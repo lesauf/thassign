@@ -2,27 +2,53 @@ import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 
 import { PartServiceStitch } from './part.service.stitch';
 import { ConstantsService } from './constants.service';
-import { MessageService } from './message.service';
+import { partSchema, Part } from '../models/part/part.schema';
+import { partMocks } from '../mocks/parts.mock';
 
 describe('PartServiceStitch', () => {
   let PartServiceStitchSpectator: SpectatorService<PartServiceStitch>;
 
   const createService = createServiceFactory({
-    service: PartServiceStitch
-    // mocks: [],
-    // providers: [
-    //   {
-    //     provide: ConstantsService,
-    //     useValue: new ConstantsService()
-    //   }
-    // ]
+    service: PartServiceStitch,
+    mocks: [
+      // ConstantsService
+    ],
+    providers: [
+      {
+        provide: ConstantsService,
+        useValue: {
+          authenticate: () => Promise.resolve(true),
+          getCollectionByName: () => Promise.resolve(null),
+          getServiceWebHookUrl: () => '',
+        },
+      },
+    ],
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     PartServiceStitchSpectator = createService();
+
+    spyOn(PartServiceStitchSpectator.service, 'getAllParts').and.returnValue(
+      Promise.resolve(partMocks)
+    );
+
+    await PartServiceStitchSpectator.service.init();
   });
 
-  it('should be created', () => {
+  test('should be created and request the list of parts', async () => {
     expect(PartServiceStitchSpectator.service).toBeTruthy();
+
+    expect(PartServiceStitchSpectator.service.allParts).toEqual(partMocks);
+    // console.log(PartServiceStitchSpectator.service.allParts.length);
+    // console.log(partMocks.length);
+  });
+
+  test('should be able to filter by meeting', async () => {
+    const weekendParts: any[] = PartServiceStitchSpectator.service.getPartsByMeeting(
+      'weekend'
+    );
+
+    // check the nomber of keys of the returned object
+    expect(Object.keys(weekendParts).length).toEqual(4);
   });
 });

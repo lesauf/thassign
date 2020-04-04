@@ -1,14 +1,23 @@
 import { Observable, of } from 'rxjs';
-const { AnonymousCredential } = require('mongodb-stitch-browser-sdk');
 const { HttpServiceClient } = require('mongodb-stitch-browser-services-http');
 
 import { ConstantsService } from './constants.service';
 import { MessageService } from './message.service';
 
 export abstract class CommonService {
-  protected stitchAppClient: any;
+  // protected stitchAppClient: any;
 
   protected db: any;
+
+  /**
+   * DB collection
+   */
+  collection: any;
+
+  /**
+   * Webhook root URL
+   */
+  webHookUrl: string;
 
   dbService: any;
 
@@ -16,19 +25,12 @@ export abstract class CommonService {
     protected messageService?: MessageService,
     protected constantsService?: ConstantsService
   ) {
-    this.stitchAppClient = this.constantsService.stitchAppClient;
-    this.db = this.constantsService.db;
-
-    this.dbService = this.stitchAppClient.getServiceClient(
-      HttpServiceClient.factory,
-      'PartService'
-    );
-  }
-
-  authenticate() {
-    return this.stitchAppClient.auth.loginWithCredential(
-      new AnonymousCredential()
-    );
+    // this.stitchAppClient = this.constantsService.stitchAppClient;
+    // this.db = this.constantsService.db;
+    // this.dbService = this.stitchAppClient.getServiceClient(
+    //   HttpServiceClient.factory,
+    //   'PartService'
+    // );
   }
 
   /**

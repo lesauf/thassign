@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 const {
   HttpRequest,
-  HttpMethod
+  HttpMethod,
 } = require('mongodb-stitch-browser-services-http');
 
 import { CommonService } from './common.service';
@@ -13,7 +13,7 @@ import { ConstantsService } from './constants.service';
  * Get data about parts from storage
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PartServiceStitch extends CommonService {
   allParts: any[] = [];
@@ -27,7 +27,7 @@ export class PartServiceStitch extends CommonService {
       chairman: 'weekend.publicTalk.chairman',
       speaker: 'weekend.publicTalk.speaker',
       conductor: 'weekend.watchtower.conductor',
-      reader: 'weekend.watchtower.reader'
+      reader: 'weekend.watchtower.reader',
     },
     students: {
       bibleReading: 'clm.treasures.bible-reading',
@@ -36,11 +36,9 @@ export class PartServiceStitch extends CommonService {
       secondReturnVisit: 'clm.ministry.second-return-visit',
       bibleStudy: 'clm.ministry.bible-study',
       studentTalk: 'clm.ministry.talk',
-      studentAssistant: 'clm.ministry.assistant'
-    }
+      studentAssistant: 'clm.ministry.assistant',
+    },
   };
-
-  collection: any;
 
   // private partsUrl = 'api/part'; // URL to web api
 
@@ -50,15 +48,25 @@ export class PartServiceStitch extends CommonService {
   ) {
     super(null, constantsService);
 
-    this.collection = this.db.collection('parts');
+    this.collection = constantsService.getCollectionByName('parts');
+    this.webHookUrl = constantsService.getServiceWebHookUrl('PartService');
   }
+
+  // async init(callback) {
+  //   if (this.allParts.length === 0) {
+  //     this.allParts = await this.getAllParts();
+  //   }
+
+  //   callback(this);
+  // }
 
   /**
    * populate allParts property once and for all
+   * @todo rename init
    */
-  async fetchParts() {
+  async init() {
     if (this.allParts.length === 0) {
-      await this.getAllParts();
+      this.allParts = await this.getAllParts();
     }
   }
 
@@ -72,35 +80,33 @@ export class PartServiceStitch extends CommonService {
    * allParts property
    */
   async getAllParts() {
-    // const request = new HttpRequest.Builder()
-    //   .withMethod(HttpMethod.GET)
-    //   .withUrl(
-    //     'https://webhooks.mongodb-stitch.com/api/client/v2.0/app/thassign-oykwx/service/PartService/incoming_webhook/getAllPartsHook'
-    //   )
-    //   .build();
+    const request = new HttpRequest.Builder()
+      .withMethod(HttpMethod.GET)
+      .withUrl(this.webHookUrl + 'getAllPartsHook')
+      .build();
 
-    // const response = await this.dbService.execute(request);
-    // const allParts = JSON.parse(response.body);
-    // // console.log(response.body);
+    const response = await this.dbService.execute(request);
+    const allParts = JSON.parse(response.body);
+    // console.log(response.body);
 
-    // return allParts;
-    return await this.authenticate().then(() => {
-      console.log('[MongoDB Stitch] Parts fetched from Stitch');
-      return this.collection.find({}).asArray();
-    });
+    return allParts;
+    // return await this.constantsService.authenticate().then(() => {
+    //   console.log('[MongoDB Stitch] Parts fetched from Stitch');
+    //   return this.collection.find({}).asArray();
+    // });
   }
 
   /**
    * get the parts objects of the current meeting
    */
-  async getPartsByMeeting(meetingName: string) {
+  getPartsByMeeting(meetingName: string) {
     meetingName = encodeURIComponent(meetingName);
-    await this.fetchParts();
+    // await this.init();
 
     const partsOfMeeting = [];
-    Object.keys(this.meetingParts[meetingName]).forEach(partName => {
+    Object.keys(this.meetingParts[meetingName]).forEach((partName) => {
       partsOfMeeting[partName] = this.allParts.find(
-        part => part.name === this.meetingParts[meetingName][partName]
+        (part) => part.name === this.meetingParts[meetingName][partName]
       );
     });
 
@@ -114,8 +120,8 @@ export class PartServiceStitch extends CommonService {
 
   getPartsNames() {}
 
-  getPartById(_id: string) {
-    _id = encodeURIComponent(_id);
+  getPartById(id: string) {
+    id = encodeURIComponent(id);
   }
 
   getPartByName(name: string) {

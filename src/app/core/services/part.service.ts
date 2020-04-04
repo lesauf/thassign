@@ -5,7 +5,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 const {
   Stitch,
   RemoteMongoClient,
-  AnonymousCredential
+  AnonymousCredential,
 } = require('mongodb-stitch-browser-sdk');
 
 import { CommonService } from './common.service';
@@ -15,7 +15,7 @@ import { PartModel } from '../../../../server/src/modules/parts/part.model';
 // import { PARTS } from '../mocks/parts.mock';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 
 // const client = Stitch.initializeDefaultAppClient('thassign-oykwx');
@@ -28,7 +28,7 @@ const httpOptions = {
  * Get data about parts from storage
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PartService extends CommonService {
   allParts: any[] = [];
@@ -42,7 +42,7 @@ export class PartService extends CommonService {
       chairman: 'weekend.publicTalk.chairman',
       speaker: 'weekend.publicTalk.speaker',
       conductor: 'weekend.watchtower.conductor',
-      reader: 'weekend.watchtower.reader'
+      reader: 'weekend.watchtower.reader',
     },
     students: {
       bibleReading: 'clm.treasures.bible-reading',
@@ -51,8 +51,8 @@ export class PartService extends CommonService {
       secondReturnVisit: 'clm.ministry.second-return-visit',
       bibleStudy: 'clm.ministry.bible-study',
       studentTalk: 'clm.ministry.talk',
-      studentAssistant: 'clm.ministry.assistant'
-    }
+      studentAssistant: 'clm.ministry.assistant',
+    },
   };
 
   private partsUrl = 'api/part'; // URL to web api
@@ -89,7 +89,7 @@ export class PartService extends CommonService {
   /**
    * populate allParts property once and for all
    */
-  async fetchParts() {
+  async init() {
     if (this.allParts.length === 0) {
       await this.getAllParts();
     }
@@ -101,7 +101,7 @@ export class PartService extends CommonService {
   getParts(): Observable<any[]> {
     // if there are params, encode and convert them to url params
     return this.http.get<any[]>(this.partsUrl).pipe(
-      tap(_ => this.log('fetched parts')),
+      tap((_) => this.log('fetched parts')),
       catchError(this.handleError('getParts', []))
     );
   }
@@ -115,7 +115,7 @@ export class PartService extends CommonService {
     this.allParts = await this.http
       .get<any[]>(this.partsUrl)
       .pipe(
-        tap(_ => this.log('Fetched parts')),
+        tap((_) => this.log('Fetched parts')),
         catchError(this.handleError('getAllParts', []))
       )
       .toPromise();
@@ -135,12 +135,12 @@ export class PartService extends CommonService {
    * get the parts objects of the current meeting
    */
   async getPartsByMeeting(meetingName: string) {
-    await this.fetchParts();
+    await this.init();
 
     const partsOfMeeting = [];
-    Object.keys(this.meetingParts[meetingName]).forEach(partName => {
+    Object.keys(this.meetingParts[meetingName]).forEach((partName) => {
       partsOfMeeting[partName] = this.allParts.find(
-        part => part.name === this.meetingParts[meetingName][partName]
+        (part) => part.name === this.meetingParts[meetingName][partName]
       );
     });
 
@@ -153,14 +153,14 @@ export class PartService extends CommonService {
    */
   getPartsGroupedByMeeting(): Observable<Array<any>> {
     return this.http.get<Array<any>>(this.partsUrl + '/group/meeting').pipe(
-      tap(_ => this.log('fetched parts grouped by meeting')),
+      tap((_) => this.log('fetched parts grouped by meeting')),
       catchError(this.handleError('getParts', []))
     );
   }
 
   getPartsNames(): Observable<Array<string>> {
     return this.http.get<Array<string>>(this.partsUrl + '/names').pipe(
-      tap(_ => this.log('fetched parts names')),
+      tap((_) => this.log('fetched parts names')),
       catchError(this.handleError('getParts', []))
     );
   }
@@ -168,7 +168,7 @@ export class PartService extends CommonService {
   getPartById(_id: string) {
     _id = encodeURIComponent(_id);
     return this.http.get<any>(this.partsUrl + `/id/${_id}`).pipe(
-      tap(_ => this.log('fetched part ' + _id)),
+      tap((_) => this.log('fetched part ' + _id)),
       catchError(this.handleError('getParts', []))
     );
   }
@@ -176,7 +176,7 @@ export class PartService extends CommonService {
   getPartByName(name: string) {
     name = encodeURIComponent(name);
     return this.http.get<any[]>(this.partsUrl + `/name/${name}`).pipe(
-      tap(_ => this.log('fetched part ' + name)),
+      tap((_) => this.log('fetched part ' + name)),
       catchError(this.handleError('getParts', []))
     );
   }
