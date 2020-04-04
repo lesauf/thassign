@@ -13,6 +13,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+// required for AOT compilation
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  // return new TranslateHttpLoader(http);
+}
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -30,15 +36,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         provide: TranslateCompiler,
         useClass: TranslateMessageFormatCompiler,
       },
+      defaultLanguage: 'en',
     }),
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
-
-// required for AOT compilation
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-  // return new TranslateHttpLoader(http);
-}
