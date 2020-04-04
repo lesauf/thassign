@@ -4,15 +4,15 @@ import { PartServiceStitch } from 'src/app/core/services/part.service.stitch';
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss']
+  templateUrl: 'home.component.html',
+  styleUrls: ['home.component.scss'],
 })
-export class HomePage {
+export class HomeComponent {
   public parts: any;
 
   constructor(public partServiceStitch: PartServiceStitch) {
     // console.log(this.partServiceStitch.getAllParts());
-    this.partServiceStitch.getAllParts().then(parts => {
+    this.partServiceStitch.getAllParts().then((parts) => {
       this.parts = parts;
       console.log(parts.length);
     });

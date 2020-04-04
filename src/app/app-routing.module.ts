@@ -8,32 +8,34 @@ const routes: Routes = [
   {
     path: '',
     component: ContentLayoutComponent,
-    //   children: [
-    //     {
-    //       path: '',
-    //       loadChildren: () =>
-    //         import('./modules/home/home.module').then((m) => m.HomePageModule),
-    //     },
-    //     {
-    //       path: 'assignments',
-    //       loadChildren: () =>
-    //         import('./modules/assignments/assignments.module').then(
-    //           (m) => m.AssignmentsModule
-    //         ),
-    //     },
-    //     {
-    //       path: 'exports',
-    //       loadChildren: () =>
-    //         import('./modules/exports/exports.module').then(
-    //           (m) => m.ExportsModule
-    //         ),
-    //     },
-    //     {
-    //       path: 'users',
-    //       loadChildren: () =>
-    //         import('./modules/users/users.module').then((m) => m.UsersModule),
-    //     },
-    //   ],
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./modules/home/home.module').then(
+            (m) => m.HomeComponentModule
+          ),
+      },
+      //     {
+      //       path: 'assignments',
+      //       loadChildren: () =>
+      //         import('./modules/assignments/assignments.module').then(
+      //           (m) => m.AssignmentsModule
+      //         ),
+      //     },
+      //     {
+      //       path: 'exports',
+      //       loadChildren: () =>
+      //         import('./modules/exports/exports.module').then(
+      //           (m) => m.ExportsModule
+      //         ),
+      //     },
+      //     {
+      //       path: 'users',
+      //       loadChildren: () =>
+      //         import('./modules/users/users.module').then((m) => m.UsersModule),
+      //     },
+    ],
   },
   // {
   //   path: 'admin',

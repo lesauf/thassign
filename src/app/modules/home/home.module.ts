@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { HomePage } from './home.page';
+import { HomeComponent } from './home.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -13,11 +13,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
     RouterModule.forChild([
       {
         path: '',
-        component: HomePage
-      }
+        component: HomeComponent,
+      },
     ]),
-    SharedModule
+    SharedModule,
   ],
-  declarations: [HomePage]
+  declarations: [HomeComponent],
 })
-export class HomePageModule {}
+export class HomeComponentModule {}
