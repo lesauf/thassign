@@ -32,6 +32,8 @@ describe('ConstantsService', () => {
       'getCollectionByName'
     );
 
+    expect(ConstantsServiceSpectator.service).toHaveProperty('getDbService');
+
     expect(
       ConstantsServiceSpectator.service.getServiceWebHookUrl('PartService')
     ).toEqual(

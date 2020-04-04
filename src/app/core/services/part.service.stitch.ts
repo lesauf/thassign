@@ -43,22 +43,11 @@ export class PartServiceStitch extends CommonService {
   // private partsUrl = 'api/part'; // URL to web api
 
   constructor(
-    // messageService: MessageService,
+    messageService: MessageService,
     protected constantsService: ConstantsService
   ) {
-    super(null, constantsService);
-
-    this.collection = constantsService.getCollectionByName('parts');
-    this.webHookUrl = constantsService.getServiceWebHookUrl('PartService');
+    super('parts', 'PartService', messageService, constantsService);
   }
-
-  // async init(callback) {
-  //   if (this.allParts.length === 0) {
-  //     this.allParts = await this.getAllParts();
-  //   }
-
-  //   callback(this);
-  // }
 
   /**
    * populate allParts property once and for all
@@ -80,20 +69,13 @@ export class PartServiceStitch extends CommonService {
    * allParts property
    */
   async getAllParts() {
-    const request = new HttpRequest.Builder()
-      .withMethod(HttpMethod.GET)
-      .withUrl(this.webHookUrl + 'getAllPartsHook')
-      .build();
-
-    const response = await this.dbService.execute(request);
-    const allParts = JSON.parse(response.body);
-    // console.log(response.body);
+    const allParts = await this.constantsService.executeHook(
+      'PartService',
+      'getAllPartsHook',
+      this.dbService
+    );
 
     return allParts;
-    // return await this.constantsService.authenticate().then(() => {
-    //   console.log('[MongoDB Stitch] Parts fetched from Stitch');
-    //   return this.collection.find({}).asArray();
-    // });
   }
 
   /**

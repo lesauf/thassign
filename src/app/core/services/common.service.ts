@@ -1,14 +1,9 @@
 import { Observable, of } from 'rxjs';
-const { HttpServiceClient } = require('mongodb-stitch-browser-services-http');
 
 import { ConstantsService } from './constants.service';
 import { MessageService } from './message.service';
 
 export abstract class CommonService {
-  // protected stitchAppClient: any;
-
-  protected db: any;
-
   /**
    * DB collection
    */
@@ -19,18 +14,20 @@ export abstract class CommonService {
    */
   webHookUrl: string;
 
+  /**
+   * DB service
+   */
   dbService: any;
 
   constructor(
+    protected collectionName: string,
+    protected serviceName: string,
     protected messageService?: MessageService,
     protected constantsService?: ConstantsService
   ) {
-    // this.stitchAppClient = this.constantsService.stitchAppClient;
-    // this.db = this.constantsService.db;
-    // this.dbService = this.stitchAppClient.getServiceClient(
-    //   HttpServiceClient.factory,
-    //   'PartService'
-    // );
+    this.collection = constantsService.getCollectionByName('parts');
+    this.webHookUrl = constantsService.getServiceWebHookUrl('PartService');
+    this.dbService = constantsService.getDbService('PartService');
   }
 
   /**

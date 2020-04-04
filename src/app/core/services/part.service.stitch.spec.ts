@@ -19,6 +19,7 @@ describe('PartServiceStitch', () => {
         useValue: {
           authenticate: () => Promise.resolve(true),
           getCollectionByName: () => Promise.resolve(null),
+          getDbService: () => {},
           getServiceWebHookUrl: () => '',
         },
       },
@@ -35,7 +36,7 @@ describe('PartServiceStitch', () => {
     await PartServiceStitchSpectator.service.init();
   });
 
-  test('should be created and request the list of parts', async () => {
+  test('created and request the list of parts', async () => {
     expect(PartServiceStitchSpectator.service).toBeTruthy();
 
     expect(PartServiceStitchSpectator.service.allParts).toEqual(partMocks);
@@ -43,7 +44,7 @@ describe('PartServiceStitch', () => {
     // console.log(partMocks.length);
   });
 
-  test('should be able to filter by meeting', async () => {
+  test('filter by meeting', async () => {
     const weekendParts: any[] = PartServiceStitchSpectator.service.getPartsByMeeting(
       'weekend'
     );
