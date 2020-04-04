@@ -127,5 +127,8 @@
       }
     }
   },
-  "defaultProject": "thassign"
+  "defaultProject": "thassign",
+  "cli": {
+    "analytics": false
+  }
 }
