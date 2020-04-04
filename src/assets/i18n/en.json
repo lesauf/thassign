@@ -1,0 +1,174 @@
+{
+  "A - Z": "A - Z",
+  "Christian Life": "Christian Life",
+  "Christian Life and Ministry": "Christian Life and Ministry",
+  "Students": "Students",
+  "Week-end": "Week-end",
+  "actions": "actions",
+  "all": "All",
+  "assignable-parts": "Assignable parts",
+  "assignments": "Assignments",
+  "assistant": "Assistant",
+  "baptized": "Baptized",
+  "cancel": "Cancel",
+  "chairman": "Chairman",
+  "child": "Child",
+  "clm": {
+    "chairman": "CLM - Chairman",
+    "christianLiving": {
+      "congregation-bible-study": "Congregation Bible Study",
+      "first-part": "First Part",
+      "second-part": "Second Part",
+      "third-part": "Third Part",
+      "title": "Christian Life Title"
+    },
+    "closing-prayer": "CLM - Closing Prayer",
+    "ministry": {
+      "assistant": "Assistant",
+      "bible-study": "Bible Study",
+      "first-return-visit": "First Return Visit",
+      "initial-call": "Initial Call",
+      "second-return-visit": "Second Return Visit",
+      "talk": "Talk",
+      "title": "Ministry Meeting Title"
+    },
+    "opening-prayer": "CLM - Opening prayer",
+    "treasures": {
+      "bible-reading": "Bible Reading",
+      "digging": "Digging for Spiritual Gems",
+      "first-part": "Treasures - First Part",
+      "title": "Treasures Meeting Title"
+    }
+  },
+  "close": "close",
+  "conductor": "Conductor",
+  "confirm-success": "User removed",
+  "delete": "delete",
+  "dialog": {
+    "delete": {
+      "confirmation": {
+        "cancelButton": "Cancel",
+        "confirmButton": "Remove",
+        "message": "This will definitely remove the record from your lists.",
+        "title": "Delete this record ?"
+      }
+    }
+  },
+  "disabled": "Disabled",
+  "display-only": " Display only",
+  "edit": "edit",
+  "edit-user-infos": "user informations",
+  "elder": "Elder",
+  "email": "Email",
+  "error": {
+    "email": {
+      "string": {
+        "email": "This address is incomplete"
+      }
+    },
+    "firstName": {
+      "any": {
+        "empty": "Please write the firstname"
+      }
+    },
+    "genre": {
+      "any": {
+        "empty": "Please choose an option"
+      }
+    },
+    "lastName": {
+      "any": {
+        "empty": "Please write the lastname"
+      }
+    }
+  },
+  "exports": "exports",
+  "filter-by": "filter by",
+  "first-name": "First name",
+  "generate": "Generate",
+  "go": "Go",
+  "home": "Home",
+  "language": "language",
+  "last-name": "Last name",
+  "login": "Login",
+  "ma": {
+    "bible-reading": "Bible reading",
+    "bible-study": "Bible study",
+    "first-return-visit": "First return visit",
+    "last-assignments": "Last assignments",
+    "new-member": "New member"
+  },
+  "main": "Main",
+  "man": "Man",
+  "mat-paginator-intl": {
+    "first_page": "First page",
+    "items_per_page": "Items per page",
+    "last_page": "Last",
+    "next_page": "Next",
+    "of": "of",
+    "previous_page": "Previous"
+  },
+  "menu": "menu",
+  "midweek": "Midweek",
+  "midweek-meeting": "Midweek Meeting",
+  "ministerial-servant": "Ministerial servant",
+  "more": "more",
+  "name": "Name",
+  "next-week": "Next Week",
+  "not-disabled": "Not disabled",
+  "ok": "Ok",
+  "parts": "Parts",
+  "phone": "Phone",
+  "pluralization": {
+    "people": "{gender, select, male{His name is} female{Her name is} other{Their names are }} {name}",
+    "things": "There {count, plural, =0{is} one{is} other{are}} {count, plural, =0{} one{a} other{several}} {count, plural, =0{nothing} one{thing} other{things}}"
+  },
+  "prayer": "Prayer",
+  "previous-week": "Previous Week",
+  "print": "print",
+  "publisher": "Publisher",
+  "reader": "Reader",
+  "register": "Register",
+  "register-an-account": "Register an account",
+  "required": "Required",
+  "required field": "Required field",
+  "revert": "Revert",
+  "save": "Save",
+  "search-users": "Search a user",
+  "select-all": "select all",
+  "sort-by": "sort by",
+  "sort-order": "sort order",
+  "sort-users-by-any-assignment": "Sort Users by Any Assignment",
+  "sort-users-by-name": "Sort users by name",
+  "sort-users-by-this-assignment": "Sort users by this assignment",
+  "speaker": "Speaker",
+  "submit": "Submit",
+  "this": "This",
+  "type": "type",
+  "unbaptized": "Unbaptized",
+  "user": "User",
+  "user-form-title": "User informations",
+  "user-not-found": "User not found",
+  "user-save-success": "User saved",
+  "users": "Users",
+  "view": "view",
+  "week-starting": "Week Starting",
+  "weekend-meeting": "Weekend Meeting",
+  "weekend": {
+    "chairman": "Weekend - Chairman",
+    "closing-prayer": "Weekend - Closing prayer",
+    "opening-prayer": "Weekend - Opening Prayer",
+    "publicTalk": {
+      "chairman": "Weekend - Chairman",
+      "speaker": "Weekend - Speaker",
+      "title": "Public Talk title"
+    },
+    "watchtower": {
+      "conductor": "Watchtower conductor",
+      "reader": "Watchtower Reader",
+      "title": "Watchtower Study Title"
+    }
+  },
+  "with": "with",
+  "woman": "Woman"
+}

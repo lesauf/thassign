@@ -1,0 +1,17 @@
+Translation ID,fr-FR,en-US,Comment
+child,Enfants,Child,
+close,Fermentr,Closed,
+goodbye,Aurevoir,Goodbye,
+ma.bible-reading,Lecture de la Bible,Bible reading,
+ma.bible-study,Etude biblique,Bible study,
+ma.digging-for-spiritual-gems,Recherchons des perles spirituelles,Digging for Spiritual Gems,
+ma.elder,Ancien,Elder,
+ma.first-return-visit,Premiere nouvelle visite,First return visit,
+ma.last-assignments,Dernieres attributions,Last assignments,
+ma.new-member,Nouveau membre,New member,
+ma.publisher,Proclamateur,publisher,On peut meme ajouter un commentaire
+ma.unbaptized,Non baptise,Unbaptized,
+man,Humain,Man,
+pluralization.people,"{gender, select, male{His name is} female{Her name is} other{Their names are }} {name}",
+pluralization.things,"There {count, plural, =0{is} one{is} other{are}} {count, plural, =0{} one{a} other{several}} {count, plural, =0{nothing} one{thing} other{things}}",
+woman,Femme,Woman,

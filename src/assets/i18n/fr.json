@@ -1,0 +1,174 @@
+{
+  "A - Z": "A - Z",
+  "Christian Life": "Vie Chretienne",
+  "Christian Life and Ministry": "Vie Chretienne et Ministere",
+  "Students": "Eleves",
+  "Week-end": "Week-end",
+  "actions": "actions",
+  "all": "Tous",
+  "assignable-parts": "Attributions possible",
+  "assignments": "Attributions",
+  "assistant": "Interlocuteur",
+  "baptized": "Baptisé",
+  "cancel": "Annuler",
+  "chairman": "President",
+  "child": "Enfant",
+  "clm": {
+    "chairman": "VCM - President",
+    "christianLiving": {
+      "congregation-bible-study": "Etude biblique de l'assemblée",
+      "first-part": "Premiere partie",
+      "second-part": "Deuxieme partie",
+      "third-part": "Troisieme partie",
+      "title": "Title Vie Chretienne"
+    },
+    "closing-prayer": "Prière de cloture",
+    "ministry": {
+      "assistant": "Interlocuteur",
+      "bible-study": "Etude biblique",
+      "first-return-visit": "Première nouvelle visite",
+      "initial-call": "Premier contact",
+      "second-return-visit": "Deuxieme nouvelle visite",
+      "talk": "Discours",
+      "title": "Ministere"
+    },
+    "opening-prayer": "Priere d'ouverture",
+    "treasures": {
+      "bible-reading": "Lecture de la bible",
+      "digging": "Recherchons des perles",
+      "first-part": "Premiere partie",
+      "title": "Recherchons des perles spirituelles"
+    }
+  },
+  "close": "fermer",
+  "conductor": "Conducteur",
+  "confirm-success": "Utilisateur supprimé",
+  "delete": "supprimer",
+  "dialog": {
+    "delete": {
+      "confirmation": {
+        "cancelButton": "Annuler",
+        "confirmButton": "Supprimer",
+        "message": "Ceci supprimera définitivement cet enregistrement de vos listes",
+        "title": "Supprimer cet enregistrement ?"
+      }
+    }
+  },
+  "disabled": "Désactivé",
+  "display-only": "Afficher ",
+  "edit": "Modifier",
+  "edit-user-infos": "informations d'un utilisateur",
+  "elder": "Ancien",
+  "email": "Email",
+  "error": {
+    "email": {
+      "string": {
+        "email": "Cette adresse n'est pas complete"
+      }
+    },
+    "firstName": {
+      "any": {
+        "empty": "N'oublies pas de mettre le prénom"
+      }
+    },
+    "genre": {
+      "any": {
+        "empty": "Veuilles choisir une option"
+      }
+    },
+    "lastName": {
+      "any": {
+        "empty": "N'oublies pas de mettre le nom"
+      }
+    }
+  },
+  "exports": "exports",
+  "filter-by": "filtrer selon",
+  "first-name": "Prénom",
+  "generate": "Generer",
+  "go": "Rechercher",
+  "home": "Accueil",
+  "language": "langue",
+  "last-name": "Nom",
+  "login": "Nom d'utilisateur",
+  "ma": {
+    "bible-reading": "Lecture de la Bible",
+    "bible-study": "Etude biblique",
+    "first-return-visit": "Première nouvelle visite",
+    "last-assignments": "Dernières attributions",
+    "new-member": "Nouveau membre"
+  },
+  "main": "Principale",
+  "man": "Homme",
+  "mat-paginator-intl": {
+    "first_page": "Debut",
+    "items_per_page": "Nombre par page",
+    "last_page": "Fin",
+    "next_page": "Suivant",
+    "of": "sur"
+  },
+  "menu": "menu",
+  "midweek": "Milieu de semaine",
+  "midweek-meeting": "Reuion de semaine",
+  "ministerial-servant": "Assistant",
+  "more": "Plus",
+  "name": "Nom",
+  "next-week": "Semaine Suivante",
+  "not-disabled": "Non désactivé",
+  "ok": "Ok",
+  "parts": "Attributions",
+  "phone": "Téléphone",
+  "pluralization": {
+    "people": "{gender, select, male{Son nom est} female{Son nom, est} other{Leurs noms sont}} {name}",
+    "things": "Il y a {count, plural, =0{is} one{is} other{are}} {count, plural, =0{} one{a} other{several}} {count, plural, =0{nothing} one{thing} other{things}}"
+  },
+  "prayer": "Priere",
+  "previous-week": "Semaine precedente",
+  "print": "impression",
+  "publisher": "Proclamateur",
+  "reader": "Lecteur",
+  "register": "S'inscrire",
+  "register-an-account": "Créer un compte",
+  "required": "Champ requis",
+  "required field": "Champ requis",
+  "revert": "Recommencer",
+  "save": "Enregistrer",
+  "search-users": "Rechercher un utilisateur",
+  "select-all": "sélectionner tout",
+  "sort-by": "trier par",
+  "sort-order": "ordre de tri",
+  "sort-users-by-any-assignment": "Trier suivant toutes les attributions",
+  "sort-users-by-name": "Trier suivant le nom",
+  "sort-users-by-this-assignment": "Trier suivant cette attribution",
+  "speaker": "Orateur",
+  "submit": "Enregistrer",
+  "this": "Ceci",
+  "type": "type",
+  "unbaptized": "Non baptisé",
+  "user": "Utilisateur",
+  "user-form-title": "Informations de l'utilisateur",
+  "user-not-found": "Utilisateur inexistant",
+  "user-save-success": "Utilisateur enregistré",
+  "users": "Utilisateurs",
+  "view": "details",
+  "week-starting": "Semaine du",
+  "weekend-meeting": "Reunion du week-end",
+  "weekend": {
+    "chairman": "Week-end - Président",
+    "closing-prayer": "Week-end - Prière de cloture",
+    "opening-prayer": "Week-end - Prière d'ouverture",
+    "publicTalk": {
+      "chairman": "President",
+      "speaker": "Orateur",
+      "title": "Discours public"
+    },
+    "speaker": "Week-end - Orateur",
+    "watchtower": {
+      "conductor": "Conducteur TG",
+      "reader": "Lecteur TG",
+      "title": "Tour de Garde"
+    }
+  },
+  "with": "avec",
+  "woman": "Femme"
+}
