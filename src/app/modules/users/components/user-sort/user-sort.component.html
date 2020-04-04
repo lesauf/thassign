@@ -1,0 +1,24 @@
+<h3 matDialogTitle>{{ 'filter-by' | translate | titlecase }}</h3>
+
+<div mat-dialog-content>
+  <mat-radio-group
+    fxLayout="column"
+    fxLayoutGap="15px"
+    [(ngModel)]="sort"
+    (change)="closeUserSort()"
+  >
+    <mat-radio-button fxFlex value="firstName">
+      {{ 'first-name' | translate | titlecase }}
+    </mat-radio-button>
+    <mat-radio-button fxFlex value="lastName">
+      {{ 'last-name' | translate | titlecase }}
+    </mat-radio-button>
+  </mat-radio-group>
+</div>
+
+<!--
+  <mat-dialog-actions>
+    <button mat-button matDialogClose>Close dialog</button>
+    <button mat-button>Action</button>
+  </mat-dialog-actions>
+-->

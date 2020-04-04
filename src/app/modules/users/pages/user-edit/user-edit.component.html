@@ -1,0 +1,171 @@
+<h2>{{ 'user-form-title' | translate }}</h2>
+
+<mat-divider></mat-divider>
+
+<div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="space-around stretch"
+  *ngIf="userForm">
+  <form fxFlex="95" fxLayout="row wrap" fxLayoutAlign="center start"
+    #userEditForm *ngIf="userForm" [formGroup]="userForm"
+    (ngSubmit)="saveUser()">
+    <div fxFlex="100" fxLayoutGap="25px" fxLayout="row wrap"
+      fxLayoutAlign="center start">
+      <!-- Left column -->
+      <div fxFlex="80" fxFlex.lt-md="75" fxFlex.lt-sm="95" fxLayout="column"
+        fxLayoutAlign="center start">
+        <!-- Genre -->
+        <mat-radio-group fxFlex="row" fxLayoutAlign="start stretch"
+          fxLayoutGap="15px" labelPosition="before" formControlName="genre"
+          (change)="toggleManFields('genre', $event)">
+          <mat-radio-button value="man" name="genre">
+            {{ 'man' | translate }}
+          </mat-radio-button>
+          <mat-radio-button fxFlex value="woman" name="genre">
+            {{ 'woman' | translate }}
+          </mat-radio-button>
+        </mat-radio-group>
+        <app-control-messages [control]="userForm.controls['genre']">
+        </app-control-messages>
+        <!-- First name -->
+        <mat-form-field fxFill>
+          <input matInput autocomplete="off"
+            placeholder="{{ 'first-name' | translate }}"
+            formControlName="firstName" required />
+        </mat-form-field>
+        <app-control-messages [control]="userForm.controls['firstName']">
+        </app-control-messages>
+        <!-- Last name -->
+        <mat-form-field fxFill>
+          <input matInput autocomplete="off"
+            placeholder="{{ 'last-name' | translate }}"
+            formControlName="lastName" required />
+        </mat-form-field>
+        <app-control-messages [control]="userForm.controls['lastName']">
+        </app-control-messages>
+        <!-- Phone -->
+        <mat-form-field fxFill>
+          <input matInput autocomplete="off"
+            placeholder="{{ 'phone' | translate }}" formControlName="phone" />
+        </mat-form-field>
+        <app-control-messages [control]="userForm.controls['phone']">
+        </app-control-messages>
+        <!-- Email -->
+        <mat-form-field fxFill>
+          <input matInput autocomplete="off"
+            placeholder="{{ 'email' | translate }}" formControlName="email" />
+        </mat-form-field>
+        <app-control-messages [control]="userForm.controls['email']">
+        </app-control-messages>
+        <!-- Overseer -->
+        <mat-radio-group labelPosition="before" fxFlex="row wrap"
+          fxLayoutGap="15px" formControlName="overseer"
+          [hidden]="overseerFieldsDisabled">
+          <mat-radio-button value="elder" name="overseer">
+            {{ 'elder' | translate }}
+          </mat-radio-button>
+          <mat-radio-button value="ministerial-servant" name="overseer">
+            {{ 'ministerial-servant' | translate }}
+          </mat-radio-button>
+        </mat-radio-group>
+
+        <!-- Parts -->
+        <!-- <mat-form-field *ngIf="(allParts$ | async) as allParts" fxFill>
+          <mat-select
+            placeholder="{{ 'assignable-parts' | translate }}"
+            multiple
+            [compareWith]="comparePartFn"
+            formControlName="parts"
+          >
+            <mat-option
+              *ngFor="let part of allParts; let i = index"
+              [value]="part"
+            >
+              {{ part.name | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field> -->
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div fxFlex="10" fxFlex.lt-md="15" fxFlex.xs="95" fxLayout="column"
+        fxLayout.lt-sm="row wrap" fxLayoutGap.gt-sm="10px"
+        fxLayoutAlign="space-between start" fxLayoutAlign.xs="end center">
+        <div fxFlex>&nbsp;</div>
+        <!-- Child -->
+        <mat-checkbox fxFlex.lt-sm="45" labelPosition="after"
+          formControlName="child" (change)="toggleManFields('child', $event)">
+          {{ 'child' | translate }}
+        </mat-checkbox>
+        <!-- baptized -->
+        <mat-checkbox fxFlex.lt-sm="45" labelPosition="after"
+          formControlName="baptized"
+          (change)="toggleManFields('baptized', $event)">
+          {{ 'baptized' | translate }}
+        </mat-checkbox>
+        <!-- publisher -->
+        <mat-checkbox fxFlex.lt-sm="45" labelPosition="after"
+          formControlName="publisher"
+          (change)="toggleManFields('publisher', $event)">
+          {{ 'publisher' | translate }}
+        </mat-checkbox>
+        <!-- disabled -->
+        <mat-checkbox fxFlex.lt-sm="45" labelPosition="after"
+          formControlName="disabled">
+          {{ 'disabled' | translate }}
+        </mat-checkbox>
+      </div>
+      <!-- /Right column -->
+
+      <div fxFlex="100">
+        &nbsp;
+        <!-- spacer -->
+      </div>
+
+      <!-- Part Chips -->
+
+      <div fxFlex="90" *ngIf="(allPartsGrouped$ | async) as allPartsGrouped">
+        <div>
+          <!-- Midweek parts -->
+          <h3>{{ 'assignable-parts' | translate | titlecase }}</h3>
+          <mat-chip-list multiple="true" fxLayout="row">
+            <fieldset fxFlex="100" *ngFor="
+                let meeting of allPartsGrouped.meetings;
+                let meetingIndex = index
+              ">
+              <legend>
+                {{ meeting | translate | titlecase }}
+              </legend>
+              <mat-chip [fxHide]="
+                  (part?.byAnOverseer && overseerFieldsDisabled) 
+                  || (part?.byABrother && manFieldsDisabled)
+                " *ngFor="let part of allPartsGrouped.parts[meetingIndex]"
+                [selected]="partSelected(part)"
+                (click)="togglePart(part); userForm.pristine = false">
+                {{ part.name | translate }}
+              </mat-chip>
+            </fieldset>
+          </mat-chip-list>
+        </div>
+      </div>
+
+      <div fxFlex="100">
+        &nbsp;
+        <!-- spacer -->
+      </div>
+
+      <!-- BUTTONS -->
+      <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-around stretch">
+        <button type="button" mat-raised-button (click)="cancel()">
+          {{ 'cancel' | translate | titlecase }}
+        </button>
+        <button type="submit" mat-raised-button color="primary">
+          {{ 'save' | translate | titlecase }}
+        </button>
+      </div>
+
+      <div fxFlex="100">
+        &nbsp;
+        <!-- spacer -->
+      </div>
+    </div>
+  </form>
+</div>

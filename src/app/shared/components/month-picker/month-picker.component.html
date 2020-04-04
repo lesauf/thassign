@@ -1,0 +1,43 @@
+<!-- Previous button -->
+<button
+  mat-raised-button
+  title="{{ 'previous-month' | translate }}"
+  [disabled]="disablePicker"
+  (click)="navigateMonths('previous')"
+>
+  <!-- [disabled]="selectedMonth.disabled" -->
+  <mat-icon> keyboard_arrow_left </mat-icon>
+</button>
+&nbsp;
+
+<label fxFlex.lt-md="90">
+  <span fxHide>{{ 'month' | translate | titlecase }}</span>
+  <mat-form-field>
+    <input
+      matInput
+      (click)="monthPicker.open()"
+      [matDatepicker]="monthPicker"
+      [formControl]="date"
+      class="center"
+      style="text-align: center"
+    />
+    <mat-datepicker
+      #monthPicker
+      startView="year"
+      (monthSelected)="chosenMonthHandler($event, monthPicker)"
+    >
+    </mat-datepicker>
+  </mat-form-field>
+</label>
+&nbsp;
+
+<!-- NEXT button -->
+<button
+  mat-raised-button
+  title="{{ 'next-month' | translate }}"
+  [disabled]="disablePicker"
+  (click)="navigateMonths('next')"
+>
+  <!-- [disabled]="selectedMonth.disabled" -->
+  <mat-icon> keyboard_arrow_right </mat-icon>
+</button>

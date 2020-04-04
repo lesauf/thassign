@@ -1,0 +1,88 @@
+<form fxLayout="row wrap" fxLayoutAlign="space-around start" *ngIf="monthForm"
+  [formGroup]="monthForm">
+  <div fxFlex="95" fxLayoutAlign="end">
+    <button type="button" mat-raised-button (click)="generateAssignments()">
+      <mat-icon>functions</mat-icon>
+      {{ 'generate' | translate }}
+    </button>
+    &nbsp;
+    <button type="button" *ngIf="isEditMode" mat-raised-button
+      (click)="cancelForm()">
+      <mat-icon>cancel</mat-icon>
+      {{ 'cancel' | translate }}
+    </button>
+    &nbsp;
+    <button type="submit" mat-raised-button class="mat-primary"
+      (click)="editAndSaveForm()">
+      <mat-icon>{{ isEditMode ? 'save' : 'edit' }}</mat-icon>
+      {{ (isEditMode ? 'save' : 'edit') | translate }}
+    </button>
+  </div>
+  <div fxFlex="95" formArrayName="weeks">
+    <div
+      *ngFor="let weekendForm of monthForm.get('weeks').controls; let weekIndex = index">
+      <div [formGroupName]="weekIndex" fxLayout="row wrap"
+        fxLayoutAlign="space-around start">
+        <div fxFlex="100" fxLayoutAlign="space-around start">
+          <h2 fxFlex="45" fxFlex.lt-md="80">
+            {{ weekendForm.get('chairman').controls['week'].value | date }}
+          </h2>
+          <div fxFlex="45" fxFlex.lt-md="10">&nbsp;</div>
+        </div>
+
+        <div fxFlex="100" fxLayout="row wrap"
+          fxLayoutAlign="space-around start">
+          <mat-form-field fxFlex="20" fxFlex.lt-md="45"
+            formGroupName="{{ partName }}"
+            *ngFor="let partName of listOfParts; let i = index">
+            <mat-select
+              placeholder="{{ getPartTitle(partName) | translate | titlecase }}"
+              [compareWith]="compareFn" formControlName="assignee">
+              <mat-select-trigger>
+                {{
+                weekendForm.get(partName).controls['assignee'].value?.fullName
+              }}
+              </mat-select-trigger>
+              <mat-option disabled="disabled" class="filter-option">
+                <mat-icon class="mat-18">sort</mat-icon>
+                <button mat-raised-button class="mat-primary fill text-sm"
+                  (click)="sortUsersByName(partName)"
+                  title="{{ 'sort-users-by-name' | translate }}">
+                  {{ 'A - Z' | translate | titlecase }}
+                </button>
+                <button mat-raised-button class="mat-primary fill text-sm"
+                  (click)="
+                  sortUsersByLastAssignment(
+                    partName,
+                    'asc',
+                    'weekend.publicTalk.chairman'
+                  )
+                " title="{{ 'sort-users-by-this-assignment' | translate }}">
+                  {{ 'this' | translate | titlecase }}
+                </button>
+                <button mat-raised-button class="mat-primary fill text-sm"
+                  (click)="sortUsersByLastAssignment(partName)"
+                  title="{{ 'sort-users-by-any-assignment' | translate }}">
+                  {{ 'all' | translate | titlecase }}
+                </button>
+              </mat-option>
+
+
+              <mat-option *ngFor="let assignee of assignableList[partName]"
+                [value]="assignee" matTooltip="{{ 'latest-assignment' | translate }} : {{
+                'this' | translate | titlecase
+              }} : {{ assignee?.lastAssignmentThisPart?.week }} |
+        {{ 'all' | translate | titlecase }} : {{
+                assignee?.lastAssignmentAnyPart?.week
+              }}">
+                {{ assignee.fullName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

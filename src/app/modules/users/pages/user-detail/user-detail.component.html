@@ -1,0 +1,47 @@
+<div *ngIf="user">
+  <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+
+  <div
+    fxLayout="row wrap"
+    fxLayout.lt-sm="column"
+    fxLayoutAlign="space-around stretch"
+    fxLayoutAlign.lt-sm="center start"
+  >
+    <div fxFlex="45">
+      <mat-icon inline="true">person</mat-icon>
+      {{ user.type }}
+    </div>
+    <div fxFlex="45" *ngIf="user.progress">
+      <mat-icon inline="true">info</mat-icon>
+      {{ user.progress }}
+    </div>
+    <div fxFlex="45" *ngIf="user.phone">
+      <mat-icon inline="true">phone</mat-icon>
+      {{ user.phone }}
+    </div>
+    <div fxFlex="45" *ngIf="user.email">
+      <mat-icon inline="true">mail_outline</mat-icon>
+      {{ user.email }}
+    </div>
+  </div>
+
+  <mat-chip-list fxLayout="row" fxLayoutAlign="start stretch">
+    <mat-chip
+      class="mat-chip-list-stacked"
+      aria-orientation="vertical"
+      [selectable]="false"
+      disabled
+      *ngFor="let part of user.parts"
+    >
+      {{ part.name | translate }}
+    </mat-chip>
+  </mat-chip-list>
+
+  <mat-action-row>
+    <button mat-button [routerLink]="['/users/edit', user._id]">
+      <mat-icon inline="true">edit</mat-icon>
+
+      {{ 'edit' | translate | titlecase }}
+    </button>
+  </mat-action-row>
+</div>

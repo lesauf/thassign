@@ -1,0 +1,75 @@
+<div fxLayout="row wrap" fxLayoutAlign="center start">
+  <mat-expansion-panel fxFlex="90" #mepSearch="matExpansionPanel"
+    [expanded]="displayMore" [hideToggle]="false">
+    <mat-expansion-panel-header>
+      <div fxFlex fxLayout="row wrap" fxLayoutAlign="center stretch">
+        <mat-form-field fxFlex="90" fxFlex.lt-md="80" fxFlex.lt-sm="70">
+          <!-- Disabled autocomplete -->
+          <!--  -->
+          <input #searchBar matInput
+            placeholder="{{ 'search-users' | translate }}"
+            (click)="$event.stopPropagation()" [matAutocomplete]="auto"
+            (input)="search(searchBar.value)"
+            (keydown.space)="$event.stopPropagation()"
+            (keydown.enter)="$event.stopPropagation(); searchUsers()" />
+        </mat-form-field>
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let user of (users$ | async)" [value]="user"
+            fxLayout="row">
+            <button mat-flat-button fxFill fxLayout="row"
+              [routerLink]="['/users/detail', user._id]">
+              <div>{{ user.firstName }} {{ user.lastName }}</div>
+            </button>
+          </mat-option>
+        </mat-autocomplete>
+
+        <!-- Search button -->
+        <div fxFlex="40px" fxFlexAlign="center" fxLayoutlign="start center"
+          fxLayout="row">
+          <button fxFlex fxFill mat-icon-button
+            (click)="$event.stopPropagation(); searchUsers()">
+            <mat-icon matSuffix>search</mat-icon>
+          </button>
+        </div>
+        <!-- More button -->
+        <!-- <div
+          fxHide
+          fxFlex="15px"
+          fxFlexAlign="center"
+          fxLayoutlign="start center"
+          fxLayout="row"
+        >
+          <button
+            fxFlex
+            fxFill
+            mat-flat-button
+            (click)="displayMore = !displayMore"
+          >
+            {{ 'more' | translate | titlecase }}
+          </button>
+        </div> -->
+      </div>
+    </mat-expansion-panel-header>
+
+    <!-- Chips -->
+    <!-- <p>{{ 'type' | translate | titlecase }} :</p>
+    <mat-chip-list>
+      <mat-chip> {{ 'elder' | translate }} </mat-chip>
+      <mat-chip>{{ 'ministerial-servant' | translate }} </mat-chip>
+      <mat-chip>{{ 'man' | translate }} </mat-chip>
+      <mat-chip>{{ 'woman' | translate }} </mat-chip>
+      <mat-chip>{{ 'child' | translate }} </mat-chip>
+      <mat-chip>{{ 'baptized' | translate }} </mat-chip>
+      <mat-chip>{{ 'baptized' | translate }} </mat-chip>
+      <mat-chip>{{ 'disabled' | translate }} </mat-chip>
+      <mat-chip>{{ 'not-disabled' | translate }} </mat-chip>
+      <mat-chip>{{ 'publisher' | translate }} </mat-chip>
+    </mat-chip-list> -->
+
+    <mat-action-row>
+      <button mat-button (click)="mepSearch.expanded = false">
+        {{ 'close' | translate | titlecase }}
+      </button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</div>

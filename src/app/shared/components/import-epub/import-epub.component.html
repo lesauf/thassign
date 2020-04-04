@@ -1,0 +1,24 @@
+<div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="15px">
+  <div fxFlex fxLayout="row" fxLayoutAlign="start start">
+    <button fxFlex="10" mat-raised-button (click)="prevPage()">
+      <mat-icon>arrow_left</mat-icon>
+    </button>
+    <button
+      fxFlex="10"
+      fxFlexOffset="90"
+      mat-raised-button
+      (click)="nextPage()"
+    >
+      <mat-icon>arrow_right</mat-icon>
+    </button>
+  </div>
+
+  <div fxFlex="80" fxLayout="row" fxLayoutAlign="center start">
+    <div
+      #epubArea
+      fxFlex="80"
+      class="bg-color-white"
+      [innerHtml]="displayedProgram"
+    ></div>
+  </div>
+</div>

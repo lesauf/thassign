@@ -1,0 +1,6 @@
+<mat-nav-list>
+  <mat-list-item *ngIf="menu.link !== false" [routerLink]="[menu.link]" (click)="menuSelected()">
+    <mat-icon matListIcon iconsmall>{{ menu.icon }} </mat-icon>
+    <h3 matLine *ngIf="!iconOnly">{{ menu.name | translate | titlecase }}</h3>
+  </mat-list-item>
+</mat-nav-list>

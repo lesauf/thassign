@@ -1,0 +1,66 @@
+<div fxLayout="column">
+  <!-- Avatar -->
+  <!-- <div
+    *ngIf="!iconOnly"
+    fxLayoutAlign="space-around center"
+    [style.margin]="'10px 0px'"
+  >
+    <img
+      width="100"
+      [style.borderRadius]="'50%'"
+      src="./assets/user-image.jpg"
+    />
+  </div>
+  <div
+    *ngIf="iconOnly"
+    style="height: 100px;"
+    fxLayoutAlign="space-around center"
+  >
+    <img
+      width="50"
+      [style.borderRadius]="'50%'"
+      src="./assets/user-image.jpg"
+    />
+  </div> -->
+
+  <!-- Menu -->
+  <app-sidemenu-item
+    *ngFor="let menu of menus"
+    [menu]="menu"
+    [iconOnly]="iconOnly"
+    (onMenuSelected)="menuSelected()"
+  >
+  </app-sidemenu-item>
+
+  <!-- Language selector -->
+  <!-- TODO a better job displaying the language selector -->
+  <mat-form-field *ngIf="!iconOnly">
+    <span matPrefix style="margin-right: 8px;">
+      <mat-icon>language</mat-icon>
+    </span>
+
+    <mat-select
+      name="language"
+      [(ngModel)]="language"
+      (selectionChange)="changeLanguage()"
+    >
+      <mat-option value="en"> English </mat-option>
+      <mat-option value="fr"> Français </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field style="width:50px;" *ngIf="iconOnly">
+    <span matPrefix style="margin-right: 8px;">
+      <mat-icon>language</mat-icon>
+    </span>
+
+    <mat-select
+      name="language"
+      [(ngModel)]="language"
+      (selectionChange)="changeLanguage()"
+    >
+      <mat-option value="en"> English </mat-option>
+      <mat-option value="fr"> Français </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

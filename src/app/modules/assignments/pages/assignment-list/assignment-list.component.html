@@ -1,0 +1,71 @@
+<!-- Month selector -->
+<div fxLayout="row" fxLayoutAlign="center center">
+  <app-month-picker
+    [disablePicker]="isEditMode"
+    (monthSelected)="getSelectedMonth($event)"
+  >
+  </app-month-picker>
+</div>
+
+<!-- Tabs -->
+<mat-tab-group mat-align-tabs="center" animationDuration="0ms">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      {{ 'Students' | translate | titlecase }}
+    </ng-template>
+    <ng-template matTabContent>
+      <app-assignment-midweek-students
+        *ngIf="selectedMonth"
+        [month]="selectedMonth"
+        (editMode)="disableNavigation($event)"
+      >
+      </app-assignment-midweek-students>
+
+      <!-- Inserted dynamic component here -->
+      <div>
+        <ng-template #container> </ng-template>
+      </div>
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      {{ 'Christian Life and Ministry' | translate | titlecase }}
+    </ng-template>
+    <ng-template matTabContent>
+      <app-assignment-midweek
+        *ngIf="selectedMonth"
+        [month]="selectedMonth"
+        (editMode)="disableNavigation($event)"
+      ></app-assignment-midweek>
+    </ng-template>
+  </mat-tab>
+
+  <!-- <mat-tab>
+    <ng-template mat-tab-label>
+      {{ 'Week-end' | translate | titlecase }}
+    </ng-template>
+    <ng-template matTabContent>
+      <app-assignment-weekend
+        *ngIf="selectedMonth"
+        [month]="selectedMonth"
+        (editMode)="disableNavigation($event)"
+      ></app-assignment-weekend>
+
+      <! -- Inserted dynamic component here -- >
+      <div>
+        <ng-template #container> </ng-template>
+      </div>
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      {{ 'Christian Life and Ministry' | translate | titlecase }}
+    </ng-template>
+    <ng-template matTabContent>
+      <h1>Students title</h1>
+      <p>Content here</p>
+    </ng-template>
+  </mat-tab> -->
+</mat-tab-group>

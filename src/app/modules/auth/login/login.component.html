@@ -1,0 +1,103 @@
+<div
+  fxLayout="column"
+  fxFlexFill
+  fxLayoutAlign="center center"
+  style="background-image:url('../../../assets/login11.jpg');
+height: 100%;
+background-repeat: no-repeat;
+background-position: center;
+background-size: cover; "
+>
+  <div fxLayout="column">
+    <div class=" mat-elevation-z4">
+      <mat-card>
+        <mat-card-title
+          >User login
+          <a class="redirect" [routerLink]="['/auth/register']">
+            {{ 'register-an-account' | translate | titlecase }}
+          </a>
+        </mat-card-title>
+        <mat-card-content>
+          <form
+            fxLayout="column"
+            fxLayoutAlign="start stretch"
+            [formGroup]="userForm"
+            (ngSubmit)="login()"
+          >
+            <mat-form-field class="full-width">
+              <input
+                type="email"
+                id="email"
+                class="input"
+                placeholder="Please enter your email"
+                formControlName="email"
+                required
+                matInput
+              />
+            </mat-form-field>
+            <div *ngIf="formErrors.email" class="help is-danger">
+              {{ formErrors.email }}
+            </div>
+            <mat-form-field class="full-width">
+              <input
+                type="password"
+                id="password"
+                class="input"
+                placeholder="Please enter your password"
+                formControlName="password"
+                required
+                matInput
+              />
+            </mat-form-field>
+            <div *ngIf="formErrors.password" class="help is-danger">
+              {{ formErrors.password }}
+            </div>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="!userForm.valid"
+              (click)="login()"
+            >
+              {{ 'login' | translate | titlecase }}
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<!-- <mat-card class="example-card">
+  <mat-card-header>
+    <mat-card-title>Login</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form class="example-form">
+      <table cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field>
+              <input matInput placeholder="Email" [(ngModel)]="email"
+                name="email" required>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field>
+              <input matInput placeholder="Password" [(ngModel)]="password"
+                type="password" name="password" required>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="login()" color="primary">Login</button>
+    <span>Don't have an account ? <a
+        [routerLink]="['/auth/register']">register</a> here</span>
+  </mat-card-actions>
+</mat-card> -->
+<!--  -->

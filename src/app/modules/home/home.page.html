@@ -1,0 +1,8 @@
+<p *ngIf="parts">
+  Parts: {{ parts.length }}
+</p>
+<ul>
+  <li *ngFor="let part of parts">{{ part.name }}</li>
+</ul>
+
+<!-- <app-import-epub epubFilename="mwb_E_201909"></app-import-epub> -->

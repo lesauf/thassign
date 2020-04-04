@@ -1,0 +1,21 @@
+<label>
+  {{ 'week-starting' | translate }}
+  <mat-form-field>
+    <input matInput (click)="datePicker.open()"
+      (dateChange)="dateChanged($event)" [matDatepicker]="datePicker"
+      [formControl]="date" />
+    <mat-datepicker #datePicker></mat-datepicker>
+  </mat-form-field>
+</label>
+<!-- [matDatepickerFilter]="disableWeekDays" -->
+<button mat-raised-button title="{{ 'previous-month' | translate }}"
+  (click)="navigateWeeks('previous')">
+  <!-- [disabled]="selectedWeek.disabled" -->
+  <mat-icon> keyboard_arrow_left </mat-icon>
+</button>
+
+<button mat-raised-button title="{{ 'next-month' | translate }}"
+  (click)="navigateWeeks('next')">
+  <!-- [disabled]="selectedWeek.disabled" -->
+  <mat-icon> keyboard_arrow_right </mat-icon>
+</button>

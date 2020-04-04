@@ -1,0 +1,13 @@
+<mat-form-field
+  fxFlex
+  class="search"
+  [ngClass]="{ 'search-open': open == true }"
+>
+  <input
+    matInput
+    placeholder="Search"
+    autocomplete="off"
+    (focus)="bigMenu = true"
+    (focusout)="bigMenu = false"
+  />
+</mat-form-field>

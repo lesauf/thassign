@@ -1,0 +1,45 @@
+<!--
+  Below is another example of the home page that has a smaller menu that shows up when the main menu is hidden
+-->
+
+<mat-sidenav-container class="container" fullscreen>
+  <mat-sidenav
+    [mode]="sideNavMode"
+    class="sidenav"
+    #sidenav
+    [opened]="sideNavOpened"
+  >
+    <mat-toolbar color="primary" class="mat-elevation-z4">
+      <a mat-button routerLink="/">
+        <h1 class="logo">Thassign.<span style="font-size: 12px;">com</span></h1>
+      </a>
+    </mat-toolbar>
+    <app-sidemenu (onMenuSelected)="closeSidebar()"></app-sidemenu>
+  </mat-sidenav>
+  <mat-sidenav-content style="z-index: unset;">
+    <mat-drawer-container fullscreen>
+      <mat-drawer mode="side" #drawer class="drawer" [opened]="matDrawerOpened">
+        <!-- Logo or Initials -->
+        <mat-toolbar color="primary" center class="mat-elevation-z4">
+          <button mat-icon-button routerLink="/">TA</button>
+        </mat-toolbar>
+        <!-- Second sidebar with icons only -->
+        <app-sidemenu [iconOnly]="true"></app-sidemenu>
+      </mat-drawer>
+      <mat-drawer-content>
+        <ma-toolbar
+          [sidenav]="sidenav"
+          [drawer]="drawer"
+          [matDrawerShow]="matDrawerShow"
+          style="z-index: 500;"
+        ></ma-toolbar>
+
+        <div fxLayout="row" fxLayoutAlign="center start">
+          <div fxFlex="95" class="mat-elevation-z4">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
