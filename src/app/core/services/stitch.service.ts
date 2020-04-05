@@ -25,8 +25,8 @@ export class StitchService {
 
   protected webHookClientUrlParams = {
     scheme: 'https',
-    domain: 'webhooks.mongodb-stitch.com',
-    path: 'api/client/v2.0/app/thassign-oykwx/',
+    host: 'webhooks.mongodb-stitch.com',
+    path: '/api/client/v2.0/app/thassign-oykwx/',
     query: {},
     fragment: '',
     username: '',
@@ -129,26 +129,31 @@ export class StitchService {
         '/incoming_webhook/' +
         hookName;
 
-      this.webHookClientUrlParams.path +=
-        'service/' + serviceName + '/incoming_webhook/' + hookName;
+      this.webHookClientUrlParams.path =
+        this.webHookClientUrlParams.path +
+        'service/' +
+        serviceName +
+        '/incoming_webhook/' +
+        hookName;
       this.webHookClientUrlParams.username = 'lesauf@gmail.com';
       this.webHookClientUrlParams.password = 'password';
 
-      // const request = new HttpRequest(this.webHookClientUrlParams);
+      const buildRequest = new HttpRequest(this.webHookClientUrlParams);
+      buildRequest.method = HttpMethod.GET;
       // console.log(request.Builder());
-      const buildRequest = new HttpRequest.Builder()
-        .withMethod(HttpMethod.GET)
-        .withUrl(webHookUrl)
-        .withHeaders({
-          Authorization: [`Basic ${btoa('lesauf:password')}`],
-        })
-        // .withEncodeBodyAsJson(true)
-        // .withBody({
-        //   // user_id: this.stitchAppClient.auth.user.id,
-        //   email: 'lesauf@gmail.com',
-        //   password: 'password',
-        // })
-        .build();
+      // const buildRequest = new HttpRequest.Builder()
+      //   .withMethod(HttpMethod.GET)
+      //   .withUrl(webHookUrl)
+      //   .withHeaders({
+      //     Authorization: [`Basic ${btoa('lesauf:password')}`],
+      //   })
+      //   // .withEncodeBodyAsJson(true)
+      //   // .withBody({
+      //   //   // user_id: this.stitchAppClient.auth.user.id,
+      //   //   email: 'lesauf@gmail.com',
+      //   //   password: 'password',
+      //   // })
+      //   .build();
       // buildRequest.username = 'lesauf@gmail.com';
       // buildRequest.password = 'password';
       console.log(buildRequest);
