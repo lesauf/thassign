@@ -1,24 +1,24 @@
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 
-import { ConstantsService } from './constants.service';
-describe('ConstantsService', () => {
-  let service: ConstantsService;
-  let ConstantsServiceSpectator: SpectatorService<ConstantsService>;
+import { StitchService } from './stitch.service';
+describe('StitchService', () => {
+  let service: StitchService;
+  let StitchServiceSpectator: SpectatorService<StitchService>;
 
-  const createService = createServiceFactory(ConstantsService);
+  const createService = createServiceFactory(StitchService);
 
   beforeEach(async () => {
-    ConstantsServiceSpectator = createService();
+    StitchServiceSpectator = createService();
   });
 
   test('should be created', () => {
-    expect(ConstantsServiceSpectator.service).toBeTruthy();
+    expect(StitchServiceSpectator.service).toBeTruthy();
   });
 
   test('StitchAppClient, db and webHookClientUrl should be defined', () => {
-    expect(ConstantsServiceSpectator.service.stitchAppClient).toBeTruthy();
+    expect(StitchServiceSpectator.service.stitchAppClient).toBeTruthy();
 
-    expect(ConstantsServiceSpectator.service.db).toBeTruthy();
+    expect(StitchServiceSpectator.service.db).toBeTruthy();
 
     expect(service.webHookClientUrl).toEqual(
       'https://webhooks.mongodb-stitch.com/api/client/v2.0/app/thassign-oykwx/'
@@ -26,16 +26,16 @@ describe('ConstantsService', () => {
   });
 
   test('Stitch methods should exists', () => {
-    expect(ConstantsServiceSpectator.service).toHaveProperty('authenticate');
+    expect(StitchServiceSpectator.service).toHaveProperty('authenticate');
 
-    expect(ConstantsServiceSpectator.service).toHaveProperty(
+    expect(StitchServiceSpectator.service).toHaveProperty(
       'getCollectionByName'
     );
 
-    expect(ConstantsServiceSpectator.service).toHaveProperty('getDbService');
+    expect(StitchServiceSpectator.service).toHaveProperty('getDbService');
 
     expect(
-      ConstantsServiceSpectator.service.getServiceWebHookUrl('PartService')
+      StitchServiceSpectator.service.getServiceWebHookUrl('PartService')
     ).toEqual(
       'https://webhooks.mongodb-stitch.com/api/client/v2.0/app/thassign-oykwx/service/PartService/incoming_webhook/'
     );

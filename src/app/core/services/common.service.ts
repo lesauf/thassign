@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 
-import { ConstantsService } from './constants.service';
+import { StitchService } from './stitch.service';
 import { MessageService } from './message.service';
 
 export abstract class CommonService {
@@ -12,7 +12,7 @@ export abstract class CommonService {
   /**
    * Webhook root URL
    */
-  webHookUrl: string;
+  // webHookUrl: string;
 
   /**
    * DB service
@@ -23,10 +23,10 @@ export abstract class CommonService {
     protected collectionName: string,
     protected serviceName: string,
     protected messageService?: MessageService,
-    protected constantsService?: ConstantsService
+    protected constantsService?: StitchService
   ) {
     this.collection = constantsService.getCollectionByName('parts');
-    this.webHookUrl = constantsService.getServiceWebHookUrl('PartService');
+    // this.webHookUrl = constantsService.getServiceWebHookUrl('PartService');
     this.dbService = constantsService.getDbService('PartService');
   }
 

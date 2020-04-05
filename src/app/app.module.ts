@@ -13,7 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { ConstantsService } from './core/services/constants.service';
+import { StitchService } from './core/services/stitch.service';
 import { ContentLayoutComponent } from './layouts/content-layout/content-layout.component';
 import { CoreModule } from './core/core.module';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
@@ -69,7 +69,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     SharedModule,
   ],
 
-  providers: [ConstantsService],
+  providers: [StitchService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

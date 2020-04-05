@@ -1,7 +1,7 @@
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 
 import { PartServiceStitch } from './part.service.stitch';
-import { ConstantsService } from './constants.service';
+import { StitchService } from './stitch.service';
 import { partSchema, Part } from '../models/part/part.schema';
 import { partMocks } from '../mocks/parts.mock';
 
@@ -11,11 +11,11 @@ describe('PartServiceStitch', () => {
   const createService = createServiceFactory({
     service: PartServiceStitch,
     mocks: [
-      // ConstantsService
+      // StitchService
     ],
     providers: [
       {
-        provide: ConstantsService,
+        provide: StitchService,
         useValue: {
           authenticate: () => Promise.resolve(true),
           getCollectionByName: () => Promise.resolve(null),

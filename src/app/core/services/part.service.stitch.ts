@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-const {
-  HttpRequest,
-  HttpMethod,
-} = require('mongodb-stitch-browser-services-http');
 
 import { CommonService } from './common.service';
 import { MessageService } from './message.service';
 // import { any } from 'server/src/modules/parts/part.model';
-import { ConstantsService } from './constants.service';
+import { StitchService } from './stitch.service';
 
 /**
  * Get data about parts from storage
@@ -44,7 +40,7 @@ export class PartServiceStitch extends CommonService {
 
   constructor(
     messageService: MessageService,
-    protected constantsService: ConstantsService
+    protected constantsService: StitchService
   ) {
     super('parts', 'PartService', messageService, constantsService);
   }
