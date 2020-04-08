@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AuthModule } from './modules/auth/auth.module';
 import { StitchService } from './core/services/stitch.service';
 import { ContentLayoutComponent } from './layouts/content-layout/content-layout.component';
 import { CoreModule } from './core/core.module';
@@ -64,6 +65,8 @@ export function HttpLoaderFactory(http: HttpClient) {
       },
       defaultLanguage: 'en',
     }),
+    AuthModule,
+
     // Shared & Core
     CoreModule,
     SharedModule,

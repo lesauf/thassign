@@ -49,6 +49,7 @@ const routes: Routes = [
   //     import('./modules/auth/auth.module').then((m) => m.AuthModule),
   // },
   // { path: 'test', component: TestComponent },
+  { path: 'auth', loadChildren: './modules/auth/auth.module#MaModule' },
   // { path: 'ma', loadChildren: './modules/ma/ma.module#MaModule' },
   // { path: '', component: ContentLayoutComponent },
   { path: '**', component: PageNotFoundComponent },

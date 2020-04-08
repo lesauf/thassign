@@ -65,11 +65,7 @@ export class PartServiceStitch extends CommonService {
    * allParts property
    */
   async getAllParts() {
-    const allParts = await this.constantsService.executeHook(
-      'PartService',
-      'getAllPartsHook',
-      this.dbService
-    );
+    const allParts = await this.constantsService.callFunction('getAllParts');
 
     return allParts;
   }

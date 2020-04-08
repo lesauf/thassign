@@ -41,13 +41,12 @@ export class StitchService {
   authenticate() {
     const credential = new UserPasswordCredential('lesauf', 'password');
 
-    this.stitchAppClient.auth
-      .loginWithCredential(credential)
-      // Returns a promise that resolves to the authenticated user
-      .then((authedUser) =>
-        console.log(`successfully logged in with id: ${authedUser.id}`)
-      )
-      .catch((err) => console.error(`login failed with error: ${err}`));
+    return this.stitchAppClient.auth.loginWithCredential(credential);
+    // Returns a promise that resolves to the authenticated user
+    // .then((authedUser) =>
+    //   console.log(`successfully logged in with id: ${authedUser.id}`)
+    // )
+    // .catch((err) => console.error(`login failed with error: ${err}`));
 
     // return this.stitchAppClient.auth.loginWithCredential(
     //   new AnonymousCredential()
@@ -110,60 +109,20 @@ export class StitchService {
    * @param hookName Webhook name
    * @param dbService to avoid recreating it
    */
-  async executeHook(serviceName: string, hookName: string, dbService) {
-    // this.stitchAppClient.auth.logout();
+  async callFunction(functionName: string, args?: any[]) {
+    await this.stitchAppClient.auth.logout();
     try {
-      // if (this.stitchAppClient.auth.isLoggedIn) {
-      await this.authenticate();
-      // } else {
-      //   console.log('Already logged in');
-      // }
+      if (!this.stitchAppClient.auth.isLoggedIn) {
+        await this.authenticate();
+        console.log('logging in');
+      } else {
+        console.log('Already logged in');
+      }
 
-      const webHookUrl =
-        this.webHookClientUrlParams.scheme +
-        '://' +
-        // 'lesauf:password@' +
-        this.webHookClientUrl +
-        'service/' +
-        serviceName +
-        '/incoming_webhook/' +
-        hookName;
+      const response = await this.stitchAppClient.callFunction('getAllParts');
+      // console.log(response);
 
-      this.webHookClientUrlParams.path =
-        this.webHookClientUrlParams.path +
-        'service/' +
-        serviceName +
-        '/incoming_webhook/' +
-        hookName;
-      this.webHookClientUrlParams.username = 'lesauf@gmail.com';
-      this.webHookClientUrlParams.password = 'password';
-
-      const buildRequest = new HttpRequest(this.webHookClientUrlParams);
-      buildRequest.method = HttpMethod.GET;
-      // console.log(request.Builder());
-      // const buildRequest = new HttpRequest.Builder()
-      //   .withMethod(HttpMethod.GET)
-      //   .withUrl(webHookUrl)
-      //   .withHeaders({
-      //     Authorization: [`Basic ${btoa('lesauf:password')}`],
-      //   })
-      //   // .withEncodeBodyAsJson(true)
-      //   // .withBody({
-      //   //   // user_id: this.stitchAppClient.auth.user.id,
-      //   //   email: 'lesauf@gmail.com',
-      //   //   password: 'password',
-      //   // })
-      //   .build();
-      // buildRequest.username = 'lesauf@gmail.com';
-      // buildRequest.password = 'password';
-      console.log(buildRequest);
-      //   {
-      //   username: 'lesauf@gmail.com',
-      //   password: 'password',
-      // }
-
-      const response = await dbService.execute(buildRequest);
-      return JSON.parse(response.body);
+      return response;
     } catch (error) {
       throw error;
     }
