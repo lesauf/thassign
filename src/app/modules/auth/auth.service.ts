@@ -1,92 +1,41 @@
-// import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 // import { Subject } from 'rxjs/Subject';
 
-// import { TokenStorage } from './token.storage';
+import { StitchService } from 'src/app/core/services/stitch.service';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
-// @Injectable()
-// export class AuthService {
-//   constructor(private http: HttpClient, private token: TokenStorage) { }
+@Injectable()
+export class AuthService {
+  // store the URL so we can redirect after logging in
+  redirectUrl: string;
 
-//   // public $userSource = new Subject<any>();
+  constructor(private stitchService: StitchService) {}
 
-//   login(email: string, password: string): Observable<any> {
-//     return new Observable(observer => {
-//       this.http
-//         .post('/api/auth/login', {
-//           email,
-//           password
-//         })
-//         .subscribe((data: any) => {
-//           observer.next({ user: data.user });
-//           this.setUser(data.user);
-//           this.token.saveToken(data.token);
-//           observer.complete();
-//         });
-//     });
-//   }
+  isLoggedIn(): boolean {
+    return this.stitchService.isLoggedIn();
+  }
 
-//   register(
-//     firstName: string,
-//     lastName: string,
-//     email: string,
-//     password: string,
-//     repeatPassword: string
-//   ): Observable<any> {
-//     return new Observable(observer => {
-//       this.http
-//         .post('/api/user/register', {
-//           firstName,
-//           lastName,
-//           email,
-//           password,
-//           repeatPassword
-//         })
-//         .subscribe((data: any) => {
-//           observer.next({ user: data.user });
-//           this.setUser(data.user);
-//           this.token.saveToken(data.token);
-//           observer.complete();
-//         });
-//     });
-//   }
+  login(email: string, password: string): Promise<any> {
+    return this.stitchService.authenticate(email, password);
+  }
 
-//   setUser(user): void {
-//     if (user) {
-//       user.isAdmin = user.roles.indexOf('admin') > -1;
-//     }
+  register(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    repeatPassword: string
+  ) {}
 
-//     // this.$userSource.next(user);
-//     (<any>window).user = user;
-//   }
+  setUser(user) {}
 
-//   getUser(): Observable<any> {
-//     return new Observable(observer => {
-//       return observer.complete();
-//     });
-//     // Produce errors on build
-//     // return this.$userSource.asObservable();
-//   }
+  getUser() {}
 
-//   me(): Observable<any> {
-//     return new Observable(observer => {
-//       const tokenVal = this.token.getToken();
-//       if (!tokenVal) {
-//         return observer.complete();
-//       }
-//       this.http.get('/api/auth/me').subscribe((data: any) => {
-//         observer.next({ user: data.user });
-//         this.setUser(data.user);
-//         observer.complete();
-//       });
-//     });
-//   }
+  me() {}
 
-//   signOut(): void {
-//     this.token.signOut();
-//     this.setUser(null);
-//     delete (<any>window).user;
-//   }
-// }
+  logout(): void {
+    this.stitchService.logout();
+  }
+}

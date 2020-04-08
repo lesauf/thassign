@@ -38,8 +38,16 @@ export class StitchService {
   webHookClientUrl =
     'webhooks.mongodb-stitch.com/api/client/v2.0/app/thassign-oykwx/';
 
-  authenticate() {
-    const credential = new UserPasswordCredential('lesauf', 'password');
+  isLoggedIn() {
+    return this.stitchAppClient.auth.isLoggedIn;
+  }
+
+  logout() {
+    return this.stitchAppClient.auth.logout();
+  }
+
+  authenticate(email: string = 'lesauf', password: string = 'password') {
+    const credential = new UserPasswordCredential(email, password);
 
     return this.stitchAppClient.auth.loginWithCredential(credential);
     // Returns a promise that resolves to the authenticated user
