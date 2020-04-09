@@ -42,6 +42,10 @@ export class StitchService {
     return this.stitchAppClient.auth.isLoggedIn;
   }
 
+  getUser() {
+    return this.stitchAppClient.auth.user;
+  }
+
   logout() {
     return this.stitchAppClient.auth.logout();
   }

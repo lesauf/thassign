@@ -5,7 +5,7 @@ import {
   FormBuilder,
   FormControl,
   Validators,
-  ValidationErrors
+  ValidationErrors,
 } from '@angular/forms';
 
 // import { AuthService } from '../auth.service';
@@ -13,48 +13,48 @@ import {
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['../auth.component.scss']
+  styleUrls: ['../auth.component.scss'],
 })
 export class RegisterComponent implements OnInit {
   userForm: FormGroup;
-  formErrors = {
+  formMessages = {
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    repeatPassword: ''
+    repeatPassword: '',
   };
   validationMessages = {
     firstName: {
-      required: 'Please enter your first name'
+      required: 'Please enter your first name',
     },
     lastName: {
-      required: 'Please enter your last name'
+      required: 'Please enter your last name',
     },
     email: {
       required: 'Please enter your email',
-      email: 'Please enter your valid email address'
+      email: 'Please enter your valid email address',
     },
     password: {
       required: 'Please enter your password',
       pattern: 'The password must contain numbers and letters',
       minlength: 'Please enter more than 6 characters',
-      maxlength: 'Please enter less than 25 characters'
+      maxlength: 'Please enter less than 25 characters',
     },
     repeatPassword: {
       required: 'please retype your password',
       pattern: 'The password must contain numbers and letters',
       minlength: 'Please enter more than 6 characters',
       maxlength: 'Please enter less than 25 characters',
-      passwordMatch: 'Password mismatch'
-    }
+      passwordMatch: 'Password mismatch',
+    },
   };
 
   constructor(
     // private authService: AuthService,
     private fb: FormBuilder,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.buildForm();
@@ -70,13 +70,13 @@ export class RegisterComponent implements OnInit {
         [
           Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'),
           Validators.minLength(6),
-          Validators.maxLength(25)
-        ]
+          Validators.maxLength(25),
+        ],
       ],
-      repeatPassword: ['', [Validators.required, this.passwordsMatchValidator]]
+      repeatPassword: ['', [Validators.required, this.passwordsMatchValidator]],
     });
 
-    this.userForm.valueChanges.subscribe(data => this.onValueChanged(data));
+    this.userForm.valueChanges.subscribe((data) => this.onValueChanged(data));
     this.onValueChanged();
   }
 
@@ -84,8 +84,8 @@ export class RegisterComponent implements OnInit {
     const password = control.root.get('password');
     return password && control.value !== password.value
       ? {
-        passwordMatch: true
-      }
+          passwordMatch: true,
+        }
       : null;
   }
 
@@ -120,15 +120,15 @@ export class RegisterComponent implements OnInit {
       return;
     }
     const form = this.userForm;
-    for (const field in this.formErrors) {
-      if (Object.prototype.hasOwnProperty.call(this.formErrors, field)) {
-        this.formErrors[field] = '';
+    for (const field in this.formMessages) {
+      if (Object.prototype.hasOwnProperty.call(this.formMessages, field)) {
+        this.formMessages[field] = '';
         const control = form.get(field);
         if (control && control.dirty && !control.valid) {
           const messages = this.validationMessages[field];
           for (const key in control.errors) {
             if (Object.prototype.hasOwnProperty.call(control.errors, key)) {
-              this.formErrors[field] += messages[key] + ' ';
+              this.formMessages[field] += messages[key] + ' ';
             }
           }
         }
@@ -146,7 +146,7 @@ export class RegisterComponent implements OnInit {
       lastName,
       email,
       password,
-      repeatPassword
+      repeatPassword,
     } = this.userForm.getRawValue();
 
     // this.authService

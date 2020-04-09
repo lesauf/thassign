@@ -9,7 +9,7 @@ import { StitchService } from 'src/app/core/services/stitch.service';
 @Injectable()
 export class AuthService {
   // store the URL so we can redirect after logging in
-  redirectUrl: string;
+  redirectUrl = '';
 
   constructor(private stitchService: StitchService) {}
 
@@ -31,7 +31,9 @@ export class AuthService {
 
   setUser(user) {}
 
-  getUser() {}
+  getUser() {
+    return this.stitchService.getUser();
+  }
 
   me() {}
 
