@@ -17,8 +17,8 @@ export class AuthService {
     return this.stitchService.isLoggedIn();
   }
 
-  login(email: string, password: string): Promise<any> {
-    return this.stitchService.authenticate(email, password);
+  login(username: string, password: string): Promise<any> {
+    return this.stitchService.authenticate(username, password);
   }
 
   register(

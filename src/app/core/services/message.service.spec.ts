@@ -1,12 +1,30 @@
-import { TestBed } from '@angular/core/testing';
+import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 
 import { MessageService } from './message.service';
+import { StitchService } from 'src/app/core/services/stitch.service';
 
 describe('MessageService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let MessageServiceSpectator: SpectatorService<MessageService>;
 
-  it('should be created', () => {
-    const service: MessageService = TestBed.inject(MessageService);
-    expect(service).toBeTruthy();
+  const createService = createServiceFactory({
+    service: MessageService,
+    mocks: [],
+    providers: [],
+  });
+
+  beforeEach(async () => {
+    MessageServiceSpectator = createService();
+  });
+
+  test('created and able to add and clear messages', async () => {
+    expect(MessageServiceSpectator.service).toBeTruthy();
+
+    expect(MessageServiceSpectator.service.messages.length).toBe(0);
+
+    MessageServiceSpectator.service.add('Un nouveau message');
+    expect(MessageServiceSpectator.service.messages.length).toBe(1);
+
+    MessageServiceSpectator.service.clear();
+    expect(MessageServiceSpectator.service.messages.length).toBe(0);
   });
 });

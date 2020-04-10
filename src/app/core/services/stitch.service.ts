@@ -50,19 +50,16 @@ export class StitchService {
     return this.stitchAppClient.auth.logout();
   }
 
-  authenticate(email: string = 'lesauf', password: string = 'password') {
-    const credential = new UserPasswordCredential(email, password);
+  /**
+   *
+   * @param username username
+   * @param password password
+   * @returns // Returns a promise that resolves to the authenticated user
+   */
+  authenticate(username: string = 'lesauf', password: string = 'password') {
+    const credential = new UserPasswordCredential(username, password);
 
     return this.stitchAppClient.auth.loginWithCredential(credential);
-    // Returns a promise that resolves to the authenticated user
-    // .then((authedUser) =>
-    //   console.log(`successfully logged in with id: ${authedUser.id}`)
-    // )
-    // .catch((err) => console.error(`login failed with error: ${err}`));
-
-    // return this.stitchAppClient.auth.loginWithCredential(
-    //   new AnonymousCredential()
-    // );
   }
 
   createUserAccount(username: string, password: string) {

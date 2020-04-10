@@ -1,15 +1,34 @@
-// import { TestBed, inject } from '@angular/core/testing';
+import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 
-// import { AuthService } from './auth.service';
+import { AuthService } from './auth.service';
+import { StitchService } from 'src/app/core/services/stitch.service';
 
-// describe('AuthService', () => {
-//   beforeEach(() => {
-//     TestBed.configureTestingModule({
-//       providers: [AuthService]
-//     });
-//   });
+describe('AuthService', () => {
+  let AuthServiceSpectator: SpectatorService<AuthService>;
 
-//   it('should be created', inject([AuthService], (service: AuthService) => {
-//     expect(service).toBeTruthy();
-//   }));
-// });
+  const createService = createServiceFactory({
+    service: AuthService,
+    mocks: [
+      // StitchService
+    ],
+    providers: [
+      {
+        provide: StitchService,
+        useValue: {
+          authenticate: () => Promise.resolve(true),
+          getCollectionByName: () => Promise.resolve(null),
+          getDbService: () => {},
+          getServiceWebHookUrl: () => '',
+        },
+      },
+    ],
+  });
+
+  beforeEach(async () => {
+    AuthServiceSpectator = createService();
+  });
+
+  test('created', async () => {
+    expect(AuthServiceSpectator.service).toBeTruthy();
+  });
+});

@@ -1,12 +1,34 @@
-import { TestBed } from '@angular/core/testing';
+import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 
 import { ValidationService } from './validation.service';
+import { StitchService } from 'src/app/core/services/stitch.service';
 
 describe('ValidationService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let ValidationServiceSpectator: SpectatorService<ValidationService>;
 
-  it('should be created', () => {
-    const service: ValidationService = TestBed.inject(ValidationService);
-    expect(service).toBeTruthy();
+  const createService = createServiceFactory({
+    service: ValidationService,
+    mocks: [
+      // StitchService
+    ],
+    providers: [],
+  });
+
+  beforeEach(async () => {
+    ValidationServiceSpectator = createService();
+  });
+
+  test('created', async () => {
+    expect(ValidationServiceSpectator.service).toBeTruthy();
+  });
+
+  test('validate password', async () => {
+    expect(
+      ValidationService.passwordValidator({ value: 'goodpass1' })
+    ).toBeNull();
+
+    expect(
+      ValidationService.passwordValidator({ value: 'badpass' }).invalidPassword
+    ).toBe(true);
   });
 });

@@ -40,9 +40,9 @@ export class PartServiceStitch extends CommonService {
 
   constructor(
     messageService: MessageService,
-    protected constantsService: StitchService
+    protected stitchService: StitchService
   ) {
-    super('parts', 'PartService', messageService, constantsService);
+    super('parts', 'PartService', messageService, stitchService);
   }
 
   /**
@@ -65,7 +65,7 @@ export class PartServiceStitch extends CommonService {
    * allParts property
    */
   async getAllParts() {
-    const allParts = await this.constantsService.callFunction('getAllParts');
+    const allParts = await this.stitchService.callFunction('getAllParts');
 
     return allParts;
   }

@@ -5,10 +5,10 @@
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 8080 --disableHostCheck true",
     "build": "ng build",
-    "test": "jest part.service.stitch.spec.ts",
+    "test": "jest auth.service.spec.ts",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "test:watch": "jest part.service.stitch.spec.ts --watch"
+    "test:watch": "jest auth.service.spec.ts --watch"
   },
   "author": "Fotso Teketchuet Stephane",
   "private": true,
