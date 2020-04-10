@@ -8,7 +8,7 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 
-// import { AuthService } from '../auth.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-register',
@@ -51,7 +51,7 @@ export class RegisterComponent implements OnInit {
   };
 
   constructor(
-    // private authService: AuthService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private router: Router
   ) {}
@@ -149,10 +149,10 @@ export class RegisterComponent implements OnInit {
       repeatPassword,
     } = this.userForm.getRawValue();
 
-    // this.authService
-    //   .register(firstName, lastName, email, password, repeatPassword)
-    //   .subscribe(data => {
-    //     this.router.navigate(['']);
-    //   });
+    this.authService
+      .register(firstName, lastName, email, password, repeatPassword)
+      .then((authedUser) => {
+        this.router.navigate(['']);
+      });
   }
 }

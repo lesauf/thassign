@@ -149,13 +149,41 @@ export class PartService extends CommonService {
 
   /**
    * Get all part grouped by meeting
-   * @todo Use a sql query on MongoDb
+   *
+   * Get all part grouped by meeting
+   * Maintaining actually 2 arrays:
+   * 1. parts: any[] subarrays of parts for a meeting
+   * 2. meetings: string[] array of meetings names to retrieve the keys
    */
-  getPartsGroupedByMeeting(): Observable<Array<any>> {
-    return this.http.get<Array<any>>(this.partsUrl + '/group/meeting').pipe(
-      tap((_) => this.log('fetched parts grouped by meeting')),
-      catchError(this.handleError('getParts', []))
-    );
+  async getPartsGroupedByMeeting(): Promise<any> {
+    await this.init();
+
+    const allPartsGrouped = [];
+    // list of meeting names
+    const meetings = [];
+
+    this.allParts.forEach((part) => {
+      // if the meeting name is already saved, we skip
+      if (
+        !meetings.find((meeting) => {
+          return meeting === part.meeting;
+        })
+      ) {
+        allPartsGrouped.push(
+          this.allParts.filter((p) => p.meeting === part.meeting)
+        );
+
+        meetings.push(part.meeting);
+      }
+    });
+
+    this.log('fetched parts grouped by meeting');
+
+    return { parts: allPartsGrouped, meetings: meetings };
+    // return this.http.get<Array<any>>(this.partsUrl + '/group/meeting').pipe(
+    //   tap((_) => this.log('fetched parts grouped by meeting')),
+    //   catchError(this.handleError('getParts', []))
+    // );
   }
 
   getPartsNames(): Observable<Array<string>> {

@@ -62,15 +62,16 @@ export class StitchService {
     return this.stitchAppClient.auth.loginWithCredential(credential);
   }
 
-  createUserAccount(username: string, password: string) {
+  async createUserAccount(username: string, password: string) {
     const emailPasswordClient = Stitch.defaultAppClient.auth.getProviderClient(
       UserPasswordAuthProviderClient.factory
     );
 
-    emailPasswordClient
-      .registerWithEmail(username, password)
-      .then(() => console.log('Successfully sent account confirmation email!'))
-      .catch((err) => console.error('Error registering new user:', err));
+    await emailPasswordClient.registerWithEmail(username, password);
+
+    console.log('Successfully created new user account');
+    // Authenticate
+    return await this.authenticate(username, password);
   }
 
   /**

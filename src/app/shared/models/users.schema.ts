@@ -3,7 +3,7 @@ import { Part } from './parts.schema';
 
 export class User {
   id?: string;
-  _id: string;
+  // _id?: string;
   firstName: string = null;
   lastName: string = '';
   baptized: boolean = true;

@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   ): boolean {
     const url: string = state.url;
 
-    console.log('AuthGuard#canActivate called');
+    // console.log('AuthGuard#canActivate called');
     return this.checkLogin(url);
 
     // const user = (window as any).user;

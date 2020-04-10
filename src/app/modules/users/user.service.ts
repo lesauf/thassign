@@ -16,14 +16,14 @@ import { PartModel } from 'server/src/modules/parts/part.model';
 // import { Part } from '../../models/parts.schema';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 
 /**
  * Get data about users from storage
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService extends CommonService {
   private usersUrl = 'api/user'; // URL to web api
@@ -34,7 +34,7 @@ export class UserService extends CommonService {
     private partService: PartService,
     private translate: TranslateService
   ) {
-    super(messageService);
+    super('users', 'UserserService', messageService);
   }
 
   generateUsers(number: number = 50) {
@@ -43,7 +43,7 @@ export class UserService extends CommonService {
     );
 
     const usersList = userRequest.pipe(
-      tap(_ => this.log('generated users')),
+      tap((_) => this.log('generated users')),
       catchError(this.handleError('generateUsers', []))
     );
 
@@ -67,7 +67,7 @@ export class UserService extends CommonService {
         .set('sortOrder', sortOrder)
         .set('limit', pageSize.toString())
         .set('page', pageIndex.toString())
-        .set('filters', filters)
+        .set('filters', filters),
     };
 
     // TODO add to the query when doing server-side
@@ -76,7 +76,7 @@ export class UserService extends CommonService {
       options
     );
     const usersList = userRequest.pipe(
-      tap(_ => this.log('fetched users')),
+      tap((_) => this.log('fetched users')),
       // map((result: any[]) => {
       //   // sorting on client side,
       //   // TODO REMOVE when sorting on server side
@@ -111,8 +111,8 @@ export class UserService extends CommonService {
   getUserNo404<Data>(id: number | string): Observable<any> {
     const url = `${this.usersUrl}/?id=${id}`;
     return this.http.get<any[]>(url).pipe(
-      map(users => users[0]), // returns a {0|1} element array
-      tap(h => {
+      map((users) => users[0]), // returns a {0|1} element array
+      tap((h) => {
         const outcome = h ? `fetched` : `did not find`;
         this.log(`${outcome} user id=${id}`);
       }),
@@ -131,12 +131,12 @@ export class UserService extends CommonService {
         // searching on client side,
         // TODO REMOVE when doing nice requests on MongoDB
         return result.filter(
-          user =>
-            user.parts.find(availablePart => availablePart._id === partId) !==
+          (user) =>
+            user.parts.find((availablePart) => availablePart._id === partId) !==
             undefined
         );
       }),
-      tap(h => {
+      tap((h) => {
         const outcome = h ? `fetched` : `did not find`;
         this.log(`${outcome} users assigned to part ${part.name}`);
       }),
@@ -151,19 +151,19 @@ export class UserService extends CommonService {
    */
   getWeekendAssignableList(): Observable<any> {
     return this.http.get<any[]>(this.usersUrl + '/meeting/weekend').pipe(
-      map(result => {
+      map((result) => {
         // Arranging
         const chairmanResults = result.find(
-          part => part._id === 'weekend.publicTalk.chairman'
+          (part) => part._id === 'weekend.publicTalk.chairman'
         );
         const speakerResults = result.find(
-          part => part._id === 'weekend.publicTalk.speaker'
+          (part) => part._id === 'weekend.publicTalk.speaker'
         );
         const conductorResults = result.find(
-          part => part._id === 'weekend.watchtower.conductor'
+          (part) => part._id === 'weekend.watchtower.conductor'
         );
         const readerResults = result.find(
-          part => part._id === 'weekend.watchtower.reader'
+          (part) => part._id === 'weekend.watchtower.reader'
         );
 
         const weekeendAssignableList = {
@@ -180,12 +180,12 @@ export class UserService extends CommonService {
               ? conductorResults.assignableUsers
               : null,
           reader:
-            readerResults !== undefined ? readerResults.assignableUsers : null
+            readerResults !== undefined ? readerResults.assignableUsers : null,
         };
 
         return weekeendAssignableList;
       }),
-      tap(h => {
+      tap((h) => {
         const outcome = h ? `fetched` : `did not find`;
         this.log(`${outcome} users assigned to weekend parts`);
       }),
@@ -202,7 +202,7 @@ export class UserService extends CommonService {
     return this.http
       .get<any[]>(this.usersUrl + '/meeting/midweek-students')
       .pipe(
-        map(assignableUsers => {
+        map((assignableUsers) => {
           // Arranging by part,
 
           const assignableUsersByPart = this._arrangeAssignableUsers(
@@ -211,10 +211,10 @@ export class UserService extends CommonService {
 
           return {
             list: assignableUsers,
-            byPart: assignableUsersByPart
+            byPart: assignableUsersByPart,
           };
         }),
-        tap(h => {
+        tap((h) => {
           const outcome = h ? `fetched` : `did not find`;
           this.log(`${outcome} users assigned to midweek students parts`);
         }),
@@ -229,39 +229,41 @@ export class UserService extends CommonService {
     const assignableUsersByPartArranged = [];
 
     assignableUsersByPartArranged['bibleReading'] = result.filter(
-      user =>
-        user.parts.find(part => part.name === 'clm.treasures.bible-reading') !==
-        undefined
+      (user) =>
+        user.parts.find(
+          (part) => part.name === 'clm.treasures.bible-reading'
+        ) !== undefined
     );
     assignableUsersByPartArranged['initialCall'] = result.filter(
-      user =>
-        user.parts.find(part => part.name === 'clm.ministry.initial-call') !==
+      (user) =>
+        user.parts.find((part) => part.name === 'clm.ministry.initial-call') !==
         undefined
     );
     assignableUsersByPartArranged['firstReturnVisit'] = result.filter(
-      user =>
+      (user) =>
         user.parts.find(
-          part => part.name === 'clm.ministry.first-return-visit'
+          (part) => part.name === 'clm.ministry.first-return-visit'
         ) !== undefined
     );
     assignableUsersByPartArranged['secondReturnVisit'] = result.filter(
-      user =>
+      (user) =>
         user.parts.find(
-          part => part.name === 'clm.ministry.second-return-visit'
+          (part) => part.name === 'clm.ministry.second-return-visit'
         ) !== undefined
     );
     assignableUsersByPartArranged['bibleStudy'] = result.filter(
-      user =>
-        user.parts.find(part => part.name === 'clm.ministry.bible-study') !==
+      (user) =>
+        user.parts.find((part) => part.name === 'clm.ministry.bible-study') !==
         undefined
     );
     assignableUsersByPartArranged['studentTalk'] = result.filter(
-      user =>
-        user.parts.find(part => part.name === 'clm.ministry.talk') !== undefined
+      (user) =>
+        user.parts.find((part) => part.name === 'clm.ministry.talk') !==
+        undefined
     );
     assignableUsersByPartArranged['studentAssistant'] = result.filter(
-      user =>
-        user.parts.find(part => part.name === 'clm.ministry.assistant') !==
+      (user) =>
+        user.parts.find((part) => part.name === 'clm.ministry.assistant') !==
         undefined
     );
 
@@ -278,7 +280,7 @@ export class UserService extends CommonService {
       // Fetch user from db
       const url = `${this.usersUrl}/${id}?populate=${populate}`;
       return this.http.get<any>(url).pipe(
-        tap(_ => this.log(`fetched user id=${id}`)),
+        tap((_) => this.log(`fetched user id=${id}`)),
         catchError(this.handleError<any>(`getUser id=${id}`))
       );
     } else {
@@ -291,7 +293,7 @@ export class UserService extends CommonService {
         baptized: false,
         publisher: false,
         disabled: false,
-        parts: []
+        parts: [],
       } as any;
       return new BehaviorSubject(user).asObservable();
     }
@@ -302,7 +304,7 @@ export class UserService extends CommonService {
     term = term ? encodeURIComponent(term.trim()) : null;
 
     return this.http.get<any[]>(this.usersUrl + `/search/${term}`).pipe(
-      tap(_ => this.log(`found users matching "${term}"`)),
+      tap((_) => this.log(`found users matching "${term}"`)),
       catchError(this.handleError<any[]>('searchUsers', []))
     );
   }
@@ -343,10 +345,10 @@ export class UserService extends CommonService {
 
     const options = {
       headers: httpOptions.headers,
-      body: userId
+      body: userId,
     };
     return this.http.delete(url, options).pipe(
-      tap(_ => this.log(`deleted user`)),
+      tap((_) => this.log(`deleted user`)),
       catchError(this.handleError<any>('deleteUser'))
     );
   }
