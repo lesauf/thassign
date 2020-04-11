@@ -129,7 +129,7 @@ export class StitchService {
         console.log('Already logged in');
       }
 
-      const response = await this.stitchAppClient.callFunction('getAllParts');
+      const response = await this.stitchAppClient.callFunction(functionName);
       // console.log(response);
 
       return response;

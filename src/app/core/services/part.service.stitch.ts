@@ -89,16 +89,50 @@ export class PartServiceStitch extends CommonService {
 
   /**
    * Get all part grouped by meeting
+   *
+   * Maintaining actually 2 arrays:
+   * 1. parts: any[] subarrays of parts for a meeting
+   * 2. meetings: string[] array of meetings names to retrieve the keys
    */
-  getPartsGroupedByMeeting() {}
+  async getPartsGroupedByMeeting() {
+    const meetingsParts = await this.stitchService.callFunction(
+      'getPartsGroupedByMeeting'
+    );
 
-  getPartsNames() {}
+    const allPartsGrouped = [];
+    // list of meeting names
+    const meetings = [];
 
-  getPartById(id: string) {
-    id = encodeURIComponent(id);
+    meetingsParts.forEach((meetingPart) => {
+      allPartsGrouped.push(meetingPart.parts);
+      meetings.push(meetingPart._id);
+    });
+
+    this.log('fetched parts grouped by meeting');
+
+    return { parts: allPartsGrouped, meetings: meetings };
   }
 
-  getPartByName(name: string) {
-    name = encodeURIComponent(name);
+  async getPartsNames() {
+    await this.init();
+
+    const partsNames = [];
+
+    this.allParts.forEach((part) => {
+      partsNames.push(part.name);
+    });
+    return partsNames;
+  }
+
+  async getPartById(id: string) {
+    id = encodeURIComponent(id);
+
+    return await this.collection.findOne({ _id: id });
+  }
+
+  async getPartByName(partName: string) {
+    partName = encodeURIComponent(name);
+
+    return await this.collection.findOne({ name: partName });
   }
 }

@@ -14,8 +14,11 @@ export class HomeComponent {
     // console.log(this.partServiceStitch.getAllParts());
     this.partServiceStitch.getAllParts().then((parts) => {
       this.parts = parts;
-      console.log(parts.length);
+      console.log(parts);
     });
-    // this.parts = this.partServiceStitch.getAllParts();
+
+    this.partServiceStitch.getPartsNames().then((partsNames) => {
+      console.log('Parts names :', partsNames);
+    });
   }
 }

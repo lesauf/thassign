@@ -17,17 +17,17 @@ export abstract class CommonService {
   /**
    * DB service
    */
-  dbService: any;
+  // dbService: any;
 
   constructor(
     protected collectionName: string,
     protected serviceName: string,
     protected messageService?: MessageService,
-    protected constantsService?: StitchService
+    protected stitchService?: StitchService
   ) {
-    this.collection = constantsService.getCollectionByName('parts');
-    // this.webHookUrl = constantsService.getServiceWebHookUrl('PartService');
-    this.dbService = constantsService.getDbService('PartService');
+    this.collection = stitchService.getCollectionByName('parts');
+    // this.webHookUrl = stitchService.getServiceWebHookUrl('PartService');
+    // this.dbService = stitchService.getDbService('PartService');
   }
 
   /**
