@@ -2,7 +2,7 @@ import {
   FormGroup,
   Validators,
   FormBuilder,
-  FormControl
+  FormControl,
 } from '@angular/forms';
 import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
@@ -16,10 +16,10 @@ import { ValidationService } from '../../../../core/services/validation.service'
  */
 @Injectable()
 export class UserEditProvider implements OnInit {
-  private manFieldsDisable: BehaviorSubject<Boolean> = new BehaviorSubject(
+  private manFieldsDisable: BehaviorSubject<boolean> = new BehaviorSubject(
     false
   );
-  private overseerFieldsDisable: BehaviorSubject<Boolean> = new BehaviorSubject(
+  private overseerFieldsDisable: BehaviorSubject<boolean> = new BehaviorSubject(
     false
   );
   private form: FormGroup;

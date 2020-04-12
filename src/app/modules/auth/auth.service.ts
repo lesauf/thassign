@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 
 import { StitchService } from 'src/app/core/services/stitch.service';
 import { first } from 'rxjs/operators';
-import { User } from 'src/app/shared/models/users.schema';
+import { User, userSchema } from 'src/app/core/models/user/user.schema';
+// import { User } from 'src/app/shared/models/users.schema';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
 @Injectable()
@@ -40,14 +41,30 @@ export class AuthService {
 
     // Create user then authenticate him at one
     try {
-      // Create user and authenticate at once
-      await this.stitchService.createUserAccount(email, password);
+      if (password !== repeatPassword) {
+        throw 'Password does not match';
+      }
+
+      password = password; // Apply the hash here
 
       // save user data
-      const user = new User();
-      user.firstName = firstname;
-      user.lastName = lastname;
-      user.email = email;
+      let user = {
+        firstName: firstname,
+        lastName: lastname,
+        email: email,
+        hashedPassword: password,
+        ownerId: this.getUser().id,
+      };
+
+      const validation = userSchema.validate(user, { abortEarly: false });
+      if (validation.error) {
+        throw validation.error.message;
+      }
+
+      // Create user and authenticate at once
+      await this.stitchService.createUserAccount(email, password);
+      user = validation.value;
+
       // user.hashedPassword = password;
       // return await this.stitchService.authenticate(email, password);
       return Promise.resolve(true);

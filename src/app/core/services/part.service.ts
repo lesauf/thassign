@@ -1,28 +1,9 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-const {
-  Stitch,
-  RemoteMongoClient,
-  AnonymousCredential,
-} = require('mongodb-stitch-browser-sdk');
 
 import { CommonService } from './common.service';
 import { MessageService } from './message.service';
-
-import { PartModel } from '../../../../server/src/modules/parts/part.model';
-// import { PARTS } from '../mocks/parts.mock';
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-};
-
-// const client = Stitch.initializeDefaultAppClient('thassign-oykwx');
-
-// const db = client
-//   .getServiceClient(RemoteMongoClient.factory, 'mongodb-atlas')
-//   .db('thassign');
+// import { any } from 'server/src/modules/parts/part.model';
+import { StitchService } from './stitch.service';
 
 /**
  * Get data about parts from storage
@@ -55,55 +36,32 @@ export class PartService extends CommonService {
     },
   };
 
-  private partsUrl = 'api/part'; // URL to web api
+  // private partsUrl = 'api/part'; // URL to web api
 
-  constructor(private http: HttpClient, messageService: MessageService) {
-    super(messageService);
-
-    // client.auth
-    //   .loginWithCredential(new AnonymousCredential())
-    //   .then(user =>
-    //     db
-    //       .collection('parts')
-    //       .updateOne(
-    //         { owner_id: client.auth.user.id },
-    //         { $set: { number: 42 } },
-    //         { upsert: true }
-    //       )
-    //   )
-    //   .then(() =>
-    //     db
-    //       .collection('parts')
-    //       .find({ owner_id: client.auth.user.id }, { limit: 100 })
-    //       .asArray()
-    //   )
-    //   .then(docs => {
-    //     console.log('Found docs', docs);
-    //     console.log('[MongoDB Stitch] Connected to Stitch');
-    //   })
-    //   .catch(err => {
-    //     console.error(err);
-    //   });
+  constructor(
+    messageService: MessageService,
+    protected stitchService: StitchService
+  ) {
+    super('parts', 'PartService', messageService, stitchService);
   }
 
   /**
    * populate allParts property once and for all
+   * @todo rename init
    */
   async init() {
     if (this.allParts.length === 0) {
-      await this.getAllParts();
+      this.allParts = await this.getAllParts();
     }
   }
 
   /**
    * Get all parts from the server
    */
-  getParts(): Observable<any[]> {
-    // if there are params, encode and convert them to url params
-    return this.http.get<any[]>(this.partsUrl).pipe(
-      tap((_) => this.log('fetched parts')),
-      catchError(this.handleError('getParts', []))
-    );
+  async getParts() {
+    await this.init();
+
+    return this.allParts;
   }
 
   /**
@@ -111,31 +69,17 @@ export class PartService extends CommonService {
    * allParts property
    */
   async getAllParts() {
-    // if there are params, encode and convert them to url params
-    this.allParts = await this.http
-      .get<any[]>(this.partsUrl)
-      .pipe(
-        tap((_) => this.log('Fetched parts')),
-        catchError(this.handleError('getAllParts', []))
-      )
-      .toPromise();
-  }
+    const allParts = await this.stitchService.callFunction('getAllParts');
 
-  // getPartsByMeeting(meetingName: string) {
-  //   const meetingNameEncoded = encodeURIComponent(meetingName);
-  //   return this.http
-  //     .get<any[]>(this.partsUrl + `/meeting/${meetingNameEncoded}`)
-  //     .pipe(
-  //       tap(_ => this.log(`fetched parts of meeting ${meetingName}`)),
-  //       catchError(this.handleError('getParts', []))
-  //     );
-  // }
+    return allParts;
+  }
 
   /**
    * get the parts objects of the current meeting
    */
-  async getPartsByMeeting(meetingName: string) {
-    await this.init();
+  getPartsByMeeting(meetingName: string) {
+    meetingName = encodeURIComponent(meetingName);
+    // await this.init();
 
     const partsOfMeeting = [];
     Object.keys(this.meetingParts[meetingName]).forEach((partName) => {
@@ -150,62 +94,49 @@ export class PartService extends CommonService {
   /**
    * Get all part grouped by meeting
    *
-   * Get all part grouped by meeting
    * Maintaining actually 2 arrays:
    * 1. parts: any[] subarrays of parts for a meeting
    * 2. meetings: string[] array of meetings names to retrieve the keys
    */
-  async getPartsGroupedByMeeting(): Promise<any> {
-    await this.init();
+  async getPartsGroupedByMeeting() {
+    const meetingsParts = await this.stitchService.callFunction(
+      'getPartsGroupedByMeeting'
+    );
 
     const allPartsGrouped = [];
     // list of meeting names
     const meetings = [];
 
-    this.allParts.forEach((part) => {
-      // if the meeting name is already saved, we skip
-      if (
-        !meetings.find((meeting) => {
-          return meeting === part.meeting;
-        })
-      ) {
-        allPartsGrouped.push(
-          this.allParts.filter((p) => p.meeting === part.meeting)
-        );
-
-        meetings.push(part.meeting);
-      }
+    meetingsParts.forEach((meetingPart) => {
+      allPartsGrouped.push(meetingPart.parts);
+      meetings.push(meetingPart._id);
     });
 
     this.log('fetched parts grouped by meeting');
 
     return { parts: allPartsGrouped, meetings: meetings };
-    // return this.http.get<Array<any>>(this.partsUrl + '/group/meeting').pipe(
-    //   tap((_) => this.log('fetched parts grouped by meeting')),
-    //   catchError(this.handleError('getParts', []))
-    // );
   }
 
-  getPartsNames(): Observable<Array<string>> {
-    return this.http.get<Array<string>>(this.partsUrl + '/names').pipe(
-      tap((_) => this.log('fetched parts names')),
-      catchError(this.handleError('getParts', []))
-    );
+  async getPartsNames() {
+    await this.init();
+
+    const partsNames = [];
+
+    this.allParts.forEach((part) => {
+      partsNames.push(part.name);
+    });
+    return partsNames;
   }
 
-  getPartById(_id: string) {
-    _id = encodeURIComponent(_id);
-    return this.http.get<any>(this.partsUrl + `/id/${_id}`).pipe(
-      tap((_) => this.log('fetched part ' + _id)),
-      catchError(this.handleError('getParts', []))
-    );
+  async getPartById(id: string) {
+    id = encodeURIComponent(id);
+
+    return await this.collection.findOne({ _id: id });
   }
 
-  getPartByName(name: string) {
-    name = encodeURIComponent(name);
-    return this.http.get<any[]>(this.partsUrl + `/name/${name}`).pipe(
-      tap((_) => this.log('fetched part ' + name)),
-      catchError(this.handleError('getParts', []))
-    );
+  async getPartByName(partName: string) {
+    partName = encodeURIComponent(name);
+
+    return await this.collection.findOne({ name: partName });
   }
 }

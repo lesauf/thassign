@@ -5,14 +5,14 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  NgZone
+  NgZone,
 } from '@angular/core';
 import {
   FormGroup,
   Validators,
   FormBuilder,
   FormControl,
-  FormArray
+  FormArray,
 } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -24,11 +24,9 @@ import { UserEditProvider } from './user-edit.provider';
 // import { any } from '../../../../../../server/src/modules/parts/part.model';
 // import { Part } from '../../../models/parts.schema';
 // import { UserModel } from '../../../../../server/src/modules/users/user.model';
-// import { any } from '../../../../../../server/src/modules/users/user.schema';
-// import { User } from '../../../models/users.schema';
-import { userSchema } from '../../../../../../server/src/modules/users/user.schema';
+import { userSchema } from 'src/app/core/models/user/user.schema';
 import { ValidationService } from '../../../../core/services/validation.service';
-import { PartService } from '../../../../core/services/part.service';
+import { PartService } from 'src/app/core/services/part.service';
 import { UserService } from '../../user.service';
 import { MessageService } from '../../../../core/services/message.service';
 // import { translate } from './../../utils/common';
@@ -37,7 +35,7 @@ import { MessageService } from '../../../../core/services/message.service';
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.scss'],
-  providers: [UserEditProvider]
+  providers: [UserEditProvider],
 })
 export class UserEditComponent implements OnInit {
   /**
@@ -48,20 +46,20 @@ export class UserEditComponent implements OnInit {
   /**
    * List of all available parts
    */
-  allParts$: Observable<any[]>;
+  allParts$: Promise<any[]>;
   /**
    * All parts grouped by meeting
    */
-  allPartsGrouped$: Observable<{}>;
+  allPartsGrouped$: Promise<{ parts: any; meetings: any }>;
 
   controlMessagesComponent: ControlMessagesComponent;
 
   @Output()
-  userEdited = new EventEmitter<Object>();
+  userEdited = new EventEmitter<object>();
   selectedUser: any;
   userForm: FormGroup;
-  overseerFieldsDisabled: Boolean;
-  manFieldsDisabled: Boolean;
+  overseerFieldsDisabled: boolean;
+  manFieldsDisabled: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -98,12 +96,12 @@ export class UserEditComponent implements OnInit {
         }),
         defaultIfEmpty(undefined)
       )
-      .subscribe(user => {
+      .subscribe((user) => {
         if (user === undefined) {
           // user not found. Redirect to users
 
           this.router.navigate(['users']);
-          this.translate.get('user-not-found').subscribe(message => {
+          this.translate.get('user-not-found').subscribe((message) => {
             this.messageService.presentToast(message);
           });
         } else {
@@ -128,7 +126,7 @@ export class UserEditComponent implements OnInit {
         overseer: new FormControl(this.user.overseer),
         disabled: new FormControl(this.user.disabled),
         // familyMembers: new FormControl(this.user.familyMembers),
-        parts: new FormControl(this.user.parts)
+        parts: new FormControl(this.user.parts),
         // assignments: new FormControl(this.user.assignments)
       },
       ValidationService.joiValidator(userSchema)
@@ -137,11 +135,11 @@ export class UserEditComponent implements OnInit {
 
     this.userEditProvider
       .getManFieldsDisable()
-      .subscribe(val => (this.manFieldsDisabled = val));
+      .subscribe((val) => (this.manFieldsDisabled = val));
 
     this.userEditProvider
       .getOverseerFieldsDisable()
-      .subscribe(val => (this.overseerFieldsDisabled = val));
+      .subscribe((val) => (this.overseerFieldsDisabled = val));
   }
 
   async showAlert() {
@@ -170,12 +168,12 @@ export class UserEditComponent implements OnInit {
       result.parts = Object.assign([], result.parts);
 
       // Do useful stuff with the gathered data
-      this.userService.upsertUser(result).subscribe(user => {
+      this.userService.upsertUser(result).subscribe((user) => {
         // TODO UserEdit check if save success
         // Go to users list, passing dummy data to force reload
         this.router.navigate(['users', { dummyData: new Date().getTime() }]);
 
-        this.translate.get('user-save-success').subscribe(message => {
+        this.translate.get('user-save-success').subscribe((message) => {
           this.messageService.presentToast(message);
         });
       });
@@ -203,14 +201,14 @@ export class UserEditComponent implements OnInit {
     this.router.navigate(['users', { dummyData: new Date().getTime() }]);
     // this.redirectTo('users');
 
-    this.translate.get('confirm-success').subscribe(message => {
+    this.translate.get('confirm-success').subscribe((message) => {
       this.messageService.presentToast(message);
     });
   }
 
   /**
    * Toggle disabled on fields concerning only men
-   * @param val <Boolean> true: Disabled; false: Enabled
+   * @param val <boolean> true: Disabled; false: Enabled
    */
   toggleManFields(field?, event?) {
     if (this.userForm.value.genre === 'woman') {
@@ -261,7 +259,7 @@ export class UserEditComponent implements OnInit {
 
       this.userForm.get('parts').updateValueAndValidity({
         onlySelf: false,
-        emitEvent: true
+        emitEvent: true,
       });
     } catch (error) {}
   }
@@ -274,7 +272,7 @@ export class UserEditComponent implements OnInit {
         // TODO Remove when parts comes from Mongo
         // partValue.find(selectedPart => selectedPart.name === part.name) !==
         // undefined
-        partValue.find(selectedPartId => selectedPartId === part._id) !==
+        partValue.find((selectedPartId) => selectedPartId === part._id) !==
         undefined
       );
     }

@@ -7,12 +7,10 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { CommonService } from '../../core/services/common.service';
 import { MessageService } from '../../core/services/message.service';
-import { PartService } from 'src/app/core/services/part.service';
+// import { PartService } from 'src/app/core/services/part.service';
 // import * as mockUsers from '../../mocks/users.mock';
 // import { User } from '../../models/users.schema';
 // import { any } from 'server/src/modules/users/user.schema';
-import { UserModel } from 'server/src/modules/users/user.model';
-import { PartModel } from 'server/src/modules/parts/part.model';
 // import { Part } from '../../models/parts.schema';
 
 const httpOptions = {
@@ -31,10 +29,10 @@ export class UserService extends CommonService {
   constructor(
     private http: HttpClient,
     messageService: MessageService,
-    private partService: PartService,
+    // private partService: PartService,
     private translate: TranslateService
   ) {
-    super('users', 'UserserService', messageService);
+    super('users', 'UserService', messageService);
   }
 
   generateUsers(number: number = 50) {

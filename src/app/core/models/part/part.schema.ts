@@ -21,4 +21,3 @@ export const partSchema = Joi.object({
 }).unknown(true); // Enable other keys
 
 export type Part = Joi.extractType<typeof partSchema>;
-// export type Part = partSchematype & Mongoose.Document;

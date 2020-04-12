@@ -6,11 +6,13 @@ import { MaterialModule } from './material.module';
 import { FlexLayoutModule, CoreModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 
+import { ControlMessagesComponent } from './components/control-messages/control-messages.component';
+
 @NgModule({
   declarations: [
     // ConfirmDialogComponent,
     // ConfirmDirective,
-    // ControlMessagesComponent,
+    ControlMessagesComponent,
     // ImportEpubComponent,
     // MessagesComponent,
     // TranslateDatePipe,

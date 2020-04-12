@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs';
 import { switchMap, defaultIfEmpty } from 'rxjs/operators';
 
-import { User } from '../../../../shared/models/users.schema';
-import { MessageService } from '../../../../core/services/message.service';
-import { PartService } from '../../../../core/services/part.service';
+import { MessageService } from 'src/app/core/services/message.service';
+import { PartService } from 'src/app/core/services/part.service';
+import { User } from 'src/app/core/models/user/user.schema';
 import { UserService } from '../../user.service';
 
 @Component({
   selector: 'user-detail',
-  templateUrl: 'user-detail.component.html'
+  templateUrl: 'user-detail.component.html',
 })
 export class UserDetailComponent implements OnInit {
   user: User;
@@ -23,7 +22,7 @@ export class UserDetailComponent implements OnInit {
     private messageService: MessageService,
     private partService: PartService,
     private userService: UserService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.getUser();
@@ -39,7 +38,7 @@ export class UserDetailComponent implements OnInit {
         ),
         defaultIfEmpty(undefined)
       )
-      .subscribe(user => {
+      .subscribe((user) => {
         if (user === undefined) {
           // user not found. Redirect to users
           this.router.navigate(['users']);
@@ -54,6 +53,5 @@ export class UserDetailComponent implements OnInit {
     return this.partService.getPartsNames();
   }
 
-  openUserEdit(ev: any) {
-  }
+  openUserEdit(ev: any) {}
 }
