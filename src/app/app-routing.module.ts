@@ -34,11 +34,11 @@ const routes: Routes = [
       //           (m) => m.ExportsModule
       //         ),
       //     },
-      {
-        path: 'users',
-        loadChildren: () =>
-          import('./modules/users/users.module').then((m) => m.UsersModule),
-      },
+      // {
+      //   path: 'users',
+      //   loadChildren: () =>
+      //     import('./modules/users/users.module').then((m) => m.UsersModule),
+      // },
     ],
   },
   // {

@@ -4,7 +4,7 @@ import { switchMap, defaultIfEmpty } from 'rxjs/operators';
 
 import { MessageService } from 'src/app/core/services/message.service';
 import { PartService } from 'src/app/core/services/part.service';
-import { User } from 'src/app/core/models/user/user.schema';
+// import { User } from 'src/app/core/models/user/user.schema';
 import { UserService } from '../../user.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { UserService } from '../../user.service';
   templateUrl: 'user-detail.component.html',
 })
 export class UserDetailComponent implements OnInit {
-  user: User;
+  user: any;
   partsNames: Array<string>;
   filteredPart: Array<string>;
 

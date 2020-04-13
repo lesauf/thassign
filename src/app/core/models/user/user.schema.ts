@@ -28,4 +28,4 @@ export const userSchema = Joi.object({
   ownerId: Joi.string().required(),
 }).unknown(true); // Enable other keys
 
-export type User = Joi.extractType<typeof userSchema>;
+// export type User = Joi.extractType<typeof userSchema>;

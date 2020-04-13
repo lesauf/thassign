@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { StitchService } from 'src/app/core/services/stitch.service';
 import { first } from 'rxjs/operators';
-import { User, userSchema } from 'src/app/core/models/user/user.schema';
+import { userSchema } from 'src/app/core/models/user/user.schema';
 // import { User } from 'src/app/shared/models/users.schema';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
