@@ -119,7 +119,7 @@ export class StitchService {
    * @param hookName Webhook name
    * @param dbService to avoid recreating it
    */
-  async callFunction(functionName: string, args?: any[]) {
+  async callFunction(functionName: string, params?: any[]) {
     await this.stitchAppClient.auth.logout();
     try {
       if (!this.stitchAppClient.auth.isLoggedIn) {
@@ -129,8 +129,11 @@ export class StitchService {
         console.log('Already logged in');
       }
 
-      const response = await this.stitchAppClient.callFunction(functionName);
-      // console.log(response);
+      const response = await this.stitchAppClient.callFunction(
+        functionName,
+        params
+      );
+      console.log(response);
 
       return response;
     } catch (error) {

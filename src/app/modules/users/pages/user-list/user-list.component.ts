@@ -102,7 +102,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
       paginator !== undefined ? paginator.pageIndex : this.pageIndex,
       this.filters
     );
-    usersRequest.subscribe((res) => {
+    usersRequest.then((res) => {
       this.users = res.docs;
       this.usersTotal = res.totalDocs;
       // });

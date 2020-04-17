@@ -53,38 +53,34 @@ export class UserService extends CommonService {
   /**
    * Get all users from the server
    */
-  async getUsers(
-    sortField: string = 'lastName',
+  getUsers(
+    sort: string = 'lastName',
     sortOrder: string = 'ASC',
     pageSize: number = 50,
     pageIndex: number = 1,
     filters: string = ''
-  ): Promise<any> {
+  ): Observable<any> {
     // add safe, encoded search parameter if term present
-    const params = {
-      sort: sortField,
-      sortOrder: sortOrder,
-      limit: pageSize * 1, // convert to number
-      page: pageIndex * 1, // convert to number
-      filters: filters,
+    const options = {
+      params: new HttpParams()
+        .set('sort', sort)
+        .set('sortOrder', sortOrder)
+        .set('limit', pageSize.toString())
+        .set('page', pageIndex.toString())
+        .set('filters', filters),
     };
 
     // TODO add to the query when doing server-side
-    // const userRequest = this.http.get<any>(
-    //   this.usersUrl + '/paginated',
-    //   options
-    // );
-    try {
-      const usersList = await this.stitchService.callFunction(
-        'Users_getPaginated',
-        [params]
-      );
-      this.log('fetched users');
+    const userRequest = this.http.get<any>(
+      this.usersUrl + '/paginated',
+      options
+    );
+    const usersList = userRequest.pipe(
+      tap((_) => this.log('fetched users')),
+      catchError(this.handleError('getUsers', []))
+    );
 
-      return usersList;
-    } catch (error) {
-      this.handleError('getUsers', []);
-    }
+    return usersList;
   }
 
   /** GET user by id. Return `undefined` when id not found */
