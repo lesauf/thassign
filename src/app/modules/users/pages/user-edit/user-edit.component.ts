@@ -24,7 +24,7 @@ import { UserEditProvider } from './user-edit.provider';
 // import { any } from '../../../../../../server/src/modules/parts/part.model';
 // import { Part } from '../../../models/parts.schema';
 // import { UserModel } from '../../../../../server/src/modules/users/user.model';
-import { userSchema } from 'src/app/core/models/user/user.schema';
+import { User } from 'src/app/core/models/user/user.model';
 import { ValidationService } from '../../../../core/services/validation.service';
 import { PartService } from 'src/app/core/services/part.service';
 import { UserService } from '../../user.service';
@@ -128,8 +128,8 @@ export class UserEditComponent implements OnInit {
         // familyMembers: new FormControl(this.user.familyMembers),
         parts: new FormControl(this.user.parts),
         // assignments: new FormControl(this.user.assignments)
-      },
-      ValidationService.joiValidator(userSchema)
+      }
+      // ValidationService.joiValidator(userSchema)
     );
     this.toggleManFields();
 

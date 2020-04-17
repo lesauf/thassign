@@ -5,7 +5,7 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
-  ElementRef
+  ElementRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,11 +21,10 @@ import { UserEditComponent } from '../user-edit/user-edit.component';
 import { UserFilterComponent } from '../../components/user-filter/user-filter.component';
 import { UserSortComponent } from '../../components/user-sort/user-sort.component';
 import { tap } from 'rxjs/operators';
-import { isDefined } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-user-list',
-  templateUrl: 'user-list.component.html'
+  templateUrl: 'user-list.component.html',
   // styleUrls: ['user-list.component.scss']
 })
 export class UserListComponent implements OnInit, AfterViewInit {
@@ -63,7 +62,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     // Handle paginators
 
-    this.paginators.forEach(paginator => {
+    this.paginators.forEach((paginator) => {
       paginator.page
         .pipe(
           tap(() => {
@@ -85,7 +84,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   generateUsers() {
     const usersRequest = this.userService.generateUsers(10);
 
-    usersRequest.subscribe(res => {
+    usersRequest.subscribe((res) => {
       // Refresh the grid
       this.getUsers();
     });
@@ -103,7 +102,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
       paginator !== undefined ? paginator.pageIndex : this.pageIndex,
       this.filters
     );
-    usersRequest.subscribe(res => {
+    usersRequest.subscribe((res) => {
       this.users = res.docs;
       this.usersTotal = res.totalDocs;
       // });
@@ -154,7 +153,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   async delete(userId?: string | string[]) {
     // Lets convert the userId to array
     userId = typeof userId === 'string' ? [userId] : userId;
-    this.userService.deleteUser(userId).subscribe(result => {
+    this.userService.deleteUser(userId).subscribe((result) => {
       // Todo : Handle delete error
       // Refresh the list
       this.getUsers();
@@ -168,7 +167,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   getCheckedUsers(): any[] {
     return this.usersCheckboxes
       .filter((c, i) => i !== 0 && c.checked) // List of checked
-      .map(c => c.value); // Return the value (user)
+      .map((c) => c.value); // Return the value (user)
   }
 
   // Handle view user detail button
@@ -201,10 +200,10 @@ export class UserListComponent implements OnInit, AfterViewInit {
     const dialogRef = this._matDialog.open(UserSortComponent, {
       data: {
         trigger: target,
-        sort: this.sort
-      }
+        sort: this.sort,
+      },
     });
-    dialogRef.afterClosed().subscribe(sort => {
+    dialogRef.afterClosed().subscribe((sort) => {
       if (sort && this.sort !== sort) {
         this.sort = sort;
         this.getUsers();

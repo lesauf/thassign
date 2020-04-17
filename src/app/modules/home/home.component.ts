@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { validate, validateOrReject } from 'class-validator';
 
 import { PartService } from 'src/app/core/services/part.service';
-import { userSchema } from 'src/app/core/models/user/user.schema';
 import { AuthService } from '../auth/auth.service';
 import { Part } from 'src/app/core/models/part/part.model';
 
@@ -41,11 +40,14 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit() {
     const part: Part = new Part();
-    // part.name = 'test';
-    // part.withAssistant = true;
-    // part.meeting = 'midweek';
+    part.name = 'test';
+    part.withAssistant = true;
+    part.meeting = 'midweek';
 
     const validationResult = await validate(part);
-    console.log('PART:', validationResult[1].toString());
+
+    if (validationResult.length > 0) {
+      console.log('PART:', validationResult[1].toString());
+    }
   }
 }

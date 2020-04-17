@@ -208,7 +208,7 @@
                 "
                 *ngFor="let part of allPartsGrouped.parts[meetingIndex]"
                 [selected]="partSelected(part)"
-                (click)="togglePart(part); userForm.pristine = false"
+                (click)="togglePart(part); userForm.markAllAsTouched()"
               >
                 {{ part.name | translate }}
               </mat-chip>

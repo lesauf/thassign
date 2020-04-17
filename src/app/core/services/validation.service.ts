@@ -3,16 +3,15 @@ import {
   FormGroup,
   FormControl,
   ValidatorFn,
-  AbstractControl
+  AbstractControl,
 } from '@angular/forms';
-import * as Joi from 'joi-browser';
-// const Joi = require('joi-browser');
+
 /**
  * @see https://medium.com/@amcdnl/advanced-validation-with-angular-reactive-forms-2929759bf6e3
  * @see https://medium.com/@Yuschick/building-custom-localised-error-messages-with-joi-4a348d8cc2ba
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ValidationService {
   /**
@@ -29,14 +28,14 @@ export class ValidationService {
 
     return (form: FormGroup): { [key: string]: any } | null => {
       const result = schema.validate(form.value, {
-        abortEarly: false
+        abortEarly: false,
       });
 
       let error = null;
 
       const fieldsWithError = {};
       if (result.error) {
-        result.error.details.forEach(errorObj => {
+        result.error.details.forEach((errorObj) => {
           const field = errorObj.path.join('_');
           const type = errorObj.type;
           fieldsWithError[field] = `error.${field}.${type}`;
@@ -59,7 +58,7 @@ export class ValidationService {
       invalidEmailAddress: 'Invalid email address',
       invalidPassword:
         'Invalid password. Password must be at least 6 characters long, and contain a number.',
-      minlength: `Minimum length ${validatorValue.requiredLength}`
+      minlength: `Minimum length ${validatorValue.requiredLength}`,
     };
 
     return config[validatorName];
@@ -111,7 +110,7 @@ export class ValidationService {
    * Trigger validation on formFields
    */
   validateAllFormFields(formGroup: FormGroup) {
-    Object.keys(formGroup.controls).forEach(field => {
+    Object.keys(formGroup.controls).forEach((field) => {
       const control = formGroup.get(field);
       if (control instanceof FormControl) {
         control.markAsTouched({ onlySelf: true });

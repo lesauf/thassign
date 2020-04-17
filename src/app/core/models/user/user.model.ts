@@ -14,6 +14,7 @@ export class User {
   @IsUUID()
   @IsOptional()
   // Joi.string().alphanum()
+  // tslint:disable-next-line: variable-name
   _id: string;
 
   // @(jf.string().required())

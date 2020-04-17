@@ -5,8 +5,9 @@ import { Observable } from 'rxjs';
 
 import { StitchService } from 'src/app/core/services/stitch.service';
 import { first } from 'rxjs/operators';
-import { userSchema } from 'src/app/core/models/user/user.schema';
-// import { User } from 'src/app/shared/models/users.schema';
+// import { userSchema } from 'src/app/core/models/user/user.schema';
+import { User } from 'src/app/core/models/user/user.model';
+import { validate } from 'class-validator';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
 @Injectable()
@@ -56,14 +57,15 @@ export class AuthService {
         ownerId: this.getUser().id,
       };
 
-      const validation = userSchema.validate(user, { abortEarly: false });
-      if (validation.error) {
-        throw validation.error.message;
+      const validationErrors = await validate(user);
+
+      if (validationErrors.length > 0) {
+        throw validationErrors;
       }
 
       // Create user and authenticate at once
       await this.stitchService.createUserAccount(email, password);
-      user = validation.value;
+      // user = validation.value;
 
       // user.hashedPassword = password;
       // return await this.stitchService.authenticate(email, password);

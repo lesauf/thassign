@@ -7,6 +7,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { CommonService } from '../../core/services/common.service';
 import { MessageService } from '../../core/services/message.service';
+import { StitchService } from 'src/app/core/services/stitch.service';
 // import { PartService } from 'src/app/core/services/part.service';
 // import * as mockUsers from '../../mocks/users.mock';
 // import { User } from '../../models/users.schema';
@@ -30,9 +31,10 @@ export class UserService extends CommonService {
     private http: HttpClient,
     messageService: MessageService,
     // private partService: PartService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    protected stitchService: StitchService
   ) {
-    super('users', 'UserService', messageService);
+    super('users', 'UserService', messageService, stitchService);
   }
 
   generateUsers(number: number = 50) {

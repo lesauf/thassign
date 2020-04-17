@@ -27,18 +27,18 @@ const routes: Routes = [
       //           (m) => m.AssignmentsModule
       //         ),
       //     },
-      //     {
-      //       path: 'exports',
-      //       loadChildren: () =>
-      //         import('./modules/exports/exports.module').then(
-      //           (m) => m.ExportsModule
-      //         ),
-      //     },
       // {
-      //   path: 'users',
+      //   path: 'exports',
       //   loadChildren: () =>
-      //     import('./modules/users/users.module').then((m) => m.UsersModule),
+      //     import('./modules/exports/exports.module').then(
+      //       (m) => m.ExportsModule
+      //     ),
       // },
+      {
+        path: 'users',
+        loadChildren: () =>
+          import('./modules/users/users.module').then((m) => m.UsersModule),
+      },
     ],
   },
   // {
