@@ -8,6 +8,8 @@ import {
   IsInt,
   IsOptional,
   IsUUID,
+  IsDefined,
+  MinLength,
 } from 'class-validator';
 
 export class User {
@@ -18,11 +20,11 @@ export class User {
   _id: string;
 
   // @(jf.string().required())
-  @IsString()
+  @IsString({ message: 'error.firstName.any.empty' })
   firstName: string;
 
   // @(jf.string().required())
-  @IsString()
+  @IsString({ message: 'error.lastName.any.empty' })
   lastName: string;
 
   /**
@@ -40,14 +42,15 @@ export class User {
   congregation: string;
 
   // Joi.string().optional().allow('man', 'woman')
-  @IsString()
+  @IsString({ message: 'error.genre.any.empty' })
   @IsIn(['man', 'woman'])
   genre: string;
 
   // Joi.string()
   //   .email({ tlds: { allow: false } })
   //   .allow(null, ''),
-  @IsEmail()
+  @IsEmail({}, { message: 'error.email.string.email' })
+  @IsOptional()
   email: string;
 
   // Joi.boolean().optional().default(true),
@@ -112,4 +115,18 @@ export class User {
   // Joi.date(),
   @IsInt()
   deletedAt: number;
+
+  constructor(userProperties?: object) {
+    if (userProperties) {
+      this.fromJson(userProperties);
+    }
+  }
+
+  /**
+   *
+   * @param userProperties JSON object woth properties
+   */
+  public fromJson(userProperties?: object) {
+    return Object.assign(this, userProperties);
+  }
 }

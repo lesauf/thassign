@@ -6,10 +6,16 @@ import { ValidationService } from '../../../core/services/validation.service';
 @Component({
   selector: 'app-control-messages',
   template: `
-    <div *ngIf="errorMessage !== null">
-      {{ errorMessage | translate }}
+    <div *ngIf="errorMessage !== null" class="app-control-messages">
+      <ul>
+        <li *ngFor="let message of errorMessage">
+          {{ message | translate }}
+        </li>
+      </ul>
     </div>
-  `
+  `,
+
+  styleUrls: ['control-messages.component.scss'],
 })
 /**
  * Handle the form validation and display of errors
@@ -20,7 +26,7 @@ export class ControlMessagesComponent implements OnInit {
   control: FormControl;
 
   controlName: string;
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     this.getControlNameFromParentForm();
@@ -44,7 +50,7 @@ export class ControlMessagesComponent implements OnInit {
   getControlNameFromParentForm() {
     const formGroup = this.control.parent.controls;
     this.controlName =
-      Object.keys(formGroup).find(name => this.control === formGroup[name]) ||
+      Object.keys(formGroup).find((name) => this.control === formGroup[name]) ||
       null;
   }
 }

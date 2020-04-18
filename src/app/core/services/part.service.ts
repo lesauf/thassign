@@ -69,6 +69,8 @@ export class PartService extends CommonService {
    * allParts property
    */
   async getAllParts() {
+    console.log('Fetching parts from server');
+
     const allParts = await this.stitchService.callFunction('getAllParts');
 
     return allParts;
@@ -99,20 +101,37 @@ export class PartService extends CommonService {
    * 2. meetings: string[] array of meetings names to retrieve the keys
    */
   async getPartsGroupedByMeeting() {
-    const meetingsParts = await this.stitchService.callFunction(
-      'getPartsGroupedByMeeting'
-    );
+    await this.init();
 
     const allPartsGrouped = [];
     // list of meeting names
     const meetings = [];
 
-    meetingsParts.forEach((meetingPart) => {
-      allPartsGrouped.push(meetingPart.parts);
-      meetings.push(meetingPart._id);
-    });
+    // this.stitchService
+    //   .callFunction('getPartsGroupedByMeeting')
+    //   .then((meetingsParts) => {
+    //     meetingsParts.forEach((meetingPart) => {
+    //       allPartsGrouped.push(meetingPart.parts);
+    //       meetings.push(meetingPart._id);
+    //     });
 
-    this.log('fetched parts grouped by meeting');
+    //     console.log('fetched parts grouped by meeting');
+    //   });
+
+    this.allParts.forEach((part) => {
+      // if the meeting name is already saved, we skip
+      if (
+        !meetings.find((meeting) => {
+          return meeting === part.meeting;
+        })
+      ) {
+        allPartsGrouped.push(
+          this.allParts.filter((p) => p.meeting === part.meeting)
+        );
+
+        meetings.push(part.meeting);
+      }
+    });
 
     return { parts: allPartsGrouped, meetings: meetings };
   }

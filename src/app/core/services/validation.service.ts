@@ -5,6 +5,7 @@ import {
   ValidatorFn,
   AbstractControl,
 } from '@angular/forms';
+import { validateSync } from 'class-validator';
 
 /**
  * @see https://medium.com/@amcdnl/advanced-validation-with-angular-reactive-forms-2929759bf6e3
@@ -48,6 +49,30 @@ export class ValidationService {
       }
 
       return error !== null ? fieldsWithError : null;
+    };
+  }
+
+  /**
+   * Wrapper that will map Joi errors to an Angular format
+   */
+  static classValidator(model): ValidatorFn {
+    return (form: FormGroup): { [key: string]: any } | null => {
+      // console.log(model.fromJson(form.value));
+      const errors = validateSync(model.fromJson(form.value));
+
+      const fieldsWithError = {};
+      if (errors.length > 0) {
+        errors.forEach((errorObj) => {
+          const field = errorObj.property;
+          // const type = errorObj.property;
+          console.log(errorObj);
+          fieldsWithError[field] = Object.values(errorObj.constraints);
+        });
+
+        return fieldsWithError;
+      }
+
+      return null;
     };
   }
 

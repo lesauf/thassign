@@ -5,9 +5,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
+import { AuthService } from '../auth/auth.service';
 import { CommonService } from '../../core/services/common.service';
 import { MessageService } from '../../core/services/message.service';
 import { StitchService } from 'src/app/core/services/stitch.service';
+import { User } from 'src/app/core/models/user/user.model';
 // import { PartService } from 'src/app/core/services/part.service';
 // import * as mockUsers from '../../mocks/users.mock';
 // import { User } from '../../models/users.schema';
@@ -31,6 +33,7 @@ export class UserService extends CommonService {
     private http: HttpClient,
     messageService: MessageService,
     // private partService: PartService,
+    private authService: AuthService,
     private translate: TranslateService,
     protected stitchService: StitchService
   ) {
@@ -69,11 +72,6 @@ export class UserService extends CommonService {
       filters: filters,
     };
 
-    // TODO add to the query when doing server-side
-    // const userRequest = this.http.get<any>(
-    //   this.usersUrl + '/paginated',
-    //   options
-    // );
     try {
       const usersList = await this.stitchService.callFunction(
         'Users_getPaginated',
@@ -255,27 +253,32 @@ export class UserService extends CommonService {
    *
    * @param id: string
    */
-  getUser(id: number | string, populate: boolean = false): Observable<any> {
-    if (id) {
-      // Fetch user from db
-      const url = `${this.usersUrl}/${id}?populate=${populate}`;
-      return this.http.get<any>(url).pipe(
-        tap((_) => this.log(`fetched user id=${id}`)),
-        catchError(this.handleError<any>(`getUser id=${id}`))
-      );
-    } else {
-      // create an empty user with default values // Gave me an error
-      const user = {
-        firstName: '',
-        lastName: '',
-        genre: '',
-        child: false,
-        baptized: false,
-        publisher: false,
-        disabled: false,
-        parts: [],
-      } as any;
-      return new BehaviorSubject(user).asObservable();
+  async getUser(id: number | string, populate: boolean = false): Promise<any> {
+    try {
+      if (id) {
+        // Fetch user from db
+        this.log(`fetched user id=${id}`);
+
+        return await this.stitchService.callFunction('Users_getById', [
+          id,
+          populate,
+        ]);
+      } else {
+        // create an empty user with default values
+        return new User({
+          // firstName: '',
+          // lastName: '',
+          ownerId: this.authService.getUser().id,
+          // genre: '',
+          child: false,
+          baptized: false,
+          publisher: false,
+          disabled: false,
+          parts: [],
+        });
+      }
+    } catch (error) {
+      catchError(this.handleError<any>(`getUser id=${id}`));
     }
   }
 

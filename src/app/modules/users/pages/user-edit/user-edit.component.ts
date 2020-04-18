@@ -86,13 +86,13 @@ export class UserEditComponent implements OnInit {
     this.controlMessagesComponent = new ControlMessagesComponent();
   }
 
-  getUser(): void {
+  getUser() {
     this.route.paramMap
       .pipe(
-        switchMap((params: ParamMap) => {
+        switchMap(async (params: ParamMap) => {
           // if id param sent, pass it else pass a null param
           const id = params.get('id') ? params.get('id') : null;
-          return this.userService.getUser(id);
+          return await this.userService.getUser(id);
         }),
         defaultIfEmpty(undefined)
       )
@@ -106,6 +106,7 @@ export class UserEditComponent implements OnInit {
           });
         } else {
           this.user = user;
+          // console.log('User:', this.user);
           this.getUserForm();
         }
       });
@@ -128,8 +129,8 @@ export class UserEditComponent implements OnInit {
         // familyMembers: new FormControl(this.user.familyMembers),
         parts: new FormControl(this.user.parts),
         // assignments: new FormControl(this.user.assignments)
-      }
-      // ValidationService.joiValidator(userSchema)
+      },
+      ValidationService.classValidator(new User())
     );
     this.toggleManFields();
 

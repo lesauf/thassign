@@ -133,7 +133,7 @@ export class StitchService {
         functionName,
         params
       );
-      console.log(response);
+      console.log(functionName, ':', response);
 
       return response;
     } catch (error) {
