@@ -6,6 +6,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { validateSync } from 'class-validator';
+import { User } from '../models/user/user.model';
 
 /**
  * @see https://medium.com/@amcdnl/advanced-validation-with-angular-reactive-forms-2929759bf6e3
@@ -58,7 +59,7 @@ export class ValidationService {
   static classValidator(model): ValidatorFn {
     return (form: FormGroup): { [key: string]: any } | null => {
       // console.log(model.fromJson(form.value));
-      const errors = validateSync(model.fromJson(form.value));
+      const errors = validateSync(User.fromJson(form.value));
 
       const fieldsWithError = {};
       if (errors.length > 0) {

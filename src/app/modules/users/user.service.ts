@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
@@ -73,13 +72,18 @@ export class UserService extends CommonService {
     };
 
     try {
-      const usersList = await this.stitchService.callFunction(
-        'Users_getPaginated',
-        [params]
-      );
+      let result: {
+        docs: any;
+        totalDocs: number;
+      } = await this.stitchService.callFunction('Users_getPaginated', [params]);
+
+      // Convert results to User objects
+      result.docs = User.fromJson(result.docs);
+
+      alert(result.docs[0].type + ': ' + result.docs[0].type);
       this.log('fetched users');
 
-      return usersList;
+      return result;
     } catch (error) {
       this.handleError('getUsers', []);
     }

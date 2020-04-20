@@ -116,6 +116,27 @@ export class User {
   @IsInt()
   deletedAt: number;
 
+  constructor(userProperties?: object) {
+    if (userProperties) {
+      // User.fromJson(userProperties);
+
+      Object.assign(this, userProperties);
+    }
+  }
+
+  /**
+   * Create instances from JSON or array of JSON objects
+   *
+   * @param userProperties JSON object with properties
+   */
+  public static fromJson(userProperties?: any) {
+    if (userProperties instanceof Array) {
+      return userProperties.map((obj) => new User(obj));
+    } else {
+      return new User(userProperties);
+    }
+  }
+
   // Some virtual properties
   get fullName() {
     return this.firstName + ' ' + this.lastName;
@@ -138,19 +159,5 @@ export class User {
     }
 
     return generatedType;
-  }
-
-  constructor(userProperties?: object) {
-    if (userProperties) {
-      this.fromJson(userProperties);
-    }
-  }
-
-  /**
-   *
-   * @param userProperties JSON object woth properties
-   */
-  public fromJson(userProperties?: object) {
-    return Object.assign(this, userProperties);
   }
 }
