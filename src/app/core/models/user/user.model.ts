@@ -116,6 +116,30 @@ export class User {
   @IsInt()
   deletedAt: number;
 
+  // Some virtual properties
+  get fullName() {
+    return this.firstName + ' ' + this.lastName;
+  }
+
+  get type() {
+    let generatedType = '';
+    if (this.genre === 'man') {
+      if (this.child) {
+        generatedType = 'boy';
+      } else if (this.overseer === 'elder') {
+        generatedType = 'elder';
+      } else if (this.overseer === 'ministerial-servant') {
+        generatedType = 'ministerial-servant';
+      } else {
+        generatedType = 'man';
+      }
+    } else {
+      generatedType = this.child ? 'girl' : 'woman';
+    }
+
+    return generatedType;
+  }
+
   constructor(userProperties?: object) {
     if (userProperties) {
       this.fromJson(userProperties);
