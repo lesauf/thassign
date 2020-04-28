@@ -312,31 +312,39 @@ export class UserService extends CommonService {
   }
 
   /** PUT: update the user on the server */
-  updateUser(user: any): Observable<any> {
-    const url = `${this.usersUrl}/${user._id}`;
+  async updateUser(user: User): Promise<any> {
+    // const url = `${this.usersUrl}/${user._id}`;
 
-    return this.http.put(url, user, httpOptions).pipe(
-      tap((result: any) => {
-        const updatedUser = result.updatedData;
+    // return this.http.put(url, user, httpOptions).pipe(
+    //   tap((result: any) => {
+    //     const updatedUser = result.updatedData;
 
-        this.log(`updated user w/ name=${updatedUser.fullName}`);
-      }),
-      catchError(this.handleError<any>('updateUser'))
-    );
+    //     this.log(`updated user w/ name=${updatedUser.fullName}`);
+    //   }),
+    //   catchError(this.handleError<any>('updateUser'))
+    // );
+
+    try {
+      const result = await this.stitchService.callFunction('Users_update', [
+        user,
+      ]);
+      const updatedUser = User.fromJson(result.updatedData) as User;
+
+      this.log(`updated user w/ name=${updatedUser.fullName}`);
+    } catch (error) {
+      catchError(this.handleError<any>('updateUser'));
+    }
   }
 
   /** DELETE: delete the user from the server */
-  deleteUser(userId: string[]): Observable<any> {
-    const url = `${this.usersUrl}/delete`;
+  async deleteUser(userId: string[]): Promise<any> {
+    try {
+      await this.stitchService.callFunction('Users_deleteById', [userId]);
 
-    const options = {
-      headers: httpOptions.headers,
-      body: userId,
-    };
-    return this.http.delete(url, options).pipe(
-      tap((_) => this.log(`deleted user`)),
-      catchError(this.handleError<any>('deleteUser'))
-    );
+      this.log(`deleted user`);
+    } catch (error) {
+      catchError(this.handleError<any>('deleteUser'));
+    }
   }
 
   /**

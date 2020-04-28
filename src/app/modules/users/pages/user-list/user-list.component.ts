@@ -105,10 +105,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
     usersRequest.then((res) => {
       this.users = res.docs;
       this.usersTotal = res.totalDocs;
-      // });
-
-      // usersRequest.total.subscribe(res => {
-      //   this.usersTotal = res.totalDocs;
 
       // Handle users checkboxes
       this.usersCheckboxes.forEach((c, index, usersCheckboxes) => {
