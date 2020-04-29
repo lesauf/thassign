@@ -129,7 +129,7 @@ export class User {
    *
    * @param userProperties JSON object with properties
    */
-  public static fromJson(userProperties?: any) {
+  public static fromJson(userProperties?: object) {
     if (userProperties instanceof Array) {
       return userProperties.map((obj) => new User(obj));
     } else {

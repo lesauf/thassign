@@ -75,7 +75,7 @@ export class UserService extends CommonService {
       const result: {
         docs: any;
         totalDocs: number;
-      } = await this.stitchService.callFunction('Users_getPaginated', [params]);
+      } = await this.callFunction('Users_getPaginated', [params]);
 
       // Convert results to User objects
       result.docs = User.fromJson(result.docs);

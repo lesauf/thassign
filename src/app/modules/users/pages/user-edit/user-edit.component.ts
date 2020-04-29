@@ -156,20 +156,22 @@ export class UserEditComponent implements OnInit {
     // return await alert.present();
   }
 
-  saveUser() {
+  async saveUser() {
     const saved = false;
 
     // trigger validation
     this.validationService.validateAllFormFields(this.userForm);
 
-    if (this.userForm.valid) {
-      // Make sure to create a deep copy of the form-model
-      // let result = this.user;
-      const result = Object.assign({}, this.userForm.value);
-      result.parts = Object.assign([], result.parts);
+    try {
+      if (this.userForm.valid) {
+        // Make sure to create a deep copy of the form-model
+        // let result = this.user;
+        const result = Object.assign({}, this.userForm.value);
+        result.parts = Object.assign([], result.parts);
 
-      // Do useful stuff with the gathered data
-      this.userService.upsertUser(result).subscribe((user) => {
+        // Do useful stuff with the gathered data
+        const insertedUser = await this.userService.upsertUser(result);
+
         // TODO UserEdit check if save success
         // Go to users list, passing dummy data to force reload
         this.router.navigate(['users', { dummyData: new Date().getTime() }]);
@@ -177,9 +179,11 @@ export class UserEditComponent implements OnInit {
         this.translate.get('user-save-success').subscribe((message) => {
           this.messageService.presentToast(message);
         });
-      });
-    } else {
-      this.showAlert();
+      } else {
+        this.showAlert();
+      }
+    } catch (error) {
+      throw error;
     }
 
     if (saved) {

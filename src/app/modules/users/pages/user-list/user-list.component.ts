@@ -147,13 +147,15 @@ export class UserListComponent implements OnInit, AfterViewInit {
   }
 
   async delete(userId?: string | string[]) {
-    // Lets convert the userId to array
-    userId = typeof userId === 'string' ? [userId] : userId;
-    this.userService.deleteUser(userId).subscribe((result) => {
-      // Todo : Handle delete error
+    try {
+      // Lets convert the userId to array
+      userId = typeof userId === 'string' ? [userId] : userId;
+      await this.userService.deleteUser(userId);
       // Refresh the list
       this.getUsers();
-    });
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**

@@ -31,6 +31,13 @@ export abstract class CommonService {
   }
 
   /**
+   * Generic function to encapsulate any Baas used
+   */
+  protected callFunction<T>(functionName, parameters: T[]): Promise<any> {
+    return this.stitchService.callFunction(functionName, parameters);
+  }
+
+  /**
    * Handle Http operation that failed.
    * Let the app continue.
    * @param operation - name of the operation that failed
