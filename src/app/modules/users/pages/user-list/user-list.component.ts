@@ -159,7 +159,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     try {
       // Lets convert the userId to array
       userId = typeof userId === 'string' ? [userId] : userId;
-      await this.userService.deleteUser(userId);
+      await this.userService.softDeleteUsers(userId);
       // Refresh the list
       this.getUsers();
     } catch (error) {

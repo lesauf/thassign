@@ -339,7 +339,27 @@ export class UserService extends CommonService {
   /** DELETE: delete the user from the server */
   async deleteUser(userId: string[]): Promise<any> {
     try {
-      await this.stitchService.callFunction('Users_deleteById', [userId]);
+      await this.stitchService.callFunction('Users_updateByIds', [userId]);
+
+      this.log(`deleted user`);
+    } catch (error) {
+      catchError(this.handleError<any>('deleteUser'));
+    }
+  }
+
+  /** SOFT DELETE: mark the users as deleted from the server */
+  async softDeleteUsers(userId: string[]): Promise<any> {
+    try {
+      const deleteProps = {
+        deleted: true,
+        deletedAt: Date.now(),
+        deletedBy: this.authService.getUser().id,
+      };
+
+      await this.stitchService.callFunction('Users_updateByIds', [
+        userId,
+        deleteProps,
+      ]);
 
       this.log(`deleted user`);
     } catch (error) {
