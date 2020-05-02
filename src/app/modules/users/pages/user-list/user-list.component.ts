@@ -32,16 +32,16 @@ export class UserListComponent implements OnInit, AfterViewInit {
   /**
    * State of the master checkbox
    */
-  masterChecked: boolean = false;
+  masterChecked = false;
   // State of all checkboxes
-  noUserChecked: boolean = true;
+  noUserChecked = true;
   display = 'grid'; // 'grid' or 'list'
   sort = 'firstName';
   sortOrder = 'asc';
   pageSize = 10;
   pageIndex = 0;
-  pageSizeOptions: Number[] = [1, 2, 5, 10, 25, 100];
-  usersTotal: Number;
+  pageSizeOptions: number[] = [1, 2, 5, 10, 25, 100];
+  usersTotal: number;
   filters = ''; // TODO: retrieve value from input field in component UserFilter
 
   // MatPaginator Output
@@ -108,6 +108,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
       this.usersTotal = res.totalDocs;
 
       // Handle users checkboxes
+      // this.handleCheckboxes();
       this.usersCheckboxes.forEach((c, index, usersCheckboxes) => {
         // Do not handle the first (master)
         if (index !== 0) {
@@ -127,7 +128,8 @@ export class UserListComponent implements OnInit, AfterViewInit {
     // If all are checked check the master too
     this.usersCheckboxes.first.checked = this.usersCheckboxes
       .toArray()
-      .every((_, i) => (i !== 0 ? _.checked : true));
+      .slice(1)
+      .every((checkbox, i) => checkbox.checked);
     // this.masterChecked = this.usersCheckboxes.first.checked;
     // If all are unchecked, disable the delete button
     this.noUserChecked = !this.usersCheckboxes.some((_, i) => _.checked);
@@ -155,10 +157,8 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.router.navigateByUrl(`user/details/${user._id}`);
   }
 
-  async delete(userId?: string | string[]) {
+  async delete(userId?: string[]) {
     try {
-      // Lets convert the userId to array
-      userId = typeof userId === 'string' ? [userId] : userId;
       await this.userService.softDeleteUsers(userId);
       // Refresh the list
       this.getUsers();

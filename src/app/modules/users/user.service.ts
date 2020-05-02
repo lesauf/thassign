@@ -352,7 +352,7 @@ export class UserService extends CommonService {
     try {
       const deleteProps = {
         deleted: true,
-        deletedAt: Date.now(),
+        deletedAt: new Date(),
         deletedBy: this.authService.getUser().id,
       };
 
