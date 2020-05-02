@@ -39,9 +39,9 @@ export class UserService extends CommonService {
     super('users', 'UserService', messageService, stitchService);
   }
 
-  generateUsers(number: number = 50) {
+  generateUsers(numberToGenerate: number = 50) {
     const userRequest = this.http.get<any>(
-      this.usersUrl + '/generate/' + number
+      this.usersUrl + '/generate/' + numberToGenerate
     );
 
     const usersList = userRequest.pipe(

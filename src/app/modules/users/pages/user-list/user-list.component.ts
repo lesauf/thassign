@@ -75,6 +75,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     });
 
     // Handle master checkbox
+
     this.usersCheckboxes.first.change.subscribe(() => {
       this.masterChecked = this.usersCheckboxes.first.checked;
       this.noUserChecked = !this.masterChecked;
@@ -111,17 +112,25 @@ export class UserListComponent implements OnInit, AfterViewInit {
         // Do not handle the first (master)
         if (index !== 0) {
           c.change.subscribe(() => {
-            // If all are checked check the master too
-            this.usersCheckboxes.first.checked = usersCheckboxes.every((_, i) =>
-              i !== 0 ? _.checked : true
-            );
-            // this.masterChecked = this.usersCheckboxes.first.checked;
-            // If all are unchecked, disable the delete button
-            this.noUserChecked = !usersCheckboxes.some((_, i) => _.checked);
+            this.handleCheckboxes();
           });
         }
       });
     });
+  }
+
+  /**
+   * Called on every toggle of checkboxes
+   * to toggle also the master checkbox and delete button
+   */
+  handleCheckboxes() {
+    // If all are checked check the master too
+    this.usersCheckboxes.first.checked = this.usersCheckboxes
+      .toArray()
+      .every((_, i) => (i !== 0 ? _.checked : true));
+    // this.masterChecked = this.usersCheckboxes.first.checked;
+    // If all are unchecked, disable the delete button
+    this.noUserChecked = !this.usersCheckboxes.some((_, i) => _.checked);
   }
 
   /**
