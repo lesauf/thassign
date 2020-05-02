@@ -12,12 +12,14 @@ import { ControlMessagesComponent } from './components/control-messages/control-
 import { MessagesComponent } from './components/messages/messages.component';
 import { TranslateDatePipe } from './pipes/translate-date.pipe';
 import { MonthPickerComponent } from './components/month-picker/month-picker.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
     ConfirmDialogComponent,
     ConfirmDirective,
     ControlMessagesComponent,
+    LoaderComponent,
     // ImportEpubComponent,
     MessagesComponent,
     TranslateDatePipe,
@@ -46,6 +48,7 @@ import { MonthPickerComponent } from './components/month-picker/month-picker.com
     ConfirmDirective,
     ControlMessagesComponent,
     ControlMessagesComponent,
+    LoaderComponent,
     MessagesComponent,
     TranslateDatePipe,
     MonthPickerComponent,

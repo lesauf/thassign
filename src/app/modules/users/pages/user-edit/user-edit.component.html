@@ -2,12 +2,9 @@
 
 <mat-divider></mat-divider>
 
-<div
-  fxLayout="column"
-  fxLayoutGap="10px"
-  fxLayoutAlign="space-around stretch"
-  *ngIf="userForm"
->
+<div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="space-around stretch">
+  <app-loader *ngIf="!userForm"> </app-loader>
+
   <form
     fxFlex="95"
     fxLayout="row wrap"

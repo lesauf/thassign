@@ -6,7 +6,9 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { AuthService } from '../auth/auth.service';
 import { CommonService } from '../../core/services/common.service';
+import { generateUsers } from 'src/app/core/mocks/users.mock';
 import { MessageService } from '../../core/services/message.service';
+import { PartService } from 'src/app/core/services/part.service';
 import { StitchService } from 'src/app/core/services/stitch.service';
 import { User } from 'src/app/core/models/user/user.model';
 // import { PartService } from 'src/app/core/services/part.service';
@@ -31,7 +33,7 @@ export class UserService extends CommonService {
   constructor(
     private http: HttpClient,
     messageService: MessageService,
-    // private partService: PartService,
+    private partService: PartService,
     private authService: AuthService,
     private translate: TranslateService,
     protected stitchService: StitchService
@@ -39,17 +41,21 @@ export class UserService extends CommonService {
     super('users', 'UserService', messageService, stitchService);
   }
 
-  generateUsers(numberToGenerate: number = 50) {
-    const userRequest = this.http.get<any>(
-      this.usersUrl + '/generate/' + numberToGenerate
+  async generateUsers(numberToGenerate: number = 50) {
+    const parts = await this.partService.getParts();
+    const generatedUsers = generateUsers(
+      parts,
+      this.authService.getUser().id,
+      numberToGenerate
     );
 
-    const usersList = userRequest.pipe(
-      tap((_) => this.log('generated users')),
-      catchError(this.handleError('generateUsers', []))
-    );
+    try {
+      await this.callFunction('Users_insertMany', [generatedUsers]);
 
-    return usersList;
+      this.log('generated users');
+    } catch (error) {
+      this.handleError('generateUsers', []);
+    }
   }
 
   /**
@@ -84,7 +90,8 @@ export class UserService extends CommonService {
 
       return result;
     } catch (error) {
-      this.handleError('getUsers', []);
+      throw error;
+      return this.handleError('getUsers', error);
     }
   }
 
@@ -263,7 +270,7 @@ export class UserService extends CommonService {
         this.log(`fetched user id=${id}`);
 
         return await this.stitchService.callFunction('Users_getById', [
-          id,
+          { $oid: id }, // Convert the string id to a MongoDb ObjectId
           populate,
         ]);
       } else {

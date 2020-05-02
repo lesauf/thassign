@@ -79,7 +79,10 @@
   [pageSize]="pageSize"
   [pageIndex]="pageIndex"
   [pageSizeOptions]="pageSizeOptions"
-></mat-paginator>
+>
+</mat-paginator>
+
+<app-loader *ngIf="!users"> </app-loader>
 
 <mat-accordion multi="false">
   <mat-expansion-panel
@@ -193,12 +196,18 @@
 
           {{ 'delete' | translate | titlecase }}
         </button>
-        <button mat-button [routerLink]="['/users/detail', user._id]">
+        <button
+          mat-button
+          [routerLink]="['/users/detail', user._id.toHexString()]"
+        >
           <!-- <mat-icon inline="true">edit</mat-icon> -->
 
           {{ 'view' | translate | titlecase }}
         </button>
-        <button mat-button [routerLink]="['/users/edit', user._id]">
+        <button
+          mat-button
+          [routerLink]="['/users/edit', user._id.toHexString()]"
+        >
           <!-- <mat-icon inline="true">edit</mat-icon> -->
 
           {{ 'edit' | translate | titlecase }}

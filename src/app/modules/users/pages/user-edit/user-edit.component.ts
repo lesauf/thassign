@@ -15,7 +15,6 @@ import {
   FormArray,
 } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs';
 import { switchMap, defaultIfEmpty } from 'rxjs/operators';
 
 import { ControlMessagesComponent } from '../../../../shared/components/control-messages/control-messages.component';
@@ -92,6 +91,7 @@ export class UserEditComponent implements OnInit {
         switchMap(async (params: ParamMap) => {
           // if id param sent, pass it else pass a null param
           const id = params.get('id') ? params.get('id') : null;
+
           return await this.userService.getUser(id);
         }),
         defaultIfEmpty(undefined)

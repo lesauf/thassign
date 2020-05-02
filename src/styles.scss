@@ -52,3 +52,13 @@ button.mat-fab-bottom-right {
 .bg-color-white {
   background-color: white;
 }
+
+/* Center the loading gif*/
+
+#loading-gif {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}

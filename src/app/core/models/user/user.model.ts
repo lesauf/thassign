@@ -160,4 +160,16 @@ export class User {
 
     return generatedType;
   }
+
+  get progress() {
+    let progress = '';
+    if (!this.baptized) {
+      progress = 'not-publisher'; // default value
+      if (this.publisher) {
+        progress = 'unbaptized-publisher';
+      }
+    }
+
+    return progress;
+  }
 }

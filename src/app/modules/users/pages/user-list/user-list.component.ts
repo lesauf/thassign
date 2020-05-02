@@ -82,42 +82,43 @@ export class UserListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  generateUsers() {
-    const usersRequest = this.userService.generateUsers(10);
+  async generateUsers() {
+    await this.userService.generateUsers(10);
 
-    usersRequest.subscribe((res) => {
-      // Refresh the grid
-      this.getUsers();
-    });
+    // usersRequest.subscribe((res) => {
+    // Refresh the grid
+    this.getUsers();
+    // });
   }
 
   /**
    * Fetch users from db and
    * display them in the paginated grid
    */
-  getUsers(paginator?: MatPaginator) {
-    const usersRequest = this.userService.getUsers(
+  async getUsers(paginator?: MatPaginator) {
+    const res = await this.userService.getUsers(
       this.sort,
       this.sortOrder,
       paginator !== undefined ? paginator.pageSize : this.pageSize,
       paginator !== undefined ? paginator.pageIndex : this.pageIndex,
       this.filters
     );
-    usersRequest.then((res) => {
-      this.users = res.docs;
-      this.usersTotal = res.totalDocs;
+    // usersRequest.then((res) => {
+    console.log('Result', res);
+    this.users = res.docs;
+    this.usersTotal = res.totalDocs;
 
-      // Handle users checkboxes
-      // this.handleCheckboxes();
-      this.usersCheckboxes.forEach((c, index, usersCheckboxes) => {
-        // Do not handle the first (master)
-        if (index !== 0) {
-          c.change.subscribe(() => {
-            this.handleCheckboxes();
-          });
-        }
-      });
+    // Handle users checkboxes
+    // this.handleCheckboxes();
+    this.usersCheckboxes.forEach((c, index, usersCheckboxes) => {
+      // Do not handle the first (master)
+      if (index !== 0) {
+        c.change.subscribe(() => {
+          this.handleCheckboxes();
+        });
+      }
     });
+    // });
   }
 
   /**
