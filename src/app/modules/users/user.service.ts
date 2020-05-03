@@ -293,13 +293,22 @@ export class UserService extends CommonService {
   }
 
   /* GET users whose name contains search term */
-  searchUsers(term: string): Observable<any[]> {
-    term = term ? encodeURIComponent(term.trim()) : null;
+  async searchUsers(term: string): Promise<User[]> {
+    // term = term ? encodeURIComponent(term.trim()) : null;
 
-    return this.http.get<any[]>(this.usersUrl + `/search/${term}`).pipe(
-      tap((_) => this.log(`found users matching "${term}"`)),
-      catchError(this.handleError<any[]>('searchUsers', []))
-    );
+    try {
+      const result = await this.stitchService.callFunction('Users_search', [
+        term,
+      ]);
+
+      const users = User.fromJson(result) as User[];
+
+      this.log(`found users matching "${term}"`);
+
+      return users;
+    } catch (error) {
+      this.handleError<any>('searchUsers', []);
+    }
   }
 
   //////// Save methods //////////
@@ -307,30 +316,24 @@ export class UserService extends CommonService {
   /**
    * @POST add a new user to the server
    */
-  addUser(user: any): Observable<any> {
-    return this.http.post<any>(this.usersUrl, user, httpOptions).pipe(
-      tap((result: any) => {
-        const addedUser = result.insertedData;
+  async addUser(user: User): Promise<any> {
+    try {
+      const result = await this.stitchService.callFunction('Users_insertMany', [
+        [user],
+      ]);
+      user._id = result.insertedIds[0];
+      // const insertedUser = User.fromJson(result.insertedIds[0]) as User;
 
-        this.log(`added user w/ name=${addedUser.fullName}`);
-      }),
-      catchError(this.handleError<any>('addUser'))
-    );
+      this.log(`added user w/ name=${user.fullName}`);
+    } catch (error) {
+      this.handleError<any>('addUser');
+    }
   }
 
-  /** PUT: update the user on the server */
+  /**
+   * @PUT: update the user on the server
+   */
   async updateUser(user: User): Promise<any> {
-    // const url = `${this.usersUrl}/${user._id}`;
-
-    // return this.http.put(url, user, httpOptions).pipe(
-    //   tap((result: any) => {
-    //     const updatedUser = result.updatedData;
-
-    //     this.log(`updated user w/ name=${updatedUser.fullName}`);
-    //   }),
-    //   catchError(this.handleError<any>('updateUser'))
-    // );
-
     try {
       const result = await this.stitchService.callFunction('Users_update', [
         user,
@@ -346,7 +349,7 @@ export class UserService extends CommonService {
   /** DELETE: delete the user from the server */
   async deleteUser(userId: string[]): Promise<any> {
     try {
-      await this.stitchService.callFunction('Users_updateByIds', [userId]);
+      await this.stitchService.callFunction('Users_deleteByIds', [userId]);
 
       this.log(`deleted user`);
     } catch (error) {
@@ -378,39 +381,8 @@ export class UserService extends CommonService {
    * Insert user if not existent, update it otherwise
    * @param user any model object
    */
-  upsertUser(user: any) {
+  upsertUser(user: User) {
     // : Observable<any> {
-    // Generate some fields (type and progress)
-    switch (user.genre) {
-      case 'man':
-        if (user.child) {
-          user.type = 'boy';
-        } else if (user.overseer === 'elder') {
-          user.type = 'elder';
-        } else if (user.overseer === 'ministerial-servant') {
-          user.type = 'ministerial-servant';
-        } else {
-          user.type = 'man';
-        }
-        break;
-      default:
-        user.type = user.child ? 'girl' : 'woman';
-        break;
-    }
-
-    if (!user.publisher) {
-      user.progress = 'not-publisher';
-    } else {
-      if (!user.baptized) {
-        user.progress = 'unbaptized-publisher';
-      }
-    }
-
-    // unbaptized, child and woman can not be overseer
-    if (!user.baptized || user.child || user.genre === 'woman') {
-      user.overseer = null;
-    }
-
     if (user._id !== null) {
       // user update
       return this.updateUser(user);

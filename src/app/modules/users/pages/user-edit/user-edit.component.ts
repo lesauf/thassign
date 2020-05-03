@@ -118,6 +118,7 @@ export class UserEditComponent implements OnInit {
         _id: new FormControl(this.user._id),
         firstName: new FormControl(this.user.firstName),
         lastName: new FormControl(this.user.lastName),
+        congregation: new FormControl(this.user.congregation),
         baptized: new FormControl(this.user.baptized),
         publisher: new FormControl(this.user.publisher),
         genre: new FormControl(this.user.genre),
@@ -128,6 +129,7 @@ export class UserEditComponent implements OnInit {
         disabled: new FormControl(this.user.disabled),
         // familyMembers: new FormControl(this.user.familyMembers),
         parts: new FormControl(this.user.parts),
+        ownerId: new FormControl(this.user.ownerId),
         // assignments: new FormControl(this.user.assignments)
       },
       ValidationService.classValidator(new User())
@@ -146,6 +148,10 @@ export class UserEditComponent implements OnInit {
   async showAlert() {
     const errorMessages = this.userForm.errors;
 
+    this.translate.get('form-error').subscribe((message) => {
+      this.messageService.presentToast(message);
+    });
+    // alert(errorMessages);
     // Show alert with error
     // const alert = await this.alertCtrl.create({
     //   header: 'form-error',

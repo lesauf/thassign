@@ -15,7 +15,7 @@ import { ValidationService } from '../../../../core/services/validation.service'
  * User form generation
  */
 @Injectable()
-export class UserEditProvider implements OnInit {
+export class UserEditProvider {
   private manFieldsDisable: BehaviorSubject<boolean> = new BehaviorSubject(
     false
   );
@@ -28,8 +28,6 @@ export class UserEditProvider implements OnInit {
     private formBuilder: FormBuilder,
     private partService: PartService
   ) {}
-
-  ngOnInit() {}
 
   initForm(user: any) {
     // If it is a woman, child, not publisher or unbaptized :

@@ -29,6 +29,7 @@ export const generateOneUser = (parts: Part[], ownerId) => {
     lastName: faker.name.lastName(),
     genre: genre,
     email: !child ? faker.internet.email() : null,
+    congregation: 'EbwaEnglish',
     baptized: baptized,
     publisher: publisher,
     child: child,

@@ -6,6 +6,7 @@ import {
   IsString,
   IsIn,
   IsInt,
+  IsObject,
   IsOptional,
   IsUUID,
   IsDefined,
@@ -13,18 +14,20 @@ import {
 } from 'class-validator';
 
 export class User {
-  @IsUUID()
+  @IsObject()
   @IsOptional()
   // Joi.string().alphanum()
   // tslint:disable-next-line: variable-name
   _id: string;
 
   // @(jf.string().required())
-  @IsString({ message: 'error.firstName.any.empty' })
+  @IsString()
+  @MinLength(1, { message: 'error.firstName.any.empty' })
   firstName: string;
 
   // @(jf.string().required())
-  @IsString({ message: 'error.lastName.any.empty' })
+  @IsString()
+  @MinLength(1, { message: 'error.lastName.any.empty' })
   lastName: string;
 
   /**
@@ -38,7 +41,8 @@ export class User {
    * Congregation Id
    */
   // Joi.string()
-  @IsUUID()
+  @IsString()
+  @IsOptional()
   congregation: string;
 
   // Joi.string().optional().allow('man', 'woman')
@@ -56,17 +60,17 @@ export class User {
   // Joi.boolean().optional().default(true),
   @IsBoolean()
   @IsOptional()
-  baptized: boolean = true;
+  baptized = true;
 
   // Joi.boolean().optional().default(true),
   @IsBoolean()
   @IsOptional()
-  publisher: boolean = true;
+  publisher = true;
 
   // Joi.boolean().optional().default(false),
   @IsBoolean()
   @IsOptional()
-  child: boolean = false;
+  child = false;
 
   // Joi.string().optional().allow(null, ''),
   @IsString()
@@ -81,7 +85,7 @@ export class User {
   // Joi.boolean().optional().default(false), // Cannot receive assignments
   @IsBoolean()
   @IsOptional()
-  disabled: boolean = false;
+  disabled = false;
 
   // Joi.string().optional(),
   @IsString()
@@ -92,29 +96,37 @@ export class User {
    * Array of Part _ids
    */
   // Joi.array().allow(null),
-  @IsArray({ each: true })
+  @IsArray()
   parts: string[];
 
   // Joi.boolean().optional().default(false), // Can modify programs
   @IsBoolean()
   @IsOptional()
-  activated: boolean = false;
+  activated = false;
 
   // Joi.date().default(Date.now()),
   @IsInt()
+  @IsOptional()
   createdAt: number = Date.now();
 
   // Joi.date(),
   @IsInt()
+  @IsOptional()
   updatedAt: number;
 
   // deleted: Joi.boolean().default(false),
   @IsBoolean()
-  deleted: boolean = false;
+  deleted = false;
 
   // Joi.date(),
   @IsInt()
+  @IsOptional()
   deletedAt: number;
+
+  // Joi.string(),
+  @IsInt()
+  @IsOptional()
+  deletedBy: string;
 
   constructor(userProperties?: object) {
     if (userProperties) {

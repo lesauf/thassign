@@ -37,6 +37,7 @@ export class Congregation {
 
   // Joi.date(),
   @IsInt()
+  @IsOptional()
   updatedAt: number;
 
   // deleted: Joi.boolean().default(false),
@@ -45,5 +46,30 @@ export class Congregation {
 
   // Joi.date(),
   @IsInt()
+  @IsOptional()
   deletedAt: number;
+
+  // Joi.string(),
+  @IsInt()
+  @IsOptional()
+  deletedBy: string;
+
+  constructor(props?: object) {
+    if (props) {
+      Object.assign(this, props);
+    }
+  }
+
+  /**
+   * Create instances from JSON or array of JSON objects
+   *
+   * @param properties JSON object with properties
+   */
+  public static fromJson(props?: object) {
+    if (props instanceof Array) {
+      return props.map((obj) => new Congregation(obj));
+    } else {
+      return new Congregation(props);
+    }
+  }
 }

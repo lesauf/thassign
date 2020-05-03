@@ -97,7 +97,9 @@ export class UserListComponent implements OnInit, AfterViewInit {
    * display them in the paginated grid
    */
   async getUsers(paginator?: MatPaginator) {
+    // Clear users list to display the loader
     this.users = null;
+
     const res = await this.userService.getUsers(
       this.sort,
       this.sortOrder,
