@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatPaginator } from '@angular/material/paginator';
+import { tap } from 'rxjs/operators';
 
 // import { any } from '../../../../../../server/src/modules/users/user.schema';
 // import { User } from 'src/app/models/users.schema';
@@ -20,7 +21,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
 import { UserEditComponent } from '../user-edit/user-edit.component';
 import { UserFilterComponent } from '../../components/user-filter/user-filter.component';
 import { UserSortComponent } from '../../components/user-sort/user-sort.component';
-import { tap } from 'rxjs/operators';
+import { User } from 'src/app/core/models/user/user.model';
 
 @Component({
   selector: 'app-user-list',
@@ -28,7 +29,7 @@ import { tap } from 'rxjs/operators';
   // styleUrls: ['user-list.component.scss']
 })
 export class UserListComponent implements OnInit, AfterViewInit {
-  users: any[];
+  users: User[];
   /**
    * State of the master checkbox
    */
@@ -96,6 +97,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
    * display them in the paginated grid
    */
   async getUsers(paginator?: MatPaginator) {
+    this.users = null;
     const res = await this.userService.getUsers(
       this.sort,
       this.sortOrder,
@@ -103,8 +105,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
       paginator !== undefined ? paginator.pageIndex : this.pageIndex,
       this.filters
     );
-    // usersRequest.then((res) => {
-    console.log('Result', res);
+
     this.users = res.docs;
     this.usersTotal = res.totalDocs;
 
@@ -118,7 +119,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
         });
       }
     });
-    // });
   }
 
   /**
