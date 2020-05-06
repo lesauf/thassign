@@ -66,7 +66,7 @@ export class ValidationService {
         errors.forEach((errorObj) => {
           const field = errorObj.property;
           // const type = errorObj.property;
-          console.log(errorObj);
+          // console.log(errorObj);
           fieldsWithError[field] = Object.values(errorObj.constraints);
         });
 

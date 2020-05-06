@@ -1,15 +1,21 @@
-import { IsBoolean, IsString, IsIn, IsOptional, IsUUID } from 'class-validator';
+import {
+  IsBoolean,
+  IsString,
+  IsIn,
+  IsOptional,
+  IsUUID,
+  IsObject,
+} from 'class-validator';
 
 /**
  * Minimum data for a standard part
  */
 export class Part {
-  
   facultative: string;
-  
-  @IsUUID()
+
+  @IsObject()
   @IsOptional()
-  _id: string;
+  _id: { id: object; toHexString() };
 
   // @(jf.string().required())
   @IsString()

@@ -40,6 +40,7 @@ export abstract class CommonService {
   /**
    * Handle Http operation that failed.
    * Let the app continue.
+   * @Todo Fix this
    * @param operation - name of the operation that failed
    * @param result - optional value to return as the observable result
    */
@@ -48,20 +49,24 @@ export abstract class CommonService {
     result?: T,
     service?: string
   ) {
-    return (error: any): Observable<T> => {
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
+    // For now, just throw the error.
+    if (result) {
+      throw result;
+    }
+    // return (error: any): Observable<T> => {
+    //   // TODO: send the error to remote logging infrastructure
+    //   console.error(error); // log to console instead
 
-      const errorMsg =
-        error.error && error.error.message
-          ? error.error.message
-          : error.statusText;
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${errorMsg}`);
+    //   const errorMsg =
+    //     error.error && error.error.message
+    //       ? error.error.message
+    //       : error.statusText;
+    //   // TODO: better job of transforming error for user consumption
+    //   this.log(`${operation} failed: ${errorMsg}`);
 
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+    //   // Let the app keep running by returning an empty result.
+    //   // return of(result as T);
+    // };
   }
 
   /** Log a UserService message with the MessageService */

@@ -54,7 +54,7 @@ export class UserService extends CommonService {
 
       this.log('generated users');
     } catch (error) {
-      this.handleError('generateUsers', []);
+      this.handleError('generateUsers', error);
     }
   }
 
@@ -90,7 +90,6 @@ export class UserService extends CommonService {
 
       return result;
     } catch (error) {
-      throw error;
       return this.handleError('getUsers', error);
     }
   }
@@ -103,8 +102,8 @@ export class UserService extends CommonService {
       tap((h) => {
         const outcome = h ? `fetched` : `did not find`;
         this.log(`${outcome} user id=${id}`);
-      }),
-      catchError(this.handleError<any>(`getUser id=${id}`))
+      })
+      // catchError(this.handleError<any>(`getUser id=${id}`))
     );
   }
 
@@ -127,8 +126,8 @@ export class UserService extends CommonService {
       tap((h) => {
         const outcome = h ? `fetched` : `did not find`;
         this.log(`${outcome} users assigned to part ${part.name}`);
-      }),
-      catchError(this.handleError('getUsersByPart', []))
+      })
+      // catchError(this.handleError('getUsersByPart', []))
     );
   }
 
@@ -176,8 +175,8 @@ export class UserService extends CommonService {
       tap((h) => {
         const outcome = h ? `fetched` : `did not find`;
         this.log(`${outcome} users assigned to weekend parts`);
-      }),
-      catchError(this.handleError('getWeekendAssignableList', []))
+      })
+      // catchError(this.handleError('getWeekendAssignableList', []))
     );
   }
 
@@ -205,8 +204,8 @@ export class UserService extends CommonService {
         tap((h) => {
           const outcome = h ? `fetched` : `did not find`;
           this.log(`${outcome} users assigned to midweek students parts`);
-        }),
-        catchError(this.handleError('getMidweekStudentsAssignableList', []))
+        })
+        // catchError(this.handleError('getMidweekStudentsAssignableList', []))
       );
   }
 
@@ -288,7 +287,7 @@ export class UserService extends CommonService {
         });
       }
     } catch (error) {
-      catchError(this.handleError<any>(`getUser id=${id}`));
+      this.handleError<any>(`getUser id=${id}`, error);
     }
   }
 
@@ -326,7 +325,7 @@ export class UserService extends CommonService {
 
       this.log(`added user w/ name=${user.fullName}`);
     } catch (error) {
-      this.handleError<any>('addUser');
+      this.handleError<any>('addUser', error);
     }
   }
 
@@ -335,14 +334,15 @@ export class UserService extends CommonService {
    */
   async updateUser(user: User): Promise<any> {
     try {
-      const result = await this.stitchService.callFunction('Users_update', [
-        user,
-      ]);
+      const result = await this.stitchService.callFunction(
+        'Users_updateByIds',
+        [[user._id], user]
+      );
       const updatedUser = User.fromJson(result.updatedData) as User;
 
       this.log(`updated user w/ name=${updatedUser.fullName}`);
     } catch (error) {
-      catchError(this.handleError<any>('updateUser'));
+      this.handleError<any>('updateUser', error);
     }
   }
 
@@ -353,7 +353,7 @@ export class UserService extends CommonService {
 
       this.log(`deleted user`);
     } catch (error) {
-      catchError(this.handleError<any>('deleteUser'));
+      this.handleError<any>('deleteUser', error);
     }
   }
 
@@ -373,7 +373,7 @@ export class UserService extends CommonService {
 
       this.log(`deleted user`);
     } catch (error) {
-      catchError(this.handleError<any>('deleteUser'));
+      this.handleError<any>('deleteUser', error);
     }
   }
 
@@ -383,6 +383,7 @@ export class UserService extends CommonService {
    */
   upsertUser(user: User) {
     // : Observable<any> {
+
     if (user._id !== null) {
       // user update
       return this.updateUser(user);

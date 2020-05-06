@@ -128,10 +128,12 @@ export class User {
   @IsOptional()
   deletedBy: string;
 
+  /**
+   * @todo Sanitize/clean the object passed (apply some rules,
+   * like women can not give public talks ...)
+   */
   constructor(userProperties?: object) {
     if (userProperties) {
-      // User.fromJson(userProperties);
-
       Object.assign(this, userProperties);
     }
   }
