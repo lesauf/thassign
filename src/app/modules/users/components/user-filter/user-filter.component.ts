@@ -15,7 +15,7 @@ import {
 // import { User } from '../../../models/users.schema';
 import { UserService } from '../../user.service';
 import { User } from 'src/app/core/models/user/user.model';
-import { UserDetailComponent } from '../../pages/user-detail/user-detail.component';
+import { UserDetailComponent } from '../user-detail/user-detail.component';
 
 @Component({
   selector: 'app-user-filter',

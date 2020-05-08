@@ -367,7 +367,7 @@ export class UserService extends CommonService {
       );
       const updatedUser = User.fromJson(result.updatedData) as User;
 
-      this.log(`updated user w/ name=${updatedUser.fullName}`);
+      this.log(`updated user`);
     } catch (error) {
       this.handleError<any>('updateUser', error);
     }

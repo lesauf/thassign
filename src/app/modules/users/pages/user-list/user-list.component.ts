@@ -15,11 +15,8 @@ import { tap } from 'rxjs/operators';
 
 // import { any } from '../../../../../../server/src/modules/users/user.schema';
 // import { User } from 'src/app/models/users.schema';
-import { UserDetailComponent } from '../user-detail/user-detail.component';
+import { UserDetailComponent } from '../../components/user-detail/user-detail.component';
 import { UserService } from '../../user.service';
-import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
-import { UserEditComponent } from '../user-edit/user-edit.component';
-import { UserFilterComponent } from '../../components/user-filter/user-filter.component';
 import { UserSortComponent } from '../../components/user-sort/user-sort.component';
 import { User } from 'src/app/core/models/user/user.model';
 import { PartService } from 'src/app/core/services/part.service';
