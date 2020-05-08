@@ -30,6 +30,12 @@ const httpOptions = {
 export class UserService extends CommonService {
   private usersUrl = 'api/user'; // URL to web api
 
+  /**
+   * Current user to edit or view
+   * Used to pass it as a parameter and avoid query again from the DB
+   */
+  private currentUser: User;
+
   constructor(
     private http: HttpClient,
     messageService: MessageService,
@@ -39,6 +45,23 @@ export class UserService extends CommonService {
     protected stitchService: StitchService
   ) {
     super('users', 'UserService', messageService, stitchService);
+  }
+
+  /**
+   * Return the saved user and clear the state
+   */
+  get state(): User {
+    const s = this.currentUser;
+    this.currentUser = null;
+
+    return s;
+  }
+
+  /**
+   * Set the saved user
+   */
+  set state(user: User) {
+    this.currentUser = user;
   }
 
   async generateUsers(numberToGenerate: number = 50) {
@@ -262,7 +285,10 @@ export class UserService extends CommonService {
    *
    * @param id: string
    */
-  async getUser(id: number | string, populate: boolean = false): Promise<any> {
+  async getUser(
+    id: number | string = null,
+    populate: boolean = false
+  ): Promise<any> {
     try {
       if (id) {
         // Fetch user from db
@@ -283,6 +309,7 @@ export class UserService extends CommonService {
           baptized: false,
           publisher: false,
           disabled: false,
+          deleted: false,
           parts: [],
         });
       }

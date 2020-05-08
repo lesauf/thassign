@@ -15,9 +15,14 @@ import { UsersRoutingModule } from './users-routing.module';
     UserEditComponent,
     UserDetailComponent,
     UserFilterComponent,
-    UserSortComponent
+    UserSortComponent,
   ],
   imports: [SharedModule, UsersRoutingModule, TranslateModule],
-  entryComponents: [UserEditComponent, UserFilterComponent, UserSortComponent]
+  entryComponents: [
+    UserEditComponent,
+    UserDetailComponent,
+    UserFilterComponent,
+    UserSortComponent,
+  ],
 })
 export class UsersModule {}

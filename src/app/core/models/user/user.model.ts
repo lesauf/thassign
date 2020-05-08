@@ -21,12 +21,10 @@ export class User {
   _id: string;
 
   // @(jf.string().required())
-  @IsString()
   @MinLength(1, { message: 'error.firstName.any.empty' })
   firstName: string;
 
   // @(jf.string().required())
-  @IsString()
   @MinLength(1, { message: 'error.lastName.any.empty' })
   lastName: string;
 

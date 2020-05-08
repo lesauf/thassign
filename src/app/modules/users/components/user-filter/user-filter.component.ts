@@ -1,22 +1,26 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   map,
   tap,
-  switchMap
+  switchMap,
 } from 'rxjs/operators';
 
 // import { UserType } from '../../../../../../server/src/modules/users/user.schema';
 // import { User } from '../../../models/users.schema';
 import { UserService } from '../../user.service';
+import { User } from 'src/app/core/models/user/user.model';
+import { UserDetailComponent } from '../../pages/user-detail/user-detail.component';
 
 @Component({
   selector: 'app-user-filter',
   templateUrl: './user-filter.component.html',
-  styleUrls: ['./user-filter.component.scss']
+  styleUrls: ['./user-filter.component.scss'],
 })
 export class UserFilterComponent implements OnInit {
   @Output()
@@ -28,11 +32,15 @@ export class UserFilterComponent implements OnInit {
   /**
    * Set the expanded status of the search panel
    */
-  displayMore: boolean = false;
+  displayMore = false;
   inputControl = new FormControl();
   private searchTerms = new Subject<string>();
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
   // Push a search term into the observable stream.
   search(term: string): void {
@@ -51,7 +59,7 @@ export class UserFilterComponent implements OnInit {
       // ignore new term if same as previous term
       distinctUntilChanged(),
 
-      tap(term => {
+      tap((term) => {
         this.searchText = term;
       }),
 
@@ -66,5 +74,16 @@ export class UserFilterComponent implements OnInit {
 
   searchUsers() {
     this.performedSearch.emit(this.searchText);
+  }
+
+  /**
+   * open a dialog with details of a user
+   */
+  openView(user: User) {
+    this.dialog.open(UserDetailComponent, {
+      data: {
+        user: user,
+      },
+    });
   }
 }

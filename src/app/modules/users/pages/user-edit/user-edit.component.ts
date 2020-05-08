@@ -78,40 +78,45 @@ export class UserEditComponent implements OnInit {
    * @see https://ultimatecourses.com/blog/angular-ngif-async-pipe
    */
   ngOnInit() {
-    this.getUser();
+    // this.getUser();
+    this.user = this.userService.state;
 
+    if (!this.user) {
+      this.router.navigate(['users']);
+      // Switch to addUser form
+      // this.user = await this.userService.getUser();
+    }
+
+    this.getUserForm();
     this.allParts$ = this.partService.getParts();
 
     this.allPartsGrouped$ = this.partService.getPartsGroupedByMeeting();
     this.controlMessagesComponent = new ControlMessagesComponent();
   }
 
-  getUser() {
-    this.route.paramMap
-      .pipe(
-        switchMap(async (params: ParamMap) => {
-          // if id param sent, pass it else pass a null param
-          const id = params.get('id') ? params.get('id') : null;
+  // getUser() {
+  //   this.route.paramMap
+  //     .pipe(
+  //       switchMap(async (params: ParamMap) => {
+  //         // if id param sent, pass it else pass a null param
+  //         const id = params.get('id') ? params.get('id') : null;
 
-          return await this.userService.getUser(id);
-        }),
-        defaultIfEmpty(undefined)
-      )
-      .subscribe((user) => {
-        if (user === undefined) {
-          // user not found. Redirect to users
+  // return await this.userService.getUser(id);
+  //       }),
+  //       defaultIfEmpty(undefined)
+  //     )
+  //     .subscribe((user) => {
+  //       if (user === undefined) {
+  //         // user not found. Redirect to users
 
-          this.router.navigate(['users']);
-          this.translate.get('user-not-found').subscribe((message) => {
-            this.messageService.presentToast(message);
-          });
-        } else {
-          this.user = user;
-          // console.log('User:', this.user);
-          this.getUserForm();
-        }
-      });
-  }
+  //         this.router.navigate(['users']);
+  //         this.messageService.presentToast('user-not-found');
+  //       } else {
+  //         this.user = user;
+  //         // console.log('User:', this.user);
+  //       }
+  //     });
+  // }
 
   getUserForm(): void {
     this.userForm = new FormGroup(
@@ -135,6 +140,9 @@ export class UserEditComponent implements OnInit {
       },
       ValidationService.classValidator(new User())
     );
+
+    console.log('User Parts: ', this.user.parts);
+
     this.toggleManFields();
 
     this.userEditProvider
@@ -286,22 +294,12 @@ export class UserEditComponent implements OnInit {
         // partValue.find((selectedPart) => selectedPart.name === part.name) !==
         // undefined
         partValue.find((selectedPartId) => {
-          // console.log(selectedPartId.toHexString() === part._id.toHexString());
           return selectedPartId.toHexString() === part._id.toHexString();
         }) !== undefined
       );
     }
 
     return false;
-  }
-
-  /**
-   * Used to set the value of Select list
-   */
-  comparePartFn(c1: any, c2: any): boolean {
-    // TODO Remove when Part come from Mongo
-    return c1 && c2 ? c1.name === c2.name : c1 === c2;
-    // return c1 && c2 ? c1._id === c2._id : c1 === c2;
   }
 
   log(error) {

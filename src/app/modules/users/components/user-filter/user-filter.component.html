@@ -1,33 +1,56 @@
 <div fxLayout="row wrap" fxLayoutAlign="center start">
-  <mat-expansion-panel fxFlex="90" #mepSearch="matExpansionPanel"
-    [expanded]="displayMore" [hideToggle]="false">
+  <mat-expansion-panel
+    fxFlex="90"
+    #mepSearch="matExpansionPanel"
+    [expanded]="displayMore"
+    [hideToggle]="false"
+  >
     <mat-expansion-panel-header>
       <div fxFlex fxLayout="row wrap" fxLayoutAlign="center stretch">
         <mat-form-field fxFlex="90" fxFlex.lt-md="80" fxFlex.lt-sm="70">
           <!-- Disabled autocomplete -->
           <!--  -->
-          <input #searchBar matInput
+          <input
+            #searchBar
+            matInput
             placeholder="{{ 'search-users' | translate }}"
-            (click)="$event.stopPropagation()" [matAutocomplete]="auto"
+            (click)="$event.stopPropagation()"
+            [matAutocomplete]="auto"
             (input)="search(searchBar.value)"
             (keydown.space)="$event.stopPropagation()"
-            (keydown.enter)="$event.stopPropagation(); searchUsers()" />
+            (keydown.enter)="$event.stopPropagation(); searchUsers()"
+          />
         </mat-form-field>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-          <mat-option *ngFor="let user of (users$ | async)" [value]="user"
-            fxLayout="row">
-            <button mat-flat-button fxFill fxLayout="row"
-              [routerLink]="['/users/detail', user._id]">
-              <div>{{ user.firstName }} {{ user.lastName }}</div>
+          <mat-option
+            *ngFor="let user of users$ | async"
+            [value]="user"
+            fxLayout="row"
+          >
+            <button
+              mat-flat-button
+              fxFill
+              fxLayout="row"
+              (click)="openView(user)"
+            >
+              <div>{{ user.fullName }}</div>
             </button>
           </mat-option>
         </mat-autocomplete>
 
         <!-- Search button -->
-        <div fxFlex="40px" fxFlexAlign="center" fxLayoutlign="start center"
-          fxLayout="row">
-          <button fxFlex fxFill mat-icon-button
-            (click)="$event.stopPropagation(); searchUsers()">
+        <div
+          fxFlex="40px"
+          fxFlexAlign="center"
+          fxLayoutlign="start center"
+          fxLayout="row"
+        >
+          <button
+            fxFlex
+            fxFill
+            mat-icon-button
+            (click)="$event.stopPropagation(); searchUsers()"
+          >
             <mat-icon matSuffix>search</mat-icon>
           </button>
         </div>

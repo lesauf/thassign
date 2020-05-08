@@ -1,6 +1,6 @@
-<div *ngIf="user">
-  <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+<h2 mat-dialog-title class="center">{{ user.fullName }}</h2>
 
+<div>
   <div
     fxLayout="row wrap"
     fxLayout.lt-sm="column"
@@ -31,17 +31,23 @@
       aria-orientation="vertical"
       [selectable]="false"
       disabled
-      *ngFor="let part of user.parts"
+      *ngFor="let partId of user.parts"
     >
-      {{ part.name | translate }}
+      {{ getPartName(partId) | translate }}
     </mat-chip>
   </mat-chip-list>
+</div>
 
-  <mat-action-row>
-    <button mat-button [routerLink]="['/users/edit', user._id]">
-      <mat-icon inline="true">edit</mat-icon>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close cdkFocusInitial>
+    <mat-icon inline="true">close</mat-icon>
 
-      {{ 'edit' | translate | titlecase }}
-    </button>
-  </mat-action-row>
+    {{ 'close' | translate | titlecase }}
+  </button>
+
+  <button mat-button mat-dialog-close (click)="openUserEdit()">
+    <mat-icon inline="true">edit</mat-icon>
+
+    {{ 'edit' | translate | titlecase }}
+  </button>
 </div>

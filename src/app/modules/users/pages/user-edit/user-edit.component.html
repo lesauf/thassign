@@ -107,23 +107,6 @@
             {{ 'ministerial-servant' | translate }}
           </mat-radio-button>
         </mat-radio-group>
-
-        <!-- Parts -->
-        <!-- <mat-form-field *ngIf="(allParts$ | async) as allParts" fxFill>
-          <mat-select
-            placeholder="{{ 'assignable-parts' | translate }}"
-            multiple
-            [compareWith]="comparePartFn"
-            formControlName="parts"
-          >
-            <mat-option
-              *ngFor="let part of allParts; let i = index"
-              [value]="part"
-            >
-              {{ part.name | translate }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field> -->
       </div>
 
       <!-- RIGHT COLUMN -->

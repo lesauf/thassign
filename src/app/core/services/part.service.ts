@@ -4,6 +4,7 @@ import { CommonService } from './common.service';
 import { MessageService } from './message.service';
 // import { any } from 'server/src/modules/parts/part.model';
 import { StitchService } from './stitch.service';
+import { Part } from '../models/part/part.model';
 
 /**
  * Get data about parts from storage
@@ -147,10 +148,18 @@ export class PartService extends CommonService {
     return partsNames;
   }
 
-  async getPartById(id: string) {
-    id = encodeURIComponent(id);
+  getPartName(partId): string {
+    const part = this.getPartById(partId);
 
-    return await this.collection.findOne({ _id: id });
+    return part.name;
+  }
+
+  getPartById(partId): Part {
+    const part = this.allParts.find(
+      (p) => p._id.toHexString() === partId.toHexString()
+    );
+
+    return part;
   }
 
   async getPartByName(partName: string) {

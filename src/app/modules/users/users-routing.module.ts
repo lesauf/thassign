@@ -8,27 +8,27 @@ import { UserEditComponent } from './pages/user-edit/user-edit.component';
 const usersRoutes: Routes = [
   {
     path: '',
-    component: UserListComponent
+    component: UserListComponent,
   },
-  {
-    path: 'detail/:id',
-    component: UserDetailComponent
-    // data: { animation: 'user' }
-  },
+  // {
+  //   path: 'detail',
+  //   component: UserDetailComponent,
+  //   // data: { animation: 'user' }
+  // },
   {
     path: 'add',
-    component: UserEditComponent
+    component: UserEditComponent,
     // data: { animation: 'user' }
   },
   {
-    path: 'edit/:id',
-    component: UserEditComponent
+    path: 'edit',
+    component: UserEditComponent,
     // data: { animation: 'user' }
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(usersRoutes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class UsersRoutingModule {}

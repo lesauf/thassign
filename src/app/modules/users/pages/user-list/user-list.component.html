@@ -170,14 +170,16 @@
           aria-orientation="vertical"
           [selectable]="false"
           disabled
-          *ngFor="let part of user.parts"
+          *ngFor="let partId of user.parts"
         >
-          {{ part?.name | translate }}
+          {{ getPartName(partId) | translate }}
         </mat-chip>
       </mat-chip-list>
 
       <mat-action-row>
         <button mat-button (click)="mep.expanded = false">
+          <mat-icon inline="true">close</mat-icon>
+
           {{ 'close' | translate | titlecase }}
         </button>
         <button
@@ -192,23 +194,19 @@
           }}"
           (confirmed)="delete([user._id])"
         >
-          <!-- <mat-icon inline="true">delete</mat-icon> -->
+          <mat-icon inline="true">delete</mat-icon>
 
           {{ 'delete' | translate | titlecase }}
         </button>
-        <button
-          mat-button
-          [routerLink]="['/users/detail', user._id.toHexString()]"
-        >
-          <!-- <mat-icon inline="true">edit</mat-icon> -->
+        <button mat-button (click)="openView($event, user)">
+          <mat-icon inline="true">edit</mat-icon>
 
           {{ 'view' | translate | titlecase }}
         </button>
-        <button
-          mat-button
-          [routerLink]="['/users/edit', user._id.toHexString()]"
-        >
-          <!-- <mat-icon inline="true">edit</mat-icon> -->
+        <button mat-button (click)="goto('/users/edit', user)">
+          <!-- [routerLink]="['/users/edit']"
+           [state]="{ user: user }" -->
+          <mat-icon inline="true">edit</mat-icon>
 
           {{ 'edit' | translate | titlecase }}
         </button>

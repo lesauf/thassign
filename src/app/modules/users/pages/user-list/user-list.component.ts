@@ -22,6 +22,7 @@ import { UserEditComponent } from '../user-edit/user-edit.component';
 import { UserFilterComponent } from '../../components/user-filter/user-filter.component';
 import { UserSortComponent } from '../../components/user-sort/user-sort.component';
 import { User } from 'src/app/core/models/user/user.model';
+import { PartService } from 'src/app/core/services/part.service';
 
 @Component({
   selector: 'app-user-list',
@@ -53,10 +54,12 @@ export class UserListComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private userService: UserService,
-    private _matDialog: MatDialog
+    private partService: PartService,
+    private dialog: MatDialog
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.partService.init();
     this.getUsers();
   }
 
@@ -156,8 +159,22 @@ export class UserListComponent implements OnInit, AfterViewInit {
     return item._id;
   }
 
-  viewUser(event, user: any): void {
-    this.router.navigateByUrl(`user/details/${user._id}`);
+  // goto(event, user: any): void {
+  //   this.router.navigateByUrl(`user/details/${user._id}`);
+  // }
+
+  goto(path: string, user?: User): void {
+    if (user) {
+      this.userService.state = user;
+    }
+
+    // console.log('State: ', this.userService.state);
+    // console.log('State2: ', this.userService.state);
+    this.router.navigate([path]);
+  }
+
+  getPartName(partId) {
+    return this.partService.getPartName(partId);
   }
 
   async delete(userId?: string[]) {
@@ -200,14 +217,21 @@ export class UserListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async openFilters() {
-    // Open search page in a modal
+  /**
+   * open a dialog with details of a user
+   */
+  openView(evt: Event, user: User) {
+    this.dialog.open(UserDetailComponent, {
+      data: {
+        user: user,
+      },
+    });
   }
 
   // Call the sort field dialog
   openSort(evt: Event): void {
     const target = new ElementRef(evt.currentTarget);
-    const dialogRef = this._matDialog.open(UserSortComponent, {
+    const dialogRef = this.dialog.open(UserSortComponent, {
       data: {
         trigger: target,
         sort: this.sort,
@@ -220,29 +244,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
-  /**
-   * Open sort field dialog
-   */
-  // async openSort(ev: any) {
-  //   const popover = await this.popoverCtrl.create({
-  //     component: UserSortComponent,
-  //     event: ev,
-  //     translucent: false,
-  //     componentProps: {
-  //       sort: this.sort,
-  //       sortOrder: this.sortOrder,
-  //       popoverCtrl: this.popoverCtrl
-  //     }
-  //   });
-
-  //   popover.onWillDismiss().then(result => {
-  //     if ((this.sort = result.data.sort)) {
-  //       this.getUsers();
-  //     }
-  //   });
-  //   await popover.present();
-  // }
 
   async toggleSortOrder() {
     this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
