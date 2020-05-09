@@ -75,7 +75,7 @@
 </div>
 
 <mat-paginator
-  [length]="users?.length"
+  [length]="dataLength"
   [pageSize]="pageSize"
   [pageIndex]="pageIndex"
   [pageSizeOptions]="pageSizeOptions"
@@ -201,7 +201,7 @@
               {{ 'delete' | translate | titlecase }}
             </button>
             <button mat-button (click)="openView($event, user)">
-              <mat-icon inline="true">edit</mat-icon>
+              <mat-icon inline="true">description</mat-icon>
 
               {{ 'view' | translate | titlecase }}
             </button>
@@ -220,7 +220,7 @@
 </div>
 
 <mat-paginator
-  [length]="users?.length"
+  [length]="dataLength"
   [pageSize]="pageSize"
   [pageIndex]="pageIndex"
   [pageSizeOptions]="pageSizeOptions"

@@ -112,27 +112,16 @@ export class PartService extends CommonService<Part> {
     // list of meeting names
     const meetings = [];
 
-    // this.stitchService
-    //   .callFunction('getPartsGroupedByMeeting')
-    //   .then((meetingsParts) => {
-    //     meetingsParts.forEach((meetingPart) => {
-    //       allPartsGrouped.push(meetingPart.parts);
-    //       meetings.push(meetingPart._id);
-    //     });
+    const parts = this.dataStore.getValue();
 
-    //     console.log('fetched parts grouped by meeting');
-    //   });
-
-    this.allParts.forEach((part) => {
+    parts.forEach((part) => {
       // if the meeting name is already saved, we skip
       if (
         !meetings.find((meeting) => {
           return meeting === part.meeting;
         })
       ) {
-        allPartsGrouped.push(
-          this.allParts.filter((p) => p.meeting === part.meeting)
-        );
+        allPartsGrouped.push(parts.filter((p) => p.meeting === part.meeting));
 
         meetings.push(part.meeting);
       }

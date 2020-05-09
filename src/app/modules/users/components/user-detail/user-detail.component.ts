@@ -68,7 +68,7 @@ export class UserDetailComponent implements OnInit {
   }
 
   openUserEdit(): void {
-    this.userService.state = this.user;
+    this.userService.currentUser = this.user;
 
     this.router.navigate(['/users/edit']);
   }

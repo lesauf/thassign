@@ -9,19 +9,18 @@
       <div fxFlex fxLayout="row wrap" fxLayoutAlign="center stretch">
         <mat-form-field fxFlex="90" fxFlex.lt-md="80" fxFlex.lt-sm="70">
           <!-- Disabled autocomplete -->
-          <!--  -->
+          <!-- [matAutocomplete]="auto" -->
           <input
             #searchBar
             matInput
             placeholder="{{ 'search-users' | translate }}"
             (click)="$event.stopPropagation()"
-            [matAutocomplete]="auto"
             (input)="search(searchBar.value)"
             (keydown.space)="$event.stopPropagation()"
             (keydown.enter)="$event.stopPropagation(); searchUsers()"
           />
         </mat-form-field>
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <!-- <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
           <mat-option
             *ngFor="let user of users$ | async"
             [value]="user"
@@ -36,7 +35,7 @@
               <div>{{ user.fullName }}</div>
             </button>
           </mat-option>
-        </mat-autocomplete>
+        </mat-autocomplete> -->
 
         <!-- Search button -->
         <div

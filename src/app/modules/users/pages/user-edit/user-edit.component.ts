@@ -79,7 +79,7 @@ export class UserEditComponent implements OnInit {
    */
   ngOnInit() {
     // this.getUser();
-    this.user = this.userService.state;
+    this.user = this.userService.currentUser;
 
     if (!this.user) {
       this.router.navigate(['users']);
@@ -93,30 +93,6 @@ export class UserEditComponent implements OnInit {
     this.allPartsGrouped$ = this.partService.getPartsGroupedByMeeting();
     this.controlMessagesComponent = new ControlMessagesComponent();
   }
-
-  // getUser() {
-  //   this.route.paramMap
-  //     .pipe(
-  //       switchMap(async (params: ParamMap) => {
-  //         // if id param sent, pass it else pass a null param
-  //         const id = params.get('id') ? params.get('id') : null;
-
-  // return await this.userService.getUser(id);
-  //       }),
-  //       defaultIfEmpty(undefined)
-  //     )
-  //     .subscribe((user) => {
-  //       if (user === undefined) {
-  //         // user not found. Redirect to users
-
-  //         this.router.navigate(['users']);
-  //         this.messageService.presentToast('user-not-found');
-  //       } else {
-  //         this.user = user;
-  //         // console.log('User:', this.user);
-  //       }
-  //     });
-  // }
 
   getUserForm(): void {
     this.userForm = new FormGroup(
@@ -247,6 +223,10 @@ export class UserEditComponent implements OnInit {
     } else {
       this.userEditProvider.setOverseerFieldsDisable(false);
     }
+  }
+
+  getPartName(partId) {
+    return this.partService.getPartName(partId);
   }
 
   /**

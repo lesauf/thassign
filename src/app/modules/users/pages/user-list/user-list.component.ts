@@ -49,6 +49,10 @@ export class UserListComponent implements OnInit, AfterViewInit {
   display = 'grid'; // 'grid' or 'list'
   sort = 'firstName';
   sortOrder = 'asc';
+  /**
+   * Number of total users filtered
+   */
+  dataLength = 0;
   pageSize = 10;
   pageIndex = 0;
   pageSizeOptions: number[] = [1, 2, 5, 10, 25, 100];
@@ -68,9 +72,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog
   ) {}
 
-  async ngOnInit() {
-    await this.partService.init();
-
+  ngOnInit() {
     this.userService.data.subscribe((users) => {
       this.users = users;
       this.pUsers$ = this.userService.pUsers;
@@ -100,15 +102,12 @@ export class UserListComponent implements OnInit, AfterViewInit {
       this.masterChecked = this.usersCheckboxes.first.checked;
       this.noUserChecked = !this.masterChecked;
     });
+
+    // this.getUsers();
   }
 
   async generateUsers() {
     await this.userService.generateUsers(10);
-
-    // usersRequest.subscribe((res) => {
-    // Refresh the grid
-    // this.getUsers();
-    // });
   }
 
   // addUser() {
@@ -122,7 +121,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   getUsers(paginator?: MatPaginator): void {
     // Clear users list to display the loader
     // this.users = null;
-    this.userService.paginateUsers(
+    this.dataLength = this.userService.paginateUsers(
       this.sort,
       this.sortOrder,
       paginator !== undefined ? paginator.pageSize : this.pageSize,
@@ -130,19 +129,15 @@ export class UserListComponent implements OnInit, AfterViewInit {
       this.filters
     );
 
-    // this.users = res.docs;
-    // this.usersTotal = res.totalDocs;
-
     // Handle users checkboxes
-    // this.handleCheckboxes();
-    this.usersCheckboxes.forEach((c, index, usersCheckboxes) => {
-      // Do not handle the first (master)
-      if (index !== 0) {
-        c.change.subscribe(() => {
-          this.handleCheckboxes();
-        });
-      }
-    });
+    // this.usersCheckboxes.forEach((c, index, usersCheckboxes) => {
+    //   // Do not handle the first (master)
+    //   if (index !== 0) {
+    //     c.change.subscribe(() => {
+    //       this.handleCheckboxes();
+    //     });
+    //   }
+    // });
   }
 
   /**
@@ -165,6 +160,8 @@ export class UserListComponent implements OnInit, AfterViewInit {
    */
   searchByName(searchTerms: string) {
     this.filters = searchTerms;
+
+    this.pageIndex = 0; // Set the paginator pack to the first page
     this.getUsers();
   }
 
@@ -184,11 +181,9 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   goto(path: string, user?: User): void {
     if (user) {
-      this.userService.state = user;
+      this.userService.currentUser = user;
     }
 
-    // console.log('State: ', this.userService.state);
-    // console.log('State2: ', this.userService.state);
     this.router.navigate([path]);
   }
 

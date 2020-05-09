@@ -31,7 +31,7 @@ export class UserService extends CommonService<User> {
    * Current user to edit or view
    * Used to pass it as a parameter and avoid query again from the DB
    */
-  private currentUser: User;
+  private cUser: User;
 
   /**
    * Paginated user list store
@@ -68,9 +68,9 @@ export class UserService extends CommonService<User> {
   /**
    * Return the saved user and clear the state
    */
-  get state(): User {
-    const s = this.currentUser;
-    this.currentUser = null;
+  get currentUser(): User {
+    const s = this.cUser;
+    this.cUser = null;
 
     return s;
   }
@@ -78,8 +78,8 @@ export class UserService extends CommonService<User> {
   /**
    * Set the saved user
    */
-  set state(user: User) {
-    this.currentUser = user;
+  set currentUser(user: User) {
+    this.cUser = user;
   }
 
   async generateUsers(numberToGenerate: number = 50) {
@@ -126,6 +126,8 @@ export class UserService extends CommonService<User> {
   /**
    * Query users from the server
    * rename to Paginate users
+   *
+   * @returns the total number of filtered users for pagination
    */
   paginateUsers(
     sortField: string = 'lastName',
@@ -133,7 +135,7 @@ export class UserService extends CommonService<User> {
     pageSize: number = 50,
     pageIndex: number = 1,
     filters: string = ''
-  ): void {
+  ): number {
     function filterFunction(user: User) {
       return user.fullName.match(new RegExp(filters, 'i')) !== null;
     }
@@ -155,16 +157,20 @@ export class UserService extends CommonService<User> {
     const users = this.dataStore.getValue();
 
     if (users !== null) {
+      const fUsers = users.filter((user) => filterFunction(user));
+
       this.pUsersStore.next(
-        users
-          .filter((user) => filterFunction(user))
+        fUsers
           .sort((a: User, b: User) => sortFunction(a, b))
           .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
       );
+
+      return fUsers.length;
+    } else {
+      this.pUsersStore.next(null);
+
+      return 0;
     }
-    // else {
-    //   this.pUsersStore.next(null);
-    // }
   }
 
   /**
@@ -379,11 +385,11 @@ export class UserService extends CommonService<User> {
    */
   async addUser(user: User): Promise<any> {
     try {
-      const result = await this.callFunction('Users_insertMany', [[user]]);
-      user._id = result.insertedIds[0];
-      // const insertedUser = User.fromJson(result.insertedIds[0]) as User;
+      const users = await this.callFunction('Users_insertMany', [[user]]);
 
-      this.log(`added user w/ name=${user.fullName}`);
+      this.updateStore(User.fromJson(users) as User[]);
+
+      this.log(`added user`);
     } catch (error) {
       this.handleError<any>('addUser', error);
     }
@@ -394,11 +400,12 @@ export class UserService extends CommonService<User> {
    */
   async updateUser(user: User): Promise<any> {
     try {
-      const result = await this.callFunction('Users_updateByIds', [
+      const users = await this.callFunction('Users_updateByIds', [
         [user._id],
         user,
       ]);
-      const updatedUser = User.fromJson(result.updatedData) as User;
+
+      this.updateStore(User.fromJson(users) as User[]);
 
       this.log(`updated user`);
     } catch (error) {
@@ -409,7 +416,9 @@ export class UserService extends CommonService<User> {
   /** DELETE: delete the user from the server */
   async deleteUser(userId: string[]): Promise<any> {
     try {
-      await this.callFunction('Users_deleteByIds', [userId]);
+      const users = await this.callFunction('Users_deleteByIds', [userId]);
+
+      this.updateStore(User.fromJson(users) as User[]);
 
       this.log(`deleted user`);
     } catch (error) {
@@ -426,7 +435,12 @@ export class UserService extends CommonService<User> {
         deletedBy: this.authService.getUser().id,
       };
 
-      await this.callFunction('Users_updateByIds', [userId, deleteProps]);
+      const users = await this.callFunction('Users_updateByIds', [
+        userId,
+        deleteProps,
+      ]);
+
+      this.updateStore(User.fromJson(users) as User[]);
 
       this.log(`deleted user`);
     } catch (error) {
