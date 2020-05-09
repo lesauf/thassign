@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { validate, validateOrReject } from 'class-validator';
+import { Observable } from 'rxjs';
 
 import { PartService } from 'src/app/core/services/part.service';
 import { AuthService } from '../auth/auth.service';
 import { Part } from 'src/app/core/models/part/part.model';
+import { UserService } from '../users/user.service';
+import { User } from 'src/app/core/models/user/user.model';
 
 @Component({
   selector: 'app-home',
@@ -11,13 +13,15 @@ import { Part } from 'src/app/core/models/part/part.model';
   styleUrls: ['home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public parts: any;
+  parts$: Observable<Part[]>;
+
+  users$: Observable<User[]>;
 
   user: any;
 
   constructor(
-    public partService: PartService,
-    public authservice: AuthService
+    private partService: PartService,
+    private userService: UserService // private authservice: AuthService
   ) {
     // const newUser = {
     //   firstName: 'trtr',
@@ -30,24 +34,19 @@ export class HomeComponent implements OnInit {
     // console.log(validation);
     // // console.log(this.partService.getAllParts());
     // this.partService.getAllParts().then((parts) => {
-    //   this.parts = parts;
-    //   console.log(parts);
+    // this.parts = this.partService.allParts;
     // });
     // this.partService.getPartsNames().then((partsNames) => {
     //   console.log('Parts names :', partsNames);
     // });
   }
 
-  async ngOnInit() {
-    const part: Part = new Part();
-    part.name = 'test';
-    part.withAssistant = true;
-    part.meeting = 'midweek';
+  ngOnInit() {
+    this.users$ = this.userService.data;
+    this.parts$ = this.partService.data;
+  }
 
-    const validationResult = await validate(part);
-
-    if (validationResult.length > 0) {
-      console.log('PART:', validationResult[1].toString());
-    }
+  addUser() {
+    // this.userService.testOs();
   }
 }

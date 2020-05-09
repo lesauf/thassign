@@ -1,8 +1,18 @@
-<p *ngIf="parts">
-  Parts: {{ parts.length }}
-</p>
-<ul>
-  <li *ngFor="let part of parts">{{ part.name }}</li>
-</ul>
+<!-- <button mat-button (click)="addUser()">Add one more</button> -->
 
+<ng-container
+  *ngIf="{
+    users: users$ | async,
+    parts: parts$ | async
+  } as loadedData"
+>
+  <div *ngIf="loadedData.users && loadedData.parts; else loading">
+    <p>Users loaded: {{ loadedData.users.length }}</p>
+    <p>Parts loaded: {{ loadedData.parts.length }}</p>
+    <!-- <ul>
+    <li *ngFor="let user of users">{{ user.fullName }}</li>
+  </ul> -->
+  </div>
+  <ng-template #loading><app-loader></app-loader></ng-template>
+</ng-container>
 <!-- <app-import-epub epubFilename="mwb_E_201909"></app-import-epub> -->

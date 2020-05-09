@@ -52,7 +52,8 @@ export class UserFilterComponent implements OnInit {
     //   map(value => (typeof value === 'string' ? value : value.firstName)),
     //   map(name => (name ? this._filter(name) : this.options.slice()))
     // );
-    this.users$ = this.searchTerms.pipe(
+    // this.users$ =
+    this.searchTerms.pipe(
       // wait 300ms after each keystroke before considering the term
       debounceTime(300),
 
@@ -61,10 +62,11 @@ export class UserFilterComponent implements OnInit {
 
       tap((term) => {
         this.searchText = term;
-      }),
+        this.searchUsers();
+      })
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.userService.searchUsers(term))
+      // switchMap((term: string) => this.userService.searchUsers(term))
     );
   }
 

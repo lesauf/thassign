@@ -4,7 +4,7 @@ import {
   Input,
   OnChanges,
   OnInit,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { MatSidenav, MatDrawer } from '@angular/material/sidenav';
@@ -12,19 +12,19 @@ import { MatSidenav, MatDrawer } from '@angular/material/sidenav';
 @Component({
   selector: 'app-content-layout',
   templateUrl: './content-layout.component.html',
-  styleUrls: ['./content-layout.component.scss']
+  styleUrls: ['./content-layout.component.scss'],
 })
 export class ContentLayoutComponent implements OnInit, OnChanges {
-  @Input() isVisible: boolean = true;
+  @Input() isVisible = true;
   visibility = 'shown';
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(MatDrawer) drawer: MatDrawer;
 
-  sideNavOpened: boolean = true;
-  matDrawerOpened: boolean = false;
-  matDrawerShow: boolean = true;
-  sideNavMode: string = 'side';
+  sideNavOpened = true;
+  matDrawerOpened = false;
+  matDrawerShow = true;
+  sideNavMode = 'side';
 
   constructor(public mediaObserver: MediaObserver) {}
 

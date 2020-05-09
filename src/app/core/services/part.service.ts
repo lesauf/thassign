@@ -5,6 +5,7 @@ import { MessageService } from './message.service';
 // import { any } from 'server/src/modules/parts/part.model';
 import { StitchService } from './stitch.service';
 import { Part } from '../models/part/part.model';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 /**
  * Get data about parts from storage
@@ -12,7 +13,7 @@ import { Part } from '../models/part/part.model';
 @Injectable({
   providedIn: 'root',
 })
-export class PartService extends CommonService {
+export class PartService extends CommonService<Part> {
   allParts: any[] = [];
 
   /**
@@ -44,6 +45,8 @@ export class PartService extends CommonService {
     protected stitchService: StitchService
   ) {
     super('parts', 'PartService', messageService, stitchService);
+
+    this.fetchParts();
   }
 
   /**
@@ -51,9 +54,9 @@ export class PartService extends CommonService {
    * @todo rename init
    */
   async init() {
-    if (this.allParts.length === 0) {
-      this.allParts = await this.getAllParts();
-    }
+    // if (this.allParts.length === 0) {
+    //   this.allParts = await this.fetchParts();
+    // }
   }
 
   /**
@@ -69,11 +72,12 @@ export class PartService extends CommonService {
    * Get all parts from the server and store them in the
    * allParts property
    */
-  async getAllParts() {
+  async fetchParts() {
     console.log('Fetching parts from server');
 
     const allParts = await this.stitchService.callFunction('getAllParts');
 
+    this.updateStore(allParts);
     return allParts;
   }
 
@@ -155,9 +159,10 @@ export class PartService extends CommonService {
   }
 
   getPartById(partId): Part {
-    const part = this.allParts.find(
-      (p) => p._id.toHexString() === partId.toHexString()
-    );
+    // const part = this.allParts.find(
+    const part = this.dataStore
+      .getValue()
+      .find((p) => p._id.toHexString() === partId.toHexString());
 
     return part;
   }

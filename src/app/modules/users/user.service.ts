@@ -11,23 +11,20 @@ import { MessageService } from '../../core/services/message.service';
 import { PartService } from 'src/app/core/services/part.service';
 import { StitchService } from 'src/app/core/services/stitch.service';
 import { User } from 'src/app/core/models/user/user.model';
-// import { PartService } from 'src/app/core/services/part.service';
-// import * as mockUsers from '../../mocks/users.mock';
-// import { User } from '../../models/users.schema';
-// import { any } from 'server/src/modules/users/user.schema';
-// import { Part } from '../../models/parts.schema';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 
 /**
+ * Observable Data Service
+ * @see https://blog.angular-university.io/how-to-build-angular2-apps-using-rxjs-observable-data-services-pitfalls-to-avoid/
  * Get data about users from storage
  */
 @Injectable({
   providedIn: 'root',
 })
-export class UserService extends CommonService {
+export class UserService extends CommonService<User> {
   private usersUrl = 'api/user'; // URL to web api
 
   /**
@@ -36,15 +33,36 @@ export class UserService extends CommonService {
    */
   private currentUser: User;
 
+  /**
+   * Paginated user list store
+   */
+  private pUsersStore: BehaviorSubject<User[]> = new BehaviorSubject<User[]>(
+    null
+  );
+
+  /**
+   * Paginated user list observable
+   */
+  pUsers: Observable<User[]> = this.pUsersStore.asObservable();
+
+  sortField = 'lastName';
+  sortOrder = 'ASC';
+  pageSize = 10;
+  pageIndex = 1;
+
   constructor(
     private http: HttpClient,
     messageService: MessageService,
     private partService: PartService,
     private authService: AuthService,
     private translate: TranslateService,
-    protected stitchService: StitchService
+    protected backendService: StitchService
   ) {
-    super('users', 'UserService', messageService, stitchService);
+    super('users', 'UserService', messageService, backendService);
+
+    // this.users = this.store.asObservable();
+
+    this.fetchUsers();
   }
 
   /**
@@ -81,78 +99,97 @@ export class UserService extends CommonService {
     }
   }
 
-  /**
-   * Get all users from the server
-   */
-  async getUsers(
-    sortField: string = 'lastName',
-    sortOrder: string = 'ASC',
-    pageSize: number = 50,
-    pageIndex: number = 1,
-    filters: string = ''
-  ): Promise<any> {
-    // add safe, encoded search parameter if term present
-    const params = {
-      sort: sortField,
-      sortOrder: sortOrder,
-      limit: pageSize * 1, // convert to number
-      page: pageIndex * 1, // convert to number
-      filters: filters,
-    };
+  public testOs() {
+    const user = new User({ firstName: 'usersdf', lastName: 'rasen' });
+    this.dataStore.getValue().push(user);
+  }
 
+  /**
+   * Get all users from server
+   */
+  async fetchUsers(): Promise<User[]> {
     try {
-      const result: {
-        docs: any;
-        totalDocs: number;
-      } = await this.callFunction('Users_getPaginated', [params]);
+      let result = await this.callFunction('Users_find');
 
       // Convert results to User objects
-      result.docs = User.fromJson(result.docs);
+      result = User.fromJson(result) as User[];
 
+      this.updateStore(result);
       this.log('fetched users');
 
       return result;
     } catch (error) {
-      return this.handleError('getUsers', error);
+      return this.handleError('fetchUsers', error, [], '');
     }
   }
 
-  /** GET user by id. Return `undefined` when id not found */
-  getUserNo404<Data>(id: number | string): Observable<any> {
-    const url = `${this.usersUrl}/?id=${id}`;
-    return this.http.get<any[]>(url).pipe(
-      map((users) => users[0]), // returns a {0|1} element array
-      tap((h) => {
-        const outcome = h ? `fetched` : `did not find`;
-        this.log(`${outcome} user id=${id}`);
-      })
-      // catchError(this.handleError<any>(`getUser id=${id}`))
-    );
+  /**
+   * Query users from the server
+   * rename to Paginate users
+   */
+  paginateUsers(
+    sortField: string = 'lastName',
+    sortOrder: string = 'asc',
+    pageSize: number = 50,
+    pageIndex: number = 1,
+    filters: string = ''
+  ): void {
+    function filterFunction(user: User) {
+      return user.fullName.match(new RegExp(filters, 'i')) !== null;
+    }
+
+    function sortFunction(a: User, b: User): number {
+      if (a[sortField] === b[sortField]) {
+        return 0;
+      }
+
+      const sortResult = a[sortField] > b[sortField] ? 1 : -1;
+
+      return sortOrder === 'asc' ? sortResult : -sortResult;
+      // return a[sortField] >
+      //   b[sortField]
+      //   ? 1
+      //   : -1;
+    }
+
+    const users = this.dataStore.getValue();
+
+    if (users !== null) {
+      this.pUsersStore.next(
+        users
+          .filter((user) => filterFunction(user))
+          .sort((a: User, b: User) => sortFunction(a, b))
+          .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
+      );
+    }
+    // else {
+    //   this.pUsersStore.next(null);
+    // }
   }
 
   /**
    * GET user by part.
    */
-  getUsersByPart(part: any): Observable<any[]> {
-    const partId = part._id;
+  // getUsersByPart(part: any): Observable<any[]> {
+  //   const partId = part._id;
 
-    return this.http.get<any[]>(this.usersUrl).pipe(
-      map((result: any[]) => {
-        // searching on client side,
-        // TODO REMOVE when doing nice requests on MongoDB
-        return result.filter(
-          (user) =>
-            user.parts.find((availablePart) => availablePart._id === partId) !==
-            undefined
-        );
-      }),
-      tap((h) => {
-        const outcome = h ? `fetched` : `did not find`;
-        this.log(`${outcome} users assigned to part ${part.name}`);
-      })
-      // catchError(this.handleError('getUsersByPart', []))
-    );
-  }
+  //   return this.http.get<any[]>(this.usersUrl).pipe(
+  //     map((result: any[]) => {
+  //       // searching on client side,
+  //       // TODO REMOVE when doing nice requests on MongoDB
+  //       return result.filter(
+  //         (user) =>
+  //           user.parts.find((availablePart) => availablePart._id === partId) !==
+  //           undefined
+  //       );
+  //     }),
+  //     tap((h) => {
+  //       const outcome = h ? `fetched` : `did not find`;
+  //       this.log(`${outcome} users assigned to part ${part.name}`);
+  //     })
+  //     // catchError(this.handleError('getUsersByPart', []))
+  //   );
+  // }
 
   /**
    * Get the list of users which have the right to do the
@@ -294,7 +331,7 @@ export class UserService extends CommonService {
         // Fetch user from db
         this.log(`fetched user id=${id}`);
 
-        return await this.stitchService.callFunction('Users_getById', [
+        return await this.callFunction('Users_getById', [
           { $oid: id }, // Convert the string id to a MongoDb ObjectId
           populate,
         ]);
@@ -323,9 +360,7 @@ export class UserService extends CommonService {
     // term = term ? encodeURIComponent(term.trim()) : null;
 
     try {
-      const result = await this.stitchService.callFunction('Users_search', [
-        term,
-      ]);
+      const result = await this.callFunction('Users_search', [term]);
 
       const users = User.fromJson(result) as User[];
 
@@ -344,9 +379,7 @@ export class UserService extends CommonService {
    */
   async addUser(user: User): Promise<any> {
     try {
-      const result = await this.stitchService.callFunction('Users_insertMany', [
-        [user],
-      ]);
+      const result = await this.callFunction('Users_insertMany', [[user]]);
       user._id = result.insertedIds[0];
       // const insertedUser = User.fromJson(result.insertedIds[0]) as User;
 
@@ -361,10 +394,10 @@ export class UserService extends CommonService {
    */
   async updateUser(user: User): Promise<any> {
     try {
-      const result = await this.stitchService.callFunction(
-        'Users_updateByIds',
-        [[user._id], user]
-      );
+      const result = await this.callFunction('Users_updateByIds', [
+        [user._id],
+        user,
+      ]);
       const updatedUser = User.fromJson(result.updatedData) as User;
 
       this.log(`updated user`);
@@ -376,7 +409,7 @@ export class UserService extends CommonService {
   /** DELETE: delete the user from the server */
   async deleteUser(userId: string[]): Promise<any> {
     try {
-      await this.stitchService.callFunction('Users_deleteByIds', [userId]);
+      await this.callFunction('Users_deleteByIds', [userId]);
 
       this.log(`deleted user`);
     } catch (error) {
@@ -393,10 +426,7 @@ export class UserService extends CommonService {
         deletedBy: this.authService.getUser().id,
       };
 
-      await this.stitchService.callFunction('Users_updateByIds', [
-        userId,
-        deleteProps,
-      ]);
+      await this.callFunction('Users_updateByIds', [userId, deleteProps]);
 
       this.log(`deleted user`);
     } catch (error) {

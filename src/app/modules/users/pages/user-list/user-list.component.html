@@ -75,149 +75,154 @@
 </div>
 
 <mat-paginator
-  [length]="usersTotal"
+  [length]="users?.length"
   [pageSize]="pageSize"
   [pageIndex]="pageIndex"
   [pageSizeOptions]="pageSizeOptions"
+  (page)="pageEvent = $event"
 >
 </mat-paginator>
 
-<app-loader *ngIf="!users"> </app-loader>
-
-<mat-accordion multi="false">
-  <mat-expansion-panel
-    hideToggle="true"
-    #mep="matExpansionPanel"
-    *ngFor="let user of users; last as last; trackBy: trackById"
-  >
-    <mat-expansion-panel-header
-      fxLayout="row"
-      fxLayoutAlign="start stretch"
-      fxLayoutGap
-    >
-      <mat-panel-title
-        fxFlex
-        fxFlex.lt-sm="100"
-        fxFlexAlign="center"
-        fxLayout="row"
-        fxLayoutAlign="space-between stretch"
-        fxLayoutGap="15px"
+<ng-template #loading><app-loader></app-loader></ng-template>
+<div *ngIf="users; else loading">
+  <div *ngIf="pUsers$ | async as pUsers">
+    <mat-accordion multi="false">
+      <mat-expansion-panel
+        hideToggle="true"
+        #mep="matExpansionPanel"
+        *ngFor="let user of pUsers; last as last; trackBy: trackById"
       >
-        <!-- Checkbox -->
-        <div fxFlex="25px" fxFlexAlign="center">
-          <mat-checkbox
-            name="userCheckbox"
-            [value]="user._id"
-            [checked]="masterChecked"
-            (change)="handleCheckboxes()"
-            (click)="$event.stopPropagation()"
-          ></mat-checkbox>
-        </div>
-
-        <!-- Type icon -->
-        <div fxFlex="30px">
-          <img class="genre-icon" src="/assets/icon/{{ user.type }}.svg" />
-        </div>
-
-        <!-- User name -->
-        <div fxFlex fxFlexAlign="center">
-          {{ user.fullName }}
-        </div>
-      </mat-panel-title>
-      <mat-panel-description fxFlex fxFlexAlign="center">
-        <div fxFlex fxHide.lt-sm *ngIf="user.phone">
-          <mat-icon inline="true">phone</mat-icon> {{ user.phone }}
-        </div>
-
-        <div fxFlex fxHide.lt-md *ngIf="user.email">
-          <mat-icon inline="true">mail_outline</mat-icon>
-          {{ user.email }}
-        </div>
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-
-    <ng-template matExpansionPanelContent>
-      <!-- Lazy rendering -->
-
-      <div
-        fxLayout="row wrap"
-        fxLayout.lt-sm="column"
-        fxLayoutAlign="start stretch"
-      >
-        <div fxFlex="45">
-          <mat-icon inline="true">person</mat-icon>
-          {{ user.type }}
-        </div>
-
-        <div fxFlex="45" *ngIf="user.progress">
-          <mat-icon inline="true">info</mat-icon>
-          {{ user.progress }}
-        </div>
-
-        <div fxFlex fxHide.gt-xs *ngIf="user.phone">
-          <mat-icon inline="true">phone</mat-icon>
-          {{ user.phone }}
-        </div>
-        <div fxFlex fxHide.gt-sm *ngIf="user.email">
-          <mat-icon inline="true">mail_outline</mat-icon>
-          {{ user.email }}
-        </div>
-      </div>
-
-      <mat-chip-list fxLayout="row" fxLayoutAlign="start stretch">
-        <mat-chip
-          class="mat-chip-list-stacked"
-          aria-orientation="vertical"
-          [selectable]="false"
-          disabled
-          *ngFor="let partId of user.parts"
+        <mat-expansion-panel-header
+          fxLayout="row"
+          fxLayoutAlign="start stretch"
+          fxLayoutGap
         >
-          {{ getPartName(partId) | translate }}
-        </mat-chip>
-      </mat-chip-list>
+          <mat-panel-title
+            fxFlex
+            fxFlex.lt-sm="100"
+            fxFlexAlign="center"
+            fxLayout="row"
+            fxLayoutAlign="space-between stretch"
+            fxLayoutGap="15px"
+          >
+            <!-- Checkbox -->
+            <div fxFlex="25px" fxFlexAlign="center">
+              <mat-checkbox
+                name="userCheckbox"
+                [value]="user._id"
+                [checked]="masterChecked"
+                (change)="handleCheckboxes()"
+                (click)="$event.stopPropagation()"
+              ></mat-checkbox>
+            </div>
 
-      <mat-action-row>
-        <button mat-button (click)="mep.expanded = false">
-          <mat-icon inline="true">close</mat-icon>
+            <!-- Type icon -->
+            <div fxFlex="30px">
+              <img class="genre-icon" src="/assets/icon/{{ user.type }}.svg" />
+            </div>
 
-          {{ 'close' | translate | titlecase }}
-        </button>
-        <button
-          mat-button
-          appConfirm="{{ 'dialog.delete.confirmation.title' | translate }}"
-          message="{{ 'dialog.delete.confirmation.message' | translate }}"
-          cancelButton="{{
-            'dialog.delete.confirmation.cancelButton' | translate
-          }}"
-          confirmButton="{{
-            'dialog.delete.confirmation.confirmButton' | translate
-          }}"
-          (confirmed)="delete([user._id])"
-        >
-          <mat-icon inline="true">delete</mat-icon>
+            <!-- User name -->
+            <div fxFlex fxFlexAlign="center">
+              {{ user.fullName }}
+            </div>
+          </mat-panel-title>
+          <mat-panel-description fxFlex fxFlexAlign="center">
+            <div fxFlex fxHide.lt-sm *ngIf="user.phone">
+              <mat-icon inline="true">phone</mat-icon> {{ user.phone }}
+            </div>
 
-          {{ 'delete' | translate | titlecase }}
-        </button>
-        <button mat-button (click)="openView($event, user)">
-          <mat-icon inline="true">edit</mat-icon>
+            <div fxFlex fxHide.lt-md *ngIf="user.email">
+              <mat-icon inline="true">mail_outline</mat-icon>
+              {{ user.email }}
+            </div>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
 
-          {{ 'view' | translate | titlecase }}
-        </button>
-        <button mat-button (click)="goto('/users/edit', user)">
-          <!-- [routerLink]="['/users/edit']"
+        <ng-template matExpansionPanelContent>
+          <!-- Lazy rendering -->
+
+          <div
+            fxLayout="row wrap"
+            fxLayout.lt-sm="column"
+            fxLayoutAlign="start stretch"
+          >
+            <div fxFlex="45">
+              <mat-icon inline="true">person</mat-icon>
+              {{ user.type }}
+            </div>
+
+            <div fxFlex="45" *ngIf="user.progress">
+              <mat-icon inline="true">info</mat-icon>
+              {{ user.progress }}
+            </div>
+
+            <div fxFlex fxHide.gt-xs *ngIf="user.phone">
+              <mat-icon inline="true">phone</mat-icon>
+              {{ user.phone }}
+            </div>
+            <div fxFlex fxHide.gt-sm *ngIf="user.email">
+              <mat-icon inline="true">mail_outline</mat-icon>
+              {{ user.email }}
+            </div>
+          </div>
+
+          <mat-chip-list fxLayout="row" fxLayoutAlign="start stretch">
+            <mat-chip
+              class="mat-chip-list-stacked"
+              aria-orientation="vertical"
+              [selectable]="false"
+              disabled
+              *ngFor="let partId of user.parts"
+            >
+              {{ getPartName(partId) | translate }}
+            </mat-chip>
+          </mat-chip-list>
+
+          <mat-action-row>
+            <button mat-button (click)="mep.expanded = false">
+              <mat-icon inline="true">close</mat-icon>
+
+              {{ 'close' | translate | titlecase }}
+            </button>
+            <button
+              mat-button
+              appConfirm="{{ 'dialog.delete.confirmation.title' | translate }}"
+              message="{{ 'dialog.delete.confirmation.message' | translate }}"
+              cancelButton="{{
+                'dialog.delete.confirmation.cancelButton' | translate
+              }}"
+              confirmButton="{{
+                'dialog.delete.confirmation.confirmButton' | translate
+              }}"
+              (confirmed)="delete([user._id])"
+            >
+              <mat-icon inline="true">delete</mat-icon>
+
+              {{ 'delete' | translate | titlecase }}
+            </button>
+            <button mat-button (click)="openView($event, user)">
+              <mat-icon inline="true">edit</mat-icon>
+
+              {{ 'view' | translate | titlecase }}
+            </button>
+            <button mat-button (click)="goto('/users/edit', user)">
+              <!-- [routerLink]="['/users/edit']"
            [state]="{ user: user }" -->
-          <mat-icon inline="true">edit</mat-icon>
+              <mat-icon inline="true">edit</mat-icon>
 
-          {{ 'edit' | translate | titlecase }}
-        </button>
-      </mat-action-row>
-    </ng-template>
-  </mat-expansion-panel>
-</mat-accordion>
+              {{ 'edit' | translate | titlecase }}
+            </button>
+          </mat-action-row>
+        </ng-template>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>
 
 <mat-paginator
-  [length]="usersTotal"
+  [length]="users?.length"
   [pageSize]="pageSize"
   [pageIndex]="pageIndex"
   [pageSizeOptions]="pageSizeOptions"
+  (page)="pageEvent = $event"
 ></mat-paginator>

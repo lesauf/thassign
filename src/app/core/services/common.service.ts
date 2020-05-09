@@ -1,40 +1,44 @@
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 
 import { StitchService } from './stitch.service';
 import { MessageService } from './message.service';
 
-export abstract class CommonService {
+/**
+ * M type stand for 'Model', the model type
+ */
+export abstract class CommonService<M> {
   /**
    * DB collection
    */
   collection: any;
 
   /**
-   * Webhook root URL
+   * Attempt to code a Observable data service
    */
-  // webHookUrl: string;
+  protected dataStore: BehaviorSubject<M[]> = new BehaviorSubject<M[]>(null);
 
-  /**
-   * DB service
-   */
-  // dbService: any;
+  public readonly data: Observable<M[]> = this.dataStore.asObservable();
 
   constructor(
     protected collectionName: string,
     protected serviceName: string,
     protected messageService?: MessageService,
-    protected stitchService?: StitchService
+    protected backendService?: StitchService
   ) {
-    this.collection = stitchService.getCollectionByName('parts');
-    // this.webHookUrl = stitchService.getServiceWebHookUrl('PartService');
-    // this.dbService = stitchService.getDbService('PartService');
+    this.collection = backendService.getCollectionByName('parts');
+    // this.webHookUrl = backendService.getServiceWebHookUrl('PartService');
+    // this.dbService = backendService.getDbService('PartService');
   }
 
   /**
    * Generic function to encapsulate any Baas used
    */
-  protected callFunction<T>(functionName, parameters: T[]): Promise<any> {
-    return this.stitchService.callFunction(functionName, parameters);
+  protected callFunction<T>(functionName, parameters?: T[]): Promise<any> {
+    return this.backendService.callFunction(functionName, parameters);
+  }
+
+  protected updateStore(values: M[]): void {
+    this.dataStore.next(values);
   }
 
   /**
@@ -46,13 +50,16 @@ export abstract class CommonService {
    */
   protected handleError<T>(
     operation = 'operation',
+    error: any,
     result?: T,
     service?: string
-  ) {
+  ): T {
     // For now, just throw the error.
-    if (result) {
-      throw result;
+    if (error) {
+      throw error;
     }
+
+    return result;
     // return (error: any): Observable<T> => {
     //   // TODO: send the error to remote logging infrastructure
     //   console.error(error); // log to console instead

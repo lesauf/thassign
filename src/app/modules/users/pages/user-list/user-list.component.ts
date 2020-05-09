@@ -10,8 +10,9 @@ import {
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { tap } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 
 // import { any } from '../../../../../../server/src/modules/users/user.schema';
 // import { User } from 'src/app/models/users.schema';
@@ -28,6 +29,17 @@ import { PartService } from 'src/app/core/services/part.service';
 })
 export class UserListComponent implements OnInit, AfterViewInit {
   users: User[];
+
+  /**
+   * All users from the DB
+   */
+  users$: Observable<User[]>;
+
+  /**
+   * paginated Users
+   */
+  pUsers$: Observable<User[]>;
+
   /**
    * State of the master checkbox
    */
@@ -45,6 +57,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   // MatPaginator Output
   @ViewChildren(MatPaginator) paginators: QueryList<MatPaginator>;
+  pageEvent: PageEvent;
 
   @ViewChildren(MatCheckbox) usersCheckboxes: QueryList<MatCheckbox>;
 
@@ -57,12 +70,18 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     await this.partService.init();
-    this.getUsers();
+
+    this.userService.data.subscribe((users) => {
+      this.users = users;
+      this.pUsers$ = this.userService.pUsers;
+
+      // this.userService.pUsers.subscribe((t) => console.log('test', t));
+      this.getUsers();
+    });
   }
 
   ngAfterViewInit(): void {
     // Handle paginators
-
     this.paginators.forEach((paginator) => {
       paginator.page
         .pipe(
@@ -88,19 +107,22 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
     // usersRequest.subscribe((res) => {
     // Refresh the grid
-    this.getUsers();
+    // this.getUsers();
     // });
   }
+
+  // addUser() {
+  //   this.userService.testOs();
+  // }
 
   /**
    * Fetch users from db and
    * display them in the paginated grid
    */
-  async getUsers(paginator?: MatPaginator) {
+  getUsers(paginator?: MatPaginator): void {
     // Clear users list to display the loader
-    this.users = null;
-
-    const res = await this.userService.getUsers(
+    // this.users = null;
+    this.userService.paginateUsers(
       this.sort,
       this.sortOrder,
       paginator !== undefined ? paginator.pageSize : this.pageSize,
@@ -108,8 +130,8 @@ export class UserListComponent implements OnInit, AfterViewInit {
       this.filters
     );
 
-    this.users = res.docs;
-    this.usersTotal = res.totalDocs;
+    // this.users = res.docs;
+    // this.usersTotal = res.totalDocs;
 
     // Handle users checkboxes
     // this.handleCheckboxes();
