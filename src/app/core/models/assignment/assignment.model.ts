@@ -1,62 +1,95 @@
-/**
- * Model definitions
- * @see https://stackoverflow.com/a/32780233/3234046
- */
-import * as Mongoose from 'mongoose';
-// import * as mongoose_delete from 'mongoose-delete';
-const mongoose_delete = require('mongoose-delete');
-// import * as mongoosePaginate from 'mongoose-paginate-v2';
-const mongoosePaginate = require('mongoose-paginate-v2');
-// import * as joigooseModule from 'joigoose';
-const Joigoose = require('joigoose')(Mongoose);
+import {
+  IsArray,
+  IsBoolean,
+  IsDate,
+  IsEmail,
+  IsString,
+  IsIn,
+  IsInt,
+  IsObject,
+  IsOptional,
+  IsUUID,
+  IsDefined,
+  MinLength,
+} from 'class-validator';
 
-import { assignmentSchema } from './assignment.schema';
-import { PartModel, PartSchema } from '../parts/part.model';
-import { UserModel } from '../users/user.model';
+export class Assignment {
+  @IsString()
+  @IsDate()
+  week: Date;
 
-// Passing Mongoose to Joigoose
-// const Joigoose = joigooseModule(Mongoose);
+  @IsString()
+  part: string;
 
-// Define mongoose schema from Joi's one
-const mongooseAssignmentSchema = new Mongoose.Schema(
-  Joigoose.convert(assignmentSchema),
-  {
-    // versionKey: false,
-    toObject: {
-      virtuals: true
-    },
-    toJSON: {
-      virtuals: true
-    },
-    timestamps: true
+  @IsString()
+  assignee: string;
+
+  @IsString()
+  @IsOptional()
+  assistant: string;
+
+  @IsInt()
+  position = 1; // 'Assignment position for same part'), // like many Initial Calls, for example
+
+  @IsString()
+  @IsOptional()
+  title: string; // theme of the assignment
+
+  @IsString()
+  @IsOptional()
+  hall = 'main'; // "main" | "second" | "third"
+
+  @IsInt()
+  @IsOptional()
+  number: number; // like public talk number
+
+  @IsString()
+  ownerId: string;
+
+  // Joi.date().default(Date.now()),
+  @IsDate()
+  @IsOptional()
+  createdAt: number = Date.now();
+
+  // Joi.date(),
+  @IsDate()
+  @IsOptional()
+  updatedAt: number;
+
+  // deleted: Joi.boolean().default(false),
+  @IsBoolean()
+  deleted = false;
+
+  // Joi.date(),
+  @IsDate()
+  @IsOptional()
+  deletedAt: number;
+
+  // Joi.string(),
+  @IsInt()
+  @IsOptional()
+  deletedBy: string;
+
+  /**
+   * @todo Sanitize/clean the object passed (apply some rules,
+   * like women can not give public talks ...)
+   */
+  constructor(userProperties?: object) {
+    if (userProperties) {
+      Object.assign(this, userProperties);
+    }
   }
-);
 
-// Defining part, assignee and assistant as array of Foreign keys
-mongooseAssignmentSchema.add({
-  part: {
-    type: Mongoose.Schema.Types.ObjectId,
-    ref: PartModel
-  },
-  assignee: {
-    type: Mongoose.Schema.Types.ObjectId,
-    ref: UserModel
-  },
-  assistant: {
-    type: Mongoose.Schema.Types.ObjectId,
-    ref: UserModel
+  /**
+   * Create instances from JSON or array of JSON objects
+   *
+   * @param properties JSON object with properties
+   */
+  public static fromJson(properties?: object) {
+    if (properties instanceof Array) {
+      return properties.map((obj) => new Assignment(obj));
+    } else {
+      return new Assignment(properties);
+    }
   }
-});
-
-// Soft delete plugin
-mongooseAssignmentSchema.plugin(mongoose_delete, {
-  overrideMethods: true,
-  deletedAt: true,
-  deletedBy: true
-});
-
-// MODEL
-export const Assignment = Mongoose.model<any>(
-  'assignments',
-  mongooseAssignmentSchema
-);
+}

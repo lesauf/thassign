@@ -20,13 +20,13 @@ const routes: Routes = [
             (m) => m.HomeComponentModule
           ),
       },
-      //     {
-      //       path: 'assignments',
-      //       loadChildren: () =>
-      //         import('./modules/assignments/assignments.module').then(
-      //           (m) => m.AssignmentsModule
-      //         ),
-      //     },
+      {
+        path: 'assignments',
+        loadChildren: () =>
+          import('./modules/assignments/assignments.module').then(
+            (m) => m.AssignmentsModule
+          ),
+      },
       // {
       //   path: 'exports',
       //   loadChildren: () =>

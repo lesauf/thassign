@@ -6,14 +6,14 @@ import {
   Input,
   Output,
   SimpleChanges,
-  OnDestroy
+  OnDestroy,
 } from '@angular/core';
 import {
   FormArray,
   FormControl,
   FormGroup,
   Validators,
-  FormBuilder
+  FormBuilder,
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DateTime, Interval } from 'luxon';
@@ -26,23 +26,21 @@ import { PartService } from 'src/app/core/services/part.service';
 import { SettingService } from 'src/app/core/services/setting.service';
 import { UserService } from 'src/app/modules/users/user.service';
 import { ValidationService } from 'src/app/core/services/validation.service';
-import { Assignment } from 'src/app/shared/models/assignments.schema';
-import { User } from 'src/app/shared/models/users.schema';
-import { Part } from 'src/app/shared/models/parts.schema';
+import { Part } from 'src/app/core/models/part/part.model';
 
 export const DATE_FORMATS = {
   parse: {
-    dateInput: 'DD/MM/YYYY'
+    dateInput: 'DD/MM/YYYY',
   },
   display: {
     dateInput: 'DD/MM/YYYY',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY'
+    monthYearA11yLabel: 'MMMM YYYY',
   },
   store: {
-    dateInput: 'YYYY-MM-DD'
-  }
+    dateInput: 'YYYY-MM-DD',
+  },
 };
 
 /**
@@ -52,7 +50,7 @@ export const DATE_FORMATS = {
 @Component({
   selector: 'app-assignment-midweek-students',
   templateUrl: './assignment-midweek-students.component.html',
-  styleUrls: ['./assignment-midweek-students.component.scss']
+  styleUrls: ['./assignment-midweek-students.component.scss'],
 })
 export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   implements OnInit, OnChanges, OnDestroy {
@@ -90,9 +88,9 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   studentAssistantPart: Part;
 
   constructor(
-    assignmentService: AssignmentService,
-    partService: PartService,
-    userService: UserService,
+    protected assignmentService: AssignmentService,
+    protected partService: PartService,
+    protected userService: UserService,
     messageService: MessageService,
     formBuilder: FormBuilder,
     settingService: SettingService,
@@ -101,9 +99,6 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     validationService: ValidationService
   ) {
     super(
-      assignmentService,
-      partService,
-      userService,
       messageService,
       formBuilder,
       settingService,
@@ -174,7 +169,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     });
 
     this.monthForm = this.formBuilder.group({
-      weeks: weekForms
+      weeks: weekForms,
     });
 
     this.monthForm.disable(); // Disabled by default to prevent editing
@@ -193,7 +188,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
         week: week,
         part: this.bibleReadingPart._id,
         assignee: [''],
-        position: position
+        position: position,
       }),
       initialCall: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
@@ -202,35 +197,35 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
         assistant: [''],
         position: position,
         title: 'A definir',
-        number: 0
+        number: 0,
       }),
       firstReturnVisit: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
         part: this.firstReturnVisitPart._id,
         assignee: [''],
         assistant: [''],
-        position: position
+        position: position,
       }),
       secondReturnVisit: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
         part: this.secondReturnVisitPart._id,
         assignee: [''],
         assistant: [''],
-        position: position
+        position: position,
       }),
       bibleStudy: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
         part: this.bibleStudyPart._id,
         assignee: [''],
         assistant: [''],
-        position: position
+        position: position,
       }),
       studentTalk: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
         part: this.studentTalkPart._id,
         assignee: [''],
-        position: position
-      }) as FormGroup
+        position: position,
+      }) as FormGroup,
     };
 
     return partsForms[partName];
@@ -242,7 +237,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
       ['bibleReading', 'initialCall', 'initialCall', 'initialCall'],
       ['bibleReading', 'firstReturnVisit', 'firstReturnVisit'],
       ['bibleReading', 'secondReturnVisit', 'bibleStudy'],
-      ['bibleReading', 'secondReturnVisit', 'bibleStudy', 'bibleStudy']
+      ['bibleReading', 'secondReturnVisit', 'bibleStudy', 'bibleStudy'],
     ];
   }
 
@@ -294,10 +289,10 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
         formData,
         this.month.toFormat(this.settingService.getDateFormat('parseMonth'))
       )
-      .subscribe(assignment => {
+      .subscribe((assignment) => {
         // TODO AssignmentEdit check if save success
 
-        this._translate.get('assignment-save-success').subscribe(message => {
+        this._translate.get('assignment-save-success').subscribe((message) => {
           this.messageService.presentToast(message);
         });
       });

@@ -38,7 +38,7 @@ export abstract class AssignmentCommon {
   /**
    * Edit mode, useful for disabling the month selector
    */
-  isEditMode: boolean = false;
+  isEditMode = false;
 
   firstWeekOfTheMonth: Interval;
 
@@ -56,10 +56,9 @@ export abstract class AssignmentCommon {
    * List of all the weeks of the selected month
    */
   weeks: Interval[];
-
-  assignmentService: AssignmentService;
-  partService: PartService;
-  userService: UserService;
+  protected assignmentService: AssignmentService;
+  protected partService: PartService;
+  protected userService: UserService;
   messageService: MessageService;
   formBuilder: FormBuilder;
   settingService: SettingService;
@@ -68,9 +67,6 @@ export abstract class AssignmentCommon {
   validationService: ValidationService;
 
   constructor(
-    assignmentService: AssignmentService,
-    partService: PartService,
-    userService: UserService,
     messageService: MessageService,
     formBuilder: FormBuilder,
     settingService: SettingService,
@@ -78,9 +74,9 @@ export abstract class AssignmentCommon {
     _translate: TranslateService,
     validationService: ValidationService
   ) {
-    this.assignmentService = assignmentService;
-    this.partService = partService;
-    this.userService = userService;
+    // this.assignmentService = assignmentService;
+    // this.partService = partService;
+    // this.userService = userService;
     this.messageService = messageService;
     this.formBuilder = formBuilder;
     this.settingService = settingService;
@@ -140,7 +136,7 @@ export abstract class AssignmentCommon {
       currentWeek = currentWeek.set({
         // we shift to the next week
         start: currentWeek.start.plus({ week: 1 }),
-        end: currentWeek.end.plus({ week: 1 })
+        end: currentWeek.end.plus({ week: 1 }),
       })
     ) {
       this.weeks.push(currentWeek);
@@ -157,7 +153,7 @@ export abstract class AssignmentCommon {
 
     const partsShortNames = Object.keys(this.listOfParts);
 
-    partsShortNames.forEach(partName => {
+    partsShortNames.forEach((partName) => {
       this[partName + 'Part'] = this.listOfParts[partName];
       // console.log(this[partName + 'Part']);
     });
@@ -310,11 +306,11 @@ export abstract class AssignmentCommon {
    */
   _getFirstAssignableUserForPartAndMoveHimDown(partName) {
     // Get the index of the first user assignable to this part
-    const assignableUserIndex = this.assignableList.findIndex(user => {
+    const assignableUserIndex = this.assignableList.findIndex((user) => {
       return (
         user.parts.find(
           // partName is just the short name, so we need to get the db name
-          part => part.name === this.listOfParts[partName].name
+          (part) => part.name === this.listOfParts[partName].name
         ) !== undefined
       );
     });
@@ -460,7 +456,7 @@ export abstract class AssignmentCommon {
     let aLastAssignment;
     let bLastAssignment;
     this[fieldCombinedName] = this[fieldCombinedName].sort((a, b) => {
-      let sortValue: number = 0;
+      let sortValue = 0;
       // If a part is specified, search instead for its last assignment
       aLastAssignment =
         partName === undefined

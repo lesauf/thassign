@@ -5,22 +5,26 @@ import {
   Type,
   ComponentFactoryResolver,
   ViewContainerRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { DateTime } from 'luxon';
 
 import { AssignmentWeekendComponent } from '../../components/assignment-weekend/assignment-weekend.component';
 import { SettingService } from 'src/app/core/services/setting.service';
+import { UserService } from 'src/app/modules/users/user.service';
+import { PartService } from 'src/app/core/services/part.service';
 
 @Component({
   selector: 'app-assignment-list',
   templateUrl: './assignment-list.component.html',
-  styleUrls: ['./assignment-list.component.scss']
+  styleUrls: ['./assignment-list.component.scss'],
 })
 export class AssignmentListComponent implements OnInit, OnDestroy {
   @ViewChild(
     'container',
-    /* TODO: add static flag */ /* TODO: add static flag */ { read: ViewContainerRef }
+    /* TODO: add static flag */ /* TODO: add static flag */ {
+      read: ViewContainerRef,
+    }
   )
   container: ViewContainerRef;
 
@@ -53,7 +57,7 @@ export class AssignmentListComponent implements OnInit, OnDestroy {
   /**
    * Edit mode, useful for disabling the month selector
    */
-  isEditMode: boolean = false;
+  isEditMode = false;
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -123,7 +127,7 @@ export class AssignmentListComponent implements OnInit, OnDestroy {
   removeComponent(componentClass: Type<any>) {
     // Find the component
     const component = this.components.find(
-      c => c.instance instanceof componentClass
+      (c) => c.instance instanceof componentClass
     );
     const componentIndex = this.components.indexOf(component);
 
