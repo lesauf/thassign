@@ -8,27 +8,18 @@ import { MessageService } from './message.service';
  */
 export abstract class CommonService<M> {
   /**
-   * DB collection
-   */
-  collection: any;
-
-  /**
    * Attempt to code a Observable data service
    */
   protected dataStore: BehaviorSubject<M[]> = new BehaviorSubject<M[]>(null);
 
   public readonly data: Observable<M[]> = this.dataStore.asObservable();
 
-  constructor(
-    protected collectionName: string,
-    protected serviceName: string,
-    protected messageService?: MessageService,
-    protected backendService?: StitchService
-  ) {
-    this.collection = backendService.getCollectionByName('parts');
-    // this.webHookUrl = backendService.getServiceWebHookUrl('PartService');
-    // this.dbService = backendService.getDbService('PartService');
-  }
+  protected collectionName: string;
+  protected serviceName: string;
+  protected messageService: MessageService;
+  protected backendService: StitchService;
+
+  constructor() {}
 
   /**
    * Generic function to encapsulate any Baas used

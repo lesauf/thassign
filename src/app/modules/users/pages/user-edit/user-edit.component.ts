@@ -46,7 +46,8 @@ export class UserEditComponent implements OnInit {
   /**
    * List of all available parts
    */
-  allParts$: Promise<any[]>;
+  allParts: Part[];
+
   /**
    * All parts grouped by meeting
    */
@@ -88,7 +89,7 @@ export class UserEditComponent implements OnInit {
     }
 
     this.getUserForm();
-    this.allParts$ = this.partService.getParts();
+    this.allParts = this.partService.getParts();
 
     this.allPartsGrouped$ = this.partService.getPartsGroupedByMeeting();
     this.controlMessagesComponent = new ControlMessagesComponent();

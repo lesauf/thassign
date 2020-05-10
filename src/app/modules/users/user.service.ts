@@ -16,6 +16,15 @@ const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 
+interface AssignableUsersByPart {
+  bibleReading: User[];
+  initialCall: User[];
+  firstReturnVisit: User[];
+  secondReturnVisit: User[];
+  bibleStudy: User[];
+  studentTalk: User[];
+  studentAssistant: User[];
+}
 /**
  * Observable Data Service
  * @see https://blog.angular-university.io/how-to-build-angular2-apps-using-rxjs-observable-data-services-pitfalls-to-avoid/
@@ -50,15 +59,18 @@ export class UserService extends CommonService<User> {
   pageSize = 10;
   pageIndex = 1;
 
+  protected collectionName = 'users';
+  protected serviceName = 'UserService';
+
   constructor(
     private http: HttpClient,
-    messageService: MessageService,
+    protected messageService: MessageService,
     private partService: PartService,
     private authService: AuthService,
     private translate: TranslateService,
     protected backendService: StitchService
   ) {
-    super('users', 'UserService', messageService, backendService);
+    super();
 
     // this.users = this.store.asObservable();
 
@@ -102,6 +114,13 @@ export class UserService extends CommonService<User> {
   public testOs() {
     const user = new User({ firstName: 'usersdf', lastName: 'rasen' });
     this.dataStore.getValue().push(user);
+  }
+
+  /**
+   * Get users from store
+   */
+  getUsers(): User[] {
+    return this.dataStore.getValue();
   }
 
   /**
@@ -278,49 +297,49 @@ export class UserService extends CommonService<User> {
   /**
    * Extract the parts from the results from DB
    */
-  _arrangeAssignableUsers(result: Array<any>): Array<any> {
-    const assignableUsersByPartArranged = [];
-
-    assignableUsersByPartArranged['bibleReading'] = result.filter(
-      (user) =>
-        user.parts.find(
-          (part) => part.name === 'clm.treasures.bible-reading'
-        ) !== undefined
-    );
-    assignableUsersByPartArranged['initialCall'] = result.filter(
-      (user) =>
-        user.parts.find((part) => part.name === 'clm.ministry.initial-call') !==
-        undefined
-    );
-    assignableUsersByPartArranged['firstReturnVisit'] = result.filter(
-      (user) =>
-        user.parts.find(
-          (part) => part.name === 'clm.ministry.first-return-visit'
-        ) !== undefined
-    );
-    assignableUsersByPartArranged['secondReturnVisit'] = result.filter(
-      (user) =>
-        user.parts.find(
-          (part) => part.name === 'clm.ministry.second-return-visit'
-        ) !== undefined
-    );
-    assignableUsersByPartArranged['bibleStudy'] = result.filter(
-      (user) =>
-        user.parts.find((part) => part.name === 'clm.ministry.bible-study') !==
-        undefined
-    );
-    assignableUsersByPartArranged['studentTalk'] = result.filter(
-      (user) =>
-        user.parts.find((part) => part.name === 'clm.ministry.talk') !==
-        undefined
-    );
-    assignableUsersByPartArranged['studentAssistant'] = result.filter(
-      (user) =>
-        user.parts.find((part) => part.name === 'clm.ministry.assistant') !==
-        undefined
-    );
-
-    return assignableUsersByPartArranged;
+  _arrangeAssignableUsers(result: Array<any>): AssignableUsersByPart {
+    return {
+      bibleReading: result.filter(
+        (user) =>
+          user.parts.find(
+            (part) => part.name === 'clm.treasures.bible-reading'
+          ) !== undefined
+      ),
+      initialCall: result.filter(
+        (user) =>
+          user.parts.find(
+            (part) => part.name === 'clm.ministry.initial-call'
+          ) !== undefined
+      ),
+      firstReturnVisit: result.filter(
+        (user) =>
+          user.parts.find(
+            (part) => part.name === 'clm.ministry.first-return-visit'
+          ) !== undefined
+      ),
+      secondReturnVisit: result.filter(
+        (user) =>
+          user.parts.find(
+            (part) => part.name === 'clm.ministry.second-return-visit'
+          ) !== undefined
+      ),
+      bibleStudy: result.filter(
+        (user) =>
+          user.parts.find(
+            (part) => part.name === 'clm.ministry.bible-study'
+          ) !== undefined
+      ),
+      studentTalk: result.filter(
+        (user) =>
+          user.parts.find((part) => part.name === 'clm.ministry.talk') !==
+          undefined
+      ),
+      studentAssistant: result.filter(
+        (user) =>
+          user.parts.find((part) => part.name === 'clm.ministry.assistant') !==
+          undefined
+      ),
+    } as AssignableUsersByPart;
   }
 
   /**
@@ -328,19 +347,15 @@ export class UserService extends CommonService<User> {
    *
    * @param id: string
    */
-  async getUser(
-    id: number | string = null,
-    populate: boolean = false
-  ): Promise<any> {
+  getUser(userId: string = null): User {
     try {
-      if (id) {
-        // Fetch user from db
-        this.log(`fetched user id=${id}`);
+      if (userId) {
+        // Get user from store
+        this.log(`fetched user id=${userId}`);
 
-        return await this.callFunction('Users_getById', [
-          { $oid: id }, // Convert the string id to a MongoDb ObjectId
-          populate,
-        ]);
+        return this.getUsers().find(
+          (user) => user._id.toHexString() === userId
+        );
       } else {
         // create an empty user with default values
         return new User({
@@ -357,7 +372,7 @@ export class UserService extends CommonService<User> {
         });
       }
     } catch (error) {
-      this.handleError<any>(`getUser id=${id}`, error);
+      this.handleError<any>(`getUser id=${userId}`, error);
     }
   }
 

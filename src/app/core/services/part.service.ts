@@ -38,44 +38,32 @@ export class PartService extends CommonService<Part> {
     },
   };
 
-  // private partsUrl = 'api/part'; // URL to web api
+  protected collectionName = 'parts';
+  protected serviceName = 'PartService';
 
   constructor(
-    messageService: MessageService,
-    protected stitchService: StitchService
+    protected messageService: MessageService,
+    protected backendService: StitchService
   ) {
-    super('parts', 'PartService', messageService, stitchService);
+    super();
 
     this.fetchParts();
   }
 
   /**
-   * populate allParts property once and for all
-   * @todo rename init
+   * Get all parts
    */
-  async init() {
-    // if (this.allParts.length === 0) {
-    //   this.allParts = await this.fetchParts();
-    // }
+  getParts() {
+    return this.dataStore.getValue();
   }
 
   /**
-   * Get all parts from the server
-   */
-  async getParts() {
-    await this.init();
-
-    return this.allParts;
-  }
-
-  /**
-   * Get all parts from the server and store them in the
-   * allParts property
+   * Get all parts from the server and store them
    */
   async fetchParts() {
     console.log('Fetching parts from server');
 
-    const allParts = await this.stitchService.callFunction('getAllParts');
+    const allParts = await this.callFunction('getAllParts');
 
     this.updateStore(allParts);
     return allParts;
@@ -86,11 +74,10 @@ export class PartService extends CommonService<Part> {
    */
   getPartsByMeeting(meetingName: string) {
     meetingName = encodeURIComponent(meetingName);
-    // await this.init();
 
     const partsOfMeeting = [];
     Object.keys(this.meetingParts[meetingName]).forEach((partName) => {
-      partsOfMeeting[partName] = this.allParts.find(
+      partsOfMeeting[partName] = this.getParts().find(
         (part) => part.name === this.meetingParts[meetingName][partName]
       );
     });
@@ -106,22 +93,20 @@ export class PartService extends CommonService<Part> {
    * 2. meetings: string[] array of meetings names to retrieve the keys
    */
   async getPartsGroupedByMeeting() {
-    await this.init();
-
     const allPartsGrouped = [];
     // list of meeting names
     const meetings = [];
 
-    const parts = this.dataStore.getValue();
-
-    parts.forEach((part) => {
+    this.getParts().forEach((part) => {
       // if the meeting name is already saved, we skip
       if (
         !meetings.find((meeting) => {
           return meeting === part.meeting;
         })
       ) {
-        allPartsGrouped.push(parts.filter((p) => p.meeting === part.meeting));
+        allPartsGrouped.push(
+          this.getParts().filter((p) => p.meeting === part.meeting)
+        );
 
         meetings.push(part.meeting);
       }
@@ -131,11 +116,9 @@ export class PartService extends CommonService<Part> {
   }
 
   async getPartsNames() {
-    await this.init();
-
     const partsNames = [];
 
-    this.allParts.forEach((part) => {
+    this.getParts().forEach((part) => {
       partsNames.push(part.name);
     });
     return partsNames;
@@ -149,16 +132,14 @@ export class PartService extends CommonService<Part> {
 
   getPartById(partId): Part {
     // const part = this.allParts.find(
-    const part = this.dataStore
-      .getValue()
-      .find((p) => p._id.toHexString() === partId.toHexString());
+    const part = this.getParts().find(
+      (p) => p._id.toHexString() === partId.toHexString()
+    );
 
     return part;
   }
 
-  async getPartByName(partName: string) {
-    partName = encodeURIComponent(name);
-
-    return await this.collection.findOne({ name: partName });
+  getPartByName(partName: string) {
+    return this.getParts().find((p) => p.name === partName);
   }
 }

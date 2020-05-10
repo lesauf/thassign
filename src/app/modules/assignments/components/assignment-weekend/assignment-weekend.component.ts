@@ -6,14 +6,14 @@ import {
   Input,
   Output,
   SimpleChanges,
-  OnDestroy
+  OnDestroy,
 } from '@angular/core';
 import {
   FormArray,
   FormControl,
   FormGroup,
   Validators,
-  FormBuilder
+  FormBuilder,
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DateTime, Interval } from 'luxon';
@@ -26,23 +26,22 @@ import { PartService } from 'src/app/core/services/part.service';
 import { SettingService } from 'src/app/core/services/setting.service';
 import { UserService } from 'src/app/modules/users/user.service';
 import { ValidationService } from 'src/app/core/services/validation.service';
-import { Assignment } from 'src/app/shared/models/assignments.schema';
-import { User } from 'src/app/shared/models/users.schema';
-import { Part } from 'src/app/shared/models/parts.schema';
+import { Assignment } from 'src/app/core/models/assignment/assignment.model';
+import { Part } from 'src/app/core/models/part/part.model';
 
 export const DATE_FORMATS = {
   parse: {
-    dateInput: 'DD/MM/YYYY'
+    dateInput: 'DD/MM/YYYY',
   },
   display: {
     dateInput: 'DD/MM/YYYY',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY'
+    monthYearA11yLabel: 'MMMM YYYY',
   },
   store: {
-    dateInput: 'YYYY-MM-DD'
-  }
+    dateInput: 'YYYY-MM-DD',
+  },
 };
 
 /**
@@ -52,7 +51,7 @@ export const DATE_FORMATS = {
 @Component({
   selector: 'app-assignment-weekend',
   templateUrl: './assignment-weekend.component.html',
-  styleUrls: ['./assignment-weekend.component.scss']
+  styleUrls: ['./assignment-weekend.component.scss'],
 })
 export class AssignmentWeekendComponent extends AssignmentCommon
   implements OnInit, OnChanges, OnDestroy {
@@ -82,27 +81,26 @@ export class AssignmentWeekendComponent extends AssignmentCommon
   readerPart: Part;
 
   constructor(
-    assignmentService: AssignmentService,
-    partService: PartService,
-    userService: UserService,
-    messageService: MessageService,
-    formBuilder: FormBuilder,
-    settingService: SettingService,
-    _snackBar: MatSnackBar,
-    _translate: TranslateService,
-    validationService: ValidationService
+    protected assignmentService: AssignmentService,
+    protected partService: PartService,
+    protected userService: UserService,
+    protected messageService: MessageService,
+    protected formBuilder: FormBuilder,
+    protected settingService: SettingService,
+    protected _snackBar: MatSnackBar,
+    protected _translate: TranslateService,
+    protected validationService: ValidationService
   ) {
-    super(
-      assignmentService,
-      partService,
-      userService,
-      messageService,
-      formBuilder,
-      settingService,
-      _snackBar,
-      _translate,
-      validationService
-    );
+    super();
+    // assignmentService,
+    // partService,
+    // userService,
+    // messageService,
+    // formBuilder,
+    // settingService,
+    // _snackBar,
+    // _translate,
+    // validationService
   }
 
   async ngOnInit() {
@@ -161,12 +159,12 @@ export class AssignmentWeekendComponent extends AssignmentCommon
   generateForm() {
     const weekForms = this.formBuilder.array([]);
 
-    this.weeks.forEach(week => {
+    this.weeks.forEach((week) => {
       weekForms.push(this.generateWeekendForm(week));
     });
 
     this.monthForm = this.formBuilder.group({
-      weeks: weekForms
+      weeks: weekForms,
     });
 
     this.populateForm();
@@ -179,25 +177,25 @@ export class AssignmentWeekendComponent extends AssignmentCommon
       chairman: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
         part: this.chairmanPart._id,
-        assignee: ['']
+        assignee: [''],
       }),
       speaker: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
         part: this.speakerPart._id,
         assignee: [''],
         title: 'A definir',
-        number: 0
+        number: 0,
       }),
       conductor: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
         part: this.conductorPart._id,
-        assignee: ['']
+        assignee: [''],
       }),
       reader: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
         part: this.readerPart._id,
-        assignee: ['']
-      })
+        assignee: [''],
+      }),
     });
 
     return weekendForm as FormGroup;
@@ -209,7 +207,7 @@ export class AssignmentWeekendComponent extends AssignmentCommon
       ['chairman', 'speaker', 'conductor', 'reader'],
       ['chairman', 'speaker', 'conductor', 'reader'],
       ['chairman', 'speaker', 'conductor', 'reader'],
-      ['chairman', 'speaker', 'conductor', 'reader']
+      ['chairman', 'speaker', 'conductor', 'reader'],
     ];
   }
 
@@ -253,9 +251,9 @@ export class AssignmentWeekendComponent extends AssignmentCommon
         formData,
         this.month.toFormat(this.settingService.getDateFormat('parseMonth'))
       )
-      .subscribe(assignment => {
+      .subscribe((assignment) => {
         // TODO AssignmentEdit check if save success
-        this._translate.get('assignment-save-success').subscribe(message => {
+        this._translate.get('assignment-save-success').subscribe((message) => {
           this.messageService.presentToast(message);
         });
       });

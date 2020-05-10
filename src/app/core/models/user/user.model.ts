@@ -18,7 +18,7 @@ export class User {
   @IsOptional()
   // Joi.string().alphanum()
   // tslint:disable-next-line: variable-name
-  _id: string;
+  _id: { toHexString() };
 
   // @(jf.string().required())
   @MinLength(1, { message: 'error.firstName.any.empty' })

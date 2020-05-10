@@ -59,31 +59,25 @@ export abstract class AssignmentCommon {
   protected assignmentService: AssignmentService;
   protected partService: PartService;
   protected userService: UserService;
-  messageService: MessageService;
-  formBuilder: FormBuilder;
-  settingService: SettingService;
-  _snackBar: MatSnackBar;
-  _translate: TranslateService;
-  validationService: ValidationService;
+  protected messageService: MessageService;
+  protected formBuilder: FormBuilder;
+  protected settingService: SettingService;
+  protected _snackBar: MatSnackBar;
+  protected _translate: TranslateService;
+  protected validationService: ValidationService;
 
-  constructor(
-    messageService: MessageService,
-    formBuilder: FormBuilder,
-    settingService: SettingService,
-    _snackBar: MatSnackBar,
-    _translate: TranslateService,
-    validationService: ValidationService
-  ) {
+  constructor() {
     // this.assignmentService = assignmentService;
     // this.partService = partService;
     // this.userService = userService;
-    this.messageService = messageService;
-    this.formBuilder = formBuilder;
-    this.settingService = settingService;
-    this._snackBar = _snackBar;
-    this._translate = _translate;
-    this.validationService = validationService;
+    // this.messageService = messageService;
+    // this.formBuilder = formBuilder;
+    // this.settingService = settingService;
+    // this._snackBar = _snackBar;
+    // this._translate = _translate;
+    // this.validationService = validationService;
   }
+
   async initializeMonthForm() {
     // Convert the month to the first day of the week
     this.getFirstWeekOfTheSelectedMonth();

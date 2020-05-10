@@ -26,6 +26,7 @@ import { PartService } from 'src/app/core/services/part.service';
 import { SettingService } from 'src/app/core/services/setting.service';
 import { UserService } from 'src/app/modules/users/user.service';
 import { ValidationService } from 'src/app/core/services/validation.service';
+import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 import { Part } from 'src/app/core/models/part/part.model';
 
 export const DATE_FORMATS = {
@@ -91,21 +92,20 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     protected assignmentService: AssignmentService,
     protected partService: PartService,
     protected userService: UserService,
-    messageService: MessageService,
-    formBuilder: FormBuilder,
-    settingService: SettingService,
-    _snackBar: MatSnackBar,
-    _translate: TranslateService,
-    validationService: ValidationService
+    protected messageService: MessageService,
+    protected formBuilder: FormBuilder,
+    protected settingService: SettingService,
+    protected _snackBar: MatSnackBar,
+    protected _translate: TranslateService,
+    protected validationService: ValidationService
   ) {
-    super(
-      messageService,
-      formBuilder,
-      settingService,
-      _snackBar,
-      _translate,
-      validationService
-    );
+    super();
+    // messageService,
+    // formBuilder,
+    // settingService,
+    // _snackBar,
+    // _translate,
+    // validationService
   }
 
   ngOnInit() {
@@ -134,7 +134,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     // Check if the previous form was in edit mode
     if (this.isEditMode) {
       // alert('save first please');
-      changes['month'].currentValue = changes['month'].previousValue;
+      changes.month.currentValue = changes.month.previousValue;
     } else {
       this.initializeMonthForm();
     }
@@ -255,14 +255,14 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     );
 
     // Populate form with stored values if there are
-    const weekForms = this.monthForm.controls['weeks'] as FormArray;
+    const weekForms = this.monthForm.controls.weeks as FormArray;
 
     weekForms.controls.forEach((studentsForm: FormGroup, i) => {
       this.listOfPartsByWeek[i].forEach((partName, partIndex) => {
         // const partName = partNameFull.substr(0, partNameFull.indexOf('-'));
 
-        const week = studentsForm.get([partIndex]).value['week'];
-        const position = studentsForm.get([partIndex]).value['position'];
+        const week = studentsForm.get([partIndex]).value.week;
+        const position = studentsForm.get([partIndex]).value.position;
 
         if (midweekAssignments[week] !== undefined) {
           const partNameFull = this[partName + 'Part'].name;

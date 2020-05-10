@@ -15,33 +15,33 @@ import { tap, map, catchError } from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  reportProgress: true
+  reportProgress: true,
 };
 
 /**
  * Get data about assignments from storage
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export abstract class AssignmentService extends CommonService {
+export abstract class AssignmentService extends CommonService<Assignment> {
   public abstract weekendParts = [
     'weekend.publicTalk.chairman',
     'weekend.publicTalk.speaker',
     'weekend.watchtower.conductor',
-    'weekend.watchtower.reader'
+    'weekend.watchtower.reader',
   ];
 
   private assignmentsUrl = 'api/assignment'; // URL to web api
 
   constructor(
     private http: HttpClient,
-    messageService: MessageService,
+    protected messageService: MessageService,
     private partService: PartService,
     private settingService: SettingService,
     private userService: UserService
   ) {
-    super(messageService);
+    super();
 
     // generateAssignments(userService, partSer);
   }
@@ -54,7 +54,7 @@ export abstract class AssignmentService extends CommonService {
     const assignmentsList = this.http
       .get<Assignment[]>(this.assignmentsUrl)
       .pipe(
-        tap(_ => this.log('fetched assignments', 'AssignmentService')),
+        tap((_) => this.log('fetched assignments', 'AssignmentService')),
         map((result: Assignment[]) => {
           // sorting on client side,
           // TODO REMOVE when sorting on server side
@@ -89,11 +89,13 @@ export abstract class AssignmentService extends CommonService {
       // Fetch assignment from db
       const url = `${this.assignmentsUrl}/${id}`;
       return this.http.get<Assignment>(url).pipe(
-        tap(_ => this.log(`fetched Assignment id=${id}`, 'AssignmentService')),
+        tap((_) =>
+          this.log(`fetched Assignment id=${id}`, 'AssignmentService')
+        ),
         catchError(this.handleError<Assignment>(`getAssignment id=${id}`))
       );
     } else {
-      // create an empty user
+      // create an empty assignment
       const assignment = new Assignment();
       // Set default values here
       return new BehaviorSubject(assignment).asObservable();
@@ -111,7 +113,7 @@ export abstract class AssignmentService extends CommonService {
   ): Observable<Assignment[]> {
     const url = this.assignmentsUrl + '/week/' + week.toFormat('YYYY-MM-DD');
     return this.http.get<Assignment[]>(url).pipe(
-      tap(h => {
+      tap((h) => {
         const outcome = h ? `fetched` : `did not find`;
         const weekFormatted = week.toFormat('L');
         this.log(
@@ -171,7 +173,7 @@ export abstract class AssignmentService extends CommonService {
     const weekendAssignments = await this.http
       .get<any[]>(url)
       .pipe(
-        tap(h => {
+        tap((h) => {
           const outcome = h ? `fetched` : `did not find`;
           const monthFormatted = month.toFormat('L');
           this.log(
@@ -185,9 +187,9 @@ export abstract class AssignmentService extends CommonService {
     // console.log(weekendAssignments);
     // Now group them by week then part name
     const weekendAssignmentsGrouped = [];
-    weekendAssignments.forEach(week => {
+    weekendAssignments.forEach((week) => {
       weekendAssignmentsGrouped[week._id] = [];
-      week.parts.forEach(result => {
+      week.parts.forEach((result) => {
         weekendAssignmentsGrouped[week._id][result._id.part] =
           result.assignment;
       });
@@ -208,7 +210,7 @@ export abstract class AssignmentService extends CommonService {
     const assignments = await this.http
       .get<any[]>(url)
       .pipe(
-        tap(h => {
+        tap((h) => {
           const outcome = h ? `fetched` : `did not find`;
           const monthFormatted = month.toFormat('L');
           this.log(
@@ -222,9 +224,9 @@ export abstract class AssignmentService extends CommonService {
     // console.log('ORIG', assignments);
     // Now group them by week then part name
     const assignmentsGrouped = [];
-    assignments.forEach(week => {
+    assignments.forEach((week) => {
       assignmentsGrouped[week._id] = [];
-      week.assignments.forEach(result => {
+      week.assignments.forEach((result) => {
         const partName = result._id.part + '-' + result._id.position;
         assignmentsGrouped[week._id][partName] = result.assignment;
       });
@@ -241,7 +243,7 @@ export abstract class AssignmentService extends CommonService {
       'partName/weekend.publicTalk.chairman/week/' +
       week.toFormat('Y-M-D');
     return this.http.get<any[]>(url).pipe(
-      tap(h => {
+      tap((h) => {
         const outcome = h ? `fetched` : `did not find`;
         const weekFormatted = week.toFormat('L');
         this.log(
@@ -281,7 +283,7 @@ export abstract class AssignmentService extends CommonService {
     const url = `${this.assignmentsUrl}/${assignment._id}`;
     // console.log(assignment);
     return this.http.put<Assignment>(url, assignment, httpOptions).pipe(
-      tap(_ =>
+      tap((_) =>
         this.log(`Updated assignment id=${assignment._id}`, 'AssignmentService')
       ),
       catchError(this.handleError<any>('updateAssignment'))
@@ -294,7 +296,7 @@ export abstract class AssignmentService extends CommonService {
     const url = `${this.assignmentsUrl}/${id}`;
     // console.log(id);
     return this.http.delete<Assignment>(url, httpOptions).pipe(
-      tap(_ => this.log(`deleted assignment id=${id}`, 'AssignmentService')),
+      tap((_) => this.log(`deleted assignment id=${id}`, 'AssignmentService')),
       catchError(this.handleError<Assignment>('deleteAssignment'))
     );
   }
@@ -308,8 +310,8 @@ export abstract class AssignmentService extends CommonService {
     // console.log(assignments);
     // Converting form data to array and assignee to its id
     const assignmentsData = [];
-    assignments.weeks.forEach(week => {
-      Object.values(week).forEach(ass => {
+    assignments.weeks.forEach((week) => {
+      Object.values(week).forEach((ass) => {
         if (ass['assignee']) {
           ass['assignee'] = ass['assignee']._id;
           if (ass['assistant'] !== undefined) {
@@ -326,7 +328,7 @@ export abstract class AssignmentService extends CommonService {
     // console.log(assignment);
     if (assignmentsData.length) {
       return this.http.post(url, assignmentsData, httpOptions).pipe(
-        tap(_ =>
+        tap((_) =>
           this.log(`Updated assignments (${month})`, 'AssignmentService')
         ),
         catchError(
@@ -335,7 +337,7 @@ export abstract class AssignmentService extends CommonService {
       );
     } else {
       return of(null).pipe(
-        tap(_ => this.log(`Nothing to update`, 'AssignmentService'))
+        tap((_) => this.log(`Nothing to update`, 'AssignmentService'))
       );
     }
   }
