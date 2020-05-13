@@ -78,17 +78,19 @@ export class UserEditComponent implements OnInit {
   /**
    * @see https://ultimatecourses.com/blog/angular-ngif-async-pipe
    */
-  ngOnInit() {
+  async ngOnInit() {
     // this.getUser();
     this.user = this.userService.currentUser;
 
-    if (!this.user) {
+    if (!this.user && this.router.url !== '/users/add') {
       this.router.navigate(['users']);
-      // Switch to addUser form
-      // this.user = await this.userService.getUser();
+    } else if (this.router.url === '/users/add') {
+      // AddUser form
+      this.user = await this.userService.getUser();
     }
 
     this.getUserForm();
+
     this.allParts = this.partService.getParts();
 
     this.allPartsGrouped$ = this.partService.getPartsGroupedByMeeting();

@@ -1,9 +1,4 @@
-<button
-  mat-fab
-  matTooltip="{{ 'add-user' | translate | titlecase }}"
-  [routerLink]="['/users/add']"
-  class="mat-fab-bottom-right"
->
+<button mat-fab matTooltip="{{ 'add-user' | translate | titlecase }}" [routerLink]="['/users/add']" class="mat-fab-bottom-right">
   <mat-icon>person_add</mat-icon>
 </button>
 
@@ -18,13 +13,7 @@
 
 <!-- Generate button -->
 <div fxLayout="row" fxLayoutAlign="end start">
-  <button
-    mat-raised-button
-    matTooltip="{{ 'generate-users' | translate | titlecase }}"
-    (click)="generateUsers()"
-    fxFlex="1"
-    fxFlexAlign="right"
-  >
+  <button mat-raised-button matTooltip="{{ 'generate-users' | translate | titlecase }}" (click)="generateUsers()" fxFlex="1" fxFlexAlign="right">
     <mat-icon>autorenew</mat-icon>
   </button>
 </div>
@@ -32,10 +21,7 @@
 <!-- Table control bar -->
 <div fxLayout="row" fxLayoutAlign="space-between stretch">
   <div fxFlex="30px" fxFlexOffset="25px" fxFlexAlign="center">
-    <mat-checkbox
-      [checked]="masterChecked"
-      matTooltip="{{ 'select-all' | translate }}"
-    ></mat-checkbox>
+    <mat-checkbox [checked]="masterChecked" matTooltip="{{ 'select-all' | translate }}"></mat-checkbox>
   </div>
   <div fxFlexAlign="center">
     <button mat-icon-button (click)="openSort($event)">
@@ -45,75 +31,38 @@
       {{ 'sort-by' | translate | titlecase }}
       {{ sort.replace('_', '-') | translate }}
     </button>
-    <button
-      mat-icon-button
-      matTooltip="{{ 'sort-order' | translate }}"
-      (click)="toggleSortOrder()"
-    >
+    <button mat-icon-button matTooltip="{{ 'sort-order' | translate }}" (click)="toggleSortOrder()">
       <mat-icon>
         arrow_{{ sortOrder === 'asc' ? 'upward' : 'downward' }}
       </mat-icon>
     </button>
   </div>
   <div fxFlex="30px" fxFlexAlign="center">
-    <button
-      mat-icon-button
-      [disabled]="noUserChecked"
-      matTooltip="{{ 'delete' | translate }}"
-      appConfirm="{{ 'dialog.delete.confirmation.title' | translate }}"
-      message="{{ 'dialog.delete.confirmation.message' | translate }}"
-      cancelButton="{{ 'dialog.delete.confirmation.cancelButton' | translate }}"
+    <button mat-icon-button [disabled]="noUserChecked" matTooltip="{{ 'delete' | translate }}" appConfirm="{{ 'dialog.delete.confirmation.title' | translate }}" message="{{ 'dialog.delete.confirmation.message' | translate }}" cancelButton="{{ 'dialog.delete.confirmation.cancelButton' | translate }}"
       confirmButton="{{
         'dialog.delete.confirmation.confirmButton' | translate
-      }}"
-      (confirmed)="delete(getCheckedUsers())"
-    >
+      }}" (confirmed)="delete(getCheckedUsers())">
       <mat-icon>delete</mat-icon>
     </button>
   </div>
   <div fxFlex></div>
 </div>
 
-<mat-paginator
-  [length]="dataLength"
-  [pageSize]="pageSize"
-  [pageIndex]="pageIndex"
-  [pageSizeOptions]="pageSizeOptions"
-  (page)="pageEvent = $event"
->
+<mat-paginator [length]="dataLength" [pageSize]="pageSize" [pageIndex]="pageIndex" [pageSizeOptions]="pageSizeOptions" (page)="pageEvent = $event">
 </mat-paginator>
 
-<ng-template #loading><app-loader></app-loader></ng-template>
+<ng-template #loading>
+  <app-loader></app-loader>
+</ng-template>
 <div *ngIf="users; else loading">
   <div *ngIf="pUsers$ | async as pUsers">
     <mat-accordion multi="false">
-      <mat-expansion-panel
-        hideToggle="true"
-        #mep="matExpansionPanel"
-        *ngFor="let user of pUsers; last as last; trackBy: trackById"
-      >
-        <mat-expansion-panel-header
-          fxLayout="row"
-          fxLayoutAlign="start stretch"
-          fxLayoutGap
-        >
-          <mat-panel-title
-            fxFlex
-            fxFlex.lt-sm="100"
-            fxFlexAlign="center"
-            fxLayout="row"
-            fxLayoutAlign="space-between stretch"
-            fxLayoutGap="15px"
-          >
+      <mat-expansion-panel hideToggle="true" #mep="matExpansionPanel" *ngFor="let user of pUsers; last as last; trackBy: trackById">
+        <mat-expansion-panel-header fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap>
+          <mat-panel-title fxFlex fxFlex.lt-sm="100" fxFlexAlign="center" fxLayout="row" fxLayoutAlign="space-between stretch" fxLayoutGap="15px">
             <!-- Checkbox -->
             <div fxFlex="25px" fxFlexAlign="center">
-              <mat-checkbox
-                name="userCheckbox"
-                [value]="user._id"
-                [checked]="masterChecked"
-                (change)="handleCheckboxes()"
-                (click)="$event.stopPropagation()"
-              ></mat-checkbox>
+              <mat-checkbox name="userCheckbox" [value]="user._id" [checked]="masterChecked" (change)="handleCheckboxes()" (click)="$event.stopPropagation()"></mat-checkbox>
             </div>
 
             <!-- Type icon -->
@@ -141,11 +90,7 @@
         <ng-template matExpansionPanelContent>
           <!-- Lazy rendering -->
 
-          <div
-            fxLayout="row wrap"
-            fxLayout.lt-sm="column"
-            fxLayoutAlign="start stretch"
-          >
+          <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start stretch">
             <div fxFlex="45">
               <mat-icon inline="true">person</mat-icon>
               {{ user.type }}
@@ -167,13 +112,7 @@
           </div>
 
           <mat-chip-list fxLayout="row" fxLayoutAlign="start stretch">
-            <mat-chip
-              class="mat-chip-list-stacked"
-              aria-orientation="vertical"
-              [selectable]="false"
-              disabled
-              *ngFor="let partId of user.parts"
-            >
+            <mat-chip class="mat-chip-list-stacked" aria-orientation="vertical" [selectable]="false" disabled *ngFor="let partId of user.parts">
               {{ getPartName(partId) | translate }}
             </mat-chip>
           </mat-chip-list>
@@ -184,18 +123,11 @@
 
               {{ 'close' | translate | titlecase }}
             </button>
-            <button
-              mat-button
-              appConfirm="{{ 'dialog.delete.confirmation.title' | translate }}"
-              message="{{ 'dialog.delete.confirmation.message' | translate }}"
-              cancelButton="{{
+            <button mat-button appConfirm="{{ 'dialog.delete.confirmation.title' | translate }}" message="{{ 'dialog.delete.confirmation.message' | translate }}" cancelButton="{{
                 'dialog.delete.confirmation.cancelButton' | translate
-              }}"
-              confirmButton="{{
+              }}" confirmButton="{{
                 'dialog.delete.confirmation.confirmButton' | translate
-              }}"
-              (confirmed)="delete([user._id])"
-            >
+              }}" (confirmed)="delete([user._id])">
               <mat-icon inline="true">delete</mat-icon>
 
               {{ 'delete' | translate | titlecase }}
@@ -219,10 +151,4 @@
   </div>
 </div>
 
-<mat-paginator
-  [length]="dataLength"
-  [pageSize]="pageSize"
-  [pageIndex]="pageIndex"
-  [pageSizeOptions]="pageSizeOptions"
-  (page)="pageEvent = $event"
-></mat-paginator>
+<mat-paginator [length]="dataLength" [pageSize]="pageSize" [pageIndex]="pageIndex" [pageSizeOptions]="pageSizeOptions" (page)="pageEvent = $event"></mat-paginator>

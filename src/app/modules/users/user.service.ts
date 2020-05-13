@@ -103,7 +103,14 @@ export class UserService extends CommonService<User> {
     );
 
     try {
-      await this.callFunction('Users_insertMany', [generatedUsers]);
+      // Clear the list of users to activate loader
+      this.updateStore(null);
+
+      const users = await this.callFunction('Users_insertMany', [
+        generatedUsers,
+      ]);
+
+      this.updateStore(User.fromJson(users) as User[]);
 
       this.log('generated users');
     } catch (error) {
