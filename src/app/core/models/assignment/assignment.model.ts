@@ -14,6 +14,12 @@ import {
 } from 'class-validator';
 
 export class Assignment {
+  @IsObject()
+  @IsOptional()
+  // Joi.string().alphanum()
+  // tslint:disable-next-line: variable-name
+  _id: { toHexString() };
+
   @IsString()
   @IsDate()
   week: Date;

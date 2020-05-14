@@ -1,17 +1,16 @@
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
+import { tap, map, catchError } from 'rxjs/operators';
 import { DateTime } from 'luxon';
 
+import { AuthService } from '../auth/auth.service';
 import { CommonService } from '../../core/services/common.service';
 import { MessageService } from '../../core/services/message.service';
 import { PartService } from '../../core/services/part.service';
 import { SettingService } from 'src/app/core/services/setting.service';
 import { UserService } from '../users/user.service';
-
-import { Assignment } from '../../shared/models/assignments.schema';
-import { Part } from '../../shared/models/parts.schema';
-import { tap, map, catchError } from 'rxjs/operators';
+import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -38,6 +37,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     private http: HttpClient,
     protected messageService: MessageService,
     private partService: PartService,
+    private authService: AuthService,
     private settingService: SettingService,
     private userService: UserService
   ) {
@@ -47,35 +47,42 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   }
 
   /**
+   * Get users from store
+   */
+  getAssignments(): Assignment[] {
+    return this.dataStore.getValue();
+  }
+
+  /**
    * Get all users from the server
    */
-  getAssignments(): Observable<Assignment[]> {
-    // TODO add to the query when doing server-side
-    const assignmentsList = this.http
-      .get<Assignment[]>(this.assignmentsUrl)
-      .pipe(
-        tap((_) => this.log('fetched assignments', 'AssignmentService')),
-        map((result: Assignment[]) => {
-          // sorting on client side,
-          // TODO REMOVE when sorting on server side
-          // console.log(result);
-          return result.sort((a: Assignment, b: Assignment) => {
-            // sort desc
-            if (a.week > b.week) {
-              return -1;
-            }
+  async fetchAssignments(): Promise<Assignment[]> {
+    try {
+      let result = await this.callFunction('Assignments_find');
 
-            if (a.week < b.week) {
-              return 1;
-            }
+      // Convert results to User objects
+      result = Assignment.fromJson(result) as Assignment[];
+      // Sort
+      result.sort((a: Assignment, b: Assignment) => {
+        // sort desc
+        if (a.week > b.week) {
+          return -1;
+        }
 
-            return 0;
-          });
-        }),
-        catchError(this.handleError('getAssignments', []))
-      );
+        if (a.week < b.week) {
+          return 1;
+        }
 
-    return assignmentsList;
+        return 0;
+      });
+
+      this.updateStore(result);
+      this.log('fetched Assignments');
+
+      return result;
+    } catch (error) {
+      return this.handleError('fetchAssignments', error, [], '');
+    }
   }
 
   /**
@@ -83,22 +90,23 @@ export abstract class AssignmentService extends CommonService<Assignment> {
    *
    * @param id: string
    */
-  getAssignment(id?: number | string): Observable<Assignment> {
-    // console.log(id);
-    if (id) {
-      // Fetch assignment from db
-      const url = `${this.assignmentsUrl}/${id}`;
-      return this.http.get<Assignment>(url).pipe(
-        tap((_) =>
-          this.log(`fetched Assignment id=${id}`, 'AssignmentService')
-        ),
-        catchError(this.handleError<Assignment>(`getAssignment id=${id}`))
-      );
-    } else {
-      // create an empty assignment
-      const assignment = new Assignment();
-      // Set default values here
-      return new BehaviorSubject(assignment).asObservable();
+  getAssignment(id?: number | string): Assignment {
+    try {
+      if (id) {
+        // Get assignment from store
+        this.log(`fetched assignment id=${id}`);
+
+        return this.getAssignments().find(
+          (assignment) => assignment._id.toHexString() === id
+        );
+      } else {
+        // create an empty assignment with default values
+        return new Assignment({
+          ownerId: this.authService.getUser().id,
+        });
+      }
+    } catch (error) {
+      this.handleError<any>(`getAssignment id=${id}`, error);
     }
   }
 
@@ -263,82 +271,87 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   }
 
   //////// Save methods //////////
+  /**
+   * @POST add a new assignment to the server
+   */
+  async addAssignment(assignment: Assignment): Promise<any> {
+    try {
+      const assignments = await this.callFunction('Assignments_insertMany', [
+        [assignment],
+      ]);
 
-  /** POST: add a new assignment to the server */
-  addAssignment(assignment: Assignment) {
-    // console.log(assignment);
-    return this.http.post(this.assignmentsUrl, assignment, httpOptions).pipe(
-      tap((addedAssignment: Assignment) =>
-        this.log(
-          `added assignment w/ id=${addedAssignment._id}`,
-          'AssignmentService'
-        )
-      ),
-      catchError(this.handleError<Assignment>('addAssignment'))
-    );
+      this.updateStore(Assignment.fromJson(assignments) as Assignment[]);
+
+      this.log(`added assignment`);
+    } catch (error) {
+      this.handleError<any>('addAssignment', error);
+    }
   }
 
-  /** PUT: update the assignment on the server */
-  updateAssignment(assignment: Assignment) {
-    const url = `${this.assignmentsUrl}/${assignment._id}`;
-    // console.log(assignment);
-    return this.http.put<Assignment>(url, assignment, httpOptions).pipe(
-      tap((_) =>
-        this.log(`Updated assignment id=${assignment._id}`, 'AssignmentService')
-      ),
-      catchError(this.handleError<any>('updateAssignment'))
-    );
+  /**
+   * @PUT: update the assignment on the server
+   */
+  async updateAssignment(assignment: Assignment): Promise<void> {
+    try {
+      const assignments = await this.callFunction('Assignments_updateByIds', [
+        [assignment._id],
+        assignment,
+      ]);
+
+      this.updateStore(Assignment.fromJson(assignments) as Assignment[]);
+
+      this.log(`updated assignment`);
+    } catch (error) {
+      this.handleError<any>('updateAssignment', error);
+    }
   }
 
-  /** DELETE: delete the assignment from the server */
-  deleteAssignment(assignment: Assignment | number): Observable<Assignment> {
-    const id = typeof assignment === 'number' ? assignment : assignment.id;
-    const url = `${this.assignmentsUrl}/${id}`;
-    // console.log(id);
-    return this.http.delete<Assignment>(url, httpOptions).pipe(
-      tap((_) => this.log(`deleted assignment id=${id}`, 'AssignmentService')),
-      catchError(this.handleError<Assignment>('deleteAssignment'))
-    );
+  /**
+   * DELETE: delete the assignment from the server
+   */
+  async deleteAssignment(id: string[]): Promise<any> {
+    try {
+      const assignments = await this.callFunction('Assignments_deleteByIds', [
+        id,
+      ]);
+
+      this.updateStore(Assignment.fromJson(assignments) as Assignment[]);
+
+      this.log(`deleted assignment`);
+    } catch (error) {
+      this.handleError<any>('deleteAssignment', error);
+    }
   }
 
   /**
    * Insert assignment if not existent, update it otherwise
-   * @param assignment Assignment model object
+   * @param assignments Assignment model object
    */
-  upsertAssignments(assignments: any, month?: string) {
+  async upsertAssignments(assignments: any, month?: string): Promise<void> {
     // : Observable<Assignment> {
     // console.log(assignments);
-    // Converting form data to array and assignee to its id
-    const assignmentsData = [];
+    // Extract all the assignments ids in case of an update
+    const assignmentsIds = [];
     assignments.weeks.forEach((week) => {
       Object.values(week).forEach((ass) => {
-        if (ass['assignee']) {
-          ass['assignee'] = ass['assignee']._id;
-          if (ass['assistant'] !== undefined) {
-            ass['assistant'] = ass['assistant']._id;
-          }
-          assignmentsData.push(ass);
+        if (ass['_id']) {
+          assignmentsIds.push(ass['_id']);
         }
       });
     });
     // console.log(assignmentsData);
 
-    /** PUT: update the assignment on the server */
-    const url = `${this.assignmentsUrl}`;
-    // console.log(assignment);
-    if (assignmentsData.length) {
-      return this.http.post(url, assignmentsData, httpOptions).pipe(
-        tap((_) =>
-          this.log(`Updated assignments (${month})`, 'AssignmentService')
-        ),
-        catchError(
-          this.handleError<any>('updateAssignment', null, 'AssignmentService')
-        )
-      );
-    } else {
-      return of(null).pipe(
-        tap((_) => this.log(`Nothing to update`, 'AssignmentService'))
-      );
+    try {
+      const result = await this.callFunction('Assignments_updateMany', [
+        assignmentsIds,
+        assignments,
+      ]);
+
+      this.updateStore(Assignment.fromJson(assignments) as Assignment[]);
+
+      this.log(`Updated assignments (${month})`, 'AssignmentService');
+    } catch (error) {
+      this.handleError<any>('upsertAssignment', error);
     }
   }
 

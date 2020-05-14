@@ -150,6 +150,57 @@ export class UserService extends CommonService<User> {
   }
 
   /**
+   * Get/create a user
+   *
+   * @param id: string
+   */
+  getUser(userId: string = null): User {
+    try {
+      if (userId) {
+        // Get user from store
+        this.log(`fetched user id=${userId}`);
+
+        return this.getUsers().find(
+          (user) => user._id.toHexString() === userId
+        );
+      } else {
+        // create an empty user with default values
+        return new User({
+          // firstName: '',
+          // lastName: '',
+          ownerId: this.authService.getUser().id,
+          // genre: '',
+          child: false,
+          baptized: false,
+          publisher: false,
+          disabled: false,
+          deleted: false,
+          parts: [],
+        });
+      }
+    } catch (error) {
+      this.handleError<any>(`getUser id=${userId}`, error);
+    }
+  }
+
+  /* GET users whose name contains search term */
+  async searchUsers(term: string): Promise<User[]> {
+    // term = term ? encodeURIComponent(term.trim()) : null;
+
+    try {
+      const result = await this.callFunction('Users_search', [term]);
+
+      const users = User.fromJson(result) as User[];
+
+      this.log(`found users matching "${term}"`);
+
+      return users;
+    } catch (error) {
+      this.handleError<any>('searchUsers', []);
+    }
+  }
+
+  /**
    * Query users from the server
    * rename to Paginate users
    *
@@ -349,57 +400,6 @@ export class UserService extends CommonService<User> {
     } as AssignableUsersByPart;
   }
 
-  /**
-   * Get/create a user
-   *
-   * @param id: string
-   */
-  getUser(userId: string = null): User {
-    try {
-      if (userId) {
-        // Get user from store
-        this.log(`fetched user id=${userId}`);
-
-        return this.getUsers().find(
-          (user) => user._id.toHexString() === userId
-        );
-      } else {
-        // create an empty user with default values
-        return new User({
-          // firstName: '',
-          // lastName: '',
-          ownerId: this.authService.getUser().id,
-          // genre: '',
-          child: false,
-          baptized: false,
-          publisher: false,
-          disabled: false,
-          deleted: false,
-          parts: [],
-        });
-      }
-    } catch (error) {
-      this.handleError<any>(`getUser id=${userId}`, error);
-    }
-  }
-
-  /* GET users whose name contains search term */
-  async searchUsers(term: string): Promise<User[]> {
-    // term = term ? encodeURIComponent(term.trim()) : null;
-
-    try {
-      const result = await this.callFunction('Users_search', [term]);
-
-      const users = User.fromJson(result) as User[];
-
-      this.log(`found users matching "${term}"`);
-
-      return users;
-    } catch (error) {
-      this.handleError<any>('searchUsers', []);
-    }
-  }
-
   //////// Save methods //////////
 
   /**
@@ -420,7 +420,7 @@ export class UserService extends CommonService<User> {
   /**
    * @PUT: update the user on the server
    */
-  async updateUser(user: User): Promise<any> {
+  async updateUser(user: User): Promise<void> {
     try {
       const users = await this.callFunction('Users_updateByIds', [
         [user._id],
