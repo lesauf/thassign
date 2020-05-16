@@ -1,9 +1,6 @@
 <!-- Month selector -->
 <div fxLayout="row" fxLayoutAlign="center center">
-  <app-month-picker
-    [disablePicker]="isEditMode"
-    (monthSelected)="getSelectedMonth($event)"
-  >
+  <app-month-picker [disablePicker]="isEditMode" (monthSelected)="getSelectedMonth($event)">
   </app-month-picker>
 </div>
 
@@ -14,12 +11,8 @@
       {{ 'Students' | translate | titlecase }}
     </ng-template>
     <ng-template matTabContent>
-      <!--<app-assignment-midweek-students-->
-        <!--  *ngIf="selectedMonth"-->
-        <!--  [month]="selectedMonth"-->
-        <!--  (editMode)="disableNavigation($event)"-->
-        <!-->-->
-        <!--</app-assignment-midweek-students>-->
+      <app-assignment-midweek-students *ngIf="selectedMonth" [month]="selectedMonth" (editMode)="disableNavigation($event)">
+      </app-assignment-midweek-students>
 
       <!-- Inserted dynamic component here -->
       <div>
@@ -37,7 +30,8 @@
       <!--  *ngIf="selectedMonth"-->
       <!--  [month]="selectedMonth"-->
       <!--  (editMode)="disableNavigation($event)"-->
-      <!--></app-assignment-midweek>-->
+      <!-->
+      </app-assignment-midweek>-->
     </ng-template>
   </mat-tab>
 

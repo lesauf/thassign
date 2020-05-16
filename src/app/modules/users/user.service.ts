@@ -11,6 +11,7 @@ import { MessageService } from '../../core/services/message.service';
 import { PartService } from 'src/app/core/services/part.service';
 import { StitchService } from 'src/app/core/services/stitch.service';
 import { User } from 'src/app/core/models/user/user.model';
+import { Part } from 'src/app/core/models/part/part.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -253,26 +254,22 @@ export class UserService extends CommonService<User> {
   /**
    * GET user by part.
    */
-  // getUsersByPart(part: any): Observable<any[]> {
-  //   const partId = part._id;
+  getUsersByPart(part: Part): User[] {
+    const users = this.getUsers();
 
-  //   return this.http.get<any[]>(this.usersUrl).pipe(
-  //     map((result: any[]) => {
-  //       // searching on client side,
-  //       // TODO REMOVE when doing nice requests on MongoDB
-  //       return result.filter(
-  //         (user) =>
-  //           user.parts.find((availablePart) => availablePart._id === partId) !==
-  //           undefined
-  //       );
-  //     }),
-  //     tap((h) => {
-  //       const outcome = h ? `fetched` : `did not find`;
-  //       this.log(`${outcome} users assigned to part ${part.name}`);
-  //     })
-  //     // catchError(this.handleError('getUsersByPart', []))
-  //   );
-  // }
+    return users.filter(
+      (user) =>
+        user.parts.find(
+          (assignablePartId) => assignablePartId === part._id.toHexString()
+        ) !== undefined
+    );
+    //   tap((h) => {
+    //     const outcome = h ? `fetched` : `did not find`;
+    //     this.log(`${outcome} users assigned to part ${part.name}`);
+    //   })
+    //   // catchError(this.handleError('getUsersByPart', []))
+    // );
+  }
 
   /**
    * Get the list of users which have the right to do the
@@ -328,28 +325,33 @@ export class UserService extends CommonService<User> {
    * 'weekend.publicTalk.chairman' part
    * nb: Sort assignments by week desc
    */
-  getMidweekStudentsAssignableList(): Observable<any> {
-    return this.http
-      .get<any[]>(this.usersUrl + '/meeting/midweek-students')
-      .pipe(
-        map((assignableUsers) => {
-          // Arranging by part,
+  getMidweekStudentsAssignableList(meetingName: string): any {
+    const users = this.getUsers();
 
-          const assignableUsersByPart = this._arrangeAssignableUsers(
-            assignableUsers
-          );
+    const partsOfMeeting = this.partService.getPartsByMeeting(meetingName);
 
-          return {
-            list: assignableUsers,
-            byPart: assignableUsersByPart,
-          };
-        }),
-        tap((h) => {
-          const outcome = h ? `fetched` : `did not find`;
-          this.log(`${outcome} users assigned to midweek students parts`);
-        })
-        // catchError(this.handleError('getMidweekStudentsAssignableList', []))
+    const assignableUsers = users.filter((user) => {
+      return user.parts.filter(
+        (assignablePartId) =>
+          partsOfMeeting.find(
+            (part) => assignablePartId === part._id.toHexString()
+          ) !== undefined
       );
+    });
+
+    // Arranging by part,
+
+    const assignableUsersByPart = this._arrangeAssignableUsers(assignableUsers);
+
+    return {
+      list: assignableUsers,
+      byPart: assignableUsersByPart,
+    };
+
+    // tap((h) => {
+    //   const outcome = h ? `fetched` : `did not find`;
+    //   this.log(`${outcome} users assigned to midweek students parts`);
+    // })
   }
 
   /**

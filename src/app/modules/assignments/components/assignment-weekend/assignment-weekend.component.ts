@@ -245,17 +245,18 @@ export class AssignmentWeekendComponent extends AssignmentCommon
     });
   }
 
-  saveForm(formData) {
-    this.assignmentService
-      .upsertAssignments(
+  async saveForm(formData) {
+    try {
+      await this.assignmentService.upsertAssignments(
         formData,
         this.month.toFormat(this.settingService.getDateFormat('parseMonth'))
-      )
-      .subscribe((assignment) => {
-        // TODO AssignmentEdit check if save success
-        this._translate.get('assignment-save-success').subscribe((message) => {
-          this.messageService.presentToast(message);
-        });
+      );
+
+      this._translate.get('assignment-save-success').subscribe((message) => {
+        this.messageService.presentToast(message);
       });
+    } catch (error) {
+      throw error;
+    }
   }
 }

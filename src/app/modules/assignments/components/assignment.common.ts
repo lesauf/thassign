@@ -80,18 +80,19 @@ export abstract class AssignmentCommon {
 
   async initializeMonthForm() {
     // Convert the month to the first day of the week
-    this.getFirstWeekOfTheSelectedMonth();
+    this.getFirstWeekOfTheSelectedMonth(); // populate this.firstWeekOfMonth
 
-    this.getAllWeeksOfTheSelectedMonth();
+    this.getAllWeeksOfTheSelectedMonth(); // populate this.weeks
 
-    this.getListOfPartsByWeek();
+    this.getListOfPartsByWeek(); // populate this.listOfPartsByWeek
 
     // this.studentsForm.reset(); // ??
 
-    await this.getPartsAssignableList();
+    this.getPartsAssignableList(); // populate this.assignableList and this.assignableListByPart
 
     // Generate and populate the form with the values for the selected month
     this.generateForm();
+    // console.log(this.assignableList);
 
     this.populateForm();
 

@@ -128,7 +128,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   async ngOnChanges(changes: SimpleChanges) {
     if (this.listOfParts === undefined) {
       // Fetch parts if not yet available
-      await this.getParts('students');
+      await this.getParts('midweek-students');
     }
 
     // Check if the previous form was in edit mode
@@ -140,10 +140,10 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     }
   }
 
-  async getPartsAssignableList() {
-    const assignables = await this.userService
-      .getMidweekStudentsAssignableList()
-      .toPromise();
+  getPartsAssignableList() {
+    const assignables = this.userService.getMidweekStudentsAssignableList(
+      'midweek-students'
+    );
 
     this.assignableList = assignables.list;
     this.assignableListByPart = assignables.byPart;
@@ -231,6 +231,10 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     return partsForms[partName];
   }
 
+  /**
+   * TODO Fetch them either from the epub or from jw.org.
+   * Read the contract
+   */
   getListOfPartsByWeek() {
     this.listOfPartsByWeek = [
       ['bibleReading', 'studentTalk'],
@@ -283,18 +287,18 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     });
   }
 
-  saveForm(formData) {
-    this.assignmentService
-      .upsertAssignments(
+  async saveForm(formData) {
+    try {
+      await this.assignmentService.upsertAssignments(
         formData,
         this.month.toFormat(this.settingService.getDateFormat('parseMonth'))
-      )
-      .subscribe((assignment) => {
-        // TODO AssignmentEdit check if save success
+      );
 
-        this._translate.get('assignment-save-success').subscribe((message) => {
-          this.messageService.presentToast(message);
-        });
+      this._translate.get('assignment-save-success').subscribe((message) => {
+        this.messageService.presentToast(message);
       });
+    } catch (error) {
+      throw error;
+    }
   }
 }

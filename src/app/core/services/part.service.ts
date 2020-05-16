@@ -27,7 +27,7 @@ export class PartService extends CommonService<Part> {
       conductor: 'weekend.watchtower.conductor',
       reader: 'weekend.watchtower.reader',
     },
-    students: {
+    'midweek-students': {
       bibleReading: 'clm.treasures.bible-reading',
       initialCall: 'clm.ministry.initial-call',
       firstReturnVisit: 'clm.ministry.first-return-visit',
@@ -73,11 +73,11 @@ export class PartService extends CommonService<Part> {
    * get the parts objects of the current meeting
    */
   getPartsByMeeting(meetingName: string) {
-    meetingName = encodeURIComponent(meetingName);
-
+    const parts = this.getParts();
     const partsOfMeeting = [];
+
     Object.keys(this.meetingParts[meetingName]).forEach((partName) => {
-      partsOfMeeting[partName] = this.getParts().find(
+      partsOfMeeting[partName] = parts.find(
         (part) => part.name === this.meetingParts[meetingName][partName]
       );
     });

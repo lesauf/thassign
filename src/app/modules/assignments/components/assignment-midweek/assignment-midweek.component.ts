@@ -6,7 +6,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import { AssignmentCommon } from '../assignment.common';
 import { DateTime, Interval } from 'luxon';
@@ -16,7 +16,7 @@ import { MY_FORMATS } from 'src/app/shared/components/month-picker/month-picker.
 @Component({
   selector: 'app-assignment-midweek',
   templateUrl: './assignment-midweek.component.html',
-  styleUrls: ['./assignment-midweek.component.scss']
+  styleUrls: ['./assignment-midweek.component.scss'],
 })
 export class AssignmentMidweekComponent
   implements OnInit, OnChanges, OnDestroy {
@@ -33,9 +33,9 @@ export class AssignmentMidweekComponent
 
   dateFormat = MY_FORMATS.display.dateA11yLabel;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   async ngOnChanges(changes: SimpleChanges) {
     const firstMondayOfMonth = this.month.set({ weekday: 8 }).setLocale('fr'); // set the date as the first monday of the month
@@ -45,5 +45,27 @@ export class AssignmentMidweekComponent
     // console.log(firstMondayOfMonth);
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {}
+
+  getMondays() {
+    var d = new Date(),
+      month = d.getMonth(),
+      tuesdays = [];
+
+    d.setDate(1);
+
+    // Get the first Monday in the month
+    d.setDate(d.getDate() + ((8 - d.getDay()) % 7));
+    // while (d.getDay() !== 1) {
+    //     d.setDate(d.getDate() + 1);
+    // }
+
+    // Get all the other Mondays in the month
+    while (d.getMonth() === month) {
+      tuesdays.push(new Date(d.getTime()));
+      d.setDate(d.getDate() + 7);
+    }
+
+    return tuesdays;
+  }
 }
