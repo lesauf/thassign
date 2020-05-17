@@ -141,7 +141,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   }
 
   getPartsAssignableList() {
-    const assignables = this.userService.getMidweekStudentsAssignableList(
+    const assignables = this.userService.getAssignableUsersByMeeting(
       'midweek-students'
     );
 

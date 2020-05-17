@@ -325,24 +325,26 @@ export class UserService extends CommonService<User> {
    * 'weekend.publicTalk.chairman' part
    * nb: Sort assignments by week desc
    */
-  getMidweekStudentsAssignableList(meetingName: string): any {
+  getAssignableUsersByMeeting(meetingName: string): any {
     const users = this.getUsers();
 
     const partsOfMeeting = this.partService.getPartsByMeeting(meetingName);
 
     const assignableUsers = users.filter((user) => {
-      return user.parts.filter(
+      const containParts = user.parts.filter(
         (assignablePartId) =>
-          partsOfMeeting.find(
-            (part) => assignablePartId === part._id.toHexString()
+          Object.values(partsOfMeeting).find(
+            (part) => assignablePartId.toHexString() === part._id.toHexString()
           ) !== undefined
       );
+
+      return containParts.length ? true : false;
     });
 
     // Arranging by part,
 
     const assignableUsersByPart = this._arrangeAssignableUsers(assignableUsers);
-
+    console.log(assignableUsersByPart);
     return {
       list: assignableUsers,
       byPart: assignableUsersByPart,
@@ -362,42 +364,57 @@ export class UserService extends CommonService<User> {
       bibleReading: result.filter(
         (user) =>
           user.parts.find(
-            (part) => part.name === 'clm.treasures.bible-reading'
+            (part) =>
+              this.partService.getPartById(part).name ===
+              'clm.treasures.bible-reading'
           ) !== undefined
       ),
       initialCall: result.filter(
         (user) =>
           user.parts.find(
-            (part) => part.name === 'clm.ministry.initial-call'
+            (part) =>
+              this.partService.getPartById(part).name ===
+              'clm.ministry.initial-call'
           ) !== undefined
       ),
       firstReturnVisit: result.filter(
         (user) =>
           user.parts.find(
-            (part) => part.name === 'clm.ministry.first-return-visit'
+            (part) =>
+              this.partService.getPartById(part).name ===
+              'clm.ministry.first-return-visit'
           ) !== undefined
       ),
       secondReturnVisit: result.filter(
         (user) =>
           user.parts.find(
-            (part) => part.name === 'clm.ministry.second-return-visit'
+            (part) =>
+              this.partService.getPartById(part).name ===
+              'clm.ministry.second-return-visit'
           ) !== undefined
       ),
       bibleStudy: result.filter(
         (user) =>
           user.parts.find(
-            (part) => part.name === 'clm.ministry.bible-study'
+            (part) =>
+              this.partService.getPartById(part).name ===
+              'clm.ministry.bible-study'
           ) !== undefined
       ),
       studentTalk: result.filter(
         (user) =>
-          user.parts.find((part) => part.name === 'clm.ministry.talk') !==
-          undefined
+          user.parts.find(
+            (part) =>
+              this.partService.getPartById(part).name === 'clm.ministry.talk'
+          ) !== undefined
       ),
       studentAssistant: result.filter(
         (user) =>
-          user.parts.find((part) => part.name === 'clm.ministry.assistant') !==
-          undefined
+          user.parts.find(
+            (part) =>
+              this.partService.getPartById(part).name ===
+              'clm.ministry.assistant'
+          ) !== undefined
       ),
     } as AssignableUsersByPart;
   }

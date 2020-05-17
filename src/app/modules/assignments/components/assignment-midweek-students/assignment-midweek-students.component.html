@@ -1,198 +1,112 @@
-<!--<form-->
-  <!--  fxLayout="row wrap"-->
-  <!--  fxLayoutAlign="space-around start"-->
-  <!--  *ngIf="monthForm"-->
-  <!--  [formGroup]="monthForm"-->
-  <!-->-->
-  <!--  <div fxFlex="95" fxLayoutAlign="end">-->
-  <!--    <button type="button" mat-raised-button (click)="generateAssignments()">-->
-  <!--      <mat-icon>functions</mat-icon>-->
-  <!--      {{ 'generate' | translate }}-->
-  <!--    </button>-->
-  <!--    &nbsp;-->
-  <!--    <button-->
-  <!--      type="button"-->
-  <!--      *ngIf="isEditMode"-->
-  <!--      mat-raised-button-->
-  <!--      (click)="cancelForm()"-->
-  <!--    >-->
-  <!--      <mat-icon>cancel</mat-icon>-->
-  <!--      {{ 'cancel' | translate }}-->
-  <!--    </button>-->
-  <!--    &nbsp;-->
-  <!--    <button-->
-  <!--      type="submit"-->
-  <!--      mat-raised-button-->
-  <!--      class="mat-primary"-->
-  <!--      (click)="editAndSaveForm()"-->
-  <!--    >-->
-  <!--      <mat-icon>{{ isEditMode ? 'save' : 'edit' }}</mat-icon>-->
-  <!--      {{ (isEditMode ? 'save' : 'edit') | translate }}-->
-  <!--    </button>-->
-  <!--  </div>-->
-  <!--  <div fxFlex="95" formArrayName="weeks">-->
-  <!--    <div-->
-  <!--      *ngFor="-->
-  <!--        let studentsForm of monthForm.get('weeks')['controls'];-->
-  <!--        let weekIndex = index-->
-  <!--      "-->
-  <!--    >-->
-  <!--      <div-->
-  <!--        [formGroupName]="weekIndex"-->
-  <!--        fxLayout="row wrap"-->
-  <!--        fxLayoutAlign="space-around start"-->
-  <!--      >-->
-  <!--        <div fxFlex="100" fxLayoutAlign="space-around start">-->
-  <!--          <h2 fxFlex="45" fxFlex.lt-md="80">-->
-  <!--            {{-->
-  <!--              studentsForm.get(['0', 'week']).value-->
-  <!--                | translateDate: 'MMM-D'-->
-  <!--                | async-->
-  <!--            }}-->
-  <!--          </h2>-->
-  <!--          <div fxFlex="45" fxFlex.lt-md="10">&nbsp;</div>-->
-  <!--        </div>-->
+<form fxLayout="row wrap" fxLayoutAlign="space-around start" *ngIf="monthForm" [formGroup]="monthForm">
+  <div fxFlex="95" fxLayoutAlign="end">
+    <!--<button type="button" mat-raised-button (click)="generateAssignments()">-->
+    <!--  <mat-icon>functions</mat-icon>-->
+    <!--  {{ 'generate' | translate }}-->
+    <!--</button> &nbsp;-->
+    <button type="button" *ngIf="isEditMode" mat-raised-button (click)="cancelForm()">
+      <mat-icon>cancel</mat-icon>
+      {{ 'cancel' | translate }}
+    </button> &nbsp;
+    <button type="submit" mat-raised-button class="mat-primary" (click)="editAndSaveForm()">
+      <mat-icon>{{ isEditMode ? 'save' : 'edit' }}</mat-icon>
+      {{ (isEditMode ? 'save' : 'edit') | translate }}
+    </button>
+  </div>
+  <div fxFlex="95" formArrayName="weeks">
+    <div *ngFor="
+          let studentsForm of monthForm.get('weeks')['controls'];
+          let weekIndex = index
+        ">
+      <div [formGroupName]="weekIndex" fxLayout="row wrap" fxLayoutAlign="space-around start">
+        <div fxFlex="100" fxLayoutAlign="space-around start">
+          <h2 fxFlex="45" fxFlex.lt-md="80">
+            {{ studentsForm.get(['0', 'week']).value | translateDate: 'MMM-D' | async }}
+          </h2>
+          <div fxFlex="45" fxFlex.lt-md="10">&nbsp;</div>
+        </div>
 
-  <!--        <div-->
-  <!--          fxFlex="100"-->
-  <!--          fxLayout="row wrap"-->
-  <!--          fxLayoutAlign="space-around start"-->
-  <!--          formGroupName="{{ partIndex }}"-->
-  <!--          *ngFor="-->
-  <!--            let partName of listOfPartsByWeek[weekIndex];-->
-  <!--            let partIndex = index-->
-  <!--          "-->
-  <!--        >-->
-  <!--          <mat-form-field fxFlex="45">-->
-  <!--            <mat-select-->
-  <!--              placeholder="{{ getPartTitle(partName) | translate | titlecase }}"-->
-  <!--              [compareWith]="compareFn"-->
-  <!--              formControlName="assignee"-->
-  <!--            >-->
-  <!--              <mat-select-trigger>-->
-  <!--                {{ studentsForm.get([partIndex, 'assignee']).value?.fullName }}-->
-  <!--              </mat-select-trigger>-->
-  <!--              <mat-option disabled="disabled" class="filter-option">-->
-  <!--                <mat-icon class="mat-18">sort</mat-icon>-->
-  <!--                <button-->
-  <!--                  mat-raised-button-->
-  <!--                  class="mat-primary fill text-sm"-->
-  <!--                  (click)="sortUsersByName(partName)"-->
-  <!--                  title="{{ 'sort-users-by-name' | translate }}"-->
-  <!--                >-->
-  <!--                  {{ 'A - Z' | translate | titlecase }}-->
-  <!--                </button>-->
-  <!--                <button-->
-  <!--                  mat-raised-button-->
-  <!--                  class="mat-primary fill text-sm"-->
-  <!--                  (click)="-->
-  <!--                    sortUsersByLastAssignment(-->
-  <!--                      partName,-->
-  <!--                      'asc',-->
-  <!--                      'weekend.publicTalk.chairman'-->
-  <!--                    )-->
-  <!--                  "-->
-  <!--                  title="{{ 'sort-users-by-this-assignment' | translate }}"-->
-  <!--                >-->
-  <!--                  {{ 'this' | translate | titlecase }}-->
-  <!--                </button>-->
-  <!--                <button-->
-  <!--                  mat-raised-button-->
-  <!--                  class="mat-primary fill text-sm"-->
-  <!--                  (click)="sortUsersByLastAssignment(partName)"-->
-  <!--                  title="{{ 'sort-users-by-any-assignment' | translate }}"-->
-  <!--                >-->
-  <!--                  {{ 'all' | translate | titlecase }}-->
-  <!--                </button>-->
-  <!--              </mat-option>-->
+        <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="space-around start" formGroupName="{{ partIndex }}" *ngFor="
+              let partName of listOfPartsByWeek[weekIndex];
+              let partIndex = index
+            ">
+          <mat-form-field fxFlex="45">
+            <mat-select placeholder="{{ getPartTitle(partName) | translate | titlecase }}" [compareWith]="compareFn" formControlName="assignee">
+              <mat-select-trigger>
+                {{ studentsForm.get([partIndex, 'assignee']).value?.fullName }}
+              </mat-select-trigger>
+              <mat-option disabled="disabled" class="filter-option">
+                <mat-icon class="mat-18">sort</mat-icon>
+                <button mat-raised-button class="mat-primary fill text-sm" (click)="sortUsersByName(partName)" title="{{ 'sort-users-by-name' | translate }}">
+                    {{ 'A - Z' | translate | titlecase }}
+                  </button>
+                <button mat-raised-button class="mat-primary fill text-sm" (click)="
+                      sortUsersByLastAssignment(
+                        partName,
+                        'asc',
+                        'weekend.publicTalk.chairman'
+                      )
+                    " title="{{ 'sort-users-by-this-assignment' | translate }}">
+                    {{ 'this' | translate | titlecase }}
+                  </button>
+                <button mat-raised-button class="mat-primary fill text-sm" (click)="sortUsersByLastAssignment(partName)" title="{{ 'sort-users-by-any-assignment' | translate }}">
+                    {{ 'all' | translate | titlecase }}
+                  </button>
+              </mat-option>
 
-  <!--              <mat-option-->
-  <!--                *ngFor="let assignee of assignableListByPart[partName]"-->
-  <!--                [value]="assignee"-->
-  <!--                matTooltip="{{ 'latest-assignment' | translate }} : {{-->
-  <!--                  'this' | translate | titlecase-->
-  <!--                }} : {{ assignee?.lastAssignmentThisPart?.week }} |-->
-  <!--        {{ 'all' | translate | titlecase }} : {{-->
-  <!--                  assignee?.lastAssignmentAnyPart?.week-->
-  <!--                }}"-->
-  <!--              >-->
-  <!--                {{ assignee.fullName }}-->
-  <!--              </mat-option>-->
-  <!--            </mat-select>-->
-  <!--          </mat-form-field>-->
-  <!--  -->
-  <!-- ASSISTANT -->
-  <!--          <div fxFlex="45">-->
-  <!-- formGroupName="{{ partIndex }}" -->
-  <!--            <mat-form-field-->
-  <!--              fxFill-->
-  <!--              *ngIf="studentsForm.get([partIndex, 'assistant'])"-->
-  <!--            >-->
-  <!--              <mat-select-->
-  <!--                placeholder="{{ 'assistant' | translate | titlecase }}"-->
-  <!--                [compareWith]="compareFn"-->
-  <!--                formControlName="assistant"-->
-  <!--              >-->
-  <!--                <mat-select-trigger>-->
-  <!--                  {{-->
-  <!--                    studentsForm.get([partIndex, 'assistant']).value?.fullName-->
-  <!--                  }}-->
-  <!--                </mat-select-trigger>-->
-  <!--                <mat-option disabled="disabled" class="filter-option">-->
-  <!--                  <mat-icon class="mat-18">sort</mat-icon>-->
-  <!--                  <button-->
-  <!--                    mat-raised-button-->
-  <!--                    class="mat-primary fill text-sm"-->
-  <!--                    (click)="sortUsersByName(partName)"-->
-  <!--                    title="{{ 'sort-users-by-name' | translate }}"-->
-  <!--                  >-->
-  <!--                    {{ 'A - Z' | translate | titlecase }}-->
-  <!--                  </button>-->
-  <!--                  <button-->
-  <!--                    mat-raised-button-->
-  <!--                    class="mat-primary fill text-sm"-->
-  <!--                    (click)="-->
-  <!--                      sortUsersByLastAssignment(-->
-  <!--                        partName,-->
-  <!--                        'asc',-->
-  <!--                        'weekend.publicTalk.chairman'-->
-  <!--                      )-->
-  <!--                    "-->
-  <!--                    title="{{ 'sort-users-by-this-assignment' | translate }}"-->
-  <!--                  >-->
-  <!--                    {{ 'this' | translate | titlecase }}-->
-  <!--                  </button>-->
-  <!--                  <button-->
-  <!--                    mat-raised-button-->
-  <!--                    class="mat-primary fill text-sm"-->
-  <!--                    (click)="sortUsersByLastAssignment(partName)"-->
-  <!--                    title="{{ 'sort-users-by-any-assignment' | translate }}"-->
-  <!--                  >-->
-  <!--                    {{ 'all' | translate | titlecase }}-->
-  <!--                  </button>-->
-  <!--                </mat-option>-->
+              <mat-option *ngFor="let assignee of assignableListByPart[partName]" [value]="assignee" matTooltip="{{ 'latest-assignment' | translate }} : {{
+                    'this' | translate | titlecase
+                  }} : {{ assignee?.lastAssignmentThisPart?.week }} |
+          {{ 'all' | translate | titlecase }} : {{
+                    assignee?.lastAssignmentAnyPart?.week
+                  }}">
+                {{ assignee.fullName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-  <!--                <mat-option-->
-  <!--                  *ngFor="-->
-  <!--                    let assistant of assignableListByPart['studentAssistant']-->
-  <!--                  "-->
-  <!--                  [value]="assistant"-->
-  <!--                  matTooltip="{{ 'latest-assignment' | translate }} : {{-->
-  <!--                    'this' | translate | titlecase-->
-  <!--                  }} : {{ assistant?.lastAssignmentThisPart?.week }} |-->
-  <!--        {{ 'all' | translate | titlecase }} : {{-->
-  <!--                    assistant?.lastAssignmentAnyPart?.week-->
-  <!--                  }}"-->
-  <!--                >-->
-  <!--                  {{ assistant.fullName }}-->
-  <!--                </mat-option>-->
-  <!--              </mat-select>-->
-  <!--            </mat-form-field>-->
-  <!--          </div>-->
-  <!--        </div>-->
-  <!-- Closing part -->
-  <!-- </div> -->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--  </div>-->
-  <!--</form>-->
+          <!--ASSISTANT-->
+          <div fxFlex="45" formGroupName="{{ partIndex }}">
+            <mat-form-field fxFill *ngIf="studentsForm.get([partIndex, 'assistant'])">
+              <mat-select placeholder="{{ 'assistant' | translate | titlecase }}" [compareWith]="compareFn" formControlName="assistant">
+                <mat-select-trigger>
+                  {{ studentsForm.get([partIndex, 'assistant']).value?.fullName }}
+                </mat-select-trigger>
+                <mat-option disabled="disabled" class="filter-option">
+                  <mat-icon class="mat-18">sort</mat-icon>
+                  <button mat-raised-button class="mat-primary fill text-sm" (click)="sortUsersByName(partName)" title="{{ 'sort-users-by-name' | translate }}">
+                      {{ 'A - Z' | translate | titlecase }}
+                    </button>
+                  <button mat-raised-button class="mat-primary fill text-sm" (click)="
+                        sortUsersByLastAssignment(
+                          partName,
+                          'asc',
+                          'weekend.publicTalk.chairman'
+                        )
+                      " title="{{ 'sort-users-by-this-assignment' | translate }}">
+                      {{ 'this' | translate | titlecase }}
+                    </button>
+                  <button mat-raised-button class="mat-primary fill text-sm" (click)="sortUsersByLastAssignment(partName)" title="{{ 'sort-users-by-any-assignment' | translate }}">
+                      {{ 'all' | translate | titlecase }}
+                    </button>
+                </mat-option>
+
+                <mat-option *ngFor="
+                      let assistant of assignableListByPart['studentAssistant']
+                    " [value]="assistant" matTooltip="{{ 'latest-assignment' | translate }} : {{
+                      'this' | translate | titlecase
+                    }} : {{ assistant?.lastAssignmentThisPart?.week }} |
+          {{ 'all' | translate | titlecase }} : {{
+                      assistant?.lastAssignmentAnyPart?.week
+                    }}">
+                  {{ assistant.fullName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- Closing part -->
+      </div>
+    </div>
+  </div>
+</form>

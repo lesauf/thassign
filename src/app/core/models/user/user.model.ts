@@ -95,7 +95,7 @@ export class User {
    */
   // Joi.array().allow(null),
   @IsArray()
-  parts: string[];
+  parts: { id: object; toHexString() }[];
 
   // Joi.boolean().optional().default(false), // Can modify programs
   @IsBoolean()

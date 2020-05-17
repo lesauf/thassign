@@ -94,7 +94,7 @@ export abstract class AssignmentCommon {
     this.generateForm();
     // console.log(this.assignableList);
 
-    this.populateForm();
+    // this.populateForm();
 
     this.isEditMode = false;
   }
