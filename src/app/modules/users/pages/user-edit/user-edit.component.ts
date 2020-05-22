@@ -120,7 +120,7 @@ export class UserEditComponent implements OnInit {
       ValidationService.classValidator(new User())
     );
 
-    console.log('User Parts: ', this.user.parts);
+    // console.log('User Parts: ', this.user.parts);
 
     this.toggleManFields();
 
@@ -160,9 +160,8 @@ export class UserEditComponent implements OnInit {
       if (this.userForm.valid) {
         // Make sure to create a deep copy of the form-model
         // let result = this.user;
-        const result = User.fromJson(this.userForm.value) as User;
-        // const result = Object.assign({}, this.userForm.value);
-        // result.parts = Object.assign([], result.parts);
+        // console.log(typeof this.userForm.value);
+        const result = this.userService.createUser(this.userForm.value) as User;
 
         // Do useful stuff with the gathered data
         const insertedUser = await this.userService.upsertUser(result);
@@ -233,18 +232,18 @@ export class UserEditComponent implements OnInit {
   }
 
   /**
-   * TODO: Allow the user to just click on a part to select/deselect it
+   * Allow the user to just click on a part to select/deselect it
    */
   togglePart(part: Part): void {
-    let selectedParts: Part['_id'][] = this.userForm.controls.parts.value;
+    let selectedParts: Part[] = this.userForm.controls.parts.value;
     let selectedPartIndex = -1;
 
     try {
       if (selectedParts !== null) {
         // search
         selectedPartIndex = selectedParts.findIndex(
-          (selectedPartId, index, sParts) =>
-            selectedPartId.toHexString() === part._id.toHexString()
+          (selectedPart, index, sParts) =>
+            selectedPart._id.toHexString() === part._id.toHexString()
         );
       } else {
         selectedParts = [];
@@ -255,7 +254,7 @@ export class UserEditComponent implements OnInit {
         selectedParts.splice(selectedPartIndex, 1);
       } else {
         // Part not selected, add it
-        selectedParts.push(part._id);
+        selectedParts.push(part);
       }
       this.userForm.controls.parts.patchValue(selectedParts);
 
@@ -268,6 +267,9 @@ export class UserEditComponent implements OnInit {
     } catch (error) {}
   }
 
+  /**
+   * To populate the form, check if the part chip should be selected
+   */
   partSelected(part: Part): boolean {
     if (this.userForm.controls.parts.value !== null) {
       const partValue = this.userForm.controls.parts.value;
@@ -276,8 +278,8 @@ export class UserEditComponent implements OnInit {
         // TODO Remove when parts comes from Mongo
         // partValue.find((selectedPart) => selectedPart.name === part.name) !==
         // undefined
-        partValue.find((selectedPartId) => {
-          return selectedPartId.toHexString() === part._id.toHexString();
+        partValue.find((selectedPart) => {
+          return selectedPart._id.toHexString() === part._id.toHexString();
         }) !== undefined
       );
     }

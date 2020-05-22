@@ -5,16 +5,21 @@ import { AuthGuard } from './modules/auth/auth.guard';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { ContentLayoutComponent } from './layouts/content-layout/content-layout.component';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
+import { AppResolverService } from './app-resolver.service';
 
 const routes: Routes = [
   {
     path: '',
     component: ContentLayoutComponent,
     canActivate: [AuthGuard],
+    resolve: {
+      message: AppResolverService,
+    },
     children: [
       {
         path: '',
         canActivateChild: [AuthGuard],
+
         loadChildren: () =>
           import('./modules/home/home.module').then(
             (m) => m.HomeComponentModule

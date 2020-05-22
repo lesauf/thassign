@@ -33,7 +33,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   /**
    * All users from the DB
    */
-  users$: Observable<User[]>;
+  // users$: Observable<User[]>;
 
   /**
    * paginated Users

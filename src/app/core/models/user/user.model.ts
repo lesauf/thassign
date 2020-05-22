@@ -12,13 +12,14 @@ import {
   IsDefined,
   MinLength,
 } from 'class-validator';
+import { Part, ObjectId } from '../part/part.model';
 
 export class User {
   @IsObject()
   @IsOptional()
   // Joi.string().alphanum()
   // tslint:disable-next-line: variable-name
-  _id: { toHexString() };
+  _id: ObjectId;
 
   // @(jf.string().required())
   @MinLength(1, { message: 'error.firstName.any.empty' })
@@ -95,7 +96,7 @@ export class User {
    */
   // Joi.array().allow(null),
   @IsArray()
-  parts: { id: object; toHexString() }[];
+  parts: Part[] | ObjectId[];
 
   // Joi.boolean().optional().default(false), // Can modify programs
   @IsBoolean()
@@ -130,24 +131,50 @@ export class User {
    * @todo Sanitize/clean the object passed (apply some rules,
    * like women can not give public talks ...)
    */
-  constructor(userProperties?: object) {
+  constructor(userProperties?: object, allParts?: Part[]) {
     if (userProperties) {
+      // First convert parts id array to an array of Part
+      // console.log();
+      console.log('Part', userProperties['parts'][0].constructor.name);
+      if (
+        allParts &&
+        userProperties['parts'][0].constructor.name === 'ObjectId'
+      ) {
+        userProperties['parts'] = userProperties['parts'].map((partId: any) =>
+          allParts.find((part: Part) => {
+            return partId.equals(part._id);
+
+            // return false;
+          })
+        );
+      }
+
+      // Assign the properties to this object
       Object.assign(this, userProperties);
     }
   }
 
   /**
+   * Convert the user to the format accepted in the db
+   * for example, replace parts with their ids
+   */
+  prepareToSave(): void {
+    // Replace parts with their ids
+    this.parts = (this.parts as Part[]).map((part) => part._id);
+  }
+
+  /**
    * Create instances from JSON or array of JSON objects
-   *
+   * These are coming from the form for example
    * @param userProperties JSON object with properties
    */
-  public static fromJson(userProperties?: object) {
-    if (userProperties instanceof Array) {
-      return userProperties.map((obj) => new User(obj));
-    } else {
-      return new User(userProperties);
-    }
-  }
+  // public static fromJson(userProperties?: object) {
+  //   if (userProperties instanceof Array) {
+  //     return userProperties.map((obj) => new User(obj));
+  //   } else {
+  //     return new User(userProperties);
+  //   }
+  // }
 
   // Some virtual properties
   get fullName() {
@@ -183,5 +210,20 @@ export class User {
     }
 
     return progress;
+  }
+
+  /**
+   * List of meetings the users have parts on
+   */
+  get meetingsAssignable(): string[] {
+    let meetingsAssignable = [];
+
+    this.parts.forEach((part) => {
+      if (!meetingsAssignable.includes(part['meeting'])) {
+        meetingsAssignable.push(part['meeting']);
+      }
+    });
+
+    return this.meetingsAssignable;
   }
 }

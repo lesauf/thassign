@@ -134,7 +134,7 @@ export class StitchService {
         params
       );
       console.log(functionName, ':', response);
-
+      // exit;
       return response;
     } catch (error) {
       throw error;

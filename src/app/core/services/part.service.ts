@@ -47,7 +47,7 @@ export class PartService extends CommonService<Part> {
   ) {
     super();
 
-    this.fetchParts();
+    // this.fetchParts();
   }
 
   /**

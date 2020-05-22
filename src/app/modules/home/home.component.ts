@@ -13,9 +13,9 @@ import { User } from 'src/app/core/models/user/user.model';
   styleUrls: ['home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  parts$: Observable<Part[]>;
+  parts: Part[];
 
-  users$: Observable<User[]>;
+  users: User[];
 
   user: any;
 
@@ -34,7 +34,8 @@ export class HomeComponent implements OnInit {
     // console.log(validation);
     // // console.log(this.partService.getAllParts());
     // this.partService.getAllParts().then((parts) => {
-    // this.parts = this.partService.allParts;
+    this.parts = this.partService.getParts();
+    this.users = this.userService.getUsers();
     // });
     // this.partService.getPartsNames().then((partsNames) => {
     //   console.log('Parts names :', partsNames);
@@ -42,8 +43,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.users$ = this.userService.data;
-    this.parts$ = this.partService.data;
+    // this.parts$ = this.partService.data;
+    // this.users$ = this.userService.data;
   }
 
   addUser() {

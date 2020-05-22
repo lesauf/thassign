@@ -112,8 +112,8 @@
           </div>
 
           <mat-chip-list fxLayout="row" fxLayoutAlign="start stretch">
-            <mat-chip class="mat-chip-list-stacked" aria-orientation="vertical" [selectable]="false" disabled *ngFor="let partId of user.parts">
-              {{ getPartName(partId) | translate }}
+            <mat-chip class="mat-chip-list-stacked" aria-orientation="vertical" [selectable]="false" disabled *ngFor="let part of user.parts">
+              {{ part.name | translate }}
             </mat-chip>
           </mat-chip-list>
 

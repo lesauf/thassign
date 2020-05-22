@@ -59,7 +59,7 @@ export class ValidationService {
   static classValidator(model): ValidatorFn {
     return (form: FormGroup): { [key: string]: any } | null => {
       // console.log(model.fromJson(form.value));
-      const errors = validateSync(User.fromJson(form.value));
+      const errors = validateSync(form.value);
 
       const fieldsWithError = {};
       if (errors.length > 0) {

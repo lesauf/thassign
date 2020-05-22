@@ -75,7 +75,7 @@ export class UserService extends CommonService<User> {
 
     // this.users = this.store.asObservable();
 
-    this.fetchUsers();
+    // this.fetchUsers();
   }
 
   /**
@@ -95,8 +95,29 @@ export class UserService extends CommonService<User> {
     this.cUser = user;
   }
 
+  destroy() {
+    console.log('Destruction');
+    this.pUsersStore.complete();
+    this.dataStore.complete();
+  }
+
+  /**
+   * Create User instances from JSON or array of JSON objects
+   *
+   * @param userProperties JSON object/array with properties
+   */
+  createUser(userProperties?: object): User | User[] {
+    if (userProperties instanceof Array) {
+      return userProperties.map(
+        (obj) => new User(obj, this.partService.getParts())
+      ) as User[];
+    } else {
+      return new User(userProperties, this.partService.getParts()) as User;
+    }
+  }
+
   async generateUsers(numberToGenerate: number = 50) {
-    const parts = await this.partService.getParts();
+    const parts = this.partService.getParts();
     const generatedUsers = generateUsers(
       parts,
       this.authService.getUser().id,
@@ -111,7 +132,7 @@ export class UserService extends CommonService<User> {
         generatedUsers,
       ]);
 
-      this.updateStore(User.fromJson(users) as User[]);
+      this.updateStore(this.createUser(users) as User[]);
 
       this.log('generated users');
     } catch (error) {
@@ -134,19 +155,17 @@ export class UserService extends CommonService<User> {
   /**
    * Get all users from server
    */
-  async fetchUsers(): Promise<User[]> {
+  async fetchUsers(): Promise<void> {
+    // this.destroy();
     try {
       let result = await this.callFunction('Users_find');
 
-      // Convert results to User objects
-      result = User.fromJson(result) as User[];
-
-      this.updateStore(result);
+      this.updateStore(<User[]>this.createUser(result));
       this.log('fetched users');
 
-      return result;
+      // return result;
     } catch (error) {
-      return this.handleError('fetchUsers', error, [], '');
+      this.handleError('fetchUsers', error, [], '');
     }
   }
 
@@ -191,7 +210,7 @@ export class UserService extends CommonService<User> {
     try {
       const result = await this.callFunction('Users_search', [term]);
 
-      const users = User.fromJson(result) as User[];
+      const users = this.createUser(result) as User[];
 
       this.log(`found users matching "${term}"`);
 
@@ -259,8 +278,9 @@ export class UserService extends CommonService<User> {
 
     return users.filter(
       (user) =>
-        user.parts.find(
-          (assignablePartId) => assignablePartId === part._id.toHexString()
+        (user.parts as Part[]).find(
+          (assignablePart) =>
+            assignablePart._id.toHexString() === part._id.toHexString()
         ) !== undefined
     );
     //   tap((h) => {
@@ -327,95 +347,43 @@ export class UserService extends CommonService<User> {
    */
   getAssignableUsersByMeeting(meetingName: string): any {
     const users = this.getUsers();
-
     const partsOfMeeting = this.partService.getPartsByMeeting(meetingName);
+    let assignableUsersByPart = {};
 
-    const assignableUsers = users.filter((user) => {
-      const containParts = user.parts.filter(
-        (assignablePartId) =>
-          Object.values(partsOfMeeting).find(
-            (part) => assignablePartId.toHexString() === part._id.toHexString()
-          ) !== undefined
-      );
-
-      return containParts.length ? true : false;
-    });
+    const assignableUsers = users.filter((user) =>
+      user.meetingsAssignable.includes(meetingName)
+    );
 
     // Arranging by part,
+    partsOfMeeting.forEach((part) => {
+      assignableUsersByPart[part.name] = assignableUsers.filter(
+        (user) =>
+          (user.parts as Part[]).find(
+            (userPart) => userPart.name === part.name
+          ) !== undefined
+      );
+    });
 
-    const assignableUsersByPart = this._arrangeAssignableUsers(assignableUsers);
+    assignableUsersByPart = this._arrangeAssignableUsers(assignableUsersByPart);
     console.log(assignableUsersByPart);
     return {
       list: assignableUsers,
       byPart: assignableUsersByPart,
     };
-
-    // tap((h) => {
-    //   const outcome = h ? `fetched` : `did not find`;
-    //   this.log(`${outcome} users assigned to midweek students parts`);
-    // })
   }
 
   /**
-   * Extract the parts from the results from DB
+   * Rename the parts for better lisibility
    */
-  _arrangeAssignableUsers(result: Array<any>): AssignableUsersByPart {
+  _arrangeAssignableUsers(result: {}): AssignableUsersByPart {
     return {
-      bibleReading: result.filter(
-        (user) =>
-          user.parts.find(
-            (part) =>
-              this.partService.getPartById(part).name ===
-              'clm.treasures.bible-reading'
-          ) !== undefined
-      ),
-      initialCall: result.filter(
-        (user) =>
-          user.parts.find(
-            (part) =>
-              this.partService.getPartById(part).name ===
-              'clm.ministry.initial-call'
-          ) !== undefined
-      ),
-      firstReturnVisit: result.filter(
-        (user) =>
-          user.parts.find(
-            (part) =>
-              this.partService.getPartById(part).name ===
-              'clm.ministry.first-return-visit'
-          ) !== undefined
-      ),
-      secondReturnVisit: result.filter(
-        (user) =>
-          user.parts.find(
-            (part) =>
-              this.partService.getPartById(part).name ===
-              'clm.ministry.second-return-visit'
-          ) !== undefined
-      ),
-      bibleStudy: result.filter(
-        (user) =>
-          user.parts.find(
-            (part) =>
-              this.partService.getPartById(part).name ===
-              'clm.ministry.bible-study'
-          ) !== undefined
-      ),
-      studentTalk: result.filter(
-        (user) =>
-          user.parts.find(
-            (part) =>
-              this.partService.getPartById(part).name === 'clm.ministry.talk'
-          ) !== undefined
-      ),
-      studentAssistant: result.filter(
-        (user) =>
-          user.parts.find(
-            (part) =>
-              this.partService.getPartById(part).name ===
-              'clm.ministry.assistant'
-          ) !== undefined
-      ),
+      bibleReading: result['clm.treasures.bible-reading'],
+      initialCall: result['clm.ministry.initial-call'],
+      firstReturnVisit: result['clm.ministry.first-return-visit'],
+      secondReturnVisit: result['clm.ministry.second-return-visit'],
+      bibleStudy: result['clm.ministry.bible-study'],
+      studentTalk: result['clm.ministry.talk'],
+      studentAssistant: result['clm.ministry.assistant'],
     } as AssignableUsersByPart;
   }
 
@@ -428,7 +396,7 @@ export class UserService extends CommonService<User> {
     try {
       const users = await this.callFunction('Users_insertMany', [[user]]);
 
-      this.updateStore(User.fromJson(users) as User[]);
+      this.updateStore(this.createUser(users) as User[]);
 
       this.log(`added user`);
     } catch (error) {
@@ -446,7 +414,7 @@ export class UserService extends CommonService<User> {
         user,
       ]);
 
-      this.updateStore(User.fromJson(users) as User[]);
+      this.updateStore(this.createUser(users) as User[]);
 
       this.log(`updated user`);
     } catch (error) {
@@ -459,7 +427,7 @@ export class UserService extends CommonService<User> {
     try {
       const users = await this.callFunction('Users_deleteByIds', [userId]);
 
-      this.updateStore(User.fromJson(users) as User[]);
+      this.updateStore(this.createUser(users) as User[]);
 
       this.log(`deleted user`);
     } catch (error) {
@@ -481,7 +449,7 @@ export class UserService extends CommonService<User> {
         deleteProps,
       ]);
 
-      this.updateStore(User.fromJson(users) as User[]);
+      this.updateStore(this.createUser(users) as User[]);
 
       this.log(`deleted user`);
     } catch (error) {
@@ -495,6 +463,7 @@ export class UserService extends CommonService<User> {
    */
   upsertUser(user: User) {
     // : Observable<any> {
+    user.prepareToSave();
 
     if (user._id !== null) {
       // user update

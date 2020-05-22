@@ -1,12 +1,7 @@
 <h2 mat-dialog-title class="center">{{ user.fullName }}</h2>
 
 <div>
-  <div
-    fxLayout="row wrap"
-    fxLayout.lt-sm="column"
-    fxLayoutAlign="space-around stretch"
-    fxLayoutAlign.lt-sm="center start"
-  >
+  <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch" fxLayoutAlign.lt-sm="center start">
     <div fxFlex="45">
       <mat-icon inline="true">person</mat-icon>
       {{ user.type }}
@@ -26,14 +21,8 @@
   </div>
 
   <mat-chip-list fxLayout="row" fxLayoutAlign="start stretch">
-    <mat-chip
-      class="mat-chip-list-stacked"
-      aria-orientation="vertical"
-      [selectable]="false"
-      disabled
-      *ngFor="let partId of user.parts"
-    >
-      {{ getPartName(partId) | translate }}
+    <mat-chip class="mat-chip-list-stacked" aria-orientation="vertical" [selectable]="false" disabled *ngFor="let part of user.parts">
+      {{ part.name | translate }}
     </mat-chip>
   </mat-chip-list>
 </div>

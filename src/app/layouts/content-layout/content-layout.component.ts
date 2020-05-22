@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { MatSidenav, MatDrawer } from '@angular/material/sidenav';
+import { UserService } from 'src/app/modules/users/user.service';
 
 @Component({
   selector: 'app-content-layout',
@@ -26,7 +27,10 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
   matDrawerShow = true;
   sideNavMode = 'side';
 
-  constructor(public mediaObserver: MediaObserver) {}
+  constructor(
+    public mediaObserver: MediaObserver,
+    private userService: UserService
+  ) {}
 
   ngOnChanges() {
     this.visibility = this.isVisible ? 'shown' : 'hidden';
@@ -37,6 +41,11 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
       this.toggleView();
     });
   }
+
+  ngOnDestroy() {
+    this.userService.destroy();
+  }
+
   getRouteAnimation(outlet) {
     return outlet.activatedRouteData.animation;
     // return outlet.isActivated ? outlet.activatedRoute : ''
