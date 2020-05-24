@@ -133,9 +133,8 @@ export class User {
    */
   constructor(userProperties?: object, allParts?: Part[]) {
     if (userProperties) {
-      // First convert parts id array to an array of Part
-      // console.log();
-      console.log('Part', userProperties['parts'][0].constructor.name);
+      // If the Users are coming from the DB,
+      // convert parts id array to an array of Part
       if (
         allParts &&
         userProperties['parts'][0].constructor.name === 'ObjectId'
@@ -224,6 +223,6 @@ export class User {
       }
     });
 
-    return this.meetingsAssignable;
+    return meetingsAssignable;
   }
 }

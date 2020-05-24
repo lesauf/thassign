@@ -12,6 +12,8 @@ import {
   IsDefined,
   MinLength,
 } from 'class-validator';
+import { Part } from '../part/part.model';
+import { User } from '../user/user.model';
 
 export class Assignment {
   @IsObject()
@@ -25,14 +27,14 @@ export class Assignment {
   week: Date;
 
   @IsString()
-  part: string;
+  part: Part;
 
   @IsString()
-  assignee: string;
+  assignee: User;
 
   @IsString()
   @IsOptional()
-  assistant: string;
+  assistant: User;
 
   @IsInt()
   position = 1; // 'Assignment position for same part'), // like many Initial Calls, for example
@@ -55,12 +57,12 @@ export class Assignment {
   // Joi.date().default(Date.now()),
   @IsDate()
   @IsOptional()
-  createdAt: number = Date.now();
+  createdAt: Date = new Date();
 
   // Joi.date(),
   @IsDate()
   @IsOptional()
-  updatedAt: number;
+  updatedAt: Date;
 
   // deleted: Joi.boolean().default(false),
   @IsBoolean()
@@ -69,12 +71,16 @@ export class Assignment {
   // Joi.date(),
   @IsDate()
   @IsOptional()
-  deletedAt: number;
+  deletedAt: Date;
 
   // Joi.string(),
   @IsInt()
   @IsOptional()
   deletedBy: string;
+
+  private _assignableUsers: User[];
+
+  private _assignableAssistants: User[];
 
   /**
    * @todo Sanitize/clean the object passed (apply some rules,
@@ -84,6 +90,29 @@ export class Assignment {
     if (userProperties) {
       Object.assign(this, userProperties);
     }
+  }
+
+  /**
+   * The unique identifier of this assignment in the form
+   */
+  get key() {
+    return this.part.name + this.week.toISOString() + this.position;
+  }
+
+  set assignableUsers(users: User[]) {
+    this._assignableUsers = users;
+  }
+
+  get assignableUsers() {
+    return this._assignableUsers;
+  }
+
+  set assignableAssistants(users: User[]) {
+    this._assignableAssistants = users;
+  }
+
+  get assignableAssistants() {
+    return this._assignableAssistants;
   }
 
   /**

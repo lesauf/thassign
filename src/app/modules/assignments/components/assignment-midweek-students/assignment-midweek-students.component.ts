@@ -16,8 +16,9 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DateTime, Interval } from 'luxon';
 import { TranslateService } from '@ngx-translate/core';
+import { DateTime, Interval } from 'luxon';
+import { Observable } from 'rxjs';
 
 import { AssignmentCommon } from '../assignment.common';
 import { AssignmentService } from 'src/app/modules/assignments/assignment.service';
@@ -28,6 +29,7 @@ import { UserService } from 'src/app/modules/users/user.service';
 import { ValidationService } from 'src/app/core/services/validation.service';
 import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 import { Part } from 'src/app/core/models/part/part.model';
+import { AssignmentControlService } from '../../assignment-control.service';
 
 export const DATE_FORMATS = {
   parse: {
@@ -52,6 +54,7 @@ export const DATE_FORMATS = {
   selector: 'app-assignment-midweek-students',
   templateUrl: './assignment-midweek-students.component.html',
   styleUrls: ['./assignment-midweek-students.component.scss'],
+  providers: [AssignmentControlService],
 })
 export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   implements OnInit, OnChanges, OnDestroy {
@@ -64,7 +67,17 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   @Output()
   editMode: EventEmitter<any> = new EventEmitter();
 
+  meetingName = 'midweek-students';
+
+  assignments: Assignment[] = [];
+  /**
+   * paginated Users
+   */
+  pAssignments$: Observable<Assignment[]>;
+
   studentsForm: FormGroup;
+
+  payLoad = '';
 
   /**
    * Selected value for this assignment
@@ -88,7 +101,13 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   studentTalkPart: Part;
   studentAssistantPart: Part;
 
+  /**
+   * Current week beeing displayed
+   */
+  currentWeek: Interval;
+
   constructor(
+    private acs: AssignmentControlService,
     protected assignmentService: AssignmentService,
     protected partService: PartService,
     protected userService: UserService,
@@ -108,27 +127,35 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     // validationService
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     // this._getTranslations();
     //   this.getAssignableList();
+    // this.userService.data.subscribe((users) => {
+    //   this.users = users;
+    //   this.pUsers$ = this.userService.pUsers;
+    // this.getUsers();
+    // });
   }
 
   ngOnDestroy(): void {
-    // Called once, before the instance is destroyed.
-    // Add 'implements OnDestroy' to the class.
-
     // TODO: set an alert to inform the users that he is still in edit mode
     // Emit edit mode event (to enable navigation)
     this.editMode.emit(false);
+    // this.assignmentService.pAssignments.unsubscribe();
   }
 
   /**
    * Called whenever a data bound property is changed
    */
   async ngOnChanges(changes: SimpleChanges) {
-    if (this.listOfParts === undefined) {
-      // Fetch parts if not yet available
+    if (changes.month.isFirstChange()) {
+      // Fetch meeting parts once
       await this.getParts('midweek-students');
+
+      this.assignmentService.pAssignments.subscribe((assignments) => {
+        this.assignments = assignments;
+        this.studentsForm = this.acs.toFormGroup(assignments);
+      });
     }
 
     // Check if the previous form was in edit mode
@@ -138,167 +165,184 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     } else {
       this.initializeMonthForm();
     }
-  }
 
-  getPartsAssignableList() {
-    const assignables = this.userService.getAssignableUsersByMeeting(
-      'midweek-students'
+    // this.assignments = this.assignmentService.getAssignmentsByMeetingAndMonth(
+    this.assignmentService.getAssignmentsByMeetingAndMonth(
+      this.meetingName,
+      this.month,
+      this.listOfParts,
+      this.assignableListByPart
     );
-
-    this.assignableList = assignables.list;
-    this.assignableListByPart = assignables.byPart;
+    // this.studentsForm = this.acs.toFormGroup(this.assignments);
   }
 
-  generateForm() {
-    const weekForms = this.formBuilder.array([]);
+  /**
+   * Tell if the assignment is the first of the week
+   * @param assignment
+   */
+  isStartNewWeek(assignment: Assignment): boolean {
+    const startDate = DateTime.fromJSDate(assignment.week);
+    const endDate = startDate.plus({ days: 6 });
 
-    this.weeks.forEach((week, index) => {
-      let position = 1;
-      // TODO fetch from the db, from the epub
-      const weekForm = {};
-      this.listOfPartsByWeek[index].forEach((partName, partIndex) => {
-        // Set the position for repetitive parts
-        const previousPartName = this.listOfPartsByWeek[index][partIndex - 1];
-        if (previousPartName === partName) {
-          position = weekForm[partIndex - 1].get('position').value + 1;
-        }
-        weekForm[partIndex] = this.getPartForm(partName, week, position);
-      });
+    if (this.currentWeek && this.currentWeek.start.equals(startDate)) {
+      return false;
+    }
 
-      weekForms.push(this.formBuilder.group(weekForm));
-    });
+    this.currentWeek = Interval.fromDateTimes(startDate, endDate);
 
-    this.monthForm = this.formBuilder.group({
-      weeks: weekForms,
-    });
-
-    this.monthForm.disable(); // Disabled by default to prevent editing
+    return true;
   }
+
+  onSubmit() {
+    this.payLoad = JSON.stringify(this.studentsForm.getRawValue(), null, 1);
+  }
+
+  // generateForm() {
+  //   const weekForms = this.formBuilder.array([]);
+
+  //   this.weeks.forEach((week, index) => {
+  //     let position = 1;
+  //     // TODO fetch from the db, from the epub
+  //     const weekForm = {};
+  //     this.listOfPartsByWeek[index].forEach((partName, partIndex) => {
+  //       // Set the position for repetitive parts
+  //       const previousPartName = this.listOfPartsByWeek[index][partIndex - 1];
+  //       if (previousPartName === partName) {
+  //         position = weekForm[partIndex - 1].get('position').value + 1;
+  //       }
+  //       weekForm[partIndex] = this.getPartForm(partName, week, position);
+  //     });
+
+  //     console.log(weekForm);
+  //     weekForms.push(this.formBuilder.group(weekForm));
+  //   });
+
+  //   // this.monthForm = this.formBuilder.group({
+  //   //   weeks: weekForms,
+  //   // });
+  //   this.monthForm = weekForms;
+
+  //   console.log('WeeksForm', this.monthForm);
+  //   // console.log('Separate', weekForms);
+  //   this.monthForm.disable(); // Disabled by default to prevent editing
+  // }
 
   /**
    * Build the individuals form/field for each part
    */
-  getPartForm(
-    partName: string,
-    week: Interval,
-    position: number = 1
-  ): FormGroup {
-    const partsForms = {
-      bibleReading: this.formBuilder.group({
-        week: week,
-        part: this.bibleReadingPart._id,
-        assignee: [''],
-        position: position,
-      }),
-      initialCall: this.formBuilder.group({
-        week: week.toFormat(DATE_FORMATS.store.dateInput),
-        part: this.initialCallPart._id,
-        assignee: [''],
-        assistant: [''],
-        position: position,
-        title: 'A definir',
-        number: 0,
-      }),
-      firstReturnVisit: this.formBuilder.group({
-        week: week.toFormat(DATE_FORMATS.store.dateInput),
-        part: this.firstReturnVisitPart._id,
-        assignee: [''],
-        assistant: [''],
-        position: position,
-      }),
-      secondReturnVisit: this.formBuilder.group({
-        week: week.toFormat(DATE_FORMATS.store.dateInput),
-        part: this.secondReturnVisitPart._id,
-        assignee: [''],
-        assistant: [''],
-        position: position,
-      }),
-      bibleStudy: this.formBuilder.group({
-        week: week.toFormat(DATE_FORMATS.store.dateInput),
-        part: this.bibleStudyPart._id,
-        assignee: [''],
-        assistant: [''],
-        position: position,
-      }),
-      studentTalk: this.formBuilder.group({
-        week: week.toFormat(DATE_FORMATS.store.dateInput),
-        part: this.studentTalkPart._id,
-        assignee: [''],
-        position: position,
-      }) as FormGroup,
-    };
+  // getPartForm(
+  //   partName: string,
+  //   week: Interval,
+  //   position: number = 1
+  // ): FormGroup {
+  //   const partsForms = {
+  //     bibleReading: this.formBuilder.group({
+  //       _id: '',
+  //       week: week,
+  //       part: this.bibleReadingPart,
+  //       assignee: [''],
+  //       position: position,
+  //     }),
+  //     initialCall: this.formBuilder.group({
+  //       _id: '',
+  //       week: week,
+  //       part: this.initialCallPart,
+  //       assignee: [''],
+  //       assistant: [''],
+  //       position: position,
+  //       title: 'A definir',
+  //       number: 0,
+  //     }),
+  //     firstReturnVisit: this.formBuilder.group({
+  //       _id: '',
+  //       week: week,
+  //       part: this.firstReturnVisitPart,
+  //       assignee: [''],
+  //       assistant: [''],
+  //       position: position,
+  //     }),
+  //     secondReturnVisit: this.formBuilder.group({
+  //       _id: '',
+  //       week: week,
+  //       part: this.secondReturnVisitPart,
+  //       assignee: [''],
+  //       assistant: [''],
+  //       position: position,
+  //     }),
+  //     bibleStudy: this.formBuilder.group({
+  //       _id: '',
+  //       week: week,
+  //       part: this.bibleStudyPart,
+  //       assignee: [''],
+  //       assistant: [''],
+  //       position: position,
+  //     }),
+  //     studentTalk: this.formBuilder.group({
+  //       _id: '',
+  //       week: week,
+  //       part: this.studentTalkPart,
+  //       assignee: [''],
+  //       position: position,
+  //     }) as FormGroup,
+  //   };
 
-    return partsForms[partName];
-  }
-
-  /**
-   * TODO Fetch them either from the epub or from jw.org.
-   * Read the contract
-   */
-  getListOfPartsByWeek() {
-    this.listOfPartsByWeek = [
-      ['bibleReading', 'studentTalk'],
-      ['bibleReading', 'initialCall', 'initialCall', 'initialCall'],
-      ['bibleReading', 'firstReturnVisit', 'firstReturnVisit'],
-      ['bibleReading', 'secondReturnVisit', 'bibleStudy'],
-      ['bibleReading', 'secondReturnVisit', 'bibleStudy', 'bibleStudy'],
-    ];
-  }
+  //   return partsForms[partName];
+  // }
 
   /**
    * Populate form, refresh and disable it
    */
-  async populateForm() {
-    // Refresh the list of users (to have their latests assignments up to date)
-    // this.getPartsAssignableList();
+  // async populateForm() {
+  //   // Refresh the list of users (to have their latests assignments up to date)
+  //   // this.getPartsAssignableList();
 
-    // Get stored values
-    const midweekAssignments = await this.assignmentService.getAssignmentsByMeetingAndMonth(
-      'midweek-students',
-      this.month
-    );
+  //   // Get stored values
+  //   const midweekAssignments = await this.assignmentService.getAssignmentsByMeetingAndMonth(
+  //     'midweek-students',
+  //     this.month
+  //   );
 
-    // Populate form with stored values if there are
-    const weekForms = this.monthForm.controls.weeks as FormArray;
+  //   // Populate form with stored values if there are
+  //   const weekForms = this.monthForm;
 
-    weekForms.controls.forEach((studentsForm: FormGroup, i) => {
-      this.listOfPartsByWeek[i].forEach((partName, partIndex) => {
-        // const partName = partNameFull.substr(0, partNameFull.indexOf('-'));
+  //   // weekForms.controls.forEach((studentsForm: FormGroup, i) => {
+  //   //   this.listOfPartsByWeek[i].forEach((partName, partIndex) => {
+  //   //     // const partName = partNameFull.substr(0, partNameFull.indexOf('-'));
 
-        const week = studentsForm.get([partIndex]).value.week;
-        const position = studentsForm.get([partIndex]).value.position;
+  //   //     const week = studentsForm.get([partIndex]).value.week;
+  //   //     const position = studentsForm.get([partIndex]).value.position;
 
-        if (midweekAssignments[week] !== undefined) {
-          const partNameFull = this[partName + 'Part'].name;
-          const partNameFullWithPosition = partNameFull + '-' + position;
+  //   //     if (midweekAssignments[week] !== undefined) {
+  //   //       const partNameFull = this[partName + 'Part'].name;
+  //   //       const partNameFullWithPosition = partNameFull + '-' + position;
 
-          if (
-            midweekAssignments[week][partNameFullWithPosition] !== undefined
-          ) {
-            // Type casting to remove TS errors
-            ((this.monthForm.get('weeks') as FormArray).at(
-              i
-            ) as FormGroup).controls[partIndex].patchValue(
-              midweekAssignments[week][partNameFullWithPosition]
-            );
-          }
-        }
-      });
-    });
-  }
+  //   //       if (
+  //   //         midweekAssignments[week][partNameFullWithPosition] !== undefined
+  //   //       ) {
+  //   //         // Type casting to remove TS errors
+  //   //         ((this.monthForm.get('weeks') as FormArray).at(
+  //   //           i
+  //   //         ) as FormGroup).controls[partIndex].patchValue(
+  //   //           midweekAssignments[week][partNameFullWithPosition]
+  //   //         );
+  //   //       }
+  //   //     }
+  //   //   });
+  //   // });
+  // }
 
-  async saveForm(formData) {
-    try {
-      await this.assignmentService.upsertAssignments(
-        formData,
-        this.month.toFormat(this.settingService.getDateFormat('parseMonth'))
-      );
+  // async saveForm(formData) {
+  //   try {
+  //     await this.assignmentService.upsertAssignments(
+  //       formData,
+  //       this.month.toFormat(this.settingService.getDateFormat('parseMonth'))
+  //     );
 
-      this._translate.get('assignment-save-success').subscribe((message) => {
-        this.messageService.presentToast(message);
-      });
-    } catch (error) {
-      throw error;
-    }
-  }
+  //     this._translate.get('assignment-save-success').subscribe((message) => {
+  //       this.messageService.presentToast(message);
+  //     });
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 }

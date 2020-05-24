@@ -4,7 +4,7 @@ import { DateTime, Interval } from 'luxon';
 import { BehaviorSubject } from 'rxjs';
 
 @Pipe({
-  name: 'translateDate'
+  name: 'translateDate',
 })
 export class TranslateDatePipe implements PipeTransform {
   /**
@@ -13,28 +13,28 @@ export class TranslateDatePipe implements PipeTransform {
   dateFormats = {
     'M-DD': {
       month: 'short',
-      day: '2-digit'
+      day: '2-digit',
     },
     'MM-DD': {
       month: 'medium',
-      day: '2-digit'
+      day: '2-digit',
     },
     'MMM-DD': {
       month: 'long',
-      day: '2-digit'
+      day: '2-digit',
     },
     'M-D': {
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     },
     'MM-D': {
       month: 'medium',
-      day: 'numeric'
+      day: 'numeric',
     },
     'MMM-D': {
       month: 'long',
-      day: 'numeric'
-    }
+      day: 'numeric',
+    },
   };
   /**
    * MomentPipe constructor
@@ -45,7 +45,7 @@ export class TranslateDatePipe implements PipeTransform {
    * Make Date dynamic
    * @param format one of the DateTime format constants
    */
-  transform(value: string, format?: any): any {
+  transform(value: DateTime | Interval | string, format?: any): any {
     // make the Date format configurable
     if (format !== undefined) {
       // if not one of DateTime constant, use my own
@@ -78,7 +78,7 @@ export class TranslateDatePipe implements PipeTransform {
     // get the initial value and whether it is an interval
     if (Interval.isInterval(dateVal)) {
       // Setting the locale to both ends of the interval
-      dateVal = dateVal.mapEndpoints(endPoint =>
+      dateVal = dateVal.mapEndpoints((endPoint) =>
         endPoint.setLocale(this.translate.currentLang)
       );
 

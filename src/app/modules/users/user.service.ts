@@ -245,10 +245,6 @@ export class UserService extends CommonService<User> {
       const sortResult = a[sortField] > b[sortField] ? 1 : -1;
 
       return sortOrder === 'asc' ? sortResult : -sortResult;
-      // return a[sortField] >
-      //   b[sortField]
-      //   ? 1
-      //   : -1;
     }
 
     const users = this.dataStore.getValue();
@@ -355,7 +351,7 @@ export class UserService extends CommonService<User> {
     );
 
     // Arranging by part,
-    partsOfMeeting.forEach((part) => {
+    Object.values(partsOfMeeting).forEach((part) => {
       assignableUsersByPart[part.name] = assignableUsers.filter(
         (user) =>
           (user.parts as Part[]).find(
@@ -364,8 +360,9 @@ export class UserService extends CommonService<User> {
       );
     });
 
+    // console.log(assignableUsersByPart);
     assignableUsersByPart = this._arrangeAssignableUsers(assignableUsersByPart);
-    console.log(assignableUsersByPart);
+
     return {
       list: assignableUsers,
       byPart: assignableUsersByPart,

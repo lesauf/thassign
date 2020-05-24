@@ -9,10 +9,7 @@ import {
 } from '@angular/core';
 import { DateTime } from 'luxon';
 
-import { AssignmentWeekendComponent } from '../../components/assignment-weekend/assignment-weekend.component';
 import { SettingService } from 'src/app/core/services/setting.service';
-import { UserService } from 'src/app/modules/users/user.service';
-import { PartService } from 'src/app/core/services/part.service';
 
 @Component({
   selector: 'app-assignment-list',
@@ -50,9 +47,6 @@ export class AssignmentListComponent implements OnInit, OnDestroy {
    * Day of week starting (0 = sunday, 6 = saturday)
    */
   startDayOfWeek: number;
-
-  // Expose class so that it can be used in the template
-  weekendMeetingComponentClass = AssignmentWeekendComponent;
 
   /**
    * Edit mode, useful for disabling the month selector

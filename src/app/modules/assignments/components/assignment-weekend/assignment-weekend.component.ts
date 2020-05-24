@@ -163,9 +163,7 @@ export class AssignmentWeekendComponent extends AssignmentCommon
       weekForms.push(this.generateWeekendForm(week));
     });
 
-    this.monthForm = this.formBuilder.group({
-      weeks: weekForms,
-    });
+    this.monthForm = weekForms;
 
     this.populateForm();
 

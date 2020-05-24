@@ -4,6 +4,7 @@ import {
   FormControl,
   ValidatorFn,
   AbstractControl,
+  FormArray,
 } from '@angular/forms';
 import { validateSync } from 'class-validator';
 import { User } from '../models/user/user.model';
@@ -135,7 +136,7 @@ export class ValidationService {
   /**
    * Trigger validation on formFields
    */
-  validateAllFormFields(formGroup: FormGroup) {
+  validateAllFormFields(formGroup: FormGroup | FormArray) {
     Object.keys(formGroup.controls).forEach((field) => {
       const control = formGroup.get(field);
       if (control instanceof FormControl) {

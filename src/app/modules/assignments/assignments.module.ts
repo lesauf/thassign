@@ -6,7 +6,8 @@ import { AssignmentListComponent } from './pages/assignment-list/assignment-list
 import { AssigmentsRoutingModule } from './assignments-routing.module';
 // import { AssignmentWeekendComponent } from './components/assignment-weekend/assignment-weekend.component';
 import { AssignmentMidweekStudentsComponent } from './components/assignment-midweek-students/assignment-midweek-students.component';
-import { AssignmentMidweekComponent } from './components/assignment-midweek/assignment-midweek.component';
+// import { AssignmentMidweekComponent } from './components/assignment-midweek/assignment-midweek.component';
+import { DynamicFormAssignmentComponent } from './components/dynamic-form-assignment/dynamic-form-assignment.component';
 
 @NgModule({
   imports: [AssigmentsRoutingModule, SharedModule, TranslateModule],
@@ -15,6 +16,8 @@ import { AssignmentMidweekComponent } from './components/assignment-midweek/assi
     AssignmentListComponent,
     // AssignmentWeekendComponent,
     AssignmentMidweekStudentsComponent,
-    AssignmentMidweekComponent]
+    // AssignmentMidweekComponent,
+    DynamicFormAssignmentComponent,
+  ],
 })
-export class AssignmentsModule { }
+export class AssignmentsModule {}

@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime, Interval } from 'luxon';
@@ -33,7 +33,7 @@ export abstract class AssignmentCommon {
   /**
    * Form for assignments for the whole month
    */
-  monthForm: FormGroup;
+  monthForm: FormArray;
 
   /**
    * Edit mode, useful for disabling the month selector
@@ -56,6 +56,9 @@ export abstract class AssignmentCommon {
    * List of all the weeks of the selected month
    */
   weeks: Interval[];
+
+  meetingName: string;
+
   protected assignmentService: AssignmentService;
   protected partService: PartService;
   protected userService: UserService;
@@ -80,18 +83,31 @@ export abstract class AssignmentCommon {
 
   async initializeMonthForm() {
     // Convert the month to the first day of the week
-    this.getFirstWeekOfTheSelectedMonth(); // populate this.firstWeekOfMonth
+    this.firstWeekOfTheMonth = this.assignmentService.getFirstWeekOfTheSelectedMonth(
+      this.month
+    ); // populate this.firstWeekOfMonth
 
-    this.getAllWeeksOfTheSelectedMonth(); // populate this.weeks
+    // this.weeks = this.assignmentService.getAllWeeksOfTheSelectedMonth(
+    //   this.month
+    // );
 
-    this.getListOfPartsByWeek(); // populate this.listOfPartsByWeek
+    this.listOfPartsByWeek = this.assignmentService.getListOfPartsByWeek(
+      this.meetingName,
+      this.month
+    );
 
     // this.studentsForm.reset(); // ??
 
-    this.getPartsAssignableList(); // populate this.assignableList and this.assignableListByPart
+    // Get the list of users assignable to parts
+    // console.log(this.meetingName);
+    const assignables = this.userService.getAssignableUsersByMeeting(
+      this.meetingName
+    );
+    this.assignableList = assignables.list;
+    this.assignableListByPart = assignables.byPart;
 
     // Generate and populate the form with the values for the selected month
-    this.generateForm();
+    // this.generateForm();
     // console.log(this.assignableList);
 
     // this.populateForm();
@@ -99,46 +115,7 @@ export abstract class AssignmentCommon {
     this.isEditMode = false;
   }
 
-  getFirstWeekOfTheSelectedMonth() {
-    const firstMondayOfMonth =
-      this.month.weekday === 1 ? this.month : this.month.set({ weekday: 8 }); // set the date as the first monday of the month
-    const endTime = firstMondayOfMonth.plus({ days: 6 }).setLocale('fr');
-
-    this.firstWeekOfTheMonth = Interval.fromDateTimes(
-      firstMondayOfMonth,
-      endTime
-    );
-
-    // if (this.month.weekday !== this.settingService.getStartDayOfWeek()) {
-    //   this.firstWeekOfTheMonth = this.month
-    //     .plus({ week: 1 })
-    //     .set({ weekday: this.settingService.getStartDayOfWeek() });
-    // } else {
-    //   this.firstWeekOfTheMonth = this.month;
-    // }
-  }
-
-  /**
-   * Get an array of all the weeks in the selected month
-   */
-  getAllWeeksOfTheSelectedMonth() {
-    this.weeks = [];
-    const nextMonth = this.month.plus({ month: 1 });
-
-    for (
-      let currentWeek = this.firstWeekOfTheMonth;
-      currentWeek.start < nextMonth;
-      currentWeek = currentWeek.set({
-        // we shift to the next week
-        start: currentWeek.start.plus({ week: 1 }),
-        end: currentWeek.end.plus({ week: 1 }),
-      })
-    ) {
-      this.weeks.push(currentWeek);
-    }
-  }
-
-  generateForm() {}
+  // generateForm() {}
 
   /**
    * Get parts of a meeting
@@ -162,77 +139,66 @@ export abstract class AssignmentCommon {
   }
 
   /**
-   * Get the list of users assignable to parts
-   */
-  abstract getPartsAssignableList();
-
-  /**
-   * Get the available parts for the week
-   * TODO import this from the epub for midweek meetings
-   */
-  abstract getListOfPartsByWeek();
-
-  /**
    * Populate form, refresh and disable it
    */
-  abstract populateForm();
+  // abstract populateForm();
 
   /**
    * Handle the request to the db with the data to save
    */
-  abstract saveForm(formData);
+  // abstract saveForm(formData);
 
   /**
    * Enable and handle the validation and save of the form
    */
-  editAndSaveForm() {
-    // If the form is disabled, enable it and
-    // activate edit mode
-    if (this.monthForm.disabled) {
-      this.isEditMode = true;
-      this.monthForm.enable();
-    } else {
-      // Form enabled, so save it, disable edit mode
-      // and disable the form
+  // editAndSaveForm() {
+  //   // If the form is disabled, enable it and
+  //   // activate edit mode
+  //   if (this.monthForm.disabled) {
+  //     this.isEditMode = true;
+  //     this.monthForm.enable();
+  //   } else {
+  //     // Form enabled, so save it, disable edit mode
+  //     // and disable the form
 
-      // trigger validation
-      this.validationService.validateAllFormFields(this.monthForm);
+  //     // trigger validation
+  //     this.validationService.validateAllFormFields(this.monthForm);
 
-      if (this.monthForm.valid) {
-        // Make sure to create a deep copy of the form-model
-        const formData = this.monthForm.value;
+  //     if (this.monthForm.valid) {
+  //       // Make sure to create a deep copy of the form-model
+  //       const formData = this.monthForm.value;
 
-        // Do useful stuff with the gathered data
-        this.saveForm(formData);
-      } else {
-        // this.showAlert();
-      }
+  //       // Do useful stuff with the gathered data
+  //       this.saveForm(formData);
+  //     } else {
+  //       // this.showAlert();
+  //     }
 
-      const saveSuccess = true;
+  //     const saveSuccess = true;
 
-      if (saveSuccess) {
-        this.isEditMode = false;
-        this.monthForm.disable();
-        this.populateForm(); // Refresh the form
-      }
-    }
+  //     if (saveSuccess) {
+  //       this.isEditMode = false;
+  //       this.monthForm.disable();
+  //       this.populateForm(); // Refresh the form
+  //     }
+  //   }
 
-    // Emit edit mode event (to disable navigation)
-    this.editMode.emit(this.isEditMode);
-  }
+  //   // Emit edit mode event (to disable navigation)
+  //   this.editMode.emit(this.isEditMode);
+  // }
 
   /**
    * Reset form and enable navigation
    */
-  cancelForm() {
-    // this.monthForm.reset();
-    this.populateForm();
-    // this.studentsForm.disable();
-    this.isEditMode = false;
+  // cancelForm() {
+  //   // this.monthForm.reset();
+  //   this.populateForm();
+  //   // this.studentsForm.disable();
+  //   this.isEditMode = false;
 
-    // Emit edit mode event (to disable navigation)
-    this.editMode.emit(this.isEditMode);
-  }
+  //   // Emit edit mode event (to disable navigation)
+  //   this.editMode.emit(this.isEditMode);
+  // }
 
   /**
    * Auto generate the empty assignments
@@ -399,7 +365,7 @@ export abstract class AssignmentCommon {
     // console.log(this.monthForm);
     // Enable the form for adjustment and save
     this.monthForm.disable();
-    this.editAndSaveForm();
+    //  this.editAndSaveForm();
   }
 
   /**
