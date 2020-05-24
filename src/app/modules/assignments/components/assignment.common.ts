@@ -384,10 +384,10 @@ export abstract class AssignmentCommon {
   /**
    * Used to set the value of Select list
    */
-  compareFn(c1, c2): boolean {
-    // console.log(c1);
-    return c1 && c2 ? c1._id === c2._id : c1 === c2;
-  }
+  // compareFn(c1, c2): boolean {
+  //   // console.log(c1);
+  //   return c1 && c2 ? c1._id === c2._id : c1 === c2;
+  // }
 
   /**
    * Sort the list of brothers by lastName

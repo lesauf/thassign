@@ -1,9 +1,9 @@
 <div *ngIf="studentsForm">
   <form (ngSubmit)="onSubmit()" [formGroup]="studentsForm">
     <div *ngFor="let assignment of assignments" class="form-row">
-      <div *ngIf="isStartNewWeek(assignment)">
+      <h2 *ngIf="isStartNewWeek(assignment)">
         {{ currentWeek | translateDate: "MMM-D" | async }}
-      </div>
+      </h2>
 
       <app-assignment
         [assignment]="assignment"
