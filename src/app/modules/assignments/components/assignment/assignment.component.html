@@ -1,69 +1,101 @@
 <div [formGroup]="form">
-  <div formGroupName="{{ assignment.key }}" fxLayoutAlign="space-around start">
-    <!-- PART -->
-    <div fxFlex="30">
-      <mat-form-field fxFill>
-        <mat-select
-          placeholder="{{ 'assignment' | translate | titlecase }}"
-          [compareWith]="compareFn"
-          formControlName="part"
-          (valueChange)="setProperty('part', $event)"
-        >
-          <mat-select-trigger>
-            {{ assignment.part?.name | translate }}
-          </mat-select-trigger>
-
-          <mat-option *ngFor="let part of listOfParts" [value]="part">
-            {{ part.name | translate }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <!-- ASSIGNEE -->
-    <div fxFlex="30">
-      <mat-form-field fxFill *ngIf="assignment.part">
-        <mat-select
-          placeholder="{{ 'assignee' | translate | titlecase }}"
-          [compareWith]="compareFn"
-          formControlName="assignee"
-          (valueChange)="setProperty('assignee', $event)"
-        >
-          <mat-select-trigger>
-            {{ assignment.assignee?.fullName }}
-          </mat-select-trigger>
-
-          <mat-option
-            *ngFor="let assignee of assignableListByPart[assignment.part.name]"
-            [value]="assignee"
+  <div formArrayName="assList">
+    <div
+      formGroupName="{{ assignment.position }}"
+      fxLayoutAlign="space-around start"
+    >
+      <!-- PART -->
+      <div fxFlex="30">
+        <mat-form-field fxFill>
+          <mat-select
+            placeholder="{{ 'assignment' | translate | titlecase }}"
+            [compareWith]="compareFn"
+            formControlName="part"
           >
-            {{ assignee.fullName }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <!-- ASSISTANT -->
-    <div fxFlex="30">
-      <mat-form-field fxFill *ngIf="assignment.part?.withAssistant">
-        <mat-select
-          placeholder="{{ 'assistant' | translate | titlecase }}"
-          [compareWith]="compareFn"
-          formControlName="assistant"
-          (valueChange)="setProperty('assistant', $event)"
-        >
-          <mat-select-trigger>
-            {{ assignment.assistant?.fullName }}
-          </mat-select-trigger>
+            <mat-select-trigger>
+              {{
+                form.get(['assList', assignment.position, 'part']).value?.name
+                  | translate
+              }}
+            </mat-select-trigger>
 
-          <mat-option
-            *ngFor="
-              let assistant of assignableListByPart['clm.ministry.assistant']
-            "
-            [value]="assistant"
+            <mat-option *ngFor="let part of listOfParts" [value]="part">
+              {{ part.name | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!-- ASSIGNEE -->
+      <div fxFlex="30">
+        <mat-form-field
+          fxFill
+          *ngIf="form.get(['assList', assignment.position, 'part']).value"
+        >
+          <mat-select
+            placeholder="{{ 'assignee' | translate | titlecase }}"
+            [compareWith]="compareFn"
+            formControlName="assignee"
           >
-            {{ assistant.fullName }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+            <mat-select-trigger>
+              {{
+                form.get(['assList', assignment.position, 'assignee']).value
+                  ?.fullName
+              }}
+            </mat-select-trigger>
+
+            <mat-option
+              *ngFor="
+                let assignee of assignableListByPart[
+                  form.get(['assList', assignment.position, 'part']).value?.name
+                ]
+              "
+              [value]="assignee"
+            >
+              {{ assignee.fullName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!-- ASSISTANT -->
+      <div fxFlex="30">
+        <mat-form-field
+          fxFill
+          *ngIf="
+            form.get(['assList', assignment.position, 'part']).value
+              ?.withAssistant
+          "
+        >
+          <mat-select
+            placeholder="{{ 'assistant' | translate | titlecase }}"
+            [compareWith]="compareFn"
+            formControlName="assistant"
+          >
+            <mat-select-trigger>
+              {{
+                form.get(['assList', assignment.position, 'assistant']).value
+                  ?.fullName
+              }}
+            </mat-select-trigger>
+
+            <mat-option
+              *ngFor="
+                let assistant of assignableListByPart['clm.ministry.assistant']
+              "
+              [value]="assistant"
+            >
+              {{ assistant.fullName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <button
+        type="button"
+        fxFlex="10"
+        mat-raised-button
+        (click)="removeAssignment()"
+      >
+        X
+      </button>
     </div>
   </div>
 </div>

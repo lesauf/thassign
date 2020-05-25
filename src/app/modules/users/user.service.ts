@@ -344,7 +344,7 @@ export class UserService extends CommonService<User> {
   getAssignableUsersByMeeting(meetingName: string): any {
     const users = this.getUsers();
     const partsOfMeeting = this.partService.getPartsByMeeting(meetingName);
-    let assignableUsersByPart = {};
+    const assignableUsersByPart = {};
 
     const assignableUsers = users.filter((user) =>
       user.meetingsAssignable.includes(meetingName)
@@ -362,7 +362,7 @@ export class UserService extends CommonService<User> {
 
     // console.log(assignableUsersByPart);
     // assignableUsersByPart = this._arrangeAssignableUsers(assignableUsersByPart);
-
+    console.log('Assignable By Part', assignableUsersByPart);
     return {
       list: assignableUsers,
       byPart: assignableUsersByPart,

@@ -22,6 +22,8 @@
             [listOfParts]="listOfParts"
             [assignableListByPart]="assignableListByPart"
             [form]="studentsForm"
+            [(assignments)]="assignments"
+            (isRemoved)="removeAssignment($event)"
           ></app-assignment>
         </div>
       </div>
@@ -39,12 +41,20 @@
 
     <div class="form-row">
       <button
+        type="reset"
+        mat-raised-button
+        class="mat-primary"
+        [disabled]="!studentsForm.valid"
+      >
+        {{ 'cancel' | translate }}
+      </button>
+      <button
         type="submit"
         mat-raised-button
         class="mat-primary"
         [disabled]="!studentsForm.valid"
       >
-        Save
+        {{ 'save' | translate }}
       </button>
     </div>
   </form>

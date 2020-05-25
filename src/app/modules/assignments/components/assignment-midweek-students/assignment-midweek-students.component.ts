@@ -148,6 +148,12 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
       this.assignmentService.pAssignments.subscribe((assignments) => {
         this.assignments = assignments;
         this.prepareForm();
+
+        this.studentsForm.valueChanges.subscribe((currentFormValues) => {
+          this.assignments = Assignment.fromJson(
+            currentFormValues.assList
+          ) as Assignment[];
+        });
       });
     }
 
@@ -163,13 +169,14 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
       this.month,
       this.listOfParts
     );
-    // this.studentsForm = this.acs.toFormGroup(this.assignments);
+    // this.studentsForm = this.acs.toFormArray(this.assignments);
   }
 
   /**
    * Prepare the form Data :
    *   - Assignments by week
    *   - FormGroup
+   *   - set assignment position as the index in array
    */
   prepareForm() {
     // Separate the assignments by week and assign them numbers
@@ -181,25 +188,45 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
       );
     });
 
-    this.studentsForm = this.acs.toFormGroup(this.assignments);
+    this.studentsForm = this.acs.toFormArray(this.assignments);
 
-    console.log('Assig: ', this.assignments);
-    console.log('AssigWeek: ', this.assignmentsByWeek);
+    // Set the assignment position as the same in the array
+    this.assignments.forEach((a, i) => {
+      this.assignments[i].position = i;
+    });
   }
 
   newAssignment(week: Interval, weekIndex: number) {
     this.assignments.push(
       new Assignment({
         week: week.start.toJSDate(),
-        position: this.assignmentsByWeek[weekIndex].length,
+        position: this.assignments.length,
       })
     );
 
     this.prepareForm();
   }
 
+  removeAssignment(assignment: Assignment) {
+    this.studentsForm.updateValueAndValidity();
+    this.assignments.splice(assignment.position, 1);
+    // (
+    //   this.studentsForm.get(['assList']) as FormArray
+    // )
+    // .removeAt(assignment.position);
+
+    this.prepareForm();
+  }
+
   drop(event: CdkDragDrop<Assignment>) {
-    moveItemInArray(this.assignments, event.previousIndex, event.currentIndex);
+    // this.assignments = Assignment.fromJson(
+    //   this.studentsForm.get('assList').value
+    // ) as Assignment[];
+
+    // console.log('DRAG', event.previousIndex, '->', event.currentIndex);
+
+    // TODO change week on drag between
+    // moveItemInArray(this.assignments, event.previousIndex, event.currentIndex);
 
     this.prepareForm();
   }
