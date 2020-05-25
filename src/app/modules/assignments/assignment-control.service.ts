@@ -9,7 +9,7 @@ export class AssignmentControlService {
   constructor() {}
 
   toFormGroup(assignments: Assignment[]) {
-    let group: any = {};
+    const group: any = {};
 
     assignments.forEach((assignment) => {
       group[assignment.key] = new FormGroup({
@@ -21,10 +21,10 @@ export class AssignmentControlService {
         ownerId: new FormControl(assignment.ownerId || ''),
         createdAt: new FormControl(assignment.createdAt),
         deleted: new FormControl(assignment.deleted),
-        ...(assignment.assistant && {
-          assistant: new FormControl(assignment.assistant || ''),
-        }),
-        ...(assignment.title && {
+        // ...(assignment.part?.withAssistant && {
+        assistant: new FormControl(assignment.assistant || ''),
+        // }),
+        ...(assignment.part?.withTitle && {
           title: new FormControl(assignment.title || ''),
         }),
         ...(assignment.number && {

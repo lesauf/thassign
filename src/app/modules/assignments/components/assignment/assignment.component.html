@@ -1,154 +1,69 @@
 <div [formGroup]="form">
   <div formGroupName="{{ assignment.key }}" fxLayoutAlign="space-around start">
-    <mat-form-field fxFlex="45">
-      <mat-select
-        placeholder="{{ assignment.part.name | translate | titlecase }}"
-        [compareWith]="compareFn"
-        formControlName="assignee"
-      >
-        <mat-select-trigger>
-          {{ assignment.assignee.fullName }}
-        </mat-select-trigger>
-
-        <mat-option disabled="disabled" class="filter-option">
-          <mat-icon class="mat-18">sort</mat-icon>
-          <button
-            mat-raised-button
-            class="mat-primary fill text-sm"
-            title="{{ 'sort-users-by-name' | translate }}"
-          >
-            <!-- (click)="sortUsersByName(partName)" -->
-            {{ "A - Z" | translate | titlecase }}
-          </button>
-          <button
-            mat-raised-button
-            class="mat-primary fill text-sm"
-            title="{{ 'sort-users-by-this-assignment' | translate }}"
-          >
-            <!-- (click)="
-              sortUsersByLastAssignment(
-                partName,
-                'asc',
-                'weekend.publicTalk.chairman'
-              )
-            " -->
-            {{ "this" | translate | titlecase }}
-          </button>
-          <button
-            mat-raised-button
-            class="mat-primary fill text-sm"
-            title="{{ 'sort-users-by-any-assignment' | translate }}"
-          >
-            <!-- (click)="sortUsersByLastAssignment(partName)" -->
-            {{ "all" | translate | titlecase }}
-          </button>
-        </mat-option>
-
-        <mat-option
-          *ngFor="let assignee of assignment.assignableUsers"
-          [value]="assignee"
-          matTooltip="{{ 'latest-assignment' | translate }} : {{
-            'this' | translate | titlecase
-          }} : {{ assignee?.lastAssignmentThisPart?.week }} |
-    {{ 'all' | translate | titlecase }} : {{
-            assignee?.lastAssignmentAnyPart?.week
-          }}"
+    <!-- PART -->
+    <div fxFlex="30">
+      <mat-form-field fxFill>
+        <mat-select
+          placeholder="{{ 'assignment' | translate | titlecase }}"
+          [compareWith]="compareFn"
+          formControlName="part"
+          (valueChange)="setProperty('part', $event)"
         >
-          {{ assignee.fullName }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+          <mat-select-trigger>
+            {{ assignment.part?.name | translate }}
+          </mat-select-trigger>
 
+          <mat-option *ngFor="let part of listOfParts" [value]="part">
+            {{ part.name | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <!-- ASSIGNEE -->
+    <div fxFlex="30">
+      <mat-form-field fxFill *ngIf="assignment.part">
+        <mat-select
+          placeholder="{{ 'assignee' | translate | titlecase }}"
+          [compareWith]="compareFn"
+          formControlName="assignee"
+          (valueChange)="setProperty('assignee', $event)"
+        >
+          <mat-select-trigger>
+            {{ assignment.assignee?.fullName }}
+          </mat-select-trigger>
+
+          <mat-option
+            *ngFor="let assignee of assignableListByPart[assignment.part.name]"
+            [value]="assignee"
+          >
+            {{ assignee.fullName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <!-- ASSISTANT -->
-    <div fxFlex="45">
-      <mat-form-field fxFill *ngIf="assignment.assistant">
+    <div fxFlex="30">
+      <mat-form-field fxFill *ngIf="assignment.part?.withAssistant">
         <mat-select
           placeholder="{{ 'assistant' | translate | titlecase }}"
           [compareWith]="compareFn"
           formControlName="assistant"
+          (valueChange)="setProperty('assistant', $event)"
         >
           <mat-select-trigger>
-            {{ assignment.assistant }}
+            {{ assignment.assistant?.fullName }}
           </mat-select-trigger>
-          <mat-option disabled="disabled" class="filter-option">
-            <mat-icon class="mat-18">sort</mat-icon>
-            <button
-              mat-raised-button
-              class="mat-primary fill text-sm"
-              title="{{ 'sort-users-by-name' | translate }}"
-            >
-              <!-- (click)="sortUsersByName(partName)" -->
-              {{ "A - Z" | translate | titlecase }}
-            </button>
-            <button
-              mat-raised-button
-              class="mat-primary fill text-sm"
-              title="{{ 'sort-users-by-this-assignment' | translate }}"
-            >
-              <!-- (click)="
-              sortUsersByLastAssignment(
-                partName,
-                'asc',
-                'weekend.publicTalk.chairman'
-              )
-            " -->
-              {{ "this" | translate | titlecase }}
-            </button>
-            <button
-              mat-raised-button
-              class="mat-primary fill text-sm"
-              title="{{ 'sort-users-by-any-assignment' | translate }}"
-            >
-              <!-- (click)="sortUsersByLastAssignment(partName)" -->
-              {{ "all" | translate | titlecase }}
-            </button>
-          </mat-option>
 
           <mat-option
-            *ngFor="let assistant of assignment.assignableAssistants"
+            *ngFor="
+              let assistant of assignableListByPart['clm.ministry.assistant']
+            "
             [value]="assistant"
-            matTooltip="{{ 'latest-assignment' | translate }} : {{
-              'this' | translate | titlecase
-            }} : {{ assistant?.lastAssignmentThisPart?.week }} |
-  {{ 'all' | translate | titlecase }} : {{
-              assistant?.lastAssignmentAnyPart?.week
-            }}"
           >
             {{ assistant.fullName }}
           </mat-option>
-          <!-- <label attr.for="{{ assignment.key + 'assignee' }} ">{{
-        assignment.part.name | translate
-      }}</label> -->
-
-          <!-- <select id="{{ assignment.key + 'assignee' }}" formControlName="assignee">
-        <option
-          *ngFor="let user of assignment.assignableUsers"
-          [value]="user"
-          >{{ user.fullName }}</option
-        >
-      </select> -->
-
-          <!-- <span *ngIf="assignment.assistant">
-        <label attr.for="{{ assignment.key + 'assistant' }}">{{
-          "assistant" | translate
-        }}</label>
-
-        <select
-          id="{{ assignment.key + 'assistant' }}"
-          formControlName="assistant"
-        >
-          <option
-            *ngFor="let user of assignment.assignableAssistants"
-            [value]="user"
-            >{{ user.fullName }}</option
-          >
-        </select>
-      </span> -->
         </mat-select>
       </mat-form-field>
     </div>
-    <!-- <div class="errorMessage" *ngIf="!isValid">
-        {{ assignment.label }} is required
-    </div> -->
   </div>
 </div>

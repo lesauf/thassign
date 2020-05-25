@@ -1,8 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { AssignmentDropdown } from '../../assignment-dropdown';
 import { Assignment } from 'src/app/core/models/assignment/assignment.model';
+import { Part } from 'src/app/core/models/part/part.model';
+import { User } from 'src/app/core/models/user/user.model';
 
 @Component({
   selector: 'app-assignment',
@@ -11,10 +13,19 @@ import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 })
 export class AssignmentComponent {
   @Input() assignment: Assignment;
+  @Input() listOfParts: Part[];
+  @Input() assignableListByPart: User[][];
   @Input() form: FormGroup;
+
+  @Output() addAssignment: EventEmitter<Assignment> = new EventEmitter();
 
   get isValid() {
     return this.form.controls[this.assignment.key].valid;
+  }
+
+  setProperty<T>(property: string, value: T) {
+    console.log(this.assignment);
+    this.assignment[property] = value;
   }
 
   /**

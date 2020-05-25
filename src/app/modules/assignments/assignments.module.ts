@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '../../shared/shared.module';
@@ -10,7 +11,12 @@ import { AssignmentMidweekStudentsComponent } from './components/assignment-midw
 import { AssignmentComponent } from './components/assignment/assignment.component';
 
 @NgModule({
-  imports: [AssigmentsRoutingModule, SharedModule, TranslateModule],
+  imports: [
+    AssigmentsRoutingModule,
+    DragDropModule,
+    SharedModule,
+    TranslateModule,
+  ],
   // entryComponents: [AssignmentWeekendComponent, AssignmentMidweekStudentsComponent],
   declarations: [
     AssignmentListComponent,

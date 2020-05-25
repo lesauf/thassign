@@ -1,6 +1,32 @@
-<div *ngIf="studentsForm">
+<ng-container *ngIf="studentsForm">
   <form (ngSubmit)="onSubmit()" [formGroup]="studentsForm">
-    <div *ngFor="let assignment of assignments" class="form-row">
+    <div *ngFor="let week of weeks; index as wIndex" class="form-row">
+      <h2>
+        {{ week | translateDate: 'MMM-D' | async }}
+      </h2>
+      <button
+        type="button"
+        mat-raised-button
+        (click)="newAssignment(week, wIndex)"
+      >
+        {{ 'add-new-assignment' | translate }}
+      </button>
+      <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+        <div
+          *ngFor="let assignment of this.assignmentsByWeek[wIndex]"
+          class="form-row"
+          cdkDrag
+        >
+          <app-assignment
+            [assignment]="assignment"
+            [listOfParts]="listOfParts"
+            [assignableListByPart]="assignableListByPart"
+            [form]="studentsForm"
+          ></app-assignment>
+        </div>
+      </div>
+    </div>
+    <!-- <div *ngFor="let assignment of assignments" class="form-row">
       <h2 *ngIf="isStartNewWeek(assignment)">
         {{ currentWeek | translateDate: "MMM-D" | async }}
       </h2>
@@ -9,10 +35,17 @@
         [assignment]="assignment"
         [form]="studentsForm"
       ></app-assignment>
-    </div>
+    </div> -->
 
     <div class="form-row">
-      <button type="submit" [disabled]="!studentsForm.valid">Save</button>
+      <button
+        type="submit"
+        mat-raised-button
+        class="mat-primary"
+        [disabled]="!studentsForm.valid"
+      >
+        Save
+      </button>
     </div>
   </form>
 
@@ -20,4 +53,4 @@
     <strong>Saved the following values</strong><br />
     <pre>{{ payLoad }}</pre>
   </div>
-</div>
+</ng-container>

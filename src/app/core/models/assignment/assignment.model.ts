@@ -36,8 +36,11 @@ export class Assignment {
   @IsOptional()
   assistant: User;
 
+  /**
+   * Zero-based position of the assignment in its week
+   */
   @IsInt()
-  position = 1; // 'Assignment position for same part'), // like many Initial Calls, for example
+  position = 1;
 
   @IsString()
   @IsOptional()
@@ -96,7 +99,7 @@ export class Assignment {
    * The unique identifier of this assignment in the form
    */
   get key() {
-    return this.part.name + this.week.toISOString() + this.position;
+    return this.week.toISOString() + this.position;
   }
 
   set assignableUsers(users: User[]) {

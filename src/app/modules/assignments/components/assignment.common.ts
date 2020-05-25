@@ -9,6 +9,8 @@ import { PartService } from 'src/app/core/services/part.service';
 import { SettingService } from 'src/app/core/services/setting.service';
 import { UserService } from '../../users/user.service';
 import { ValidationService } from 'src/app/core/services/validation.service';
+import { Part } from 'src/app/core/models/part/part.model';
+import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 
 export abstract class AssignmentCommon {
   editMode: any;
@@ -22,7 +24,7 @@ export abstract class AssignmentCommon {
    * Used to generate the variables names
    */
   // listOfParts = ['chairman', 'speaker', 'conductor', 'reader'];
-  listOfParts: any[];
+  listOfParts: Part[];
 
   /**
    * List of parts for each week
@@ -59,6 +61,8 @@ export abstract class AssignmentCommon {
 
   meetingName: string;
 
+  assignmentsByWeek: Assignment[][] = [];
+
   protected assignmentService: AssignmentService;
   protected partService: PartService;
   protected userService: UserService;
@@ -81,15 +85,15 @@ export abstract class AssignmentCommon {
     // this.validationService = validationService;
   }
 
-  async initializeMonthForm() {
+  async initializeData() {
     // Convert the month to the first day of the week
     this.firstWeekOfTheMonth = this.assignmentService.getFirstWeekOfTheSelectedMonth(
       this.month
     ); // populate this.firstWeekOfMonth
 
-    // this.weeks = this.assignmentService.getAllWeeksOfTheSelectedMonth(
-    //   this.month
-    // );
+    this.weeks = this.assignmentService.getAllWeeksOfTheSelectedMonth(
+      this.month
+    );
 
     this.listOfPartsByWeek = this.assignmentService.getListOfPartsByWeek(
       this.meetingName,
@@ -123,12 +127,12 @@ export abstract class AssignmentCommon {
   async getParts(meetingName: string) {
     this.listOfParts = await this.partService.getPartsByMeeting(meetingName);
 
-    const partsShortNames = Object.keys(this.listOfParts);
+    // const partsShortNames = Object.keys(this.listOfParts);
 
-    partsShortNames.forEach((partName) => {
-      this[partName + 'Part'] = this.listOfParts[partName];
-      // console.log(this[partName + 'Part']);
-    });
+    // partsShortNames.forEach((partName) => {
+    //   this[partName + 'Part'] = this.listOfParts[partName];
+    //   // console.log(this[partName + 'Part']);
+    // });
   }
 
   /**

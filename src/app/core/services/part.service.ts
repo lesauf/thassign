@@ -21,21 +21,21 @@ export class PartService extends CommonService<Part> {
    * grouped by meetings
    */
   meetingParts = {
-    weekend: {
-      chairman: 'weekend.publicTalk.chairman',
-      speaker: 'weekend.publicTalk.speaker',
-      conductor: 'weekend.watchtower.conductor',
-      reader: 'weekend.watchtower.reader',
-    },
-    'midweek-students': {
-      bibleReading: 'clm.treasures.bible-reading',
-      initialCall: 'clm.ministry.initial-call',
-      firstReturnVisit: 'clm.ministry.first-return-visit',
-      secondReturnVisit: 'clm.ministry.second-return-visit',
-      bibleStudy: 'clm.ministry.bible-study',
-      studentTalk: 'clm.ministry.talk',
-      studentAssistant: 'clm.ministry.assistant',
-    },
+    weekend: [
+      'weekend.publicTalk.chairman',
+      'weekend.publicTalk.speaker',
+      'weekend.watchtower.conductor',
+      'weekend.watchtower.reader',
+    ],
+    'midweek-students': [
+      'clm.treasures.bible-reading',
+      'clm.ministry.initial-call',
+      'clm.ministry.first-return-visit',
+      'clm.ministry.second-return-visit',
+      'clm.ministry.bible-study',
+      'clm.ministry.talk',
+      'clm.ministry.assistant',
+    ],
   };
 
   protected collectionName = 'parts';
@@ -72,15 +72,17 @@ export class PartService extends CommonService<Part> {
   /**
    * get the parts objects of the current meeting
    */
-  getPartsByMeeting(meetingName: string) {
+  getPartsByMeeting(meetingName: string): Part[] {
     const parts = this.getParts();
-    const partsOfMeeting = [];
+    const partsOfMeeting = parts.filter((part) =>
+      this.meetingParts[meetingName].includes(part.name)
+    );
 
-    Object.keys(this.meetingParts[meetingName]).forEach((partName) => {
-      partsOfMeeting[partName] = parts.find(
-        (part) => part.name === this.meetingParts[meetingName][partName]
-      );
-    });
+    // Object.keys(this.meetingParts[meetingName]).forEach((partName) => {
+    //   partsOfMeeting[partName] = parts.find(
+    //     (part) => part.name === this.meetingParts[meetingName][partName]
+    //   );
+    // });
 
     return partsOfMeeting;
   }

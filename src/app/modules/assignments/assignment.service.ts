@@ -11,6 +11,7 @@ import { PartService } from '../../core/services/part.service';
 import { SettingService } from 'src/app/core/services/setting.service';
 import { UserService } from '../users/user.service';
 import { Assignment } from 'src/app/core/models/assignment/assignment.model';
+import { Part } from 'src/app/core/models/part/part.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -183,31 +184,40 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   //   return weekendAssignmentsGrouped;
   // }
 
-  getAssignmentsByMeetingAndMonth(
-    meeting: string,
+  /**
+   * Get the assignments for some parts during a month
+   * Update the pAssignments observable
+   * @param month Luxon DateTime first day of the desired month
+   * @param listOfParts Part[] List of parts we want to get the assignments on
+   */
+  getAssignmentsByPartsAndMonth(
     month: DateTime,
-    listOfParts: object,
-    assignableUsersByPart: object
+    listOfParts: Part[]
   ): Assignment[] {
     const assignments = this.getAssignments();
     let pAssignments: Assignment[];
+
     if (assignments !== null) {
       pAssignments = assignments.filter(
         (assignment) =>
-          assignment.part.meeting === meeting &&
-          assignment.week.getMonth() === month.get('month')
+          listOfParts.find((part) => part._id === assignment.part._id) !==
+            undefined &&
+          DateTime.fromJSDate(assignment.week).get('month') ===
+            month.get('month')
       );
 
       this.pAssignmentsStore.next(pAssignments);
     } else {
-      pAssignments = this.generateAssignments(
-        meeting,
-        month,
-        listOfParts,
-        assignableUsersByPart
-      );
+      // pAssignments = this.generateAssignments(
+      //   meeting,
+      //   month,
+      //   listOfParts,
+      //   assignableUsersByPart
+      // );
 
-      this.pAssignmentsStore.next(pAssignments);
+      // this.pAssignmentsStore.next(pAssignments);
+
+      this.pAssignmentsStore.next([]);
     }
 
     return pAssignments;

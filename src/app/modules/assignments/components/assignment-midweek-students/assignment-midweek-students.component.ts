@@ -8,6 +8,7 @@ import {
   SimpleChanges,
   OnDestroy,
 } from '@angular/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   FormArray,
   FormControl,
@@ -70,6 +71,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   meetingName = 'midweek-students';
 
   assignments: Assignment[] = [];
+
   /**
    * paginated Users
    */
@@ -89,17 +91,6 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   bibleStudyAssignment: Assignment;
   studentTalkAssignment: Assignment;
   studentAssistantAssignment: Assignment;
-
-  /**
-   * MidweekStudents Parts
-   */
-  bibleReadingPart: Part;
-  initialCallPart: Part;
-  firstReturnVisitPart: Part;
-  secondReturnVisitPart: Part;
-  bibleStudyPart: Part;
-  studentTalkPart: Part;
-  studentAssistantPart: Part;
 
   /**
    * Current week beeing displayed
@@ -148,13 +139,15 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
    * Called whenever a data bound property is changed
    */
   async ngOnChanges(changes: SimpleChanges) {
+    this.initializeData();
+
     if (changes.month.isFirstChange()) {
       // Fetch meeting parts once
       await this.getParts('midweek-students');
 
       this.assignmentService.pAssignments.subscribe((assignments) => {
         this.assignments = assignments;
-        this.studentsForm = this.acs.toFormGroup(assignments);
+        this.prepareForm();
       });
     }
 
@@ -163,22 +156,56 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
       // alert('save first please');
       changes.month.currentValue = changes.month.previousValue;
     } else {
-      this.initializeMonthForm();
     }
 
     // this.assignments = this.assignmentService.getAssignmentsByMeetingAndMonth(
-    this.assignmentService.getAssignmentsByMeetingAndMonth(
-      this.meetingName,
+    this.assignmentService.getAssignmentsByPartsAndMonth(
       this.month,
-      this.listOfParts,
-      this.assignableListByPart
+      this.listOfParts
     );
     // this.studentsForm = this.acs.toFormGroup(this.assignments);
   }
 
   /**
+   * Prepare the form Data :
+   *   - Assignments by week
+   *   - FormGroup
+   */
+  prepareForm() {
+    // Separate the assignments by week and assign them numbers
+    this.weeks.forEach((week, index) => {
+      this.assignmentsByWeek[index] = this.assignments.filter(
+        (ass) =>
+          DateTime.fromJSDate(ass.week).get('weekNumber') ===
+          week.start.get('weekNumber')
+      );
+    });
+
+    this.studentsForm = this.acs.toFormGroup(this.assignments);
+
+    console.log('Assig: ', this.assignments);
+    console.log('AssigWeek: ', this.assignmentsByWeek);
+  }
+
+  newAssignment(week: Interval, weekIndex: number) {
+    this.assignments.push(
+      new Assignment({
+        week: week.start.toJSDate(),
+        position: this.assignmentsByWeek[weekIndex].length,
+      })
+    );
+
+    this.prepareForm();
+  }
+
+  drop(event: CdkDragDrop<Assignment>) {
+    moveItemInArray(this.assignments, event.previousIndex, event.currentIndex);
+
+    this.prepareForm();
+  }
+
+  /**
    * Tell if the assignment is the first of the week
-   * @param assignment
    */
   isStartNewWeek(assignment: Assignment): boolean {
     const startDate = DateTime.fromJSDate(assignment.week);
@@ -194,7 +221,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   }
 
   onSubmit() {
-    this.payLoad = JSON.stringify(this.studentsForm.getRawValue(), null, 1);
+    this.payLoad = JSON.stringify(this.studentsForm.value, null, 1);
   }
 
   // generateForm() {

@@ -361,7 +361,7 @@ export class UserService extends CommonService<User> {
     });
 
     // console.log(assignableUsersByPart);
-    assignableUsersByPart = this._arrangeAssignableUsers(assignableUsersByPart);
+    // assignableUsersByPart = this._arrangeAssignableUsers(assignableUsersByPart);
 
     return {
       list: assignableUsers,
@@ -372,17 +372,17 @@ export class UserService extends CommonService<User> {
   /**
    * Rename the parts for better lisibility
    */
-  _arrangeAssignableUsers(result: {}): AssignableUsersByPart {
-    return {
-      bibleReading: result['clm.treasures.bible-reading'],
-      initialCall: result['clm.ministry.initial-call'],
-      firstReturnVisit: result['clm.ministry.first-return-visit'],
-      secondReturnVisit: result['clm.ministry.second-return-visit'],
-      bibleStudy: result['clm.ministry.bible-study'],
-      studentTalk: result['clm.ministry.talk'],
-      studentAssistant: result['clm.ministry.assistant'],
-    } as AssignableUsersByPart;
-  }
+  // _arrangeAssignableUsers(result: {}): AssignableUsersByPart {
+  //   return {
+  //     bibleReading: result['clm.treasures.bible-reading'],
+  //     initialCall: result['clm.ministry.initial-call'],
+  //     firstReturnVisit: result['clm.ministry.first-return-visit'],
+  //     secondReturnVisit: result['clm.ministry.second-return-visit'],
+  //     bibleStudy: result['clm.ministry.bible-study'],
+  //     studentTalk: result['clm.ministry.talk'],
+  //     studentAssistant: result['clm.ministry.assistant'],
+  //   } as AssignableUsersByPart;
+  // }
 
   //////// Save methods //////////
 
