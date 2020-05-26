@@ -136,7 +136,6 @@ export class User {
       // If the Users are coming from the DB (first part is an ObjectId),
       // convert parts id array to an array of Part
       if (allParts && userProperties['parts'][0].hasOwnProperty('id')) {
-        console.log('All Parts', allParts);
         userProperties['parts'] = userProperties['parts'].map((partId: any) =>
           allParts.find((part: Part) => {
             return partId.equals(part._id);
