@@ -1,5 +1,5 @@
 <div [formGroup]="form">
-  <div formArrayName="assList">
+  <div formArrayName="{{ wIndex }}">
     <div
       formGroupName="{{ assignment.position }}"
       fxLayoutAlign="space-around start"
@@ -15,7 +15,7 @@
           >
             <mat-select-trigger>
               {{
-                form.get(["assList", assignment.position, "part"]).value?.name
+                form.get([wIndex, assignment.position, "part"]).value?.name
                   | translate
               }}
             </mat-select-trigger>
@@ -30,7 +30,7 @@
       <div fxFlex="30">
         <mat-form-field
           fxFill
-          *ngIf="form.get(['assList', assignment.position, 'part']).value"
+          *ngIf="form.get([wIndex, assignment.position, 'part']).value"
         >
           <mat-select
             placeholder="{{ 'assignee' | translate | titlecase }}"
@@ -39,7 +39,7 @@
           >
             <mat-select-trigger>
               {{
-                form.get(["assList", assignment.position, "assignee"]).value
+                form.get([wIndex, assignment.position, "assignee"]).value
                   ?.fullName
               }}
             </mat-select-trigger>
@@ -47,7 +47,7 @@
             <mat-option
               *ngFor="
                 let assignee of assignableListByPart[
-                  form.get(['assList', assignment.position, 'part']).value?.name
+                  form.get([wIndex, assignment.position, 'part']).value?.name
                 ]
               "
               [value]="assignee"
@@ -62,8 +62,7 @@
         <mat-form-field
           fxFill
           *ngIf="
-            form.get(['assList', assignment.position, 'part']).value
-              ?.withAssistant
+            form.get([wIndex, assignment.position, 'part']).value?.withAssistant
           "
         >
           <mat-select
@@ -73,7 +72,7 @@
           >
             <mat-select-trigger>
               {{
-                form.get(["assList", assignment.position, "assistant"]).value
+                form.get([wIndex, assignment.position, "assistant"]).value
                   ?.fullName
               }}
             </mat-select-trigger>

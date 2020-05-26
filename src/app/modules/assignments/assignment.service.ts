@@ -126,6 +126,23 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   }
 
   /**
+   * Create User instances from JSON or array of JSON objects
+   *
+   * @param props JSON object/array with properties
+   */
+  createAssignment(props?: object): Assignment | Assignment[] {
+    if (props instanceof Array) {
+      return props.map((obj, index) => {
+        // Set the assignment position as its position in the array
+        obj.position = index;
+        return new Assignment(obj);
+      }) as Assignment[];
+    } else {
+      return new Assignment(props) as Assignment;
+    }
+  }
+
+  /**
    * GET assignments by week
    * @param week as a DateTime object
    * @param partNames List of part we want to filter

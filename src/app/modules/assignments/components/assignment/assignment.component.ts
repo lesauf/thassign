@@ -24,21 +24,11 @@ export class AssignmentComponent implements OnInit, OnDestroy {
   @Input() listOfParts: Part[];
   @Input() assignableListByPart: User[][];
   @Input() form: FormGroup;
-  /**
-   * Two-way data binding to update the assignments,
-   * so that the values entered are not lost
-   */
-  @Input() assignments: Assignment[];
-  @Output() assignmentsChange: EventEmitter<Assignment[]> = new EventEmitter();
+  @Input() wIndex: number;
+
   @Output() isRemoved: EventEmitter<Assignment> = new EventEmitter();
 
-  ngOnInit(): void {
-    this.form.valueChanges.subscribe((currentFormValues) => {
-      this.assignmentsChange.emit(
-        Assignment.fromJson(currentFormValues.assList) as Assignment[]
-      );
-    });
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy() {
     // this.form.valueChanges.()
@@ -53,10 +43,10 @@ export class AssignmentComponent implements OnInit, OnDestroy {
    */
   onPartChange(partSelected: MatSelectChange) {
     this.form
-      .get(['assList', this.assignment.position])
+      .get([this.wIndex, this.assignment.position])
       .setValue(this.assignment);
     this.form
-      .get(['assList', this.assignment.position])
+      .get([this.wIndex, this.assignment.position])
       .patchValue({ part: partSelected.value });
   }
 

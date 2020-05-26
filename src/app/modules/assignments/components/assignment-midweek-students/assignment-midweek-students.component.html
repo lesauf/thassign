@@ -1,43 +1,41 @@
 <ng-container *ngIf="studentsForm">
-  <form (ngSubmit)="onSubmit()" [formGroup]="studentsForm">
+  <form (ngSubmit)="onSubmit()" [formGroup]="studentsForm" cdkDropListGroup>
     <div *ngFor="let week of weeks; index as wIndex" class="form-row">
       <h2>
-        {{ week | translateDate: 'MMM-D' | async }}
+        {{ week | translateDate: "MMM-D" | async }}
       </h2>
       <button
         type="button"
         mat-raised-button
-        (click)="newAssignment(week, wIndex)"
+        matTooltip="{{ 'add-new-assignment' | translate }}"
+        (click)="addAssignment(week, wIndex)"
       >
-        {{ 'add-new-assignment' | translate }}
+        <mat-icon>add_rounded</mat-icon>
       </button>
-      <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+      <div class="example-container">
         <div
-          *ngFor="let assignment of this.assignmentsByWeek[wIndex]"
-          class="form-row"
-          cdkDrag
+          cdkDropList
+          cdkDropListData="{{ wIndex }}"
+          class="example-list"
+          (cdkDropListDropped)="drop($event, wIndex)"
         >
-          <app-assignment
-            [assignment]="assignment"
-            [listOfParts]="listOfParts"
-            [assignableListByPart]="assignableListByPart"
-            [form]="studentsForm"
-            [(assignments)]="assignments"
-            (isRemoved)="removeAssignment($event)"
-          ></app-assignment>
+          <div
+            *ngFor="let assignment of this.assignmentsByWeek[wIndex]"
+            class="example-box"
+            cdkDrag
+          >
+            <app-assignment
+              [assignment]="assignment"
+              [listOfParts]="listOfParts"
+              [assignableListByPart]="assignableListByPart"
+              [form]="studentsForm"
+              [wIndex]="wIndex"
+              (isRemoved)="removeAssignment($event, wIndex)"
+            ></app-assignment>
+          </div>
         </div>
       </div>
     </div>
-    <!-- <div *ngFor="let assignment of assignments" class="form-row">
-      <h2 *ngIf="isStartNewWeek(assignment)">
-        {{ currentWeek | translateDate: "MMM-D" | async }}
-      </h2>
-
-      <app-assignment
-        [assignment]="assignment"
-        [form]="studentsForm"
-      ></app-assignment>
-    </div> -->
 
     <div class="form-row">
       <button
@@ -46,7 +44,7 @@
         class="mat-primary"
         [disabled]="!studentsForm.valid"
       >
-        {{ 'cancel' | translate }}
+        {{ "cancel" | translate }}
       </button>
       <button
         type="submit"
@@ -54,7 +52,7 @@
         class="mat-primary"
         [disabled]="!studentsForm.valid"
       >
-        {{ 'save' | translate }}
+        {{ "save" | translate }}
       </button>
     </div>
   </form>

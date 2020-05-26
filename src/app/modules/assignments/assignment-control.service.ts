@@ -8,43 +8,50 @@ import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 export class AssignmentControlService {
   constructor() {}
 
-  toFormArray(assignments: Assignment[]) {
-    const group: any = [];
+  toFormGroup(assignmentsByWeek: Assignment[][]) {
+    const group: any = {};
 
-    assignments.forEach((assignment) => {
-      group.push(
-        new FormGroup({
-          _id: new FormControl(assignment._id || ''),
-          week: new FormControl(assignment.week || ''),
-          part: new FormControl(assignment.part || ''),
-          assignee: new FormControl(assignment.assignee || ''),
-          hall: new FormControl(assignment.hall || ''),
-          ownerId: new FormControl(assignment.ownerId || ''),
-          createdAt: new FormControl(assignment.createdAt),
-          deleted: new FormControl(assignment.deleted),
-          position: new FormControl(assignment.position),
-          // ...(assignment.part?.withAssistant && {
-          assistant: new FormControl(assignment.assistant || ''),
-          // }),
-          // ...(assignment.part?.withTitle && {
-          title: new FormControl(assignment.title || ''),
-          // }),
-          // ...(assignment.number && {
-          number: new FormControl(assignment.number || ''),
-          // }),
-          // ...(assignment.updatedAt && {
-          updatedAt: new FormControl(assignment.updatedAt),
-          // }),
-          // ...(assignment.deletedAt && {
-          deletedAt: new FormControl(assignment.deletedAt),
-          // }),
-          // ...(assignment.deletedBy && {
-          deletedBy: new FormControl(assignment.deletedBy),
-          // }),
-        })
-      );
+    assignmentsByWeek.forEach((wAssignments, wIndex) => {
+      const weekArray = [];
+      wAssignments.forEach((assignment) => {
+        weekArray.push(this.toAssignmentControl(assignment));
+      });
+
+      group[wIndex] = new FormArray(weekArray);
     });
 
-    return new FormGroup({ assList: new FormArray(group) });
+    return new FormGroup(group);
+  }
+
+  toAssignmentControl(assignment: Assignment): FormGroup {
+    return new FormGroup({
+      _id: new FormControl(assignment._id || ''),
+      week: new FormControl(assignment.week || ''),
+      part: new FormControl(assignment.part || ''),
+      assignee: new FormControl(assignment.assignee || ''),
+      hall: new FormControl(assignment.hall || ''),
+      ownerId: new FormControl(assignment.ownerId || ''),
+      createdAt: new FormControl(assignment.createdAt),
+      deleted: new FormControl(assignment.deleted),
+      position: new FormControl(assignment.position),
+      // ...(assignment.part?.withAssistant && {
+      assistant: new FormControl(assignment.assistant || ''),
+      // }),
+      // ...(assignment.part?.withTitle && {
+      title: new FormControl(assignment.title || ''),
+      // }),
+      // ...(assignment.number && {
+      number: new FormControl(assignment.number || ''),
+      // }),
+      // ...(assignment.updatedAt && {
+      updatedAt: new FormControl(assignment.updatedAt),
+      // }),
+      // ...(assignment.deletedAt && {
+      deletedAt: new FormControl(assignment.deletedAt),
+      // }),
+      // ...(assignment.deletedBy && {
+      deletedBy: new FormControl(assignment.deletedBy),
+      // }),
+    });
   }
 }
