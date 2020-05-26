@@ -343,13 +343,15 @@ export class UserService extends CommonService<User> {
    */
   getAssignableUsersByParts(parts: Part[], meetingName: string): any {
     const users = this.getUsers();
-    console.log('Parts Of Meeting:', meetingName, parts);
+    console.log('Parts Of Meeting:', meetingName, parts, users);
 
     const assignableUsersByPart = {};
 
-    const assignableUsers = users.filter((user) =>
-      user.meetingsAssignable.includes(meetingName)
-    );
+    const assignableUsers = users.filter((user) => {
+      const meetings = user.meetingsAssignable;
+      console.log('Meetings Ass', meetings);
+      return meetings.includes(meetingName);
+    });
 
     console.log('Assignable Of Meeting:', assignableUsers);
 

@@ -215,14 +215,14 @@ export class User {
    * List of meetings the users have parts on
    */
   get meetingsAssignable(): string[] {
-    let meetingsAssignable = [];
+    let _meetingsAssignable = [];
 
     this.parts.forEach((part) => {
-      if (!meetingsAssignable.includes(part['meeting'])) {
-        meetingsAssignable.push(part['meeting']);
+      if (!_meetingsAssignable.includes(part['meeting'])) {
+        _meetingsAssignable.push(part['meeting']);
       }
     });
 
-    return meetingsAssignable;
+    return _meetingsAssignable;
   }
 }
