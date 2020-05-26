@@ -133,12 +133,13 @@ export class User {
    */
   constructor(userProperties?: object, allParts?: Part[]) {
     if (userProperties) {
-      // If the Users are coming from the DB,
+      // If the Users are coming from the DB (first part is an ObjectId),
       // convert parts id array to an array of Part
       if (
         allParts &&
-        userProperties['parts'][0].constructor.name === 'ObjectId'
+        userProperties['parts'][0].hasOwnProperty('generationTime')
       ) {
+        console.log('All Parts', allParts);
         userProperties['parts'] = userProperties['parts'].map((partId: any) =>
           allParts.find((part: Part) => {
             return partId.equals(part._id);
