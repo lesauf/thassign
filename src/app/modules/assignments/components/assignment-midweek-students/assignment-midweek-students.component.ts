@@ -23,6 +23,7 @@ import { Observable } from 'rxjs';
 
 import { AssignmentCommon } from '../assignment.common';
 import { AssignmentService } from 'src/app/modules/assignments/assignment.service';
+import { AuthService } from 'src/app/modules/auth/auth.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { PartService } from 'src/app/core/services/part.service';
 import { SettingService } from 'src/app/core/services/setting.service';
@@ -100,6 +101,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   constructor(
     private acs: AssignmentControlService,
     protected assignmentService: AssignmentService,
+    protected authService: AuthService,
     protected partService: PartService,
     protected userService: UserService,
     protected messageService: MessageService,
@@ -201,6 +203,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
       new Assignment({
         week: week.start.toJSDate(),
         position: this.assignments.length,
+        ownerId: this.authService.getUser().id,
       })
     );
 

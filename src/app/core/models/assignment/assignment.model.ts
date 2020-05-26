@@ -20,21 +20,21 @@ export class Assignment {
   @IsOptional()
   // Joi.string().alphanum()
   // tslint:disable-next-line: variable-name
-  _id: { toHexString() };
+  _id: { toHexString() } = null;
 
   @IsString()
   @IsDate()
   week: Date;
 
   @IsString()
-  part: Part;
+  part: Part = null;
 
   @IsString()
-  assignee: User;
+  assignee: User = null;
 
   @IsString()
   @IsOptional()
-  assistant: User;
+  assistant: User = null;
 
   /**
    * Zero-based position of the assignment in its week
@@ -44,7 +44,7 @@ export class Assignment {
 
   @IsString()
   @IsOptional()
-  title: string; // theme of the assignment
+  title: string = null; // theme of the assignment
 
   @IsString()
   @IsOptional()
@@ -52,7 +52,7 @@ export class Assignment {
 
   @IsInt()
   @IsOptional()
-  number: number; // like public talk number
+  number: number = null; // like public talk number
 
   @IsString()
   ownerId: string;
@@ -65,7 +65,7 @@ export class Assignment {
   // Joi.date(),
   @IsDate()
   @IsOptional()
-  updatedAt: Date;
+  updatedAt: Date = null;
 
   // deleted: Joi.boolean().default(false),
   @IsBoolean()
@@ -74,12 +74,12 @@ export class Assignment {
   // Joi.date(),
   @IsDate()
   @IsOptional()
-  deletedAt: Date;
+  deletedAt: Date = null;
 
   // Joi.string(),
   @IsInt()
   @IsOptional()
-  deletedBy: string;
+  deletedBy: string = null;
 
   private _assignableUsers: User[];
 

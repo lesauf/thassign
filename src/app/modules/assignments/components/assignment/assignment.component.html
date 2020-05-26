@@ -11,10 +11,11 @@
             placeholder="{{ 'assignment' | translate | titlecase }}"
             [compareWith]="compareFn"
             formControlName="part"
+            (selectionChange)="onPartChange($event)"
           >
             <mat-select-trigger>
               {{
-                form.get(['assList', assignment.position, 'part']).value?.name
+                form.get(["assList", assignment.position, "part"]).value?.name
                   | translate
               }}
             </mat-select-trigger>
@@ -38,7 +39,7 @@
           >
             <mat-select-trigger>
               {{
-                form.get(['assList', assignment.position, 'assignee']).value
+                form.get(["assList", assignment.position, "assignee"]).value
                   ?.fullName
               }}
             </mat-select-trigger>
@@ -72,7 +73,7 @@
           >
             <mat-select-trigger>
               {{
-                form.get(['assList', assignment.position, 'assistant']).value
+                form.get(["assList", assignment.position, "assistant"]).value
                   ?.fullName
               }}
             </mat-select-trigger>

@@ -12,6 +12,7 @@ import { AssignmentDropdown } from '../../assignment-dropdown';
 import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 import { Part } from 'src/app/core/models/part/part.model';
 import { User } from 'src/app/core/models/user/user.model';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-assignment',
@@ -45,6 +46,18 @@ export class AssignmentComponent implements OnInit, OnDestroy {
 
   get isValid() {
     return this.form.controls[this.assignment.key].valid;
+  }
+
+  /**
+   * Clear the assignment everytime its part changes
+   */
+  onPartChange(partSelected: MatSelectChange) {
+    this.form
+      .get(['assList', this.assignment.position])
+      .setValue(this.assignment);
+    this.form
+      .get(['assList', this.assignment.position])
+      .patchValue({ part: partSelected.value });
   }
 
   removeAssignment() {
