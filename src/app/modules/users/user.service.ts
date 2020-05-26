@@ -341,17 +341,20 @@ export class UserService extends CommonService<User> {
    * 'weekend.publicTalk.chairman' part
    * nb: Sort assignments by week desc
    */
-  getAssignableUsersByMeeting(meetingName: string): any {
+  getAssignableUsersByParts(parts: Part[], meetingName: string): any {
     const users = this.getUsers();
-    const partsOfMeeting = this.partService.getPartsByMeeting(meetingName);
+    console.log('Parts Of Meeting:', meetingName, parts);
+
     const assignableUsersByPart = {};
 
     const assignableUsers = users.filter((user) =>
       user.meetingsAssignable.includes(meetingName)
     );
 
+    console.log('Assignable Of Meeting:', assignableUsers);
+
     // Arranging by part,
-    Object.values(partsOfMeeting).forEach((part) => {
+    parts.forEach((part) => {
       assignableUsersByPart[part.name] = assignableUsers.filter(
         (user) =>
           (user.parts as Part[]).find(

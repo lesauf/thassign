@@ -86,6 +86,12 @@ export abstract class AssignmentCommon {
   }
 
   async initializeData() {
+    if (!this.listOfParts) {
+      this.listOfParts = await this.partService.getPartsByMeeting(
+        this.meetingName
+      );
+    }
+
     // Convert the month to the first day of the week
     this.firstWeekOfTheMonth = this.assignmentService.getFirstWeekOfTheSelectedMonth(
       this.month
@@ -104,7 +110,8 @@ export abstract class AssignmentCommon {
 
     // Get the list of users assignable to parts
     // console.log(this.meetingName);
-    const assignables = this.userService.getAssignableUsersByMeeting(
+    const assignables = this.userService.getAssignableUsersByParts(
+      this.listOfParts,
       this.meetingName
     );
     this.assignableList = assignables.list;

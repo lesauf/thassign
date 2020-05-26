@@ -31,7 +31,6 @@
     "@angular/router": "~9.1.9",
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^4.0.0",
-    "class-transformer-validator": "^0.8.0",
     "class-validator": "^0.11.1",
     "luxon": "^1.23.0",
     "messageformat": "^2.3.0",
