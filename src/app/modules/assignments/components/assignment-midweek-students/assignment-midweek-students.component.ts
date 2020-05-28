@@ -66,37 +66,27 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
    */
   month: DateTime;
 
+  /**
+   * By default the form is disabled
+   */
   @Output()
   editMode: EventEmitter<any> = new EventEmitter();
 
+  @Output()
+  onSave: EventEmitter<Assignment[]> = new EventEmitter();
+
   meetingName = 'midweek-students';
 
-  assignments: Assignment[] = [];
+  isEditMode = true;
 
   /**
-   * paginated Users
+   * paginated Assignments
    */
   pAssignments$: Observable<Assignment[]>;
 
   studentsForm: FormGroup;
 
   payLoad = '';
-
-  /**
-   * Selected value for this assignment
-   */
-  bibleReadingAssignment: Assignment;
-  initialCallAssignment: Assignment;
-  firstReturnVisitAssignment: Assignment;
-  secondReturnVisitAssignment: Assignment;
-  bibleStudyAssignment: Assignment;
-  studentTalkAssignment: Assignment;
-  studentAssistantAssignment: Assignment;
-
-  /**
-   * Current week beeing displayed
-   */
-  currentWeek: Interval;
 
   constructor(
     private acs: AssignmentControlService,
@@ -112,12 +102,6 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     protected validationService: ValidationService
   ) {
     super();
-    // messageService,
-    // formBuilder,
-    // settingService,
-    // _snackBar,
-    // _translate,
-    // validationService
   }
 
   async ngOnInit() {
@@ -148,11 +132,9 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
       await this.getParts('midweek-students');
 
       this.assignmentService.pAssignments.subscribe((assignments) => {
-        this.assignments = assignments;
-
         // Separate the assignments by week and assign them numbers
         this.weeks.forEach((week, index) => {
-          this.assignmentsByWeek[index] = this.assignments.filter(
+          this.assignmentsByWeek[index] = assignments.filter(
             (ass) =>
               DateTime.fromJSDate(ass.week).get('weekNumber') ===
               week.start.get('weekNumber')
@@ -170,12 +152,10 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     } else {
     }
 
-    // this.assignments = this.assignmentService.getAssignmentsByMeetingAndMonth(
     this.assignmentService.getAssignmentsByPartsAndMonth(
       this.month,
       this.listOfParts
     );
-    // this.studentsForm = this.acs.toFormGroup(this.assignments);
   }
 
   /**
@@ -253,117 +233,19 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     this.prepareForm();
   }
 
-  /**
-   * Tell if the assignment is the first of the week
-   */
-  isStartNewWeek(assignment: Assignment): boolean {
-    const startDate = DateTime.fromJSDate(assignment.week);
-    const endDate = startDate.plus({ days: 6 });
-
-    if (this.currentWeek && this.currentWeek.start.equals(startDate)) {
-      return false;
-    }
-
-    this.currentWeek = Interval.fromDateTimes(startDate, endDate);
-
-    return true;
-  }
-
   onSubmit() {
-    this.payLoad = JSON.stringify(this.studentsForm.value, null, 1);
+    // Convert the assignmentsByWeek values from the form to Assignment list
+    const a = [];
+    this.weeks.forEach((week, wIndex) => {
+      this.assignmentsByWeek[wIndex].forEach((assignment) =>
+        a.push(assignment)
+      );
+    });
+
+    this.payLoad = JSON.stringify(a, null, 1);
+
+    this.onSave.emit(a);
   }
-
-  // generateForm() {
-  //   const weekForms = this.formBuilder.array([]);
-
-  //   this.weeks.forEach((week, index) => {
-  //     let position = 1;
-  //     // TODO fetch from the db, from the epub
-  //     const weekForm = {};
-  //     this.listOfPartsByWeek[index].forEach((partName, partIndex) => {
-  //       // Set the position for repetitive parts
-  //       const previousPartName = this.listOfPartsByWeek[index][partIndex - 1];
-  //       if (previousPartName === partName) {
-  //         position = weekForm[partIndex - 1].get('position').value + 1;
-  //       }
-  //       weekForm[partIndex] = this.getPartForm(partName, week, position);
-  //     });
-
-  //     console.log(weekForm);
-  //     weekForms.push(this.formBuilder.group(weekForm));
-  //   });
-
-  //   // this.monthForm = this.formBuilder.group({
-  //   //   weeks: weekForms,
-  //   // });
-  //   this.monthForm = weekForms;
-
-  //   console.log('WeeksForm', this.monthForm);
-  //   // console.log('Separate', weekForms);
-  //   this.monthForm.disable(); // Disabled by default to prevent editing
-  // }
-
-  /**
-   * Build the individuals form/field for each part
-   */
-  // getPartForm(
-  //   partName: string,
-  //   week: Interval,
-  //   position: number = 1
-  // ): FormGroup {
-  //   const partsForms = {
-  //     bibleReading: this.formBuilder.group({
-  //       _id: '',
-  //       week: week,
-  //       part: this.bibleReadingPart,
-  //       assignee: [''],
-  //       position: position,
-  //     }),
-  //     initialCall: this.formBuilder.group({
-  //       _id: '',
-  //       week: week,
-  //       part: this.initialCallPart,
-  //       assignee: [''],
-  //       assistant: [''],
-  //       position: position,
-  //       title: 'A definir',
-  //       number: 0,
-  //     }),
-  //     firstReturnVisit: this.formBuilder.group({
-  //       _id: '',
-  //       week: week,
-  //       part: this.firstReturnVisitPart,
-  //       assignee: [''],
-  //       assistant: [''],
-  //       position: position,
-  //     }),
-  //     secondReturnVisit: this.formBuilder.group({
-  //       _id: '',
-  //       week: week,
-  //       part: this.secondReturnVisitPart,
-  //       assignee: [''],
-  //       assistant: [''],
-  //       position: position,
-  //     }),
-  //     bibleStudy: this.formBuilder.group({
-  //       _id: '',
-  //       week: week,
-  //       part: this.bibleStudyPart,
-  //       assignee: [''],
-  //       assistant: [''],
-  //       position: position,
-  //     }),
-  //     studentTalk: this.formBuilder.group({
-  //       _id: '',
-  //       week: week,
-  //       part: this.studentTalkPart,
-  //       assignee: [''],
-  //       position: position,
-  //     }) as FormGroup,
-  //   };
-
-  //   return partsForms[partName];
-  // }
 
   /**
    * Populate form, refresh and disable it
