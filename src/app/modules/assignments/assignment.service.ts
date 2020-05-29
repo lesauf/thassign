@@ -152,13 +152,13 @@ export abstract class AssignmentService extends CommonService<Assignment> {
           );
         } else {
           // from form
-          // obj.part = allParts.find((part) => part._id.equals(obj.part._id));
-          // obj.assignee = obj.assignee
-          //   ? allUsers.find((user) => user._id.equals(obj.assignee._id))
-          //   : null;
-          // obj.assistant = obj.assistant
-          //   ? allUsers.find((user) => user._id.equals(obj.assistant._id))
-          //   : null;
+          obj.part = allParts.find((part) => part._id.equals(obj.part._id));
+          obj.assignee = obj.assignee
+            ? allUsers.find((user) => user._id.equals(obj.assignee._id))
+            : null;
+          obj.assistant = obj.assistant
+            ? allUsers.find((user) => user._id.equals(obj.assistant._id))
+            : null;
         }
 
         // obj.part = this.partService

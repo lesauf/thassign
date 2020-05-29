@@ -38,10 +38,7 @@
             formControlName="assignee"
           >
             <mat-select-trigger>
-              {{
-                form.get([wIndex, assignment.position, "assignee"]).value
-                  ?.fullName
-              }}
+              {{ assignment.assignee?.fullName }}
             </mat-select-trigger>
 
             <mat-option
@@ -71,10 +68,7 @@
             formControlName="assistant"
           >
             <mat-select-trigger>
-              {{
-                form.get([wIndex, assignment.position, "assistant"]).value
-                  ?.fullName
-              }}
+              {{ assignment.assistant?.fullName }}
             </mat-select-trigger>
 
             <mat-option
