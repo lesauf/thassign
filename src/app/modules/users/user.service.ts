@@ -106,17 +106,15 @@ export class UserService extends CommonService<User> {
    *
    * @param userProperties JSON object/array with properties
    */
-  createUser(userProperties?: object): User | User[] {
+  createUser(userProperties: object, allParts: Part[]): User | User[] {
     if (userProperties instanceof Array) {
-      return userProperties.map(
-        (obj) => new User(obj, this.partService.getParts())
-      ) as User[];
+      return userProperties.map((obj) => new User(obj, allParts)) as User[];
     } else {
-      return new User(userProperties, this.partService.getParts()) as User;
+      return new User(userProperties, allParts) as User;
     }
   }
 
-  async generateUsers(numberToGenerate: number = 50) {
+  async generateUsers(numberToGenerate: number = 50, allParts: Part[]) {
     const parts = this.partService.getParts();
     const generatedUsers = generateUsers(
       parts,
@@ -132,7 +130,7 @@ export class UserService extends CommonService<User> {
         generatedUsers,
       ]);
 
-      this.updateStore(this.createUser(users) as User[]);
+      this.updateStore(this.createUser(users, allParts) as User[]);
 
       this.log('generated users');
     } catch (error) {
@@ -155,15 +153,15 @@ export class UserService extends CommonService<User> {
   /**
    * Get all users from server
    */
-  async fetchUsers(): Promise<void> {
+  async fetchUsers(allParts: Part[]): Promise<User[]> {
     // this.destroy();
     try {
       let result = await this.callFunction('Users_find');
 
-      this.updateStore(<User[]>this.createUser(result));
+      this.updateStore(<User[]>this.createUser(result, allParts));
       this.log('fetched users');
 
-      // return result;
+      return result;
     } catch (error) {
       this.handleError('fetchUsers', error, [], '');
     }
@@ -210,8 +208,8 @@ export class UserService extends CommonService<User> {
     try {
       const result = await this.callFunction('Users_search', [term]);
 
-      const users = this.createUser(result) as User[];
-
+      // const users = this.createUser(result) as User[];
+      const users = result;
       this.log(`found users matching "${term}"`);
 
       return users;
@@ -389,11 +387,11 @@ export class UserService extends CommonService<User> {
   /**
    * @POST add a new user to the server
    */
-  async addUser(user: User): Promise<any> {
+  async addUser(user: User, allParts: Part[]): Promise<any> {
     try {
       const users = await this.callFunction('Users_insertMany', [[user]]);
 
-      this.updateStore(this.createUser(users) as User[]);
+      this.updateStore(this.createUser(users, allParts) as User[]);
 
       this.log(`added user`);
     } catch (error) {
@@ -404,14 +402,14 @@ export class UserService extends CommonService<User> {
   /**
    * @PUT: update the user on the server
    */
-  async updateUser(user: User): Promise<void> {
+  async updateUser(userData: User, allParts: Part[]): Promise<void> {
     try {
       const users = await this.callFunction('Users_updateByIds', [
-        [user._id],
-        user,
+        [userData._id],
+        userData,
       ]);
 
-      this.updateStore(this.createUser(users) as User[]);
+      this.updateStore(this.createUser(users, allParts) as User[]);
 
       this.log(`updated user`);
     } catch (error) {
@@ -420,11 +418,11 @@ export class UserService extends CommonService<User> {
   }
 
   /** DELETE: delete the user from the server */
-  async deleteUser(userId: string[]): Promise<any> {
+  async deleteUser(userId: string[], allParts: Part[]): Promise<any> {
     try {
       const users = await this.callFunction('Users_deleteByIds', [userId]);
 
-      this.updateStore(this.createUser(users) as User[]);
+      this.updateStore(this.createUser(users, allParts) as User[]);
 
       this.log(`deleted user`);
     } catch (error) {
@@ -433,7 +431,7 @@ export class UserService extends CommonService<User> {
   }
 
   /** SOFT DELETE: mark the users as deleted from the server */
-  async softDeleteUsers(userId: string[]): Promise<any> {
+  async softDeleteUsers(userId: string[], allParts: Part[]): Promise<any> {
     try {
       const deleteProps = {
         deleted: true,
@@ -446,7 +444,7 @@ export class UserService extends CommonService<User> {
         deleteProps,
       ]);
 
-      this.updateStore(this.createUser(users) as User[]);
+      this.updateStore(this.createUser(users, allParts) as User[]);
 
       this.log(`deleted user`);
     } catch (error) {
@@ -458,17 +456,19 @@ export class UserService extends CommonService<User> {
    * Insert user if not existent, update it otherwise
    * @param user any model object
    */
-  upsertUser(user: User) {
+  upsertUser(user: User, allParts: Part[]) {
     // : Observable<any> {
     user.prepareToSave();
 
+    // this.parts = (this.parts as Part[]).map((part) => part._id);
+
     if (user._id !== null) {
       // user update
-      return this.updateUser(user);
+      return this.updateUser(user, allParts);
     } else {
       // user add
       delete user._id; // Important to get the generated _id from DB
-      return this.addUser(user);
+      return this.addUser(user, allParts);
     }
   }
 }

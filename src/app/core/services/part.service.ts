@@ -65,7 +65,8 @@ export class PartService extends CommonService<Part> {
 
     const allParts = await this.callFunction('getAllParts');
 
-    this.updateStore(allParts);
+    this.updateStore(this.createPart(allParts) as Part[]);
+
     return allParts;
   }
 
@@ -143,5 +144,18 @@ export class PartService extends CommonService<Part> {
 
   getPartByName(partName: string) {
     return this.getParts().find((p) => p.name === partName);
+  }
+
+  /**
+   * Create Part instances from JSON or array of JSON objects
+   *
+   * @param props JSON object/array with properties
+   */
+  createPart(props?: object): Part | Part[] {
+    if (props instanceof Array) {
+      return props.map((obj) => new Part(obj)) as Part[];
+    } else {
+      return new Part(props) as Part;
+    }
   }
 }

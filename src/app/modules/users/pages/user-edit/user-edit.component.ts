@@ -161,10 +161,16 @@ export class UserEditComponent implements OnInit {
         // Make sure to create a deep copy of the form-model
         // let result = this.user;
         // console.log(typeof this.userForm.value);
-        const result = this.userService.createUser(this.userForm.value) as User;
+        const result = this.userService.createUser(
+          this.userForm.value,
+          this.partService.getParts()
+        ) as User;
 
         // Do useful stuff with the gathered data
-        const insertedUser = await this.userService.upsertUser(result);
+        const insertedUser = await this.userService.upsertUser(
+          result,
+          this.partService.getParts()
+        );
 
         // TODO UserEdit check if save success
         // Go to users list, passing dummy data to force reload
@@ -194,7 +200,7 @@ export class UserEditComponent implements OnInit {
 
   deleteUser() {
     // TODO show confirmation alert
-    this.userService.deleteUser(this.user);
+    this.userService.deleteUser(this.user, this.partService.getParts());
 
     // Go to users list, passing dummy data to force reload
     this.router.navigate(['users', { dummyData: new Date().getTime() }]);

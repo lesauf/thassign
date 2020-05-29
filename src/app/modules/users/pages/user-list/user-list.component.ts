@@ -107,7 +107,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   }
 
   async generateUsers() {
-    await this.userService.generateUsers(10);
+    await this.userService.generateUsers(10, this.partService.getParts());
   }
 
   // addUser() {
@@ -193,7 +193,10 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   async delete(userId?: string[]) {
     try {
-      await this.userService.softDeleteUsers(userId);
+      await this.userService.softDeleteUsers(
+        userId,
+        this.partService.getParts()
+      );
       // Refresh the list
       this.getUsers();
     } catch (error) {

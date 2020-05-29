@@ -25,7 +25,6 @@ export class AssignmentControlService {
 
   toAssignmentControl(assignment: Assignment): FormGroup {
     return new FormGroup({
-      _id: new FormControl(assignment._id || ''),
       week: new FormControl(assignment.week || ''),
       part: new FormControl(assignment.part || ''),
       assignee: new FormControl(assignment.assignee || ''),

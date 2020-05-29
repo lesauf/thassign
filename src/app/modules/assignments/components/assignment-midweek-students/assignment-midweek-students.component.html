@@ -4,25 +4,57 @@
       <h2>
         {{ week | translateDate: "MMM-D" | async }}
       </h2>
-      <button type="button" mat-raised-button matTooltip="{{ 'add-new-assignment' | translate }}" [disabled]="studentsForm.disabled" (click)="addAssignment(week, wIndex)">
+      <button
+        type="button"
+        mat-raised-button
+        matTooltip="{{ 'add-new-assignment' | translate }}"
+        [disabled]="studentsForm.disabled"
+        (click)="addAssignment(week, wIndex)"
+      >
         <mat-icon>add_rounded</mat-icon>
       </button>
       <div class="example-container">
-        <div cdkDropList cdkDropListData="{{ wIndex }}" class="example-list" (cdkDropListDropped)="drop($event, wIndex)">
-          <div *ngFor="let assignment of this.assignmentsByWeek[wIndex]" class="example-box" cdkDrag>
-            <app-assignment [assignment]="assignment" [listOfParts]="listOfParts" [assignableListByPart]="assignableListByPart" [form]="studentsForm" [wIndex]="wIndex" (isRemoved)="removeAssignment($event, wIndex)"></app-assignment>
+        <div
+          cdkDropList
+          cdkDropListData="{{ wIndex }}"
+          class="example-list"
+          (cdkDropListDropped)="drop($event, wIndex)"
+        >
+          <div
+            *ngFor="let assignment of this.assignmentsByWeek[wIndex]"
+            class="example-box"
+            cdkDrag
+          >
+            <app-assignment
+              [assignment]="assignment"
+              [listOfParts]="listOfParts"
+              [assignableListByPart]="assignableListByPart"
+              [form]="studentsForm"
+              [wIndex]="wIndex"
+              (isRemoved)="removeAssignment($event, wIndex)"
+            ></app-assignment>
           </div>
         </div>
       </div>
     </div>
 
     <div class="form-row">
-      <button type="reset" *ngIf="isEditMode" mat-raised-button class="mat-primary" [disabled]="!studentsForm.valid">
+      <button
+        type="reset"
+        mat-raised-button
+        class="mat-primary"
+        [disabled]="!studentsForm.valid"
+      >
         {{ "cancel" | translate | titlecase }}
       </button>
-      <button type="submit" mat-raised-button class="mat-primary" [disabled]="isEditMode && !studentsForm.valid">
-        <mat-icon>{{ isEditMode ? "save" : "edit" }}</mat-icon>
-        {{ (isEditMode ? "save" : "edit") | translate | titlecase }}
+      <button
+        type="submit"
+        mat-raised-button
+        class="mat-primary"
+        [disabled]="!studentsForm.valid"
+      >
+        <mat-icon>{{ "save" }}</mat-icon>
+        {{ "save" | translate | titlecase }}
       </button>
     </div>
   </form>

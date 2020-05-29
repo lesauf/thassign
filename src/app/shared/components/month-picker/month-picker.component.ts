@@ -6,7 +6,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
@@ -27,14 +27,14 @@ import { DateTime } from 'luxon';
 
 export const MY_FORMATS = {
   parse: {
-    dateInput: 'yyyy-LL' // 9 2019 -> September 2019
+    dateInput: 'yyyy-LL', // 9 2019 -> September 2019
   },
   display: {
     dateInput: { year: 'numeric', month: 'long' },
     monthYearLabel: { year: 'numeric', month: 'short' },
     dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
-    monthYearA11yLabel: { year: 'numeric', month: 'long' }
-  }
+    monthYearA11yLabel: { year: 'numeric', month: 'long' },
+  },
 };
 
 /**
@@ -47,16 +47,14 @@ export const MY_FORMATS = {
   selector: 'app-month-picker',
   templateUrl: './month-picker.component.html',
   styleUrls: ['./month-picker.component.scss'],
-  providers: [{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
+  providers: [{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }],
 })
 export class MonthPickerComponent implements OnInit, OnChanges {
   @Input() disablePicker: boolean;
 
   @Output() monthSelected: EventEmitter<any> = new EventEmitter<any>();
 
-  @ViewChild('monthPicker') monthPicker: MatDatepicker<
-    DateTime
-  >;
+  @ViewChild('monthPicker') monthPicker: MatDatepicker<DateTime>;
 
   /**
    * Hold the previous selected month in case of rollback
@@ -69,7 +67,7 @@ export class MonthPickerComponent implements OnInit, OnChanges {
   constructor() {}
 
   ngOnInit() {
-    const firstDayOfMonth = DateTime.local().startOf('month');
+    const firstDayOfMonth = DateTime.utc().startOf('month');
     // console.log(firstDayOfMonth.day);
     // Init the form with the current month
     this.date.setValue(firstDayOfMonth);

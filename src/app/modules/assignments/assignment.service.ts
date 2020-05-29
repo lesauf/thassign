@@ -1,17 +1,15 @@
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { tap, map, catchError } from 'rxjs/operators';
 import { DateTime, Interval } from 'luxon';
 
 import { AuthService } from '../auth/auth.service';
 import { CommonService } from '../../core/services/common.service';
 import { MessageService } from '../../core/services/message.service';
-import { PartService } from '../../core/services/part.service';
-import { SettingService } from 'src/app/core/services/setting.service';
-import { UserService } from '../users/user.service';
 import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 import { Part } from 'src/app/core/models/part/part.model';
+import { StitchService } from 'src/app/core/services/stitch.service';
+import { User } from 'src/app/core/models/user/user.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -49,12 +47,9 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   > = this.pAssignmentsStore.asObservable();
 
   constructor(
-    private http: HttpClient,
     protected messageService: MessageService,
-    private partService: PartService,
     private authService: AuthService,
-    private settingService: SettingService,
-    private userService: UserService
+    protected backendService: StitchService
   ) {
     super();
 
@@ -71,25 +66,32 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   /**
    * Get all users from the server
    */
-  async fetchAssignments(): Promise<Assignment[]> {
+  async fetchAssignments(
+    allParts: Part[],
+    allUsers: User[]
+  ): Promise<Assignment[]> {
     try {
       let result = await this.callFunction('Assignments_find');
 
       // Convert results to User objects
-      result = Assignment.fromJson(result) as Assignment[];
+      result = this.createAssignment(
+        result,
+        allParts,
+        allUsers
+      ) as Assignment[];
       // Sort
-      result.sort((a: Assignment, b: Assignment) => {
-        // sort desc
-        if (a.week > b.week) {
-          return -1;
-        }
+      // result.sort((a: Assignment, b: Assignment) => {
+      //   // sort desc
+      //   if (a.week > b.week) {
+      //     return -1;
+      //   }
 
-        if (a.week < b.week) {
-          return 1;
-        }
+      //   if (a.week < b.week) {
+      //     return 1;
+      //   }
 
-        return 0;
-      });
+      //   return 0;
+      // });
 
       this.updateStore(result);
       this.log('fetched Assignments');
@@ -105,36 +107,61 @@ export abstract class AssignmentService extends CommonService<Assignment> {
    *
    * @param id: string
    */
-  getAssignment(id?: number | string): Assignment {
-    try {
-      if (id) {
-        // Get assignment from store
-        this.log(`fetched assignment id=${id}`);
+  // getAssignment(id?: number | string): Assignment {
+  //   try {
+  //     if (id) {
+  //       // Get assignment from store
+  //       this.log(`fetched assignment id=${id}`);
 
-        return this.getAssignments().find(
-          (assignment) => assignment._id.toHexString() === id
-        );
-      } else {
-        // create an empty assignment with default values
-        return new Assignment({
-          ownerId: this.authService.getUser().id,
-        });
-      }
-    } catch (error) {
-      this.handleError<any>(`getAssignment id=${id}`, error);
-    }
-  }
+  //       return this.getAssignments().find(
+  //         (assignment) => assignment._id.toHexString() === id
+  //       );
+  //     } else {
+  //       // create an empty assignment with default values
+  //       return new Assignment({
+  //         ownerId: this.authService.getUser().id,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     this.handleError<any>(`getAssignment id=${id}`, error);
+  //   }
+  // }
 
   /**
    * Create User instances from JSON or array of JSON objects
    *
    * @param props JSON object/array with properties
    */
-  createAssignment(props?: object): Assignment | Assignment[] {
+  createAssignment(
+    props: object,
+    allParts: Part[],
+    allUsers: User[]
+  ): Assignment | Assignment[] {
     if (props instanceof Array) {
       return props.map((obj, index) => {
         // Set the assignment position as its position in the array
         obj.position = index;
+
+        // Replace part, assignee and assistant with model object
+        if (obj.part.hasOwnProperty('id')) {
+          // from DB
+          obj.part = allParts.find((part) => part._id.equals(obj.part));
+          obj.assignee = allUsers.find((user) => user._id.equals(obj.assignee));
+          obj.assistant = allUsers.find((user) =>
+            user._id.equals(obj.assistant)
+          );
+        } else {
+          // from form
+          // obj.part = allParts.find((part) => part._id.equals(obj.part._id));
+          // obj.assignee = obj.assignee
+          //   ? allUsers.find((user) => user._id.equals(obj.assignee._id))
+          //   : null;
+          // obj.assistant = obj.assistant
+          //   ? allUsers.find((user) => user._id.equals(obj.assistant._id))
+          //   : null;
+        }
+
+        // obj.part = this.partService
         return new Assignment(obj);
       }) as Assignment[];
     } else {
@@ -217,10 +244,8 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     if (assignments !== null) {
       pAssignments = assignments.filter(
         (assignment) =>
-          listOfParts.find((part) => part._id === assignment.part._id) !==
-            undefined &&
-          DateTime.fromJSDate(assignment.week).get('month') ===
-            month.get('month')
+          listOfParts.find((part) => part._id.equals(assignment.part._id)) !==
+            undefined && month.get('month') === assignment.week.get('month')
       );
 
       this.pAssignmentsStore.next(pAssignments);
@@ -361,20 +386,20 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   /**
    * @PUT: update the assignment on the server
    */
-  async updateAssignment(assignment: Assignment): Promise<void> {
-    try {
-      const assignments = await this.callFunction('Assignments_updateByIds', [
-        [assignment._id],
-        assignment,
-      ]);
+  // async updateAssignment(assignment: Assignment): Promise<void> {
+  //   try {
+  //     const assignments = await this.callFunction('Assignments_updateByIds', [
+  //       [assignment._id],
+  //       assignment,
+  //     ]);
 
-      this.updateStore(Assignment.fromJson(assignments) as Assignment[]);
+  //     this.updateStore(Assignment.fromJson(assignments) as Assignment[]);
 
-      this.log(`updated assignment`);
-    } catch (error) {
-      this.handleError<any>('updateAssignment', error);
-    }
-  }
+  //     this.log(`updated assignment`);
+  //   } catch (error) {
+  //     this.handleError<any>('updateAssignment', error);
+  //   }
+  // }
 
   /**
    * DELETE: delete the assignment from the server
@@ -395,33 +420,41 @@ export abstract class AssignmentService extends CommonService<Assignment> {
 
   /**
    * Insert assignment if not existent, update it otherwise
-   * @param assignments Assignment model object
+   * @param assignments Assignment list
    */
-  async upsertAssignments(assignments: any, month?: string): Promise<void> {
-    // : Observable<Assignment> {
-    // console.log(assignments);
-    // Extract all the assignments ids in case of an update
-    const assignmentsIds = [];
-    assignments.weeks.forEach((week) => {
-      Object.values(week).forEach((ass) => {
-        if (ass['_id']) {
-          assignmentsIds.push(ass['_id']);
-        }
-      });
+  async saveAssignments(
+    assignments: Assignment[],
+    startDate: DateTime
+  ): Promise<void> {
+    let endDate = startDate.set({ day: startDate.daysInMonth });
+
+    const toSave = [];
+    // convert User, assignee and Part to their _id
+    assignments.forEach((ass, i) => {
+      toSave[i] = {};
+      Object.assign(toSave[i], ass);
+      toSave[i].week = ass.week.toJSDate();
+      toSave[i].part = ass.part._id;
+      toSave[i].assignee = ass.assignee?._id;
+      toSave[i].assistant = ass.assistant?._id;
     });
-    // console.log(assignmentsData);
 
+    console.log(
+      'DATES',
+      startDate.toISODate(),
+      endDate.toISODate(),
+      assignments,
+      toSave
+    );
     try {
-      const result = await this.callFunction('Assignments_updateMany', [
-        assignmentsIds,
-        assignments,
-      ]);
-
-      this.updateStore(Assignment.fromJson(assignments) as Assignment[]);
-
-      this.log(`Updated assignments (${month})`, 'AssignmentService');
+      // const result = await this.callFunction('Assignments_insertMany', [
+      //   startDate.toISODate(),
+      //   endDate.toISODate(),
+      //   toSave,
+      // ]);
+      // this.updateStore(Assignment.fromJson(result) as Assignment[]);
     } catch (error) {
-      this.handleError<any>('upsertAssignment', error);
+      this.handleError<any>('saveAssignments', error);
     }
   }
 

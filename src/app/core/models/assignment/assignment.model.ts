@@ -12,19 +12,15 @@ import {
   IsDefined,
   MinLength,
 } from 'class-validator';
-import { Part } from '../part/part.model';
+import { DateTime } from 'luxon';
+
+import { Part, ObjectId } from '../part/part.model';
 import { User } from '../user/user.model';
 
 export class Assignment {
   @IsObject()
   @IsOptional()
-  // Joi.string().alphanum()
-  // tslint:disable-next-line: variable-name
-  _id: { toHexString() } = null;
-
-  @IsString()
-  @IsDate()
-  week: Date;
+  week: DateTime;
 
   @IsString()
   part: Part = null;
@@ -89,9 +85,17 @@ export class Assignment {
    * @todo Sanitize/clean the object passed (apply some rules,
    * like women can not give public talks ...)
    */
-  constructor(userProperties?: object) {
-    if (userProperties) {
-      Object.assign(this, userProperties);
+  constructor(props?: object) {
+    if (props) {
+      if (!props['week'].hasOwnProperty('isLuxonDateTime')) {
+        const refDate = DateTime.utc();
+        props['week'] = DateTime.fromJSDate(props['week'], {
+          zone: refDate.zone,
+          locale: refDate.locale,
+        });
+      }
+
+      Object.assign(this, props);
     }
   }
 
@@ -99,7 +103,7 @@ export class Assignment {
    * The unique identifier of this assignment in the form
    */
   get key() {
-    return this.week.toISOString() + this.position;
+    return this.week.toISODate() + this.position;
   }
 
   set assignableUsers(users: User[]) {
@@ -130,4 +134,17 @@ export class Assignment {
       return new Assignment(properties);
     }
   }
+
+  /**
+   * Convert the user to the format accepted in the db
+   * for example, replace parts with their ids
+   */
+  //  prepareToSave(): void {
+  //    // Replace part, user, assignee with their ids
+  //    this.part = (this.part as Part)._id;
+
+  //    this.assignee = ...(this.assignee !== null && (this.assignee as User)._id);
+
+  //    this.assistant = (this.part as Part)._id;
+  //  }
 }

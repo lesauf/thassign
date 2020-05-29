@@ -134,15 +134,14 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
       this.assignmentService.pAssignments.subscribe((assignments) => {
         // Separate the assignments by week and assign them numbers
         this.weeks.forEach((week, index) => {
-          this.assignmentsByWeek[index] = assignments.filter(
-            (ass) =>
-              DateTime.fromJSDate(ass.week).get('weekNumber') ===
-              week.start.get('weekNumber')
-          );
+          this.assignmentsByWeek[index] = assignments.filter((ass) => {
+            return week.start.toISODate() === ass.week.toISODate();
+          });
         });
-      });
 
-      this.prepareForm();
+        this.prepareForm();
+        // this.studentsForm.updateValueAndValidity();
+      });
     }
 
     // Check if the previous form was in edit mode
@@ -178,29 +177,24 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   updatePositions() {
     this.weeks.forEach((week, wIndex) => {
       this.assignmentsByWeek[wIndex] = this.assignmentService.createAssignment(
-        this.studentsForm.value[wIndex]
+        this.studentsForm.value[wIndex],
+        this.partService.getParts(),
+        this.userService.getUsers()
       ) as Assignment[];
     });
   }
 
   addAssignment(week: Interval, wIndex: string) {
-    // this.assignmentsByWeek[wIndex].push(
-    //   new Assignment({
-    //     week: week.start.toJSDate(),
-    //     position: this.assignmentsByWeek[wIndex].length,
-    //     ownerId: this.authService.getUser().id,
-    //   })
-    // );
-
-    // this.prepareForm();
-
     (this.studentsForm.get([wIndex]) as FormArray).insert(
       this.assignmentsByWeek[wIndex].length,
       this.acs.toAssignmentControl(
         new Assignment({
-          week: week.start.toJSDate(),
+          week: week.start,
           position: this.assignmentsByWeek[wIndex].length,
           ownerId: this.authService.getUser().id,
+          part: {},
+          assignee: {},
+          assistant: {},
         })
       )
     );
@@ -244,7 +238,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
 
     this.payLoad = JSON.stringify(a, null, 1);
 
-    this.onSave.emit(a);
+    this.assignmentService.saveAssignments(a, this.month);
   }
 
   /**
