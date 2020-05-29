@@ -30,7 +30,7 @@ export abstract class AssignmentCommon {
    * List of parts for each week
    * Useful in case theses are different each week
    */
-  listOfPartsByWeek: any[] = [];
+  // listOfPartsByWeek: any[] = [];
 
   /**
    * Form for assignments for the whole month
@@ -86,6 +86,8 @@ export abstract class AssignmentCommon {
   }
 
   async initializeData() {
+    await this.getParts();
+
     if (!this.listOfParts) {
       this.listOfParts = await this.partService.getPartsByMeeting(
         this.meetingName
@@ -101,11 +103,11 @@ export abstract class AssignmentCommon {
       this.month
     );
 
-    this.listOfPartsByWeek = this.assignmentService.getListOfPartsByWeek(
-      this.meetingName,
-      this.month
-    );
-
+    // this.listOfPartsByWeek = this.assignmentService.getListOfPartsByWeek(
+    //   this.meetingName,
+    //   this.month
+    // );
+    // console.log('LIST PART WEEK', this.listOfPartsByWeek);
     // this.studentsForm.reset(); // ??
 
     // Get the list of users assignable to parts
@@ -114,6 +116,7 @@ export abstract class AssignmentCommon {
       this.listOfParts,
       this.meetingName
     );
+
     this.assignableList = assignables.list;
     this.assignableListByPart = assignables.byPart;
 
@@ -123,7 +126,7 @@ export abstract class AssignmentCommon {
 
     // this.populateForm();
 
-    this.isEditMode = false;
+    // this.isEditMode = false;
   }
 
   // generateForm() {}
@@ -131,8 +134,10 @@ export abstract class AssignmentCommon {
   /**
    * Get parts of a meeting
    */
-  async getParts(meetingName: string) {
-    this.listOfParts = await this.partService.getPartsByMeeting(meetingName);
+  async getParts() {
+    this.listOfParts = await this.partService.getPartsByMeeting(
+      this.meetingName
+    );
 
     // const partsShortNames = Object.keys(this.listOfParts);
 
@@ -298,86 +303,86 @@ export abstract class AssignmentCommon {
     }
   }
 
-  async generateAssignments() {
-    // Get the error messages
-    const noAssignableUserMessage = await this._translate
-      .get('part-with-no-assignable-user')
-      .toPromise();
-    const noAssignableUserAction = await this._translate
-      .get('part-with-no-assignable-user-action')
-      .toPromise();
+  // async generateAssignments() {
+  //   // Get the error messages
+  //   const noAssignableUserMessage = await this._translate
+  //     .get('part-with-no-assignable-user')
+  //     .toPromise();
+  //   const noAssignableUserAction = await this._translate
+  //     .get('part-with-no-assignable-user-action')
+  //     .toPromise();
 
-    // console.log(this.assignableList);
+  //   // console.log(this.assignableList);
 
-    // Get the values in the form
-    // parse the weeks
-    this.monthForm.value.weeks.forEach((weekValues, weekIndex) => {
-      // Handle each field
-      this.listOfPartsByWeek[weekIndex].forEach((partName, partIndex) => {
-        const assignee = this._getFirstAssignableUserForPartAndMoveHimDown(
-          partName
-        );
+  //   // Get the values in the form
+  //   // parse the weeks
+  //   this.monthForm.value.weeks.forEach((weekValues, weekIndex) => {
+  //     // Handle each field
+  //     this.listOfPartsByWeek[weekIndex].forEach((partName, partIndex) => {
+  //       const assignee = this._getFirstAssignableUserForPartAndMoveHimDown(
+  //         partName
+  //       );
 
-        // Handle only the field unassigned.
-        // This way the user can assign some and generate the rest
-        if (weekValues[partIndex] && !weekValues[partIndex]['assignee']) {
-          // No user assigned, so we will assign the first in the list
-          const week = weekValues[partIndex]['week'];
+  //       // Handle only the field unassigned.
+  //       // This way the user can assign some and generate the rest
+  //       if (weekValues[partIndex] && !weekValues[partIndex]['assignee']) {
+  //         // No user assigned, so we will assign the first in the list
+  //         const week = weekValues[partIndex]['week'];
 
-          if (assignee !== undefined) {
-            // If there is an assignable user
+  //         if (assignee !== undefined) {
+  //           // If there is an assignable user
 
-            // if (partIndex !== 0) {
-            //   const previousPartIndex = partIndex - 1;
+  //           // if (partIndex !== 0) {
+  //           //   const previousPartIndex = partIndex - 1;
 
-            //   // Compare the value in the previous field
-            //   if (
-            //     this.monthForm.get([
-            //       'weeks',
-            //       weekIndex,
-            //       previousPartIndex,
-            //       'assignee'
-            //     ]).value['_id'] === assignee['_id']
-            //   ) {
-            //     console.log('Avant', assignee);
-            //     // If same, pick the next user (done just once, for now)
-            //     assignee = this._getFirstAssignableUserForPartAndMoveHimDown(
-            //       partName
-            //     );
-            //     console.log('Apres', assignee);
-            //   }
-            // }
+  //           //   // Compare the value in the previous field
+  //           //   if (
+  //           //     this.monthForm.get([
+  //           //       'weeks',
+  //           //       weekIndex,
+  //           //       previousPartIndex,
+  //           //       'assignee'
+  //           //     ]).value['_id'] === assignee['_id']
+  //           //   ) {
+  //           //     console.log('Avant', assignee);
+  //           //     // If same, pick the next user (done just once, for now)
+  //           //     assignee = this._getFirstAssignableUserForPartAndMoveHimDown(
+  //           //       partName
+  //           //     );
+  //           //     console.log('Apres', assignee);
+  //           //   }
+  //           // }
 
-            this.monthForm
-              .get(['weeks', weekIndex, partIndex, 'assignee'])
-              .setValue(assignee);
+  //           this.monthForm
+  //             .get(['weeks', weekIndex, partIndex, 'assignee'])
+  //             .setValue(assignee);
 
-            // Assign the assistant
-            if (this.listOfParts[partName].withAssistant) {
-              const assistant = this._getFirstAssignableUserForPartAndMoveHimDown(
-                'studentAssistant'
-              );
+  //           // Assign the assistant
+  //           if (this.listOfParts[partName].withAssistant) {
+  //             const assistant = this._getFirstAssignableUserForPartAndMoveHimDown(
+  //               'studentAssistant'
+  //             );
 
-              this.monthForm
-                .get(['weeks', weekIndex, partIndex, 'assistant'])
-                .setValue(assistant);
-            }
-          } else {
-            // TODO inform the users that there are empty assignables for some parts
-            // Use snackbar notification ?
-            this._snackBar.open(
-              noAssignableUserMessage,
-              noAssignableUserAction
-            );
-          }
-        }
-      });
-    });
-    // console.log(this.monthForm);
-    // Enable the form for adjustment and save
-    this.monthForm.disable();
-    //  this.editAndSaveForm();
-  }
+  //             this.monthForm
+  //               .get(['weeks', weekIndex, partIndex, 'assistant'])
+  //               .setValue(assistant);
+  //           }
+  //         } else {
+  //           // TODO inform the users that there are empty assignables for some parts
+  //           // Use snackbar notification ?
+  //           this._snackBar.open(
+  //             noAssignableUserMessage,
+  //             noAssignableUserAction
+  //           );
+  //         }
+  //       }
+  //     });
+  //   });
+  //   // console.log(this.monthForm);
+  //   // Enable the form for adjustment and save
+  //   this.monthForm.disable();
+  //   //  this.editAndSaveForm();
+  // }
 
   /**
    * Rotate and array, sending the first elt to the end

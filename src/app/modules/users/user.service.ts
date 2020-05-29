@@ -156,12 +156,14 @@ export class UserService extends CommonService<User> {
   async fetchUsers(allParts: Part[]): Promise<User[]> {
     // this.destroy();
     try {
-      let result = await this.callFunction('Users_find');
+      const result = await this.callFunction('Users_find');
 
-      this.updateStore(<User[]>this.createUser(result, allParts));
+      const allUsers = this.createUser(result, allParts) as User[];
+
+      this.updateStore(allUsers);
       this.log('fetched users');
 
-      return result;
+      return allUsers;
     } catch (error) {
       this.handleError('fetchUsers', error, [], '');
     }

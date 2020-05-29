@@ -29,6 +29,7 @@ export class AppResolverService implements Resolve<string> {
       // this.userService.destroy();
       const allParts = await this.partService.fetchParts();
       const allUsers = await this.userService.fetchUsers(allParts);
+
       await this.assignmentService.fetchAssignments(allParts, allUsers);
 
       return 'Data fetched';

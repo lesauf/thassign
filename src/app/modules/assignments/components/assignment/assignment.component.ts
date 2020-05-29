@@ -42,8 +42,6 @@ export class AssignmentComponent implements OnInit, OnDestroy {
    * Clear the assignment everytime its part changes
    */
   onPartChange(partSelected: MatSelectChange) {
-    console.log(this.assignment);
-
     this.form
       .get([this.wIndex, this.assignment.position])
       .setValue(this.assignment);

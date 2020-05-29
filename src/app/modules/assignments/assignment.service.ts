@@ -140,18 +140,19 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     if (props instanceof Array) {
       return props.map((obj, index) => {
         // Set the assignment position as its position in the array
-        obj.position = index;
 
         // Replace part, assignee and assistant with model object
         if (obj.part.hasOwnProperty('id')) {
           // from DB
+          delete obj._id; // Remove the _id, so in case it should be saved, mongoDb regenerate
           obj.part = allParts.find((part) => part._id.equals(obj.part));
           obj.assignee = allUsers.find((user) => user._id.equals(obj.assignee));
           obj.assistant = allUsers.find((user) =>
             user._id.equals(obj.assistant)
           );
-        } else {
-          // from form
+        } else if (obj.part.hasOwnProperty('_id')) {
+          // from form, with selected part
+          obj.position = index;
           obj.part = allParts.find((part) => part._id.equals(obj.part._id));
           obj.assignee = obj.assignee
             ? allUsers.find((user) => user._id.equals(obj.assignee._id))
@@ -424,9 +425,11 @@ export abstract class AssignmentService extends CommonService<Assignment> {
    */
   async saveAssignments(
     assignments: Assignment[],
-    startDate: DateTime
+    startDate: DateTime,
+    allParts: Part[],
+    allUsers: User[]
   ): Promise<void> {
-    let endDate = startDate.set({ day: startDate.daysInMonth });
+    const endDate = startDate.set({ day: startDate.daysInMonth });
 
     const toSave = [];
     // convert User, assignee and Part to their _id
@@ -439,20 +442,18 @@ export abstract class AssignmentService extends CommonService<Assignment> {
       toSave[i].assistant = ass.assistant?._id;
     });
 
-    console.log(
-      'DATES',
-      startDate.toISODate(),
-      endDate.toISODate(),
-      assignments,
-      toSave
-    );
     try {
-      // const result = await this.callFunction('Assignments_insertMany', [
-      //   startDate.toISODate(),
-      //   endDate.toISODate(),
-      //   toSave,
-      // ]);
-      // this.updateStore(Assignment.fromJson(result) as Assignment[]);
+      //  Save the assignments and fetch all of them from the DB
+      const result = await this.callFunction('Assignments_insertMany', [
+        startDate.toISODate(),
+        endDate.toISODate(),
+        toSave,
+      ]);
+
+      // Then update Store
+      this.updateStore(
+        this.createAssignment(result, allParts, allUsers) as Assignment[]
+      );
     } catch (error) {
       this.handleError<any>('saveAssignments', error);
     }

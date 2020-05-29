@@ -63,9 +63,10 @@ export class PartService extends CommonService<Part> {
   async fetchParts() {
     console.log('Fetching parts from server');
 
-    const allParts = await this.callFunction('getAllParts');
+    const result = await this.callFunction('getAllParts');
 
-    this.updateStore(this.createPart(allParts) as Part[]);
+    const allParts = this.createPart(result) as Part[];
+    this.updateStore(allParts);
 
     return allParts;
   }

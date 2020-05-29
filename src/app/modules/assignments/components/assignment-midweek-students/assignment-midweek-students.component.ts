@@ -33,20 +33,20 @@ import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 import { Part } from 'src/app/core/models/part/part.model';
 import { AssignmentControlService } from '../../assignment-control.service';
 
-export const DATE_FORMATS = {
-  parse: {
-    dateInput: 'DD/MM/YYYY',
-  },
-  display: {
-    dateInput: 'DD/MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-  store: {
-    dateInput: 'YYYY-MM-DD',
-  },
-};
+// export const DATE_FORMATS = {
+//   parse: {
+//     dateInput: 'DD/MM/YYYY',
+//   },
+//   display: {
+//     dateInput: 'DD/MM/YYYY',
+//     monthYearLabel: 'MMM YYYY',
+//     dateA11yLabel: 'LL',
+//     monthYearA11yLabel: 'MMMM YYYY',
+//   },
+//   store: {
+//     dateInput: 'YYYY-MM-DD',
+//   },
+// };
 
 /**
  * Handle weekend assignments attributions
@@ -72,8 +72,8 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   @Output()
   editMode: EventEmitter<any> = new EventEmitter();
 
-  @Output()
-  onSave: EventEmitter<Assignment[]> = new EventEmitter();
+  // @Output()
+  // onSave: EventEmitter<Assignment[]> = new EventEmitter();
 
   meetingName = 'midweek-students';
 
@@ -82,7 +82,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   /**
    * paginated Assignments
    */
-  pAssignments$: Observable<Assignment[]>;
+  // pAssignments$: Observable<Assignment[]>;
 
   studentsForm: FormGroup;
 
@@ -125,21 +125,25 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
    * Called whenever a data bound property is changed
    */
   async ngOnChanges(changes: SimpleChanges) {
-    this.initializeData();
+    await this.initializeData();
 
     if (changes.month.isFirstChange()) {
       // Fetch meeting parts once
-      await this.getParts('midweek-students');
+      // await this.getParts('midweek-students');
 
       this.assignmentService.pAssignments.subscribe((assignments) => {
+        delete this.studentsForm;
         // Separate the assignments by week and assign them numbers
+        const assignmentsByWeek = [];
         this.weeks.forEach((week, index) => {
           this.assignmentsByWeek[index] = assignments.filter((ass) => {
             return week.start.toISODate() === ass.week.toISODate();
           });
         });
 
+        // The form has to be ready before assignmentsByWeek
         this.prepareForm();
+        // this.assignmentsByWeek = assignmentsByWeek;
         // this.studentsForm.updateValueAndValidity();
       });
     }
@@ -163,8 +167,12 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
    *   - FormGroup
    *   - Subscribe to the form changes to update assignementsByWeek
    */
-  prepareForm() {
-    this.studentsForm = this.acs.toFormGroup(this.assignmentsByWeek);
+  prepareForm(assignmentsByWeek?: Assignment[][]) {
+    if (!assignmentsByWeek) {
+      assignmentsByWeek = this.assignmentsByWeek;
+    }
+
+    this.studentsForm = this.acs.toFormGroup(assignmentsByWeek);
 
     this.studentsForm.valueChanges.subscribe((currentFormValues) => {
       this.updatePositions();
@@ -192,9 +200,9 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
           week: week.start,
           position: this.assignmentsByWeek[wIndex].length,
           ownerId: this.authService.getUser().id,
-          part: {},
-          assignee: {},
-          assistant: {},
+          // part: new Part({}),
+          // assignee: {},
+          // assistant: {},
         })
       )
     );
@@ -238,7 +246,12 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
 
     this.payLoad = JSON.stringify(a, null, 1);
 
-    this.assignmentService.saveAssignments(a, this.month);
+    this.assignmentService.saveAssignments(
+      a,
+      this.month,
+      this.partService.getParts(),
+      this.userService.getUsers()
+    );
   }
 
   /**
