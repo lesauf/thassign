@@ -77,8 +77,6 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
 
   meetingName = 'midweek-students';
 
-  isEditMode = true;
-
   /**
    * paginated Assignments
    */
@@ -117,7 +115,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   ngOnDestroy(): void {
     // TODO: set an alert to inform the users that he is still in edit mode
     // Emit edit mode event (to enable navigation)
-    this.editMode.emit(false);
+    // this.editMode.emit(false);
     // this.assignmentService.pAssignments.unsubscribe();
   }
 
@@ -235,23 +233,33 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     this.prepareForm();
   }
 
+  saveAsPdf() {
+    window.print();
+  }
+
   onSubmit() {
-    // Convert the assignmentsByWeek values from the form to Assignment list
-    const a = [];
-    this.weeks.forEach((week, wIndex) => {
-      this.assignmentsByWeek[wIndex].forEach((assignment) =>
-        a.push(assignment)
+    try {
+      // Convert the assignmentsByWeek values from the form to Assignment list
+      const a = [];
+      this.weeks.forEach((week, wIndex) => {
+        this.assignmentsByWeek[wIndex].forEach((assignment) =>
+          a.push(assignment)
+        );
+      });
+
+      this.payLoad = JSON.stringify(a, null, 1);
+
+      this.assignmentService.saveAssignments(
+        a,
+        this.month,
+        this.partService.getParts(),
+        this.userService.getUsers()
       );
-    });
 
-    this.payLoad = JSON.stringify(a, null, 1);
-
-    this.assignmentService.saveAssignments(
-      a,
-      this.month,
-      this.partService.getParts(),
-      this.userService.getUsers()
-    );
+      this.isEditMode = false;
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**

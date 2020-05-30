@@ -21,6 +21,7 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class AssignmentComponent implements OnInit, OnDestroy {
   @Input() assignment: Assignment;
+  @Input() isEditMode: boolean;
   @Input() listOfParts: Part[];
   @Input() assignableListByPart: User[][];
   @Input() form: FormGroup;

@@ -1,66 +1,57 @@
-<ng-container *ngIf="studentsForm">
-  <form (ngSubmit)="onSubmit()" [formGroup]="studentsForm" cdkDropListGroup>
-    <div *ngFor="let week of weeks; index as wIndex" class="form-row">
-      <h2>
-        {{ week | translateDate: "MMM-D" | async }}
-      </h2>
-      <button
-        type="button"
-        mat-raised-button
-        matTooltip="{{ 'add-new-assignment' | translate }}"
-        [disabled]="studentsForm.disabled"
-        (click)="addAssignment(week, wIndex)"
-      >
-        <mat-icon>add_rounded</mat-icon>
-      </button>
-      <div class="example-container">
-        <div
-          cdkDropList
-          cdkDropListData="{{ wIndex }}"
-          class="example-list"
-          (cdkDropListDropped)="drop($event, wIndex)"
-        >
-          <div
-            *ngFor="let assignment of this.assignmentsByWeek[wIndex]"
-            class="example-box"
-            cdkDrag
-          >
-            <app-assignment
-              [assignment]="assignment"
-              [listOfParts]="listOfParts"
-              [assignableListByPart]="assignableListByPart"
-              [form]="studentsForm"
-              [wIndex]="wIndex"
-              (isRemoved)="removeAssignment($event, wIndex)"
-            ></app-assignment>
+<div *ngIf="studentsForm">
+  <form (ngSubmit)="onSubmit()" [formGroup]="studentsForm" fxLayout="column" fxLayoutAlign="space-between stretch">
+    <div [ngClass]="{ 'week-box-edit': isEditMode, 'week-box-view': !isEditMode }" cdkDropListGroup fxFlex fxLayout="column" fxLayoutAlign="space-between stretch">
+      <div *ngFor="let week of weeks; index as wIndex" fxFlex class="assignments-container">
+        <h2>
+          {{ week | translateDate: "MMM-D" | async }}
+        </h2>
+        <button *ngIf="isEditMode" type="button" mat-raised-button matTooltip="{{ 'add-new-assignment' | translate }}" [disabled]="studentsForm.disabled" (click)="addAssignment(week, wIndex)">
+          <mat-icon>add_rounded</mat-icon>
+        </button>
+
+        <!--<div >-->
+        <div cdkDropList cdkDropListData="{{ wIndex }}" [ngClass]="{ 'assignments-list': isEditMode }" (cdkDropListDropped)="drop($event, wIndex)">
+          <div *ngFor="let assignment of this.assignmentsByWeek[wIndex]" class="assignment-box" [ngClass]="{ 'draggable': isEditMode }" cdkDrag [cdkDragDisabled]="!isEditMode">
+            <app-assignment [assignment]="assignment" [isEditMode]="isEditMode" [listOfParts]="listOfParts" [assignableListByPart]="assignableListByPart" [form]="studentsForm" [wIndex]="wIndex" (isRemoved)="removeAssignment($event, wIndex)"></app-assignment>
           </div>
         </div>
+        <!--</div>-->
       </div>
     </div>
-
-    <div class="form-row">
-      <button
-        type="reset"
-        mat-raised-button
-        class="mat-primary"
-        [disabled]="!studentsForm.valid"
-      >
+    &nbsp;
+    <!-- FORM BUTTONS-->
+    <div *ngIf="isEditMode; else viewButtons" fxFlex>
+      <!-- 
+      fxLayout="row" fxLayoutAlign="space-around center" -->
+      <button type="reset" mat-raised-button class="mat-primary" (click)="isEditMode = false">
+        <mat-icon>undo</mat-icon>
         {{ "cancel" | translate | titlecase }}
       </button>
-      <button
-        type="submit"
-        mat-raised-button
-        class="mat-primary"
-        [disabled]="!studentsForm.valid"
-      >
-        <mat-icon>{{ "save" }}</mat-icon>
+
+      <button type="submit" mat-raised-button class="mat-primary">
+        <mat-icon>save</mat-icon>
         {{ "save" | translate | titlecase }}
       </button>
     </div>
+
+    <!-- PRINT BUTTONS -->
+    <ng-template #viewButtons>
+      <div fxFlex>
+        <button type="button" mat-raised-button class="mat-primary" (click)="isEditMode = true">
+          <mat-icon>edit</mat-icon>
+          {{ "edit" | translate | titlecase }}
+        </button>
+
+        <button type="button" mat-raised-button class="mat-primary" (click)="saveAsPdf()">
+          <mat-icon>print</mat-icon>
+          {{ "print" | translate | titlecase }}
+        </button>
+      </div>
+    </ng-template>
   </form>
 
   <div *ngIf="payLoad" class="form-row">
     <strong>Saved the following values</strong><br />
     <pre>{{ payLoad }}</pre>
   </div>
-</ng-container>
+</div>
