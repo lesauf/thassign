@@ -1,12 +1,35 @@
 <div [formGroup]="form" *ngIf="isEditMode; else assignmentDisplay">
   <div formArrayName="{{ wIndex }}">
-    <div formGroupName="{{ assignment.position }}" fxLayoutAlign="space-around start">
+    <div
+      fxLayout="row wrap"
+      formGroupName="{{ assignment.position }}"
+      fxLayoutAlign="space-around center"
+      fxLayoutGap="1em"
+    >
+      <button
+        type="button"
+        fxFlex="nogrow"
+        mat-raised-button
+        [disabled]="form.disabled"
+        (click)="removeAssignment()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+
       <!-- PART -->
-      <div fxFlex="30">
+      <div fxFlex fxFlex.lt-sm="auto">
         <mat-form-field fxFill>
-          <mat-select placeholder="{{ 'assignment' | translate | titlecase }}" [compareWith]="compareFn" formControlName="part" (selectionChange)="onPartChange($event)">
+          <mat-select
+            placeholder="{{ 'assignment' | translate | titlecase }}"
+            [compareWith]="compareFn"
+            formControlName="part"
+            (selectionChange)="onPartChange($event)"
+          >
             <mat-select-trigger>
-              {{ form.get([wIndex, assignment.position, "part"]).value?.name | translate }}
+              {{
+                form.get([wIndex, assignment.position, "part"]).value?.name
+                  | translate
+              }}
             </mat-select-trigger>
 
             <mat-option *ngFor="let part of listOfParts" [value]="part">
@@ -16,62 +39,85 @@
         </mat-form-field>
       </div>
       <!-- ASSIGNEE -->
-      <div fxFlex="30">
-        <mat-form-field fxFill *ngIf="form.get([wIndex, assignment.position, 'part']).value">
-          <mat-select placeholder="{{ 'assignee' | translate | titlecase }}" [compareWith]="compareFn" formControlName="assignee">
+      <div fxFlex fxFlex.lt-sm="auto">
+        <mat-form-field
+          fxFill
+          *ngIf="form.get([wIndex, assignment.position, 'part']).value"
+        >
+          <mat-select
+            placeholder="{{ 'assignee' | translate | titlecase }}"
+            [compareWith]="compareFn"
+            formControlName="assignee"
+          >
             <mat-select-trigger>
               {{ assignment.assignee?.fullName }}
             </mat-select-trigger>
 
-            <mat-option *ngFor="
+            <mat-option
+              *ngFor="
                 let assignee of assignableListByPart[
                   form.get([wIndex, assignment.position, 'part']).value?.name
                 ]
-              " [value]="assignee">
+              "
+              [value]="assignee"
+            >
               {{ assignee.fullName }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <!-- ASSISTANT -->
-      <div fxFlex="30">
-        <mat-form-field fxFill *ngIf="
-            form.get([wIndex, assignment.position, 'part']).value?.withAssistant
-          ">
-          <mat-select placeholder="{{ 'assistant' | translate | titlecase }}" [compareWith]="compareFn" formControlName="assistant">
+      <div
+        fxFlex
+        *ngIf="
+          form.get([wIndex, assignment.position, 'part']).value?.withAssistant
+        "
+        fxFlex.lt-sm="auto"
+      >
+        <mat-form-field fxFill>
+          <mat-select
+            placeholder="{{ 'assistant' | translate | titlecase }}"
+            [compareWith]="compareFn"
+            formControlName="assistant"
+          >
             <mat-select-trigger>
               {{ assignment.assistant?.fullName }}
             </mat-select-trigger>
 
-            <mat-option *ngFor="
+            <mat-option
+              *ngFor="
                 let assistant of assignableListByPart['clm.ministry.assistant']
-              " [value]="assistant">
+              "
+              [value]="assistant"
+            >
               {{ assistant.fullName }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
-      <button type="button" fxFlex="10" mat-raised-button [disabled]="form.disabled" (click)="removeAssignment()">
-        <mat-icon>close</mat-icon>
-      </button>
     </div>
   </div>
 </div>
 
 <!-- ASSIGNMENT DISPLAY -->
 <ng-template #assignmentDisplay>
-  <div fxLayoutAlign="start center">
+  <div fxLayout="row wrap" fxLayoutAlign="start center">
     <!-- PART -->
-    <div fxFlex="30" fxFlexOffset="5" class="assignment-name">
+    <div
+      fxFlex="30"
+      fxFlex.lt-sm="100"
+      fxFlexOffset="5"
+      class="assignment-name"
+    >
       {{ assignment.part.name | translate }}
     </div>
     <!-- ASSIGNEE & ASSISTANT -->
-    <div fxFlex="50">
+    <div fxFlex="50" fxFlex.lt-sm="100" fxFlexOffset.lt-sm="10">
       <span class="assignment-assignee">
         {{ assignment.assignee?.fullName }}
       </span>
       <span *ngIf="assignment.part.withAssistant" class="assignment-assistant">
-       / {{ assignment.assistant?.fullName }}
+        / {{ assignment.assistant?.fullName }}
       </span>
     </div>
   </div>

@@ -86,6 +86,11 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
 
   payLoad = '';
 
+  /**
+   * Display the Loading msg
+   */
+  loading = false;
+
   constructor(
     private acs: AssignmentControlService,
     protected assignmentService: AssignmentService,
@@ -123,6 +128,8 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
    * Called whenever a data bound property is changed
    */
   async ngOnChanges(changes: SimpleChanges) {
+    this.loading = true;
+
     await this.initializeData();
 
     if (changes.month.isFirstChange()) {
@@ -157,6 +164,8 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
       this.month,
       this.listOfParts
     );
+
+    this.loading = false;
   }
 
   /**
@@ -237,7 +246,13 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     window.print();
   }
 
-  onSubmit() {
+  setEditMode(value: boolean) {
+    this.isEditMode = value;
+
+    this.editMode.emit(value);
+  }
+
+  async onSubmit() {
     try {
       // Convert the assignmentsByWeek values from the form to Assignment list
       const a = [];
@@ -249,14 +264,16 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
 
       this.payLoad = JSON.stringify(a, null, 1);
 
-      this.assignmentService.saveAssignments(
+      this.loading = true;
+      await this.assignmentService.saveAssignments(
         a,
         this.month,
         this.partService.getParts(),
         this.userService.getUsers()
       );
 
-      this.isEditMode = false;
+      this.loading = false;
+      this.setEditMode(false);
     } catch (error) {
       throw error;
     }
