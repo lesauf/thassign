@@ -12,6 +12,7 @@ import { PartService } from 'src/app/core/services/part.service';
 import { StitchService } from 'src/app/core/services/stitch.service';
 import { User } from 'src/app/core/models/user/user.model';
 import { Part } from 'src/app/core/models/part/part.model';
+import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -106,11 +107,17 @@ export class UserService extends CommonService<User> {
    *
    * @param userProperties JSON object/array with properties
    */
-  createUser(userProperties: object, allParts: Part[]): User | User[] {
+  createUser(
+    userProperties: object,
+    allParts?: Part[],
+    allAssignments?: Assignment[]
+  ): User | User[] {
     if (userProperties instanceof Array) {
-      return userProperties.map((obj) => new User(obj, allParts)) as User[];
+      return userProperties.map(
+        (obj) => new User(obj, allParts, allAssignments)
+      ) as User[];
     } else {
-      return new User(userProperties, allParts) as User;
+      return new User(userProperties, allParts, allAssignments) as User;
     }
   }
 
@@ -156,7 +163,11 @@ export class UserService extends CommonService<User> {
   async fetchUsers(allParts: Part[]): Promise<User[]> {
     // this.destroy();
     try {
-      const result = await this.callFunction('Users_find');
+      // We need to pass the ownerId as parameter because Stitch
+      // does not support lookup on user context
+      const result = await this.callFunction('Users_find', [
+        { ownerId: this.authService.getUser().id },
+      ]);
 
       const allUsers = this.createUser(result, allParts) as User[];
 
@@ -292,49 +303,49 @@ export class UserService extends CommonService<User> {
    * 'weekend.publicTalk.chairman' part
    * nb: Sort assignments by week desc
    */
-  getWeekendAssignableList(): Observable<any> {
-    return this.http.get<any[]>(this.usersUrl + '/meeting/weekend').pipe(
-      map((result) => {
-        // Arranging
-        const chairmanResults = result.find(
-          (part) => part._id === 'weekend.publicTalk.chairman'
-        );
-        const speakerResults = result.find(
-          (part) => part._id === 'weekend.publicTalk.speaker'
-        );
-        const conductorResults = result.find(
-          (part) => part._id === 'weekend.watchtower.conductor'
-        );
-        const readerResults = result.find(
-          (part) => part._id === 'weekend.watchtower.reader'
-        );
+  // getWeekendAssignableList(): Observable<any> {
+  //   return this.http.get<any[]>(this.usersUrl + '/meeting/weekend').pipe(
+  //     map((result) => {
+  //       // Arranging
+  //       const chairmanResults = result.find(
+  //         (part) => part._id === 'weekend.publicTalk.chairman'
+  //       );
+  //       const speakerResults = result.find(
+  //         (part) => part._id === 'weekend.publicTalk.speaker'
+  //       );
+  //       const conductorResults = result.find(
+  //         (part) => part._id === 'weekend.watchtower.conductor'
+  //       );
+  //       const readerResults = result.find(
+  //         (part) => part._id === 'weekend.watchtower.reader'
+  //       );
 
-        const weekeendAssignableList = {
-          chairman:
-            chairmanResults !== undefined
-              ? chairmanResults.assignableUsers
-              : null,
-          speaker:
-            speakerResults !== undefined
-              ? speakerResults.assignableUsers
-              : null,
-          conductor:
-            conductorResults !== undefined
-              ? conductorResults.assignableUsers
-              : null,
-          reader:
-            readerResults !== undefined ? readerResults.assignableUsers : null,
-        };
+  //       const weekeendAssignableList = {
+  //         chairman:
+  //           chairmanResults !== undefined
+  //             ? chairmanResults.assignableUsers
+  //             : null,
+  //         speaker:
+  //           speakerResults !== undefined
+  //             ? speakerResults.assignableUsers
+  //             : null,
+  //         conductor:
+  //           conductorResults !== undefined
+  //             ? conductorResults.assignableUsers
+  //             : null,
+  //         reader:
+  //           readerResults !== undefined ? readerResults.assignableUsers : null,
+  //       };
 
-        return weekeendAssignableList;
-      }),
-      tap((h) => {
-        const outcome = h ? `fetched` : `did not find`;
-        this.log(`${outcome} users assigned to weekend parts`);
-      })
-      // catchError(this.handleError('getWeekendAssignableList', []))
-    );
-  }
+  //       return weekeendAssignableList;
+  //     }),
+  //     tap((h) => {
+  //       const outcome = h ? `fetched` : `did not find`;
+  //       this.log(`${outcome} users assigned to weekend parts`);
+  //     })
+  //     // catchError(this.handleError('getWeekendAssignableList', []))
+  //   );
+  // }
 
   /**
    * Get the list of users which have the right to do the

@@ -13,6 +13,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { Part, ObjectId } from '../part/part.model';
+import { Assignment } from '../assignment/assignment.model';
 
 export class User {
   @IsObject()
@@ -131,18 +132,30 @@ export class User {
    * @todo Sanitize/clean the object passed (apply some rules,
    * like women can not give public talks ...)
    */
-  constructor(userProperties?: object, allParts?: Part[]) {
+  constructor(
+    userProperties?: object,
+    allParts?: Part[],
+    allAssignments?: Assignment[]
+  ) {
     if (userProperties) {
       // If the Users are coming from the DB (first part is an ObjectId),
       // convert parts id array to an array of Part
       if (allParts && userProperties['parts'][0].hasOwnProperty('id')) {
-        userProperties['parts'] = userProperties['parts'].map((partId: any) =>
-          allParts.find((part: Part) => {
-            return partId.equals(part._id);
+        if (allParts) {
+          userProperties['parts'] = userProperties['parts'].map((partId: any) =>
+            allParts.find((part: Part) => {
+              return partId.equals(part._id);
+            })
+          );
+        }
 
-            // return false;
-          })
-        );
+        if (allAssignments && userProperties['_id']) {
+          userProperties['assignments'] = allAssignments.filter(
+            (ass: Assignment) => {
+              return ass.assignee._id.equals(userProperties['_id']);
+            }
+          );
+        }
       }
 
       // Assign the properties to this object
