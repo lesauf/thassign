@@ -31,7 +31,7 @@ export class AuthService {
     email: string,
     password: string,
     repeatPassword: string
-  ): Promise<any> {
+  ): Promise<void> {
     console.log('User: ', {
       firstname,
       lastname,
@@ -54,7 +54,6 @@ export class AuthService {
         lastName: lastname,
         email: email,
         hashedPassword: password,
-        ownerId: this.getUser().id,
       };
 
       const validationErrors = await validate(user);
@@ -69,7 +68,6 @@ export class AuthService {
 
       // user.hashedPassword = password;
       // return await this.stitchService.authenticate(email, password);
-      return Promise.resolve(true);
     } catch (error) {
       throw error;
     }

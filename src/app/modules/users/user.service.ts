@@ -97,7 +97,6 @@ export class UserService extends CommonService<User> {
   }
 
   destroy() {
-    console.log('Destruction');
     this.pUsersStore.complete();
     this.dataStore.complete();
   }

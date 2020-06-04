@@ -16,7 +16,7 @@
         <mat-card-title
           >Register
           <a class="redirect" [routerLink]="['/auth/login']">
-            {{ 'login' | translate | titlecase }}
+            {{ "login" | translate | titlecase }}
           </a>
         </mat-card-title>
         <mat-card-content>
@@ -84,7 +84,7 @@
             </div>
             <mat-form-field class="full-width">
               <input
-                type="repeatPassword"
+                type="password"
                 id="repeatPassword"
                 class="input"
                 placeholder="Repeat password"
@@ -103,7 +103,7 @@
               [disabled]="!userForm.valid"
               (click)="register()"
             >
-              {{ 'register' | translate | titlecase }}
+              {{ "register" | translate | titlecase }}
             </button>
           </form>
         </mat-card-content>

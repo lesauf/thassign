@@ -21,7 +21,7 @@ export class LogoutComponent implements OnInit {
       const authedUser = this.authService.getUser();
 
       this.authService.logout();
-      console.log(`successfully logged out with id: ${authedUser.id}`);
+      console.log(`successfully logged out`);
 
       const message = 'Logged out';
     }
