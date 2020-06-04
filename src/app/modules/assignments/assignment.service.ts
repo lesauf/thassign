@@ -66,16 +66,17 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   /**
    * Get all users from the server
    */
-  async fetchAssignments(
+  storeAssignments(
+    assignments: [],
     allParts: Part[],
     allUsers: User[]
-  ): Promise<Assignment[]> {
+  ): Assignment[] {
     try {
-      let result = await this.callFunction('Assignments_find');
+      // let result = await this.callFunction('Assignments_find');
 
-      // Convert results to User objects
-      result = this.createAssignment(
-        result,
+      // Convert results to Assignment objects
+      const allAssignments = this.createAssignment(
+        assignments,
         allParts,
         allUsers
       ) as Assignment[];
@@ -93,12 +94,12 @@ export abstract class AssignmentService extends CommonService<Assignment> {
       //   return 0;
       // });
 
-      this.updateStore(result);
+      this.updateStore(allAssignments);
       this.log('fetched Assignments');
 
-      return result;
+      return allAssignments;
     } catch (error) {
-      return this.handleError('fetchAssignments', error, [], '');
+      return this.handleError('storeAssignments', error, [], '');
     }
   }
 

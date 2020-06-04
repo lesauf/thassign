@@ -10,6 +10,8 @@ import { Observable, EMPTY, of } from 'rxjs';
 import { PartService } from './core/services/part.service';
 import { UserService } from './modules/users/user.service';
 import { AssignmentService } from './modules/assignments/assignment.service';
+import { StitchService } from './core/services/stitch.service';
+import { AuthService } from './modules/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +19,10 @@ import { AssignmentService } from './modules/assignments/assignment.service';
 export class AppResolverService implements Resolve<string> {
   constructor(
     private assignmentService: AssignmentService,
+    private authService: AuthService,
     private partService: PartService,
-    private userService: UserService
+    private userService: UserService,
+    private backendService: StitchService
   ) {}
 
   async resolve(
@@ -26,11 +30,19 @@ export class AppResolverService implements Resolve<string> {
     state: RouterStateSnapshot
   ): Promise<string> {
     try {
-      // this.userService.destroy();
-      const allParts = await this.partService.fetchParts();
-      const allUsers = await this.userService.fetchUsers(allParts);
+      const data = await this.backendService.callFunction('getData', [
+        this.authService.getUser().id,
+      ]);
 
-      await this.assignmentService.fetchAssignments(allParts, allUsers);
+      // this.userService.destroy();
+      const allParts = this.partService.storeParts(data.parts);
+      const allUsers = this.userService.storeUsers(data.users, allParts);
+
+      this.assignmentService.storeAssignments(
+        data.assignments,
+        allParts,
+        allUsers
+      );
 
       return 'Data fetched';
     } catch (error) {
