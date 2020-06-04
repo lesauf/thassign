@@ -7,6 +7,8 @@ import {
   Output,
   SimpleChanges,
   OnDestroy,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
@@ -71,6 +73,9 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
    */
   @Output()
   editMode: EventEmitter<any> = new EventEmitter();
+
+  @ViewChild('printableArea')
+  printable: ElementRef;
 
   // @Output()
   // onSave: EventEmitter<Assignment[]> = new EventEmitter();
@@ -243,7 +248,35 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   }
 
   saveAsPdf() {
-    window.print();
+    // window.print();
+
+    this._translate.get('assignments').subscribe((pageTitle) => {
+      var printContents = this.printable.nativeElement.innerHTML;
+
+      var mywindow = window.open('', 'new div', 'height=400,width=600');
+      mywindow.document.write(
+        '<html><head><title>' +
+          pageTitle +
+          ': ' +
+          this.month.toFormat('MMMM yyyy') +
+          '</title>'
+      );
+      // Styling
+      mywindow.document.write(
+        '<style>' +
+          'body { font-size: 1.2em }' +
+          '.assignment-box:not(last-child) { margin: 0 0 1em; }' +
+          '.assignments-list {  }' +
+          '</style>'
+      );
+      /*optional stylesheet*/
+      mywindow.document.write('</head><body>');
+      mywindow.document.write(printContents);
+      mywindow.document.write('</body></html>');
+
+      mywindow.print();
+      mywindow.close();
+    });
   }
 
   setEditMode(value: boolean) {
