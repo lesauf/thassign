@@ -54,6 +54,7 @@ export class AuthService {
         lastName: lastname,
         email: email,
         hashedPassword: password,
+        userId: '',
       };
 
       const validationErrors = await validate(user);
@@ -63,9 +64,20 @@ export class AuthService {
       }
 
       // Create user and authenticate at once
-      await this.stitchService.createUserAccount(email, password);
-      // user = validation.value;
+      const authedUser = await this.stitchService.createUserAccount(
+        email,
+        password
+      );
+      // Link the user data to stitch auth provider
+      user.userId = authedUser.id;
+      console.log('Created: ', authedUser);
 
+      // Save custom user data
+      this.stitchService.callFunction('Users_insertOne', [user]);
+
+      // Set the user data immediately since he is authenticated
+      this.stitchService.setUserData(user);
+      console.log('Logged :', this.stitchService.getUser());
       // user.hashedPassword = password;
       // return await this.stitchService.authenticate(email, password);
     } catch (error) {

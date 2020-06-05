@@ -51,8 +51,9 @@
     }
 
     &.open {
-      opacity: 1;
+      opacity: 5;
       visibility: visible;
+      background-color: #212121;
     }
   }
 }

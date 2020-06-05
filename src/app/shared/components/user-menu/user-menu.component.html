@@ -7,13 +7,11 @@
     [ngStyle.xs]="{ 'min-width': '70px' }"
   >
     <span fxLayout="row" fxLayoutAlign="start center">
-      <img
+      <!-- <img
         class="avatar"
         [src]="currentUser?.photoURL || 'assets/images/avatars/noavatar.png'"
-      />
-      <span class="name" fxHide fxShow.gt-xs>{{
-        currentUser?.currentUserName || Hari
-      }}</span>
+      /> -->
+      <span class="name" fxHide fxShow.gt-xs>{{ currentUser?.firstName }}</span>
       <mat-icon class="icon" fxHide fxShow.gt-xs>keyboard_arrow_down</mat-icon>
     </span>
   </button>

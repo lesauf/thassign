@@ -4,11 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageService } from 'src/app/core/services/message.service';
 import { ToolbarHelpers } from './toolbar.helpers';
 import { ToolbarNotificationComponent } from '../toolbar-notification/toolbar-notification.component';
+import { AuthService } from 'src/app/modules/auth/auth.service';
+import { User } from 'src/app/core/models/user/user.model';
 
 @Component({
   selector: 'ma-toolbar',
   templateUrl: './toolbar.component.html',
-  styleUrls: ['./toolbar.component.scss']
+  styleUrls: ['./toolbar.component.scss'],
 })
 export class ToolbarComponent implements OnInit {
   @Input() sidenav;
@@ -19,12 +21,18 @@ export class ToolbarComponent implements OnInit {
   searchOpen: boolean = false;
   toolbarHelpers = ToolbarHelpers;
 
+  currentUser: { customData: User };
+
   constructor(
     private _matDialog: MatDialog,
+    private authService: AuthService,
     public messageService: MessageService
-  ) { }
+  ) {}
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log(this.authService.getUser());
+    this.currentUser = this.authService.getUser();
+  }
 
   // Call the dialog
   showNotificationsDialog(evt: Event): void {
@@ -32,10 +40,9 @@ export class ToolbarComponent implements OnInit {
     const dialogRef = this._matDialog.open(ToolbarNotificationComponent, {
       data: {
         trigger: target,
-        notifications: this.toolbarHelpers.notifications
-      }
+        notifications: this.toolbarHelpers.notifications,
+      },
     });
-    dialogRef.afterClosed().subscribe(_res => {
-    });
+    dialogRef.afterClosed().subscribe((_res) => {});
   }
 }

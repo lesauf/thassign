@@ -46,6 +46,17 @@ export class StitchService {
     return this.stitchAppClient.auth.user;
   }
 
+  /**
+   * Normally called once when the user register
+   */
+  setUserData(data: {
+    userId: string;
+    firstName: string;
+    lastName: string;
+  }): void {
+    this.stitchAppClient.auth.user.customData = data;
+  }
+
   logout() {
     return this.stitchAppClient.auth.logout();
   }
@@ -70,6 +81,7 @@ export class StitchService {
     await emailPasswordClient.registerWithEmail(username, password);
 
     console.log('Successfully created new user account');
+
     // Authenticate
     return await this.authenticate(username, password);
   }

@@ -100,6 +100,7 @@ export class LoginComponent implements OnInit {
     this.authService
       .login(this.userForm.value.email, this.userForm.value.password)
       .then((authedUser) => {
+        console.log(authedUser, this.authService.getUser());
         console.log(`successfully logged in`);
 
         this.router.navigate([this.authService.redirectUrl]);

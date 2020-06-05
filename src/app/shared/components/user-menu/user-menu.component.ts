@@ -3,13 +3,14 @@ import {
   OnInit,
   Input,
   HostListener,
-  ElementRef
+  ElementRef,
 } from '@angular/core';
+import { User } from 'src/app/core/models/user/user.model';
 
 @Component({
   selector: 'ma-user-menu',
   templateUrl: './user-menu.component.html',
-  styleUrls: ['./user-menu.component.scss']
+  styleUrls: ['./user-menu.component.scss'],
 })
 export class UserMenuComponent implements OnInit {
   isOpen: boolean = false;
@@ -17,7 +18,8 @@ export class UserMenuComponent implements OnInit {
   // currentUser = null;
   Hari;
 
-  @Input() currentUser = null;
+  @Input() currentUser: User = null;
+
   @HostListener('document:click', ['$event', '$event.target'])
   onClick(event: MouseEvent, targetElement: HTMLElement) {
     if (!targetElement) {
