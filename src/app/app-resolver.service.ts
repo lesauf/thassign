@@ -30,9 +30,7 @@ export class AppResolverService implements Resolve<string> {
     state: RouterStateSnapshot
   ): Promise<string> {
     try {
-      const data = await this.backendService.callFunction('getData', [
-        this.authService.getUser().id,
-      ]);
+      const data = await this.backendService.callFunction('getData');
 
       // this.userService.destroy();
       const allParts = this.partService.storeParts(data.parts);

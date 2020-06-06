@@ -47,14 +47,14 @@ export class LoginComponent implements OnInit {
   buildForm() {
     this.userForm = this.fb.group({
       email: [
-        'lesauf',
+        '',
         [
           Validators.required,
           // Validators.email
         ],
       ],
       password: [
-        'password',
+        '',
         [
           // Temporarily disable strong password
           // Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'),
@@ -100,7 +100,6 @@ export class LoginComponent implements OnInit {
     this.authService
       .login(this.userForm.value.email, this.userForm.value.password)
       .then((authedUser) => {
-        console.log(authedUser, this.authService.getUser());
         console.log(`successfully logged in`);
 
         this.router.navigate([this.authService.redirectUrl]);

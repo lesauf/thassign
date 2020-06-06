@@ -58,7 +58,12 @@ export class StitchService {
   }
 
   logout() {
+    this.stitchAppClient.auth.logoutUserWithId('5e8a39cc6898b88af6a67163');
     return this.stitchAppClient.auth.logout();
+  }
+
+  refreshCustomData() {
+    return this.stitchAppClient.auth.refreshCustomData();
   }
 
   /**
@@ -67,7 +72,7 @@ export class StitchService {
    * @param password password
    * @returns // Returns a promise that resolves to the authenticated user
    */
-  authenticate(username: string = 'lesauf', password: string = 'password') {
+  authenticate(username: string, password: string) {
     const credential = new UserPasswordCredential(username, password);
 
     return this.stitchAppClient.auth.loginWithCredential(credential);
@@ -132,14 +137,13 @@ export class StitchService {
    * @param dbService to avoid recreating it
    */
   async callFunction(functionName: string, params?: any[]) {
-    await this.stitchAppClient.auth.logout();
     try {
-      if (!this.stitchAppClient.auth.isLoggedIn) {
-        await this.authenticate();
-        console.log('logging in');
-      } else {
-        console.log('Already logged in');
-      }
+      // if (!this.stitchAppClient.auth.isLoggedIn) {
+      //   // await this.authenticate();
+      //   console.log('logging in');
+      // } else {
+      //   console.log('Already logged in');
+      // }
 
       const response = await this.stitchAppClient.callFunction(
         functionName,

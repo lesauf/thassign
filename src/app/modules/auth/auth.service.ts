@@ -25,6 +25,10 @@ export class AuthService {
     return this.stitchService.authenticate(username, password);
   }
 
+  refreshCustomData() {
+    return this.stitchService.refreshCustomData();
+  }
+
   async register(
     firstname: string,
     lastname: string,
@@ -76,7 +80,8 @@ export class AuthService {
       this.stitchService.callFunction('Users_insertOne', [user]);
 
       // Set the user data immediately since he is authenticated
-      this.stitchService.setUserData(user);
+      this.stitchService.refreshCustomData();
+
       console.log('Logged :', this.stitchService.getUser());
       // user.hashedPassword = password;
       // return await this.stitchService.authenticate(email, password);
