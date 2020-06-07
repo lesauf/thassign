@@ -60,7 +60,7 @@ export class PartService extends CommonService<Part> {
   /**
    * Get all parts from the server and store them
    */
-  storeParts(parts: []): Part[] {
+  storeParts(parts: any[]): Part[] {
     this.log('Stored parts');
 
     // const result = await this.callFunction('getAllParts');
@@ -79,12 +79,6 @@ export class PartService extends CommonService<Part> {
     const partsOfMeeting = parts.filter((part) =>
       this.meetingParts[meetingName].includes(part.name)
     );
-
-    // Object.keys(this.meetingParts[meetingName]).forEach((partName) => {
-    //   partsOfMeeting[partName] = parts.find(
-    //     (part) => part.name === this.meetingParts[meetingName][partName]
-    //   );
-    // });
 
     return partsOfMeeting;
   }
@@ -119,34 +113,6 @@ export class PartService extends CommonService<Part> {
     return { parts: allPartsGrouped, meetings: meetings };
   }
 
-  async getPartsNames() {
-    const partsNames = [];
-
-    this.getParts().forEach((part) => {
-      partsNames.push(part.name);
-    });
-    return partsNames;
-  }
-
-  getPartName(partId): string {
-    const part = this.getPartById(partId);
-
-    return part.name;
-  }
-
-  getPartById(partId): Part {
-    // const part = this.allParts.find(
-    const part = this.getParts().find(
-      (p) => p._id.toHexString() === partId.toHexString()
-    );
-
-    return part;
-  }
-
-  getPartByName(partName: string) {
-    return this.getParts().find((p) => p.name === partName);
-  }
-
   /**
    * Create Part instances from JSON or array of JSON objects
    *
@@ -160,3 +126,29 @@ export class PartService extends CommonService<Part> {
     }
   }
 }
+
+// async getPartsNames() {
+//   const partsNames = [];
+
+//   this.getParts().forEach((part) => {
+//     partsNames.push(part.name);
+//   });
+//   return partsNames;
+// }
+
+// getPartName(partId): string {
+//   const part = this.getPartById(partId);
+
+//   return part.name;
+// }
+
+// getPartById(partId): Part {
+//   // const part = this.allParts.find(
+//   const part = this.getParts().find((p) => p._id.equals(partId));
+
+//   return part;
+// }
+
+// getPartByName(partName: string) {
+//   return this.getParts().find((p) => p.name === partName);
+// }

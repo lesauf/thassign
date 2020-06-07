@@ -187,9 +187,9 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.router.navigate([path]);
   }
 
-  getPartName(partId) {
-    return this.partService.getPartName(partId);
-  }
+  // getPartName(partId) {
+  //   return this.partService.getPartName(partId);
+  // }
 
   async delete(userId?: string[]) {
     try {

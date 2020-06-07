@@ -1,8 +1,8 @@
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
+import { TranslateService } from '@ngx-translate/core';
 
 import { PartService } from './part.service';
 import { StitchService } from './stitch.service';
-import { partSchema, Part } from '../models/part/part.schema';
 import { partMocks } from '../mocks/parts.mock';
 
 describe('PartService', () => {
@@ -10,9 +10,7 @@ describe('PartService', () => {
 
   const createService = createServiceFactory({
     service: PartService,
-    mocks: [
-      // StitchService
-    ],
+    mocks: [TranslateService],
     providers: [
       {
         provide: StitchService,
@@ -29,27 +27,34 @@ describe('PartService', () => {
   beforeEach(async () => {
     PartServiceStitchSpectator = createService();
 
-    spyOn(PartServiceStitchSpectator.service, 'getAllParts').and.returnValue(
-      Promise.resolve(partMocks)
-    );
+    PartServiceStitchSpectator.service.storeParts(partMocks);
 
-    await PartServiceStitchSpectator.service.init();
+    // spyOn(PartServiceStitchSpectator.service, 'getParts').and.returnValue(
+    //   Promise.resolve(partMocks)
+    // );
   });
 
-  test('created and request the list of parts', async () => {
+  test('created and the list of parts is of Part objects', async () => {
     expect(PartServiceStitchSpectator.service).toBeTruthy();
 
-    expect(PartServiceStitchSpectator.service.allParts).toEqual(partMocks);
-    // console.log(PartServiceStitchSpectator.service.allParts.length);
-    // console.log(partMocks.length);
-  });
-
-  test('filter by meeting', async () => {
-    const weekendParts: any[] = PartServiceStitchSpectator.service.getPartsByMeeting(
-      'weekend'
+    expect(PartServiceStitchSpectator.service.getParts().length).toEqual(
+      partMocks.length
     );
 
+    // Check that we actually have Part objects
+    const firstPart = PartServiceStitchSpectator.service.getParts()[0];
+
+    expect(firstPart.constructor.name).toEqual('Part');
+  });
+
+  test('is able to filter and group by meeting', async () => {
+    const parts: any[] = PartServiceStitchSpectator.service.getPartsByMeeting(
+      'midweek-students'
+    );
     // check the nomber of keys of the returned object
-    expect(Object.keys(weekendParts).length).toEqual(4);
+    expect(Object.keys(parts).length).toEqual(5);
+
+    const partsbyMeeting = PartServiceStitchSpectator.service.getPartsGroupedByMeeting();
+    expect(Object.keys(partsbyMeeting).length).toEqual(2); // [ 'parts', 'meetings' ];
   });
 });

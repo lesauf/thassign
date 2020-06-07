@@ -233,9 +233,9 @@ export class UserEditComponent implements OnInit {
     }
   }
 
-  getPartName(partId) {
-    return this.partService.getPartName(partId);
-  }
+  // getPartName(partId) {
+  //   return this.partService.getPartName(partId);
+  // }
 
   /**
    * Allow the user to just click on a part to select/deselect it

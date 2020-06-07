@@ -50,8 +50,6 @@ export type ObjectId = {
  * Minimum data for a standard part
  */
 export class Part {
-  facultative: string;
-
   @IsObject()
   @IsOptional()
   _id: ObjectId;
@@ -71,7 +69,7 @@ export class Part {
   // @(jf.boolean().optional())
   @IsBoolean()
   @IsOptional()
-  withTitle: boolean;
+  withTitle?: boolean;
 
   /**
    * Does it need an assistant
@@ -79,12 +77,12 @@ export class Part {
   // @(jf.boolean().optional())
   @IsBoolean()
   @IsOptional()
-  withAssistant: boolean;
+  withAssistant?: boolean;
 
   @IsString()
   @IsOptional()
   // @(jf.string().optional())
-  after: string;
+  after?: string;
 
   /**
    * Is it an overseer assignment?
@@ -92,7 +90,7 @@ export class Part {
   // @(jf.boolean().optional())
   @IsBoolean()
   @IsOptional()
-  byAnOverseer: boolean;
+  byAnOverseer?: boolean;
 
   /**
    * Is it a brother assignment ?
@@ -100,7 +98,7 @@ export class Part {
   // @(jf.boolean().optional())
   @IsBoolean()
   @IsOptional()
-  byABrother: boolean;
+  byABrother?: boolean;
 
   constructor(properties?: object) {
     // Assign the properties to this object
