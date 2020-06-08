@@ -238,6 +238,9 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
       event.previousContainer.data,
     ]) as FormArray).removeAt(event.previousIndex);
 
+    // Set the week
+    move.get('week').setValue(this.weeks[wIndex].start);
+
     (this.studentsForm.get([event.container.data]) as FormArray).insert(
       event.currentIndex,
       move

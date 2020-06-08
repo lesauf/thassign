@@ -15,11 +15,12 @@ export class AssignmentControlService {
       let weekArray = [];
 
       wAssignments.forEach((assignment) => {
+        // console.log(assignment);
         weekArray[assignment.position] = this.toAssignmentControl(assignment);
       });
 
       group[wIndex] = new FormArray(weekArray);
-      weekArray = [];
+      // weekArray = [];
     });
 
     return new FormGroup(group);

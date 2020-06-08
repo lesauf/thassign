@@ -148,9 +148,9 @@ export abstract class AssignmentService extends CommonService<Assignment> {
           delete obj._id; // Remove the _id, so in case it should be saved, mongoDb regenerate
           obj.part = allParts.find((part) => part._id.equals(obj.part));
           obj.assignee = allUsers.find((user) => user._id.equals(obj.assignee));
-          obj.assistant = allUsers.find((user) =>
-            user._id.equals(obj.assistant)
-          );
+          obj.assistant = obj.assistant
+            ? allUsers.find((user) => user._id.equals(obj.assistant))
+            : null;
         } else if (obj.part.hasOwnProperty('_id')) {
           // from form, with selected part
           obj.position = index;
