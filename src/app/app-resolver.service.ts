@@ -18,8 +18,8 @@ import { AuthService } from './modules/auth/auth.service';
 })
 export class AppResolverService implements Resolve<string> {
   constructor(
-    private assignmentService: AssignmentService,
     private authService: AuthService,
+    private assignmentService: AssignmentService,
     private partService: PartService,
     private userService: UserService,
     private backendService: StitchService

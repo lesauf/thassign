@@ -14,6 +14,7 @@ import {
 } from 'class-validator';
 import { Part, ObjectId } from '../part/part.model';
 import { Assignment } from '../assignment/assignment.model';
+import { DateTime } from 'luxon';
 
 export class User {
   @IsObject()
@@ -98,6 +99,9 @@ export class User {
   // Joi.array().allow(null),
   @IsArray()
   parts: Part[] | ObjectId[];
+
+  @IsArray()
+  assignments: any[];
 
   // Joi.boolean().optional().default(false), // Can modify programs
   @IsBoolean()
@@ -234,5 +238,15 @@ export class User {
     });
 
     return _meetingsAssignable;
+  }
+
+  get assignmentsDisplay(): string {
+    let aDisplay = '';
+
+    this.assignments.forEach((a) => {
+      aDisplay = aDisplay + DateTime.fromJSDate(a.week).toLocaleString();
+    });
+
+    return aDisplay;
   }
 }
