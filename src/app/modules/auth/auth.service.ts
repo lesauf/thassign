@@ -67,7 +67,7 @@ export class AuthService {
         throw validationErrors;
       }
 
-      // Create user and authenticate at once
+      // Create user and authenticate at once to get his _id
       const authedUser = await this.stitchService.createUserAccount(
         email,
         password
@@ -77,7 +77,7 @@ export class AuthService {
       console.log('Created: ', authedUser);
 
       // Save custom user data
-      this.stitchService.callFunction('Users_insertOne', [user]);
+      this.stitchService.callFunction('Profiles_upsertCustomData', [user]);
 
       // Set the user data immediately since he is authenticated
       this.stitchService.refreshCustomData();
