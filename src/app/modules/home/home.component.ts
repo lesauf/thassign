@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { AssignmentService } from '../assignments/assignment.service';
+import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 import { PartService } from 'src/app/core/services/part.service';
 import { AuthService } from '../auth/auth.service';
 import { Part } from 'src/app/core/models/part/part.model';
@@ -17,9 +19,12 @@ export class HomeComponent implements OnInit {
 
   users: User[];
 
+  assignments: Assignment[];
+
   user: any;
 
   constructor(
+    private assignmentService: AssignmentService,
     private partService: PartService,
     private userService: UserService // private authservice: AuthService
   ) {
@@ -36,6 +41,7 @@ export class HomeComponent implements OnInit {
     // this.partService.getAllParts().then((parts) => {
     this.parts = this.partService.getParts();
     this.users = this.userService.getUsers();
+    this.assignments = this.assignmentService.getAssignments();
     // });
     // this.partService.getPartsNames().then((partsNames) => {
     //   console.log('Parts names :', partsNames);
