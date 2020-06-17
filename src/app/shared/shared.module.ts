@@ -13,6 +13,8 @@ import { MessagesComponent } from './components/messages/messages.component';
 import { TranslateDatePipe } from './pipes/translate-date.pipe';
 import { MonthPickerComponent } from './components/month-picker/month-picker.component';
 import { LoaderComponent } from './components/loader/loader.component';
+import { PickerComponent } from './components/picker/picker.component';
+import { OptionsDialogComponent } from './components/options-dialog/options-dialog.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,10 @@ import { LoaderComponent } from './components/loader/loader.component';
     MessagesComponent,
     TranslateDatePipe,
     MonthPickerComponent,
+    PickerComponent,
+    OptionsDialogComponent,
   ],
+  entryComponents: [OptionsDialogComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -52,6 +57,8 @@ import { LoaderComponent } from './components/loader/loader.component';
     MessagesComponent,
     TranslateDatePipe,
     MonthPickerComponent,
+    PickerComponent,
+    OptionsDialogComponent,
   ],
 })
 export class SharedModule {}
