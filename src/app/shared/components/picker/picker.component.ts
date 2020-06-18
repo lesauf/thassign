@@ -55,7 +55,7 @@ export class PickerComponent<T> implements OnInit {
       data: {
         title: this.title,
         options: this.options,
-        labelField: 'label',
+        labelField: this.labelField,
       },
       height: '100%',
       position: {

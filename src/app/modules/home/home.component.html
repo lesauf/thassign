@@ -9,7 +9,7 @@
 <p>Users loaded: {{ users.length }}</p>
 <p>Assignments loaded: {{ assignments.length }}</p>
 
-<app-picker title="Choose" placeholder="Choose an option ..."></app-picker>
+<app-picker title="Choose a user" placeholder="Choose a user ..." [options]="users" labelField="fullName"></app-picker>
 
 <!--</div>-->
 <ng-template #loading>

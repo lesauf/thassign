@@ -2,16 +2,11 @@
 
 <mat-form-field (click)="openOptionsDialog()">
   <ng-container *ngIf="selectedValue; else plainOption">
-    <input
-      matInput
-      placeholder="Select an option"
-      value="{{ selectedValue[labelField] }}"
-      disabled
-    />
+    <input matInput placeholder="Select an option" value="{{ selectedValue[labelField] }}" disabled />
   </ng-container>
 
   <ng-template #plainOption>
-    <input matInput placeholder="{{ placeholder }}" disabled />
+    <input matInput placeholder="{{ placeholder }}" readonly />
   </ng-template>
 
   <button mat-icon-button matSuffix>
