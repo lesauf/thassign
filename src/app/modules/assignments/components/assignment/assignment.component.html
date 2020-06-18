@@ -1,23 +1,34 @@
 <div [formGroup]="form" *ngIf="isEditMode; else assignmentDisplay">
   <div formArrayName="{{ wIndex }}">
     <div
-      fxLayout="row wrap"
+      fxLayout="row"
       formGroupName="{{ assignment.position }}"
       fxLayoutAlign="space-around center"
-      fxLayoutGap="1em"
     >
-      <button
-        type="button"
-        mat-icon-button
-        [disabled]="form.disabled"
-        (click)="removeAssignment()"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
-
+      <div fxFlex="5">
+        <button
+          mat-button
+          type="button"
+          mat-icon-button
+          [disabled]="form.disabled"
+          (click)="removeAssignment()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
       <!-- PART -->
-      <div fxFlex fxFlex.lt-sm="auto">
-        <mat-form-field fxFill>
+      <div fxFlex="30" fxFlex.lt-sm="auto">
+        <app-picker
+          title="{{ 'choose-assignment' | translate | titlecase }}"
+          placeholder="{{ 'assignment' | translate | titlecase }}"
+          [form]="form"
+          [controlPath]="[wIndex, assignment.position, 'part']"
+          [options]="listOfParts"
+          labelField="name"
+          (selectionChange)="onPartChange($event)"
+        ></app-picker>
+
+        <!-- <mat-form-field fxFill>
           <mat-select
             placeholder="{{ 'assignment' | translate | titlecase }}"
             [compareWith]="compareFn"
@@ -35,11 +46,25 @@
               {{ part.name | translate }}
             </mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
       <!-- ASSIGNEE -->
-      <div fxFlex fxFlex.lt-sm="auto">
-        <mat-form-field
+      <div fxFlex="30" fxFlex.lt-sm="auto">
+        <app-picker
+          *ngIf="form.get([wIndex, assignment.position, 'part']).value"
+          title="{{ 'choose-someone' | translate | titlecase }}"
+          placeholder="{{ 'assignee' | translate | titlecase }}"
+          [form]="form"
+          [controlPath]="[wIndex, assignment.position, 'assignee']"
+          [options]="
+            assignableListByPart[
+              form.get([wIndex, assignment.position, 'part']).value?.name
+            ]
+          "
+          labelField="fullName"
+        ></app-picker>
+
+        <!-- <mat-form-field
           fxFill
           *ngIf="form.get([wIndex, assignment.position, 'part']).value"
         >
@@ -63,17 +88,23 @@
               {{ assignee.fullName }}
             </mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
       <!-- ASSISTANT -->
-      <div
-        fxFlex
-        *ngIf="
-          form.get([wIndex, assignment.position, 'part']).value?.withAssistant
-        "
-        fxFlex.lt-sm="auto"
-      >
-        <mat-form-field fxFill>
+      <div fxFlex="auto" fxFlex.lt-sm="auto">
+        &nbsp;
+        <app-picker
+          *ngIf="
+            form.get([wIndex, assignment.position, 'part']).value?.withAssistant
+          "
+          title="{{ 'choose-someone' | translate | titlecase }}"
+          placeholder="{{ 'assistant' | translate | titlecase }}"
+          [form]="form"
+          [controlPath]="[wIndex, assignment.position, 'assistant']"
+          [options]="assignableListByPart['clm.ministry.assistant']"
+          labelField="fullName"
+        ></app-picker>
+        <!-- <mat-form-field fxFill>
           <mat-select
             placeholder="{{ 'assistant' | translate | titlecase }}"
             [compareWith]="compareFn"
@@ -92,7 +123,7 @@
               {{ assistant.fullName }}
             </mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
     </div>
   </div>

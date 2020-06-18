@@ -1,15 +1,27 @@
-<p>picker works!</p>
-
 <mat-form-field (click)="openOptionsDialog()">
-  <ng-container *ngIf="selectedValue; else plainOption">
-    <input matInput placeholder="Select an option" value="{{ selectedValue[labelField] }}" disabled />
+  <ng-container *ngIf="labelField; else plainOption">
+    <input [formControl]="control" hidden />
+    <!-- Display value because it is an object -->
+    <input
+      matInput
+      placeholder="{{ placeholder }}"
+      value="{{ control.value[labelField] | translate }}"
+      readonly
+    />
+
+    <!-- <span>{{ control.value[labelField] | translate }} </span> -->
   </ng-container>
 
   <ng-template #plainOption>
-    <input matInput placeholder="{{ placeholder }}" readonly />
+    <input
+      matInput
+      [formControl]="control"
+      placeholder="{{ placeholder }}"
+      readonly
+    />
   </ng-template>
 
-  <button mat-icon-button matSuffix>
+  <button type="button" mat-icon-button matSuffix>
     <mat-icon>arrow_right</mat-icon>
   </button>
 </mat-form-field>

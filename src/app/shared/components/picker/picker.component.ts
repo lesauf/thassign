@@ -20,6 +20,8 @@ import { FormGroup } from '@angular/forms';
 })
 export class PickerComponent<T> implements OnInit {
   @Input() form: FormGroup;
+  @Input() controlPath: string[];
+  // @Input() controlName: string;
   @Input() placeholder: string;
 
   /**
@@ -40,15 +42,19 @@ export class PickerComponent<T> implements OnInit {
    * If options are objects, this will be the property used
    * to as label
    */
-  @Input() labelField: string = 'label';
+  @Input() labelField: string;
 
   // @Output() selectionDone: EventEmitter<T> = new EventEmitter();
 
-  selectedValue: T;
+  @Input() selectedValue: T;
+
+  control: FormGroup;
 
   constructor(public dialog: MatDialog) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.control = this.form.get(this.controlPath) as FormGroup;
+  }
 
   openOptionsDialog() {
     const dialogRef = this.dialog.open(OptionsDialogComponent, {
@@ -67,7 +73,8 @@ export class PickerComponent<T> implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         // Do not change the value if nothing was selected
-        this.selectedValue = result.data;
+
+        this.control.setValue(result.data);
       }
     });
   }

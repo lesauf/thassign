@@ -1,10 +1,18 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between center">
-  <div fxFlex>
+  <div fxFlex="90">
     {{ data.title | translate }}
   </div>
-  <button mat-icon-button matSuffix mat-dialog-close aria-label="close" fxFlex>
-    <mat-icon>close</mat-icon>
-  </button>
+  <div fxFlex="10">
+    <button
+      type="button"
+      mat-icon-button
+      matSuffix
+      mat-dialog-close
+      aria-label="close"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 </div>
 
 <div mat-dialog-content>
