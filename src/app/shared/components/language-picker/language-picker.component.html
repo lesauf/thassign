@@ -1,0 +1,23 @@
+<div class="toolbar-lang-container">
+  <button
+    mat-icon-button
+    (click)="isOpen = !isOpen"
+    class="toolbar-lang-btn"
+    [class.open]="isOpen"
+  >
+    <mat-icon>translate</mat-icon>
+  </button>
+
+  <div class="dropdown mat-elevation-z1" [class.open]="isOpen">
+    <div class="content">
+      <mat-nav-list>
+        <mat-list-item (click)="changeLanguage('fr')">
+          <span matLine>Français</span>
+        </mat-list-item>
+        <mat-list-item (click)="changeLanguage('en')">
+          <span matLine>English</span>
+        </mat-list-item>
+      </mat-nav-list>
+    </div>
+  </div>
+</div>

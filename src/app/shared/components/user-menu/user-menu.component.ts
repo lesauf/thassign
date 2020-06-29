@@ -15,9 +15,6 @@ import { User } from 'src/app/core/models/user/user.model';
 export class UserMenuComponent implements OnInit {
   isOpen: boolean = false;
 
-  // currentUser = null;
-  Hari;
-
   @Input() currentUser: User = null;
 
   @HostListener('document:click', ['$event', '$event.target'])

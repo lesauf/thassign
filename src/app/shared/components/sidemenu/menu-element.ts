@@ -2,16 +2,11 @@ export const menus = [
   {
     name: 'users',
     icon: 'people',
-    link: '/users'
+    link: '/users',
   },
   {
     name: 'assignments',
     icon: 'mic',
-    link: '/assignments'
+    link: '/assignments',
   },
-  {
-    name: 'exports',
-    icon: 'printer',
-    link: '/exports'
-  }
 ];

@@ -27,6 +27,7 @@ import { ToolbarComponent } from './shared/components/toolbar/toolbar.component'
 import { ToolbarNotificationComponent } from './shared/components/toolbar-notification/toolbar-notification.component';
 import { UserMenuComponent } from './shared/components/user-menu/user-menu.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { LanguagePickerComponent } from './shared/components/language-picker/language-picker.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -46,6 +47,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ToolbarComponent,
     ToolbarNotificationComponent,
     UserMenuComponent,
+    LanguagePickerComponent,
     AuthLayoutComponent,
   ],
   imports: [

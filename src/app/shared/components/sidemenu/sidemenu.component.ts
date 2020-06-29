@@ -6,22 +6,23 @@ import { menus } from './menu-element';
 @Component({
   selector: 'app-sidemenu',
   templateUrl: './sidemenu.component.html',
-  styleUrls: ['./sidemenu.component.scss']
+  styleUrls: ['./sidemenu.component.scss'],
 })
 export class SidemenuComponent implements OnInit {
   /**
    *
-   * @description     		Property that stores the selected language value from the  component
+   * @description     		Property that stores the selected language
+   *  value from the component
    */
   language: string;
 
   @Input() iconOnly: boolean = false;
-  
+
   public menus = menus;
-  
+
   /**
-     * Emit event to close sidenav on menu select
-     */
+   * Emit event to close sidenav on menu select
+   */
   @Output() onMenuSelected: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private translate: TranslateService) {}
@@ -31,8 +32,8 @@ export class SidemenuComponent implements OnInit {
   }
 
   /**
-     * Emit an event to close the drawer when menu is clicked
-     */
+   * Emit an event to close the drawer when menu is clicked
+   */
   menuSelected() {
     this.onMenuSelected.emit(true);
   }
@@ -43,6 +44,6 @@ export class SidemenuComponent implements OnInit {
    * @method changeLanguage
    */
   public changeLanguage(): void {
-    this.translate.use(this.language);
+    // this.translate.use(this.language);
   }
 }

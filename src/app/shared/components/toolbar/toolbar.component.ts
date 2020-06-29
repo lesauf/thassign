@@ -6,6 +6,7 @@ import { ToolbarHelpers } from './toolbar.helpers';
 import { ToolbarNotificationComponent } from '../toolbar-notification/toolbar-notification.component';
 import { AuthService } from 'src/app/modules/auth/auth.service';
 import { User } from 'src/app/core/models/user/user.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'ma-toolbar',
