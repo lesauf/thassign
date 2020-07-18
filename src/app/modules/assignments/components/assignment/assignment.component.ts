@@ -5,6 +5,10 @@ import {
   EventEmitter,
   OnInit,
   OnDestroy,
+  ComponentFactoryResolver,
+  Injector,
+  ApplicationRef,
+  ComponentRef,
 } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 
@@ -13,6 +17,8 @@ import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 import { Part } from 'src/app/core/models/part/part.model';
 import { User } from 'src/app/core/models/user/user.model';
 import { MatSelectChange } from '@angular/material/select';
+import { AssignableListComponent } from '../assignable-list/assignable-list.component';
+import { ComponentType } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-assignment',
@@ -29,10 +35,24 @@ export class AssignmentComponent implements OnInit, OnDestroy {
 
   @Output() isRemoved: EventEmitter<Assignment> = new EventEmitter();
 
-  ngOnInit(): void {}
+  public displayComponentRef: ComponentRef<AssignableListComponent<User>>;
+
+  constructor(
+    private resolver: ComponentFactoryResolver,
+    private appRef: ApplicationRef,
+    private injector: Injector
+  ) {}
+
+  ngOnInit(): void {
+    const componentFactory = this.resolver.resolveComponentFactory(
+      AssignableListComponent
+    );
+    this.displayComponentRef = componentFactory.create(this.injector);
+    // this.appRef.attachView(componentRef.hostView);
+  }
 
   ngOnDestroy() {
-    // this.form.valueChanges.()
+    this.displayComponentRef.destroy();
   }
 
   get isValid() {

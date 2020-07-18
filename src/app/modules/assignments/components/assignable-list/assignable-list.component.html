@@ -1,0 +1,43 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between center">
+  <div fxFlex="90">
+    {{ data.title | translate }}
+  </div>
+  <div fxFlex="10">
+    <button
+      type="button"
+      mat-icon-button
+      matSuffix
+      mat-dialog-close
+      aria-label="close"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+
+<div mat-dialog-content>
+  <mat-selection-list
+    #options
+    [multiple]="false"
+    (selectionChange)="closeDialog()"
+  >
+    <mat-list-option
+      *ngFor="let option of data.options; let isFirst = first"
+      [value]="option"
+      cdkFocusInitial
+    >
+      <p *ngIf="data.labelField; else plainOption">
+        {{ option[data.labelField] }}
+      </p>
+      <ng-template #plainOption>
+        {{ option }}
+      </ng-template>
+    </mat-list-option>
+
+    <!-- <div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>
+    Ok
+  </button> -->
+  </mat-selection-list>
+</div>

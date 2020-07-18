@@ -52,6 +52,7 @@
       <div fxFlex="30" fxFlex.lt-sm="auto">
         <app-picker
           *ngIf="form.get([wIndex, assignment.position, 'part']).value"
+          [component]="displayComponentRef.componentType"
           title="{{ 'choose-someone' | translate | titlecase }}"
           placeholder="{{ 'assignee' | translate | titlecase }}"
           [form]="form"
@@ -97,6 +98,7 @@
           *ngIf="
             form.get([wIndex, assignment.position, 'part']).value?.withAssistant
           "
+          [component]="displayComponentRef.componentType"
           title="{{ 'choose-someone' | translate | titlecase }}"
           placeholder="{{ 'assistant' | translate | titlecase }}"
           [form]="form"

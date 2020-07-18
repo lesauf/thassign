@@ -6,6 +6,7 @@ import {
 } from '@angular/material/dialog';
 import { OptionsDialogComponent } from '../options-dialog/options-dialog.component';
 import { FormGroup } from '@angular/forms';
+import { ComponentType } from '@angular/cdk/portal';
 
 /**
  * Implementing the idea to replace select with modal picker with ampl space for options
@@ -19,6 +20,11 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./picker.component.scss'],
 })
 export class PickerComponent<T> implements OnInit {
+  /**
+   * Component in charge of the display of list
+   */
+  @Input() component: ComponentType<any> = OptionsDialogComponent;
+
   @Input() form: FormGroup;
   @Input() controlPath: string[];
   // @Input() controlName: string;
@@ -57,7 +63,7 @@ export class PickerComponent<T> implements OnInit {
   }
 
   openOptionsDialog() {
-    const dialogRef = this.dialog.open(OptionsDialogComponent, {
+    const dialogRef = this.dialog.open(this.component, {
       data: {
         title: this.title,
         options: this.options,
