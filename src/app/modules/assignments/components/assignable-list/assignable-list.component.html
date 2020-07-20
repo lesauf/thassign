@@ -22,16 +22,15 @@
     (selectionChange)="closeDialog()"
   >
     <mat-list-option
-      *ngFor="let option of data.options; let isFirst = first"
-      [value]="option"
+      *ngFor="let user of data.options; let isFirst = first"
+      [value]="user"
       cdkFocusInitial
     >
-      <p *ngIf="data.labelField; else plainOption">
-        {{ option[data.labelField] }}
-      </p>
-      <ng-template #plainOption>
-        {{ option }}
-      </ng-template>
+      <h3 matLine>{{ user.fullName }}</h3>
+      <span matLine>Last {{ user.assignments.length }}</span>
+      <span matLine>
+        Last {{ user.assignments[0]?.week | translateDate: 'DATE_SHORT' | async }}
+      </span>
     </mat-list-option>
 
     <!-- <div mat-dialog-actions>
