@@ -18,15 +18,15 @@
       </div>
       <!-- PART -->
       <div fxFlex="30" fxFlex.lt-sm="auto">
-        <!--<app-picker-->
-        <!--  title="{{ 'choose-assignment' | translate | titlecase }}"-->
-        <!--  placeholder="{{ 'assignment' | translate | titlecase }}"-->
-        <!--  [form]="form"-->
-        <!--  [controlPath]="[wIndex, assignment.position, 'part']"-->
-        <!--  [options]="listOfParts"-->
-        <!--  labelField="name"-->
-        <!--  (selectionChange)="onPartChange($event)"-->
-        <!--></app-picker>-->
+        <!-- <app-picker
+          title="{{ 'choose-assignment' | translate | titlecase }}"
+          placeholder="{{ 'assignment' | translate | titlecase }}"
+          [form]="form"
+          [controlPath]="[wIndex, assignment.position, 'part']"
+          [options]="listOfParts"
+          labelField="name"
+          (selectionChange)="onPartChange($event)">
+        </app-picker> -->
 
         <mat-form-field fxFill>
           <mat-select
@@ -51,28 +51,33 @@
       <!-- ASSIGNEE -->
       <div fxFlex="30" fxFlex.lt-sm="auto">
         <ng-template #assignableList>
-          <mat-selection-list
-            #assignable-list
-            [multiple]="false"
-            (selectionChange)="closeDialog()"
-          >
+          <mat-selection-list [multiple]="false">
             <mat-list-option
-              *ngFor="let user of data.options; let isFirst = first"
+              *ngFor="
+                let user of assignableListByPart[
+                  form.get([wIndex, assignment.position, 'part']).value?.name
+                ];
+                let isFirst = first
+              "
               [value]="user"
               cdkFocusInitial
             >
               <h3 matLine>{{ user.fullName }}</h3>
               <span matLine>Last {{ user.assignments.length }}</span>
               <span matLine>
-                Last {{ user.assignments[0]?.week.toISOString() | translateDate: 'DATE_SHORT' | async }}
+                Last
+                {{
+                  user.assignments[0]?.week.toISOString()
+                    | translateDate: "DATE_SHORT"
+                    | async
+                }}
               </span>
             </mat-list-option>
           </mat-selection-list>
         </ng-template>
-      
+        <!-- [optionsTemplate]="assignableList" -->
         <app-picker
           *ngIf="form.get([wIndex, assignment.position, 'part']).value"
-          [optionsTemplate]="assignableList"
           title="{{ 'choose-someone' | translate | titlecase }}"
           placeholder="{{ 'assignee' | translate | titlecase }}"
           [form]="form"
@@ -118,7 +123,7 @@
           *ngIf="
             form.get([wIndex, assignment.position, 'part']).value?.withAssistant
           "
-          [component]="displayComponentRef.componentType"
+          [optionsTemplate]="displayComponentRef.componentType"
           title="{{ 'choose-someone' | translate | titlecase }}"
           placeholder="{{ 'assistant' | translate | titlecase }}"
           [form]="form"

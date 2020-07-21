@@ -37,6 +37,13 @@ export class AssignmentComponent implements OnInit, OnDestroy {
 
   public displayComponentRef: ComponentRef<AssignableListComponent<User>>;
 
+  /**
+   * Assignable list for selected part
+   */
+  public assignableList: User[];
+
+  public test;
+
   constructor(
     private resolver: ComponentFactoryResolver,
     private appRef: ApplicationRef,
@@ -49,6 +56,7 @@ export class AssignmentComponent implements OnInit, OnDestroy {
     );
     this.displayComponentRef = componentFactory.create(this.injector);
     // this.appRef.attachView(componentRef.hostView);
+    this.test = 'trt';
   }
 
   ngOnDestroy() {
@@ -69,6 +77,10 @@ export class AssignmentComponent implements OnInit, OnDestroy {
     this.form
       .get([this.wIndex, this.assignment.position])
       .patchValue({ part: partSelected.value });
+
+    this.assignableList = this.assignableListByPart[partSelected.value.name];
+
+    console.log(this.assignableList);
   }
 
   removeAssignment() {

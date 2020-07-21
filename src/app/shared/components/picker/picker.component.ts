@@ -38,11 +38,7 @@ export class PickerComponent<T> implements OnInit {
   /**
    * List of options
    */
-  @Input() options: any[] = [
-    { label: 'Option 1' },
-    { label: 'Option 2' },
-    { label: 'Option 3' },
-  ];
+  @Input() options: T[];
 
   /**
    * If options are objects, this will be the property used
@@ -61,6 +57,7 @@ export class PickerComponent<T> implements OnInit {
   ngOnInit(): void {
     this.control = this.form.get(this.controlPath) as FormGroup;
 
+    // console.log(this.optionsTemplate);
     if (!this.optionsTemplate) {
       // this.optionsTemplate = OptionsDialogComponent;
     }

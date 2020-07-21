@@ -29,7 +29,12 @@
       <h3 matLine>{{ user.fullName }}</h3>
       <span matLine>Last {{ user.assignments.length }}</span>
       <span matLine>
-        Last {{ user.assignments[0]?.week | translateDate: 'DATE_SHORT' | async }}
+        Last
+        {{
+          user.assignments[0]?.week.toISOString()
+            | translateDate: "DATE_SHORT"
+            | async
+        }}
       </span>
     </mat-list-option>
 
