@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 import {
   MatDialog,
   MatDialogRef,
@@ -23,7 +23,7 @@ export class PickerComponent<T> implements OnInit {
   /**
    * Component in charge of the display of list
    */
-  @Input() component: ComponentType<any> = OptionsDialogComponent;
+  @Input() optionsTemplate: any = OptionsDialogComponent; // ComponentType<T> | TemplateRef<T>;
 
   @Input() form: FormGroup;
   @Input() controlPath: string[];
@@ -60,10 +60,14 @@ export class PickerComponent<T> implements OnInit {
 
   ngOnInit(): void {
     this.control = this.form.get(this.controlPath) as FormGroup;
+
+    if (!this.optionsTemplate) {
+      // this.optionsTemplate = OptionsDialogComponent;
+    }
   }
 
   openOptionsDialog() {
-    const dialogRef = this.dialog.open(this.component, {
+    const dialogRef = this.dialog.open(this.optionsTemplate, {
       data: {
         title: this.title,
         options: this.options,
