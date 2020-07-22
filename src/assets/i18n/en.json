@@ -92,6 +92,7 @@
   "go": "Go",
   "home": "Home",
   "language": "language",
+  "last": "last",
   "last-name": "Last name",
   "login": "Login",
   "ma": {
@@ -148,6 +149,7 @@
   "speaker": "Speaker",
   "submit": "Submit",
   "this": "This",
+  "total": "total",
   "type": "type",
   "unbaptized": "Unbaptized",
   "user": "User",

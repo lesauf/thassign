@@ -249,4 +249,23 @@ export class User {
 
     return aDisplay;
   }
+
+  get lastAssignment(): Assignment {
+    if (!this.assignments.length) {
+      return null;
+    }
+    // sort by assignment
+    this.assignments.sort((a, b) => {
+      if (a.week > b.week) {
+        return 1;
+      }
+
+      if (a.week < b.week) {
+        return -1;
+      }
+      return 0;
+    });
+
+    return this.assignments[0];
+  }
 }

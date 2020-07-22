@@ -1,4 +1,4 @@
-<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between center">
+<div mat-dialog-title fxLayout="row wrap" fxLayoutAlign="space-between center">
   <div fxFlex="90">
     {{ data.title | translate }}
   </div>
@@ -13,6 +13,19 @@
       <mat-icon>close</mat-icon>
     </button>
   </div>
+  <button fxFlex="auto " mat-raised-button type="button">
+    {{ "number" | translate | titlecase }}
+    <mat-icon matSuffix>arrow_upward</mat-icon>
+  </button>
+  <button fxFlex="auto " mat-raised-button type="button">
+    {{ "date" | translate | titlecase }} <mat-icon>arrow_upward</mat-icon>
+  </button>
+  <button fxFlex="auto " mat-raised-button type="button">
+    {{ "first-name" | translate | titlecase }} <mat-icon>arrow_upward</mat-icon>
+  </button>
+  <button fxFlex="auto " mat-raised-button type="button">
+    {{ "last-name" | translate | titlecase }} <mat-icon>arrow_upward</mat-icon>
+  </button>
 </div>
 
 <div mat-dialog-content>
@@ -26,16 +39,19 @@
       [value]="user"
       cdkFocusInitial
     >
-      <h3 matLine>{{ user.fullName }}</h3>
-      <span matLine>Last {{ user.assignments.length }}</span>
-      <span matLine>
-        Last
+      <h2 matLine>{{ user.fullName }}</h2>
+      <span matLine *ngIf="user.lastAssignment">
+        {{ "last" | translate | titlecase }}
         {{
-          user.assignments[0]?.week.toISOString()
-            | translateDate: "DATE_SHORT"
+          user.lastAssignment?.week.toISOString()
+            | translateDate: "DATE_MED"
             | async
         }}
       </span>
+      <span matLine
+        >{{ "total" | translate | titlecase }}
+        {{ user.assignments.length }}</span
+      >
     </mat-list-option>
 
     <!-- <div mat-dialog-actions>

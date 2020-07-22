@@ -50,7 +50,7 @@
       </div>
       <!-- ASSIGNEE -->
       <div fxFlex="30" fxFlex.lt-sm="auto">
-        <ng-template #assignableList>
+        <!-- <ng-template #assignableList>
           <mat-selection-list
             #options
             [multiple]="false"
@@ -78,11 +78,12 @@
               </span>
             </mat-list-option>
           </mat-selection-list>
-        </ng-template>
+        </ng-template> -->
         <!-- [optionsTemplate]="assignableList" -->
         <app-picker
           *ngIf="form.get([wIndex, assignment.position, 'part']).value"
-          title="{{ 'choose-someone' | translate | titlecase }}"
+          [optionsTemplate]="displayComponentRef.componentType"
+          [title]="form.get([wIndex, assignment.position, 'part']).value?.name"
           placeholder="{{ 'assignee' | translate | titlecase }}"
           [form]="form"
           [controlPath]="[wIndex, assignment.position, 'assignee']"
@@ -121,14 +122,13 @@
         </mat-form-field> -->
       </div>
       <!-- ASSISTANT -->
-      <div fxFlex="auto" fxFlex.lt-sm="auto">
-        &nbsp;
+      <div fxFlex="30" fxFlex.lt-sm="auto">
         <app-picker
           *ngIf="
             form.get([wIndex, assignment.position, 'part']).value?.withAssistant
           "
           [optionsTemplate]="displayComponentRef.componentType"
-          title="{{ 'choose-someone' | translate | titlecase }}"
+          title="{{ 'assistant' | translate | titlecase }}"
           placeholder="{{ 'assistant' | translate | titlecase }}"
           [form]="form"
           [controlPath]="[wIndex, assignment.position, 'assistant']"

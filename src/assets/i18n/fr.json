@@ -92,6 +92,7 @@
   "go": "Rechercher",
   "home": "Accueil",
   "language": "langue",
+  "last": "dernier",
   "last-name": "Nom",
   "login": "Nom d'utilisateur",
   "ma": {
@@ -147,6 +148,7 @@
   "speaker": "Orateur",
   "submit": "Enregistrer",
   "this": "Ceci",
+  "total": "total",
   "type": "type",
   "unbaptized": "Non baptisé",
   "user": "Utilisateur",
