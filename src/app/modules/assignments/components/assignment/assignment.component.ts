@@ -9,16 +9,18 @@ import {
   Injector,
   ApplicationRef,
   ComponentRef,
+  ViewChild,
+  TemplateRef,
 } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
+import { MatSelectionList } from '@angular/material/list';
+import { MatDialogRef } from '@angular/material/dialog';
 
-import { AssignmentDropdown } from '../../assignment-dropdown';
 import { Assignment } from 'src/app/core/models/assignment/assignment.model';
 import { Part } from 'src/app/core/models/part/part.model';
 import { User } from 'src/app/core/models/user/user.model';
 import { MatSelectChange } from '@angular/material/select';
 import { AssignableListComponent } from '../assignable-list/assignable-list.component';
-import { ComponentType } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-assignment',
@@ -37,18 +39,26 @@ export class AssignmentComponent implements OnInit, OnDestroy {
 
   public displayComponentRef: ComponentRef<AssignableListComponent<User>>;
 
+  @ViewChild('options', { static: false }) options: MatSelectionList;
+
+  @ViewChild('assignableList')
+  public assignableListTpl: TemplateRef<any>;
+
   /**
    * Assignable list for selected part
    */
   public assignableList: User[];
 
-  public test;
+  public dialogRef = null;
 
   constructor(
     private resolver: ComponentFactoryResolver,
     private appRef: ApplicationRef,
     private injector: Injector
-  ) {}
+  ) {
+    this.dialogRef = this.injector.get(MatDialogRef, null);
+    // this.data = this.injector.get(MAT_DIALOG_DATA, null);
+  }
 
   ngOnInit(): void {
     const componentFactory = this.resolver.resolveComponentFactory(
@@ -56,7 +66,6 @@ export class AssignmentComponent implements OnInit, OnDestroy {
     );
     this.displayComponentRef = componentFactory.create(this.injector);
     // this.appRef.attachView(componentRef.hostView);
-    this.test = 'trt';
   }
 
   ngOnDestroy() {
@@ -78,13 +87,25 @@ export class AssignmentComponent implements OnInit, OnDestroy {
       .get([this.wIndex, this.assignment.position])
       .patchValue({ part: partSelected.value });
 
-    this.assignableList = this.assignableListByPart[partSelected.value.name];
+    // this.assignableList = this.assignableListByPart[partSelected.value.name];
 
-    console.log(this.assignableList);
+    // console.log(this.assignableList);
   }
 
   removeAssignment() {
     this.isRemoved.emit(this.assignment);
+  }
+
+  closeDialog() {
+    this.form
+      .get([this.wIndex, this.assignment.position])
+      .setValue(this.assignment);
+    this.form
+      .get([this.wIndex, this.assignment.position])
+      .patchValue({ assignee: this.options.selectedOptions.selected[0].value });
+
+    console.log(this.options.selectedOptions.selected[0].value);
+    // this.dialogRef.close();
   }
 
   /**

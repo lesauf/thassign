@@ -51,7 +51,11 @@
       <!-- ASSIGNEE -->
       <div fxFlex="30" fxFlex.lt-sm="auto">
         <ng-template #assignableList>
-          <mat-selection-list [multiple]="false">
+          <mat-selection-list
+            #options
+            [multiple]="false"
+            (selectionChange)="closeDialog()"
+          >
             <mat-list-option
               *ngFor="
                 let user of assignableListByPart[
