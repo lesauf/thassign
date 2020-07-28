@@ -256,11 +256,11 @@ export class User {
     }
     // sort by assignment
     this.assignments.sort((a, b) => {
-      if (a.week > b.week) {
+      if (a.week < b.week) {
         return 1;
       }
 
-      if (a.week < b.week) {
+      if (a.week > b.week) {
         return -1;
       }
       return 0;
