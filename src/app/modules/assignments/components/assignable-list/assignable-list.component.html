@@ -13,17 +13,32 @@
       <mat-icon>close</mat-icon>
     </button>
   </div>
-  <button fxFlex="auto " mat-raised-button type="button">
+  <button
+    fxFlex="auto "
+    mat-raised-button
+    type="button"
+    (click)="sort('assignmentsNumber')"
+  >
     {{ "number" | translate | titlecase }}
     <mat-icon matSuffix>arrow_upward</mat-icon>
   </button>
-  <button fxFlex="auto " mat-raised-button type="button">
+  <button fxFlex="auto " mat-raised-button type="button" (click)="sort('date')">
     {{ "date" | translate | titlecase }} <mat-icon>arrow_upward</mat-icon>
   </button>
-  <button fxFlex="auto " mat-raised-button type="button">
+  <button
+    fxFlex="auto "
+    mat-raised-button
+    type="button"
+    (click)="sort('firstName')"
+  >
     {{ "first-name" | translate | titlecase }} <mat-icon>arrow_upward</mat-icon>
   </button>
-  <button fxFlex="auto " mat-raised-button type="button">
+  <button
+    fxFlex="auto "
+    mat-raised-button
+    type="button"
+    (click)="sort('lastName')"
+  >
     {{ "last-name" | translate | titlecase }} <mat-icon>arrow_upward</mat-icon>
   </button>
 </div>
