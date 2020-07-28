@@ -49,10 +49,10 @@ export class AssignableListComponent<T> implements OnInit {
           return 0;
         } else if (a.lastAssignment?.week < b.lastAssignment?.week) {
           // otherwise, older sorts first
-          return 1;
+          return -1;
         } else {
           // recent sorts first
-          return -1;
+          return 1;
         }
       });
     } else if (field === 'assignmentsNumber') {
