@@ -1,16 +1,15 @@
 import {
   IsArray,
   IsBoolean,
-  IsDate,
   IsEmail,
   IsString,
   IsIn,
   IsInt,
   IsObject,
   IsOptional,
-  IsUUID,
-  IsDefined,
   MinLength,
+  IsDate,
+  IsDateString,
 } from 'class-validator';
 import { Part, ObjectId } from '../part/part.model';
 import { Assignment } from '../assignment/assignment.model';
@@ -31,6 +30,11 @@ export class User {
   @MinLength(1, { message: 'error.lastName.any.empty' })
   lastName: string;
 
+  // Joi.string().optional().allow('man', 'woman')
+  @IsString({ message: 'error.genre.any.empty' })
+  @IsIn(['man', 'woman'])
+  genre: string;
+
   /**
    * User id of the creator
    */
@@ -46,11 +50,6 @@ export class User {
   @IsOptional()
   congregation: string;
 
-  // Joi.string().optional().allow('man', 'woman')
-  @IsString({ message: 'error.genre.any.empty' })
-  @IsIn(['man', 'woman'])
-  genre: string;
-
   // Joi.string()
   //   .email({ tlds: { allow: false } })
   //   .allow(null, ''),
@@ -61,17 +60,17 @@ export class User {
   // Joi.boolean().optional().default(true),
   @IsBoolean()
   @IsOptional()
-  baptized = true;
+  baptized;
 
   // Joi.boolean().optional().default(true),
   @IsBoolean()
   @IsOptional()
-  publisher = true;
+  publisher: boolean;
 
   // Joi.boolean().optional().default(false),
   @IsBoolean()
   @IsOptional()
-  child = false;
+  child: boolean;
 
   // Joi.string().optional().allow(null, ''),
   @IsString()
@@ -86,7 +85,7 @@ export class User {
   // Joi.boolean().optional().default(false), // Cannot receive assignments
   @IsBoolean()
   @IsOptional()
-  disabled = false;
+  disabled: boolean;
 
   // Joi.string().optional(),
   @IsString()
@@ -106,26 +105,26 @@ export class User {
   // Joi.boolean().optional().default(false), // Can modify programs
   @IsBoolean()
   @IsOptional()
-  activated = false;
+  activated: boolean;
 
   // Joi.date().default(Date.now()),
-  @IsInt()
+  @IsDate()
   @IsOptional()
-  createdAt: number = Date.now();
+  createdAt: Date = new Date();
 
   // Joi.date(),
-  @IsInt()
+  @IsDate()
   @IsOptional()
-  updatedAt: number;
+  updatedAt: Date;
 
   // deleted: Joi.boolean().default(false),
   @IsBoolean()
-  deleted = false;
+  deleted: boolean = false;
 
   // Joi.date(),
-  @IsInt()
+  @IsDate()
   @IsOptional()
-  deletedAt: number;
+  deletedAt: Date;
 
   // Joi.string(),
   @IsInt()
@@ -174,6 +173,20 @@ export class User {
   prepareToSave(): void {
     // Replace parts with their ids
     this.parts = (this.parts as Part[]).map((part) => part._id);
+
+    // Remove empty fields
+    if (!this.email) {
+      delete this.email;
+    }
+    if (!this.phone) {
+      delete this.phone;
+    }
+    if (!this.overseer) {
+      delete this.overseer;
+    }
+    if (!this.congregation) {
+      delete this.congregation;
+    }
   }
 
   /**

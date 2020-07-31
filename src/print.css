@@ -5,3 +5,7 @@
 .assignments-container {
   margin: 0;
 }
+
+.assignment-assignee {
+  font-weight: bold;
+}

@@ -23,14 +23,17 @@ export class Assignment {
   week: DateTime;
 
   @IsString()
-  part: Part = null;
+  part: Part;
 
   @IsString()
-  assignee: User = null;
+  assignee: User;
+
+  @IsString()
+  ownerId: string;
 
   @IsString()
   @IsOptional()
-  assistant: User = null;
+  assistant: User;
 
   /**
    * Zero-based position of the assignment in its week
@@ -40,7 +43,7 @@ export class Assignment {
 
   @IsString()
   @IsOptional()
-  title: string = null; // theme of the assignment
+  title: string; // theme of the assignment
 
   @IsString()
   @IsOptional()
@@ -48,10 +51,7 @@ export class Assignment {
 
   @IsInt()
   @IsOptional()
-  number: number = null; // like public talk number
-
-  @IsString()
-  ownerId: string;
+  number: number; // like public talk number
 
   // Joi.date().default(Date.now()),
   @IsDate()
@@ -61,21 +61,22 @@ export class Assignment {
   // Joi.date(),
   @IsDate()
   @IsOptional()
-  updatedAt: Date = null;
+  updatedAt: Date;
 
   // deleted: Joi.boolean().default(false),
   @IsBoolean()
-  deleted = false;
+  @IsOptional()
+  deleted: boolean = false;
 
   // Joi.date(),
   @IsDate()
   @IsOptional()
-  deletedAt: Date = null;
+  deletedAt: Date;
 
   // Joi.string(),
   @IsInt()
   @IsOptional()
-  deletedBy: string = null;
+  deletedBy: string;
 
   private _assignableUsers: User[];
 
@@ -139,12 +140,19 @@ export class Assignment {
    * Convert the user to the format accepted in the db
    * for example, replace parts with their ids
    */
-  //  prepareToSave(): void {
-  //    // Replace part, user, assignee with their ids
-  //    this.part = (this.part as Part)._id;
-
-  //    this.assignee = ...(this.assignee !== null && (this.assignee as User)._id);
-
-  //    this.assistant = (this.part as Part)._id;
-  //  }
+  prepareToSave(): void {
+    // Remove empty fields
+    if (!this.assistant) {
+      delete this.assistant;
+    }
+    if (!this.deletedAt) {
+      delete this.deletedAt;
+    }
+    if (!this.deletedBy) {
+      delete this.deletedBy;
+    }
+    if (!this.updatedAt) {
+      delete this.updatedAt;
+    }
+  }
 }

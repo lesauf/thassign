@@ -435,12 +435,16 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     const toSave = [];
     // convert User, assignee and Part to their _id
     assignments.forEach((ass, i) => {
+      ass.prepareToSave();
+
       toSave[i] = {};
       Object.assign(toSave[i], ass);
       toSave[i].week = ass.week.toJSDate();
       toSave[i].part = ass.part._id;
       toSave[i].assignee = ass.assignee?._id;
-      toSave[i].assistant = ass.assistant?._id;
+      if (ass.assistant) {
+        toSave[i].assistant = ass.assistant?._id;
+      }
     });
 
     try {

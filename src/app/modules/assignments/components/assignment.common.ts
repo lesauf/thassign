@@ -126,7 +126,7 @@ export abstract class AssignmentCommon {
 
     // this.populateForm();
 
-    this.isEditMode = true;
+    this.isEditMode = false;
   }
 
   // generateForm() {}
