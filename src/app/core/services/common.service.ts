@@ -2,6 +2,7 @@ import { Observable, of, BehaviorSubject } from 'rxjs';
 
 import { StitchService } from './stitch.service';
 import { MessageService } from './message.service';
+import { RealmService } from './realm.service';
 
 /**
  * M type stand for 'Model', the model type
@@ -17,7 +18,7 @@ export abstract class CommonService<M> {
   protected collectionName: string;
   protected serviceName: string;
   protected messageService: MessageService;
-  protected backendService: StitchService;
+  protected backendService: RealmService;
 
   constructor() {}
 
