@@ -89,7 +89,7 @@ export const generateUsers = (
 
     // unbaptized, child and woman can not be overseer
     if (!element.baptized || element.child || element.genre === 'woman') {
-      element.overseer = null;
+      delete element.overseer;
     }
 
     users[index] = element;
