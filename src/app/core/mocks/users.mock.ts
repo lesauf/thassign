@@ -28,16 +28,18 @@ export const generateOneUser = (parts: Part[], ownerId) => {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     genre: genre,
-    email: !child ? faker.internet.email() : null,
+    ...(!child && { email: faker.internet.email() }),
     congregation: 'EbwaEnglish',
     baptized: baptized,
     publisher: publisher,
     child: child,
-    phone: !child ? faker.phone.phoneNumber() : null,
-    overseer:
-      genre === 'man' && baptized && !child && publisher
-        ? faker.random.arrayElement(['elder', 'ministerial-servant'])
-        : null,
+    ...(!child && { phone: faker.phone.phoneNumber() }),
+    ...(genre === 'man' &&
+      baptized &&
+      !child &&
+      publisher && {
+        overseer: faker.random.arrayElement(['elder', 'ministerial-servant']),
+      }),
     parts: generateParts(parts), // Parts names
     assignments: [],
     disabled: false,
