@@ -12,6 +12,7 @@ import { UserService } from './modules/users/user.service';
 import { AssignmentService } from './modules/assignments/assignment.service';
 import { StitchService } from './core/services/stitch.service';
 import { AuthService } from './modules/auth/auth.service';
+import { RealmService } from './core/services/realm.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,7 @@ export class AppResolverService implements Resolve<string> {
     private assignmentService: AssignmentService,
     private partService: PartService,
     private userService: UserService,
-    private backendService: StitchService
+    private backendService: RealmService
   ) {}
 
   async resolve(

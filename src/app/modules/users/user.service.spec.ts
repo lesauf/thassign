@@ -16,7 +16,7 @@
 //     providers: [
 //       PartService,
 //       {
-//         provide: StitchService,
+//         provide: RealmService,
 //         useValue: {
 //           authenticate: () => Promise.resolve(true),
 //           getCollectionByName: () => Promise.resolve(null),

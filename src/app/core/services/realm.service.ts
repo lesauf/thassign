@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as Realmweb from 'realm-web';
-import { assert } from 'console';
+// import { assert } from 'console';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +24,7 @@ export class RealmService {
       // Authenticate the user
       const user: Realmweb.User = await this.app.logIn(credentials);
       // App.currentUser updates to match the logged in user
-      assert(user.id === this.app.currentUser.id);
+      // assert(user.id === this.app.currentUser.id);
 
       return user;
     } catch (err) {
@@ -32,9 +32,13 @@ export class RealmService {
     }
   }
 
-  isLoggedIn() {}
+  isLoggedIn(): boolean {
+    return true;
+  }
 
-  getUser() {}
+  getUser() {
+    return this.app.currentUser;
+  }
 
   /**
    * Normally called once when the user register
@@ -64,6 +68,8 @@ export class RealmService {
    */
   confirmUserAccount() {}
 
+  resetPassword() {}
+
   /**
    * @param colName Collection name
    */
@@ -79,7 +85,10 @@ export class RealmService {
    */
   async callFunction(functionName: string, params?: any[]) {
     try {
-      const response = await this.app.functions[functionName](...params);
+      const response = await this.app.currentUser.functions.callFunction(
+        functionName,
+        params
+      );
 
       console.log(functionName, ':', response);
 
