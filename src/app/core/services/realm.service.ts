@@ -33,7 +33,7 @@ export class RealmService {
   }
 
   isLoggedIn(): boolean {
-    return true;
+    return this.app.currentUser !== null;
   }
 
   getUser() {
@@ -83,11 +83,13 @@ export class RealmService {
    * @param hookName Webhook name
    * @param dbService to avoid recreating it
    */
-  async callFunction(functionName: string, params?: any[]) {
+  async callFunction(functionName: string, params: any[] = []) {
     try {
-      const response = await this.app.currentUser.functions.callFunction(
-        functionName,
-        params
+      // const response = await this.app.currentUser.functions[functionName](
+      //   ...params
+      // );
+      const response = await this.app.currentUser.functions[functionName](
+        ...params
       );
 
       console.log(functionName, ':', response);
