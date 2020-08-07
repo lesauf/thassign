@@ -12,9 +12,26 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
-    "typeRoots": ["node_modules/@types"],
-    "types": ["node", "jest"],
-    "lib": ["es2018", "dom"]
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types": [
+      "node",
+      "jest"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@src/*": [
+        "src/*.android.ts",
+        "src/*.ios.ts",
+        "src/*.tns.ts",
+        "src/*.web.ts",
+        "src/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

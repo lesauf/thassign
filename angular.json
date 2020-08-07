@@ -129,6 +129,6 @@
   },
   "defaultProject": "thassign",
   "cli": {
-    "analytics": false
+    "defaultCollection": "@nativescript/schematics"
   }
 }
