@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
 import * as Realmweb from 'realm-web';
 // import { assert } from 'console';
 
@@ -8,7 +11,7 @@ import * as Realmweb from 'realm-web';
 export class RealmService {
   app: Realmweb.App = new Realmweb.App({ id: 'thassign-realm-fihun' });
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   /**
    *
@@ -49,7 +52,9 @@ export class RealmService {
     lastName: string;
   }): void {}
 
-  logout() {}
+  async logout() {
+    await this.app.currentUser.logOut();
+  }
 
   refreshCustomData() {}
 
@@ -99,6 +104,32 @@ export class RealmService {
       console.log(functionName, ':Params', params, '=>', response);
 
       return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async callFunctionViaHook(functionName: string, params?: any[]) {
+    try {
+      // console.log(httpOptions.headers);
+      console.log('Via hook:', functionName, ':Params', params);
+
+      const response = await this.http
+        .post(
+          'https://webhooks.mongodb-realm.com/api/client/v2.0/app/thassign-realm-fihun/service/FunctionService/incoming_webhook/callFunctionHook',
+          { functionName, params },
+          {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${this.app.currentUser.accessToken}`,
+              // 'Access-Control-Allow-Origin': '*',
+              // 'Access-Control-Allow-Methods':
+              //   'GET,HEAD,OPTIONS,POST,PUT,DELETE',
+              // 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            }),
+          }
+        )
+        .toPromise();
     } catch (error) {
       throw error;
     }

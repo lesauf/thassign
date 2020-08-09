@@ -29,6 +29,16 @@ export abstract class CommonService<M> {
     return this.backendService.callFunction(functionName, parameters);
   }
 
+  /**
+   * Generic function to encapsulate any Baas used
+   */
+  protected callFunctionViaHook<T>(
+    functionName,
+    parameters?: T[]
+  ): Promise<any> {
+    return this.backendService.callFunctionViaHook(functionName, parameters);
+  }
+
   protected updateStore(values: M[]): void {
     this.dataStore.next(values);
   }
