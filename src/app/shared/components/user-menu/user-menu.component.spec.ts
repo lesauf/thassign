@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserMenuComponent } from './user-menu.component';
+import { UserMenuComponent } from '@src/app/shared/components/user-menu/user-menu.component';
 
 describe('UserMenuComponent', () => {
   let component: UserMenuComponent;

@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AuthGuard } from './modules/auth/auth.guard';
-import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-import { ContentLayoutComponent } from './layouts/content-layout/content-layout.component';
-import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
-import { AppResolverService } from './app-resolver.service';
+import { AuthGuard } from '@src/app/modules/auth/auth.guard';
+import { AuthLayoutComponent } from '@src/app/layouts/auth-layout/auth-layout.component';
+import { ContentLayoutComponent } from '@src/app/layouts/content-layout/content-layout.component';
+import { PageNotFoundComponent } from '@src/app/shared/components/page-not-found/page-not-found.component';
+import { AppResolverService } from '@src/app/app-resolver.service';
 
 const routes: Routes = [
   {

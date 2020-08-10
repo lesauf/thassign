@@ -2,8 +2,8 @@ import { Component, ElementRef, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { MessageService } from 'src/app/core/services/message.service';
-import { ToolbarHelpers } from './toolbar.helpers';
-import { ToolbarNotificationComponent } from '../toolbar-notification/toolbar-notification.component';
+import { ToolbarHelpers } from '@src/app/shared/components/toolbar/toolbar.helpers';
+import { ToolbarNotificationComponent } from '@src/app/shared/components/toolbar-notification/toolbar-notification.component';
 import { AuthService } from 'src/app/modules/auth/auth.service';
 import { User } from 'src/app/core/models/user/user.model';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,7 +19,7 @@ export class ToolbarComponent implements OnInit {
   @Input() drawer;
   @Input() matDrawerShow;
 
-  searchOpen: boolean = false;
+  searchOpen = false;
   toolbarHelpers = ToolbarHelpers;
 
   currentUser: { customData: User };

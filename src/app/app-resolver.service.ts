@@ -4,14 +4,14 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
-import { Part } from './core/models/part/part.model';
-import { User } from './core/models/user/user.model';
+import { Part } from '@src/app/core/models/part/part.model';
+import { User } from '@src/app/core/models/user/user.model';
 import { Observable, EMPTY, of } from 'rxjs';
-import { PartService } from './core/services/part.service';
-import { UserService } from './modules/users/user.service';
-import { AssignmentService } from './modules/assignments/assignment.service';
-import { StitchService } from './core/services/stitch.service';
-import { AuthService } from './modules/auth/auth.service';
+import { PartService } from '@src/app/core/services/part.service';
+import { UserService } from '@src/app/modules/users/user.service';
+import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
+import { StitchService } from '@src/app/core/services/stitch.service';
+import { AuthService } from '@src/app/modules/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',

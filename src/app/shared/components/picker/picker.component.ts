@@ -4,7 +4,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { OptionsDialogComponent } from '../options-dialog/options-dialog.component';
+import { OptionsDialogComponent } from '@src/app/shared/components/options-dialog/options-dialog.component';
 import { FormGroup } from '@angular/forms';
 import { ComponentType } from '@angular/cdk/portal';
 

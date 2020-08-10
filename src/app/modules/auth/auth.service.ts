@@ -47,13 +47,13 @@ export class AuthService {
     // Create user then authenticate him at one
     try {
       if (password !== repeatPassword) {
-        throw 'Password does not match';
+        throw new Error('Password does not match');
       }
 
       password = password; // Apply the hash here
 
       // save user data
-      let user = {
+      const user = {
         firstName: firstname,
         lastName: lastname,
         email: email,

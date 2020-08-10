@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OptionsDialogComponent } from './options-dialog.component';
+import { OptionsDialogComponent } from '@src/app/shared/components/options-dialog/options-dialog.component';
 
 describe('OptionsDialogComponent', () => {
   let component: OptionsDialogComponent;

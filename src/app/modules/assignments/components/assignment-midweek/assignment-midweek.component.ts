@@ -8,7 +8,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { AssignmentCommon } from '../assignment.common';
+import { AssignmentCommon } from '@src/app/modules/assignments/components/assignment.common';
 import { DateTime, Interval } from 'luxon';
 
 import { MY_FORMATS } from 'src/app/shared/components/month-picker/month-picker.component';
@@ -48,9 +48,9 @@ export class AssignmentMidweekComponent
   ngOnDestroy() {}
 
   getMondays() {
-    var d = new Date(),
-      month = d.getMonth(),
-      tuesdays = [];
+    let d = new Date();
+    let month = d.getMonth();
+    let tuesdays = [];
 
     d.setDate(1);
 

@@ -13,7 +13,7 @@ import { User } from 'src/app/core/models/user/user.model';
   styleUrls: ['./user-menu.component.scss'],
 })
 export class UserMenuComponent implements OnInit {
-  isOpen: boolean = false;
+  isOpen = false;
 
   @Input() currentUser: User = null;
 

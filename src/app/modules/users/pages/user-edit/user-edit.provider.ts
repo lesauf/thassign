@@ -8,8 +8,8 @@ import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 // import { User } from '../../../models/users.schema';
 // import { any } from '../../../../../../server/src/modules/users/user.schema';
-import { PartService } from '../../../../core/services/part.service';
-import { ValidationService } from '../../../../core/services/validation.service';
+import { PartService } from '@src/app/core/services/part.service';
+import { ValidationService } from '@src/app/core/services/validation.service';
 
 /**
  * User form generation

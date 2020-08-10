@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AppResolverService } from './app-resolver.service';
+import { AppResolverService } from '@src/app/app-resolver.service';
 
 describe('AppResolverService', () => {
   let service: AppResolverService;

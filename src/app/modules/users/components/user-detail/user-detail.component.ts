@@ -5,7 +5,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { MessageService } from 'src/app/core/services/message.service';
 import { PartService } from 'src/app/core/services/part.service';
 // import { User } from 'src/app/core/models/user/user.schema';
-import { UserService } from '../../user.service';
+import { UserService } from '@src/app/modules/users/user.service';
 import { User } from 'src/app/core/models/user/user.model';
 
 @Component({

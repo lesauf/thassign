@@ -1,7 +1,7 @@
 import { Observable, of, BehaviorSubject } from 'rxjs';
 
-import { StitchService } from './stitch.service';
-import { MessageService } from './message.service';
+import { StitchService } from '@src/app/core/services/stitch.service';
+import { MessageService } from '@src/app/core/services/message.service';
 
 /**
  * M type stand for 'Model', the model type

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AssignmentMidweekStudentsComponent } from './assignment-midweek-students.component';
+import { AssignmentMidweekStudentsComponent } from '@src/app/modules/assignments/components/assignment-midweek-students/assignment-midweek-students.component';
 
 describe('AssignmentMidweekStudentsComponent', () => {
   let component: AssignmentMidweekStudentsComponent;

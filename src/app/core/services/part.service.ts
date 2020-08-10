@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { CommonService } from './common.service';
-import { MessageService } from './message.service';
+import { CommonService } from '@src/app/core/services/common.service';
+import { MessageService } from '@src/app/core/services/message.service';
 // import { any } from 'server/src/modules/parts/part.model';
-import { StitchService } from './stitch.service';
-import { Part } from '../models/part/part.model';
+import { StitchService } from '@src/app/core/services/stitch.service';
+import { Part } from '@src/app/core/models/part/part.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 /**

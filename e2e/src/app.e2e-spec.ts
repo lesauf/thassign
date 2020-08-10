@@ -1,4 +1,4 @@
-import { AppPage } from './app.po';
+import { AppPage } from '/home/steph/sites/thassign/e2e/src/app.po';
 import { browser, logging } from 'protractor';
 
 describe('workspace-project App', () => {

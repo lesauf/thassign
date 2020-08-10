@@ -19,7 +19,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DateTime, Interval } from 'luxon';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AssignmentCommon } from '../assignment.common';
+import { AssignmentCommon } from '@src/app/modules/assignments/components/assignment.common';
 import { AssignmentService } from 'src/app/modules/assignments/assignment.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { PartService } from 'src/app/core/services/part.service';

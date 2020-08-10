@@ -1,6 +1,6 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { ValidationService } from '../../../core/services/validation.service';
+import { ValidationService } from '@src/app/core/services/validation.service';
 
 @Injectable()
 @Component({

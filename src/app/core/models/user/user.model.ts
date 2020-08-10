@@ -11,8 +11,8 @@ import {
   IsDate,
   IsDateString,
 } from 'class-validator';
-import { Part, ObjectId } from '../part/part.model';
-import { Assignment } from '../assignment/assignment.model';
+import { Part, ObjectId } from '@src/app/core/models/part/part.model';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { DateTime } from 'luxon';
 
 export class User {
@@ -119,7 +119,7 @@ export class User {
 
   // deleted: Joi.boolean().default(false),
   @IsBoolean()
-  deleted: boolean = false;
+  deleted = false;
 
   // Joi.date(),
   @IsDate()
@@ -242,7 +242,7 @@ export class User {
    * List of meetings the users have parts on
    */
   get meetingsAssignable(): string[] {
-    let _meetingsAssignable = [];
+    const _meetingsAssignable = [];
 
     this.parts.forEach((part) => {
       if (!_meetingsAssignable.includes(part['meeting'])) {

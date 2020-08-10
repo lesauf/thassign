@@ -21,7 +21,7 @@ export class LanguagePickerComponent implements OnInit {
    */
   language: string;
 
-  isOpen: boolean = false;
+  isOpen = false;
 
   @HostListener('document:click', ['$event', '$event.target'])
   onClick(event: MouseEvent, targetElement: HTMLElement) {

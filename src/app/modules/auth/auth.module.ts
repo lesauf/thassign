@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from '@src/app/shared/shared.module';
 
-import { AuthGuard } from './auth.guard';
-import { AuthRoutingModule } from './auth-routing.module';
-import { LoginComponent } from './login/login.component';
-import { LogoutComponent } from './logout/logout.component';
-import { RegisterComponent } from './register/register.component';
-import { AuthService } from './auth.service';
+import { AuthGuard } from '@src/app/modules/auth/auth.guard';
+import { AuthRoutingModule } from '@src/app/modules/auth/auth-routing.module';
+import { LoginComponent } from '@src/app/modules/auth/login/login.component';
+import { LogoutComponent } from '@src/app/modules/auth/logout/logout.component';
+import { RegisterComponent } from '@src/app/modules/auth/register/register.component';
+import { AuthService } from '@src/app/modules/auth/auth.service';
 // import { TokenStorage } from './token.storage';
 
 @NgModule({

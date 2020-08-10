@@ -7,7 +7,7 @@ import {
   FormArray,
 } from '@angular/forms';
 import { validateSync } from 'class-validator';
-import { User } from '../models/user/user.model';
+import { User } from '@src/app/core/models/user/user.model';
 
 /**
  * @see https://medium.com/@amcdnl/advanced-validation-with-angular-reactive-forms-2929759bf6e3

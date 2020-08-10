@@ -1,4 +1,4 @@
-import { ConfirmDirective } from './confirm.directive';
+import { ConfirmDirective } from '@src/app/shared/directives/confirm.directive';
 
 describe('ConfirmDirective', () => {
   it('should create an instance', () => {

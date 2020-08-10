@@ -22,16 +22,16 @@ export class ImportEpubComponent implements OnInit, AfterViewInit {
   renderArea: ElementRef;
 
   @Input()
-  epubFilename: string = 'mwb_F_201908';
+  epubFilename = 'mwb_F_201908';
 
-  public epubPath: string = '/assets/epubs/';
+  public epubPath = '/assets/epubs/';
 
   public book: Book;
 
   public rendition: Rendition;
 
   public programs: Array<any> = new Array();
-  public displayedProgramIndex: number = 0;
+  public displayedProgramIndex = 0;
   public displayedProgram;
 
   /**

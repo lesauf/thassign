@@ -4,10 +4,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { AuthService } from '../auth/auth.service';
-import { CommonService } from '../../core/services/common.service';
+import { AuthService } from '@src/app/modules/auth/auth.service';
+import { CommonService } from '@src/app/core/services/common.service';
 import { generateUsers } from 'src/app/core/mocks/users.mock';
-import { MessageService } from '../../core/services/message.service';
+import { MessageService } from '@src/app/core/services/message.service';
 import { PartService } from 'src/app/core/services/part.service';
 import { StitchService } from 'src/app/core/services/stitch.service';
 import { User } from 'src/app/core/models/user/user.model';

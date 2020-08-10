@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PickerComponent } from './picker.component';
+import { PickerComponent } from '@src/app/shared/components/picker/picker.component';
 
 describe('PickerComponent', () => {
   let component: PickerComponent;

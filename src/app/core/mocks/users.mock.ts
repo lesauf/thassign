@@ -1,7 +1,7 @@
 import * as faker from 'faker'; // /locale/en_US'
-import { PartService } from '../services/part.service';
-import { Part } from '../models/part/part.model';
-import { User } from '../models/user/user.model';
+import { PartService } from '@src/app/core/services/part.service';
+import { Part } from '@src/app/core/models/part/part.model';
+import { User } from '@src/app/core/models/user/user.model';
 
 /**
  * Generate a random number of parts between 1 and 10
