@@ -107,7 +107,7 @@
     }
   },
   "nativescript": {
-    "id": "org.nativescript.ngsample",
+    "id": "org.lesauf.thassign",
     "tns-android": {
       "version": "6.5.3"
     }
