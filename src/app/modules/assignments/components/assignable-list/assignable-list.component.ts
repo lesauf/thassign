@@ -2,8 +2,8 @@ import { Component, OnInit, Inject, ViewChild, Injector } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectionList } from '@angular/material/list';
 
-import { OptionsDialogComponent } from 'src/app/shared/components/options-dialog/options-dialog.component';
-import { User } from 'src/app/core/models/user/user.model';
+import { OptionsDialogComponent } from '@src/app/shared/components/options-dialog/options-dialog.component';
+import { User } from '@src/app/core/models/user/user.model';
 
 /**
  * Display a list of assignable brothers to choose from for an assignment

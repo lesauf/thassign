@@ -24,15 +24,15 @@ import { DateTime, Interval } from 'luxon';
 import { Observable } from 'rxjs';
 
 import { AssignmentCommon } from '@src/app/modules/assignments/components/assignment.common';
-import { AssignmentService } from 'src/app/modules/assignments/assignment.service';
-import { AuthService } from 'src/app/modules/auth/auth.service';
-import { MessageService } from 'src/app/core/services/message.service';
-import { PartService } from 'src/app/core/services/part.service';
-import { SettingService } from 'src/app/core/services/setting.service';
-import { UserService } from 'src/app/modules/users/user.service';
-import { ValidationService } from 'src/app/core/services/validation.service';
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
-import { Part } from 'src/app/core/models/part/part.model';
+import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
+import { AuthService } from '@src/app/modules/auth/auth.service';
+import { MessageService } from '@src/app/core/services/message.service';
+import { PartService } from '@src/app/core/services/part.service';
+import { SettingService } from '@src/app/core/services/setting.service';
+import { UserService } from '@src/app/modules/users/user.service';
+import { ValidationService } from '@src/app/core/services/validation.service';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
+import { Part } from '@src/app/core/models/part/part.model';
 import { AssignmentControlService } from '@src/app/modules/assignments/assignment-control.service';
 
 // export const DATE_FORMATS = {

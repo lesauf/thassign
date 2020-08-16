@@ -24,11 +24,6 @@
     "dns": "empty"
   },
   "dependencies": {
-    "@nativescript/angular": "~10.0.0",
-    "@nativescript/core": "rc",
-    "@nativescript/theme": "~2.2.1",
-    "reflect-metadata": "~0.1.12",
-    "tslib": "^1.10.0",
     "@angular/animations": "~9.1.9",
     "@angular/cdk": "^9.2.4",
     "@angular/common": "~9.1.9",
@@ -40,6 +35,9 @@
     "@angular/platform-browser": "~9.1.9",
     "@angular/platform-browser-dynamic": "~9.1.9",
     "@angular/router": "~9.1.9",
+    "@nativescript/angular": "~10.0.0",
+    "@nativescript/core": "rc",
+    "@nativescript/theme": "~2.2.1",
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^4.0.0",
     "class-validator": "^0.11.1",
@@ -48,7 +46,9 @@
     "mongodb-stitch-browser-sdk": "^4.8.0",
     "mongodb-stitch-browser-services-http": "^4.8.0",
     "ngx-translate-messageformat-compiler": "^4.6.0",
+    "reflect-metadata": "~0.1.12",
     "rxjs": "^6.5.5",
+    "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

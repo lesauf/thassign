@@ -4,13 +4,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { DateTime, Interval } from 'luxon';
 
 import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
-import { MessageService } from 'src/app/core/services/message.service';
-import { PartService } from 'src/app/core/services/part.service';
-import { SettingService } from 'src/app/core/services/setting.service';
+import { MessageService } from '@src/app/core/services/message.service';
+import { PartService } from '@src/app/core/services/part.service';
+import { SettingService } from '@src/app/core/services/setting.service';
 import { UserService } from '@src/app/modules/users/user.service';
-import { ValidationService } from 'src/app/core/services/validation.service';
-import { Part } from 'src/app/core/models/part/part.model';
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
+import { ValidationService } from '@src/app/core/services/validation.service';
+import { Part } from '@src/app/core/models/part/part.model';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 
 export abstract class AssignmentCommon {
   editMode: any;

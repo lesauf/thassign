@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormArray } from '@angular/forms';
 
 import { AssignmentDropdown } from '@src/app/modules/assignments/assignment-dropdown';
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 
 @Injectable()
 export class AssignmentControlService {

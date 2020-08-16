@@ -11,7 +11,7 @@ import {
 import { AssignmentCommon } from '@src/app/modules/assignments/components/assignment.common';
 import { DateTime, Interval } from 'luxon';
 
-import { MY_FORMATS } from 'src/app/shared/components/month-picker/month-picker.component';
+import { MY_FORMATS } from '@src/app/shared/components/month-picker/month-picker.component';
 
 @Component({
   selector: 'app-assignment-midweek',

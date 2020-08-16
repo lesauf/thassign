@@ -14,7 +14,7 @@ import {
 // import { UserType } from '../../../../../../server/src/modules/users/user.schema';
 // import { User } from '../../../models/users.schema';
 import { UserService } from '@src/app/modules/users/user.service';
-import { User } from 'src/app/core/models/user/user.model';
+import { User } from '@src/app/core/models/user/user.model';
 import { UserDetailComponent } from '@src/app/modules/users/components/user-detail/user-detail.component';
 
 @Component({

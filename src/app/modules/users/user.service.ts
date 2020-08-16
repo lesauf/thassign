@@ -6,13 +6,13 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { AuthService } from '@src/app/modules/auth/auth.service';
 import { CommonService } from '@src/app/core/services/common.service';
-import { generateUsers } from 'src/app/core/mocks/users.mock';
+import { generateUsers } from '@src/app/core/mocks/users.mock';
 import { MessageService } from '@src/app/core/services/message.service';
-import { PartService } from 'src/app/core/services/part.service';
-import { StitchService } from 'src/app/core/services/stitch.service';
-import { User } from 'src/app/core/models/user/user.model';
-import { Part } from 'src/app/core/models/part/part.model';
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
+import { PartService } from '@src/app/core/services/part.service';
+import { StitchService } from '@src/app/core/services/stitch.service';
+import { User } from '@src/app/core/models/user/user.model';
+import { Part } from '@src/app/core/models/part/part.model';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

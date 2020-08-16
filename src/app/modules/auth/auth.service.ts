@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 // import { Subject } from 'rxjs/Subject';
 
-import { StitchService } from 'src/app/core/services/stitch.service';
+import { StitchService } from '@src/app/core/services/stitch.service';
 import { first } from 'rxjs/operators';
-// import { userSchema } from 'src/app/core/models/user/user.schema';
-import { User } from 'src/app/core/models/user/user.model';
+// import { userSchema } from '@src/app/core/models/user/user.schema';
+import { User } from '@src/app/core/models/user/user.model';
 import { validate } from 'class-validator';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
