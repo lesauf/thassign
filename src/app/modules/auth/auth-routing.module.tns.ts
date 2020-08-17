@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
+import { NativeScriptRouterModule } from '@nativescript/angular';
 
 import { LoginComponent } from '@src/app/modules/auth/login/login.component';
 import { LogoutComponent } from '@src/app/modules/auth/logout/logout.component';
@@ -8,12 +9,12 @@ import { RegisterComponent } from '@src/app/modules/auth/register/register.compo
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/auth/login',
-    pathMatch: 'full',
+    component: LoginComponent,
   },
   {
     path: 'login',
-    component: LoginComponent,
+    redirectTo: '/auth',
+    pathMatch: 'full',
   },
   {
     path: 'logout',
@@ -26,8 +27,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  imports: [NativeScriptRouterModule.forChild(routes)],
+  exports: [NativeScriptRouterModule],
 })
 export class AuthRoutingModule {}
 

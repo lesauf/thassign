@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NativeScriptCommonModule } from '@nativescript/angular';
 import { TranslateModule } from '@ngx-translate/core';
 
 // import { ConfirmDialogComponent } from '@src/app/shared/components/confirm-dialog/confirm-dialog.component';
@@ -25,7 +25,7 @@ import { TranslateModule } from '@ngx-translate/core';
     // PickerComponent,
     // OptionsDialogComponent,
   ],
-  imports: [CommonModule, TranslateModule],
-  exports: [CommonModule, TranslateModule],
+  imports: [NativeScriptCommonModule, TranslateModule],
+  exports: [NativeScriptCommonModule, TranslateModule],
 })
 export class SharedModule {}
