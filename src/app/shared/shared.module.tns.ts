@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { NativeScriptCommonModule } from '@nativescript/angular';
 import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // import { ConfirmDialogComponent } from '@src/app/shared/components/confirm-dialog/confirm-dialog.component';
 // import { ConfirmDirective } from '@src/app/shared/directives/confirm.directive';
@@ -25,7 +26,17 @@ import { TranslateModule } from '@ngx-translate/core';
     // PickerComponent,
     // OptionsDialogComponent,
   ],
-  imports: [NativeScriptCommonModule, TranslateModule],
-  exports: [NativeScriptCommonModule, TranslateModule],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    NativeScriptCommonModule,
+    TranslateModule,
+  ],
+  exports: [
+    FormsModule,
+    ReactiveFormsModule,
+    NativeScriptCommonModule,
+    TranslateModule,
+  ],
 })
 export class SharedModule {}

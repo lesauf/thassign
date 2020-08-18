@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+// import { Page } from '@nativescript/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
@@ -26,7 +27,8 @@ export class AppComponent implements OnInit, OnDestroy {
     // private authService: AuthService,
     private router: Router,
     private translate: TranslateService
-  ) {}
+  ) // private page: Page
+  {}
 
   ngOnInit(): void {
     // init this.user on startup
@@ -38,6 +40,8 @@ export class AppComponent implements OnInit, OnDestroy {
     // this.userSubscription = this.authService.$userSource.subscribe(user => {
     //   this.user = user;
     // });
+
+    // this.page.actionBarHidden = true;
 
     this._initTranslationLanguage();
   }
