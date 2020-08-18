@@ -133,7 +133,7 @@ export class UserService extends CommonService<User> {
       // Clear the list of users to activate loader
       this.updateStore(null);
 
-      const users = await this.callFunctionViaHook('Users_insertMany', [
+      const users = await this.callFunction('Users_insertMany', [
         generatedUsers,
       ]);
 

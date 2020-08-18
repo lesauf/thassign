@@ -37,7 +37,7 @@
     "mongodb-stitch-browser-sdk": "^4.8.0",
     "mongodb-stitch-browser-services-http": "^4.8.0",
     "ngx-translate-messageformat-compiler": "^4.8.0",
-    "realm-web": "^0.8.0",
+    "realm-web": "^0.8.1",
     "rxjs": "^6.6.2",
     "tslib": "^1.13.0",
     "zone.js": "~0.10.2"

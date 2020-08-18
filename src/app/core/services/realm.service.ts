@@ -88,8 +88,10 @@ export class RealmService {
    * @param hookName Webhook name
    * @param dbService to avoid recreating it
    */
-  async callFunction(functionName: string, params?: any[]) {
+  async callFunction(functionName: string, params: any[] = []) {
     try {
+      console.log(functionName, ':Params', params);
+
       // const response = await this.app.currentUser.functions[functionName](
       //   ...params
       // );
@@ -97,9 +99,9 @@ export class RealmService {
       // const response = await this.app.functions.callFunction(
       //   functionName,
       //   params
-      // ); // ArgsTransformation error
+      // ); // Invalid Function Call Request error
 
-      const response = await this.app.functions[functionName](params);
+      const response = await this.app.functions[functionName](...params);
 
       console.log(functionName, ':Params', params, '=>', response);
 

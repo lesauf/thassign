@@ -25,7 +25,7 @@ export abstract class CommonService<M> {
   /**
    * Generic function to encapsulate any Baas used
    */
-  protected callFunction<T>(functionName, parameters?: T[]): Promise<any> {
+  protected callFunction<T>(functionName, parameters?: any[]): Promise<any> {
     return this.backendService.callFunction(functionName, parameters);
   }
 
