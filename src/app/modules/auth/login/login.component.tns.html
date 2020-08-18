@@ -1,3 +1,28 @@
-<!-- <StackLayout> -->
-<button text="login works!" class="btn btn-primary"></button>
-<!-- </StackLayout> -->
+<FlexboxLayout>
+  <StackLayout class="nt-form p-10">
+    <TextField
+      hint="Email Address"
+      keyboardType="email"
+      autocorrect="false"
+      autocapitalizationType="none"
+      class="nt-input -border"
+    >
+    </TextField>
+    <TextField
+      hint="Password"
+      secure="true"
+      class="nt-input -border"
+    ></TextField>
+
+    <button text="Sign in" class="-primary"></button>
+    <button text="Sign up"></button>
+  </StackLayout>
+</FlexboxLayout>
+
+<ActivityIndicator
+  busy="false"
+  visibility="collapsed"
+  row="1"
+  horizontalAlignment="center"
+  verticalAlignment="center"
+></ActivityIndicator>

@@ -8,7 +8,7 @@ import { AuthLayoutComponent } from '@src/app/layouts/auth-layout/auth-layout.co
 export const routes: Routes = [
   {
     path: 'auth',
-    component: AuthLayoutComponent,
+    // component: AuthLayoutComponent,
     loadChildren: () =>
       import('@src/app/modules/auth/auth.module').then((m) => m.AuthModule),
   },

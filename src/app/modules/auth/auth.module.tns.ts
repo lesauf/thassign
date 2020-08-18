@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   NativeScriptCommonModule,
@@ -34,5 +34,6 @@ import { AuthService } from '@src/app/modules/auth/auth.service';
     AuthService,
     // TokenStorage
   ],
+  schemas: [NO_ERRORS_SCHEMA], // Useful to use NS custom elements
 })
 export class AuthModule {}
