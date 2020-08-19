@@ -1,0 +1,51 @@
+<FlexboxLayout [formGroup]="userForm" (ngSubmit)="submit()">
+  <GridLayout
+    rows="auto, auto, auto, auto, auto"
+    class="nt-form p-10"
+    [class.dark]="!isLoggingIn"
+  >
+    <TextField
+      hint="Email Address"
+      keyboardType="email"
+      autocorrect="false"
+      autocapitalizationType="none"
+      formControlName="email"
+      row="0"
+    >
+    </TextField>
+    <TextField
+      hint="Password"
+      secure="true"
+      formControlName="password"
+      row="1"
+    ></TextField>
+
+    <TextField
+      *ngIf="!isLoggingIn"
+      hint="Repeat password"
+      secure="true"
+      formControlName="repeatPassword"
+      row="2"
+    ></TextField>
+
+    <button
+      text="{{ (isLoggingIn ?  'sign-in' : 'sign-up') | translate }}"
+      class="-primary"
+      row="3"
+      (tap)="submit()"
+    ></button>
+    <button
+      text="{{ (isLoggingIn ?  'sign-up' : 'back-to-login') | translate }}"
+      row="4"
+      (tap)="toggleDisplay()"
+    ></button>
+  </GridLayout>
+</FlexboxLayout>
+
+<ActivityIndicator
+  [busy]="isLoading"
+  [visibility]="isLoading ? 'visible' : 'collapsed'"
+  row="1"
+  horizontalAlignment="center"
+  verticalAlignment="center"
+></ActivityIndicator>

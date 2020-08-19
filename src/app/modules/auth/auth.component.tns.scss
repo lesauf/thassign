@@ -7,9 +7,8 @@ FlexboxLayout {
   background-image: url("~/assets/login11.jpg");
 }
 
-StackLayout {
+GridLayout {
   width: 300;
-  padding: 10 16;
   background-color: light(background);
 
   @at-root .ns-dark & {

@@ -47,7 +47,7 @@ export class AuthService {
   setUser(user) {}
 
   getUser() {
-    return { customData: {} };
+    return { id: null, customData: {} };
   }
 
   me() {}

@@ -30,7 +30,7 @@ import { AuthService } from '@src/app/modules/auth/auth.service';
   ],
   declarations: [...navigatableAuthComponents],
   providers: [
-    // AuthGuard,
+    AuthGuard,
     AuthService,
     // TokenStorage
   ],

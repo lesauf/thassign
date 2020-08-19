@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NativeScriptRouterModule } from '@nativescript/angular';
 
-import { LoginComponent } from '@src/app/modules/auth/login/login.component';
+import { AuthComponent } from '@src/app/modules/auth/auth.component';
 import { LogoutComponent } from '@src/app/modules/auth/logout/logout.component';
 import { RegisterComponent } from '@src/app/modules/auth/register/register.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: LoginComponent,
+    component: AuthComponent,
   },
   {
     path: 'login',
@@ -20,10 +20,6 @@ const routes: Routes = [
     path: 'logout',
     component: LogoutComponent,
   },
-  {
-    path: 'register',
-    component: RegisterComponent,
-  },
 ];
 
 @NgModule({
@@ -33,7 +29,7 @@ const routes: Routes = [
 export class AuthRoutingModule {}
 
 export const navigatableAuthComponents = [
-  LoginComponent,
+  AuthComponent,
   LogoutComponent,
   RegisterComponent,
 ];

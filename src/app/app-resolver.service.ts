@@ -10,7 +10,7 @@ import { Observable, EMPTY, of } from 'rxjs';
 import { PartService } from '@src/app/core/services/part.service';
 import { UserService } from '@src/app/modules/users/user.service';
 import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
-import { StitchService } from '@src/app/core/services/stitch.service';
+import { BackendService } from '@src/app/core/services/backend.service';
 import { AuthService } from '@src/app/modules/auth/auth.service';
 
 @Injectable({
@@ -18,11 +18,11 @@ import { AuthService } from '@src/app/modules/auth/auth.service';
 })
 export class AppResolverService implements Resolve<string> {
   constructor(
-    private authService: AuthService,
-    private assignmentService: AssignmentService,
-    private partService: PartService,
-    private userService: UserService,
-    private backendService: StitchService
+    protected authService: AuthService,
+    protected assignmentService: AssignmentService,
+    protected partService: PartService,
+    protected userService: UserService,
+    protected backendService: BackendService
   ) {}
 
   async resolve(

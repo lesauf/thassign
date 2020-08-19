@@ -4,9 +4,7 @@ import { Observable } from 'rxjs';
 // import { Subject } from 'rxjs/Subject';
 
 import { StitchService } from '@src/app/core/services/stitch.service';
-import { first } from 'rxjs/operators';
 // import { userSchema } from '@src/app/core/models/user/user.schema';
-import { User } from '@src/app/core/models/user/user.model';
 import { validate } from 'class-validator';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
@@ -15,18 +13,18 @@ export class AuthService {
   // store the URL so we can redirect after logging in
   redirectUrl = '';
 
-  constructor(private stitchService: StitchService) {}
+  constructor(private backendService: StitchService) {}
 
   isLoggedIn(): boolean {
-    return this.stitchService.isLoggedIn();
+    return this.backendService.isLoggedIn();
   }
 
   login(username: string, password: string): Promise<any> {
-    return this.stitchService.authenticate(username, password);
+    return this.backendService.authenticate(username, password);
   }
 
   refreshCustomData() {
-    return this.stitchService.refreshCustomData();
+    return this.backendService.refreshCustomData();
   }
 
   async register(
@@ -68,7 +66,7 @@ export class AuthService {
       }
 
       // Create user and authenticate at once to get his _id
-      const authedUser = await this.stitchService.createUserAccount(
+      const authedUser = await this.backendService.createUserAccount(
         email,
         password
       );
@@ -77,14 +75,14 @@ export class AuthService {
       console.log('Created: ', authedUser);
 
       // Save custom user data
-      this.stitchService.callFunction('Profiles_upsertCustomData', [user]);
+      this.backendService.callFunction('Profiles_upsertCustomData', [user]);
 
       // Set the user data immediately since he is authenticated
-      this.stitchService.refreshCustomData();
+      this.backendService.refreshCustomData();
 
-      console.log('Logged :', this.stitchService.getUser());
+      console.log('Logged :', this.backendService.getUser());
       // user.hashedPassword = password;
-      // return await this.stitchService.authenticate(email, password);
+      // return await this.backendService.authenticate(email, password);
     } catch (error) {
       throw error;
     }
@@ -93,12 +91,12 @@ export class AuthService {
   setUser(user) {}
 
   getUser() {
-    return this.stitchService.getUser();
+    return this.backendService.getUser();
   }
 
   me() {}
 
   logout(): void {
-    this.stitchService.logout();
+    this.backendService.logout();
   }
 }

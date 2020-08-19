@@ -1,8 +1,6 @@
-import { Injectable } from '@angular/core';
 import { Page } from '@nativescript/core';
 
-@Injectable()
-export class LoginHelper {
+export class AuthHelper {
   constructor(private page: Page) {}
 
   hideActionBar() {}

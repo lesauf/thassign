@@ -11,8 +11,8 @@ import { User } from '@src/app/core/models/user/user.model';
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.component.html',
-  styleUrls: ['home.component.scss'],
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   parts: Part[];
