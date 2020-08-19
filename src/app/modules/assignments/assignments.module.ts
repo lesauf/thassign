@@ -19,7 +19,6 @@ import { AssignableListComponent } from '@src/app/modules/assignments/components
     SharedModule,
     TranslateModule,
   ],
-  entryComponents: [AssignableListComponent],
   declarations: [
     AssignableListComponent,
     AssignmentListComponent,

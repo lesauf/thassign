@@ -29,7 +29,6 @@ import { OptionsDialogComponent } from '@src/app/shared/components/options-dialo
     PickerComponent,
     OptionsDialogComponent,
   ],
-  entryComponents: [OptionsDialogComponent],
   imports: [
     CommonModule,
     FormsModule,
