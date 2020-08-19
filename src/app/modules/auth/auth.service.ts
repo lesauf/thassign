@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { StitchService } from '@src/app/core/services/stitch.service';
 // import { userSchema } from '@src/app/core/models/user/user.schema';
 import { validate } from 'class-validator';
+import { BackendService } from '@src/app/core/services/backend.service';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
 @Injectable()
@@ -13,7 +14,7 @@ export class AuthService {
   // store the URL so we can redirect after logging in
   redirectUrl = '';
 
-  constructor(private backendService: StitchService) {}
+  constructor(private backendService: BackendService) {}
 
   isLoggedIn(): boolean {
     return this.backendService.isLoggedIn();

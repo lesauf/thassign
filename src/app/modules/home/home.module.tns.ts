@@ -7,12 +7,15 @@ import {
   NativeScriptCommonModule,
   NativeScriptFormsModule,
   NativeScriptRouterModule,
+  NativeScriptHttpClientModule,
 } from '@nativescript/angular';
 
 @NgModule({
   imports: [
     NativeScriptCommonModule,
     NativeScriptFormsModule,
+    NativeScriptHttpClientModule,
+    NativeScriptRouterModule,
     FormsModule,
     NativeScriptRouterModule.forChild([
       {
@@ -24,4 +27,4 @@ import {
   ],
   declarations: [HomeComponent],
 })
-export class HomeComponentModule {}
+export class HomeModule {}

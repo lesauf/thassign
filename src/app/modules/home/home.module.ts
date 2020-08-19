@@ -20,4 +20,4 @@ import { SharedModule } from '@src/app/shared/shared.module';
   ],
   declarations: [HomeComponent],
 })
-export class HomeComponentModule {}
+export class HomeModule {}

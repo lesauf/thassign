@@ -27,9 +27,7 @@ export const routes: Routes = [
         canActivateChild: [AuthGuard],
 
         loadChildren: () =>
-          import('./modules/home/home.module').then(
-            (m) => m.HomeComponentModule
-          ),
+          import('@src/app/modules/home/home.module').then((m) => m.HomeModule),
       },
     ],
   },
@@ -38,9 +36,7 @@ export const routes: Routes = [
     canActivateChild: [AuthGuard],
 
     loadChildren: () =>
-      import('@src/app/modules/home/home.module').then(
-        (m) => m.HomeComponentModule
-      ),
+      import('@src/app/modules/home/home.module').then((m) => m.HomeModule),
   },
   {
     path: 'auto-generated',

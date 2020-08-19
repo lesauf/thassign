@@ -21,28 +21,28 @@ const routes: Routes = [
         canActivateChild: [AuthGuard],
 
         loadChildren: () =>
-          import('./modules/home/home.module').then(
-            (m) => m.HomeComponentModule
-          ),
+          import('@src/app/modules/home/home.module').then((m) => m.HomeModule),
       },
       {
         path: 'assignments',
         loadChildren: () =>
-          import('./modules/assignments/assignments.module').then(
+          import('@src/app/modules/assignments/assignments.module').then(
             (m) => m.AssignmentsModule
           ),
       },
       // {
       //   path: 'exports',
       //   loadChildren: () =>
-      //     import('./modules/exports/exports.module').then(
+      //     import('@src/app/modules/exports/exports.module').then(
       //       (m) => m.ExportsModule
       //     ),
       // },
       {
         path: 'users',
         loadChildren: () =>
-          import('./modules/users/users.module').then((m) => m.UsersModule),
+          import('@src/app/modules/users/users.module').then(
+            (m) => m.UsersModule
+          ),
       },
     ],
   },
@@ -55,7 +55,7 @@ const routes: Routes = [
     path: 'auth',
     component: AuthLayoutComponent,
     loadChildren: () =>
-      import('./modules/auth/auth.module').then((m) => m.AuthModule),
+      import('@src/app/modules/auth/auth.module').then((m) => m.AuthModule),
   },
   // { path: 'test', component: TestComponent },
   // { path: 'auth', loadChildren: './modules/auth/auth.module#AuthModule' },

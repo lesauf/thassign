@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,6 +13,7 @@ import { ValidationService } from '@src/app/core/services/validation.service';
 import { Part } from '@src/app/core/models/part/part.model';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 
+@Injectable()
 export abstract class AssignmentCommon {
   editMode: any;
 

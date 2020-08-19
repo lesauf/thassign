@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 
 import { StitchService } from '@src/app/core/services/stitch.service';
@@ -6,6 +7,7 @@ import { MessageService } from '@src/app/core/services/message.service';
 /**
  * M type stand for 'Model', the model type
  */
+@Injectable()
 export abstract class CommonService<M> {
   /**
    * Attempt to code a Observable data service
