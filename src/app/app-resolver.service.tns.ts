@@ -30,17 +30,17 @@ export class AppResolverService implements Resolve<string> {
     state: RouterStateSnapshot
   ): Promise<string> {
     try {
-      const data = await this.backendService.callFunction('getData');
+      //   const data = await this.backendService.callFunction('getData');
 
-      // this.userService.destroy();
-      const allParts = this.partService.storeParts(data?.parts);
-      const allUsers = this.userService.storeUsers(data?.users, allParts);
+      //   // this.userService.destroy();
+      //   const allParts = this.partService.storeParts(data?.parts);
+      //   const allUsers = this.userService.storeUsers(data?.users, allParts);
 
-      this.assignmentService.storeAssignments(
-        data?.assignments,
-        allParts,
-        allUsers
-      );
+      //   this.assignmentService.storeAssignments(
+      //     data?.assignments,
+      //     allParts,
+      //     allUsers
+      //   );
 
       return 'Data fetched';
     } catch (error) {

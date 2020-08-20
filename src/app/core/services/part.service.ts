@@ -6,7 +6,7 @@ import { MessageService } from '@src/app/core/services/message.service';
 import { StitchService } from '@src/app/core/services/stitch.service';
 import { Part } from '@src/app/core/models/part/part.model';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { BackendService } from './backend.service';
+import { BackendService } from '@src/app/core/services/backend.service';
 
 /**
  * Get data about parts from storage

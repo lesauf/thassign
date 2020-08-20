@@ -7,14 +7,18 @@ import { StitchService } from '@src/app/core/services/stitch.service';
 // import { userSchema } from '@src/app/core/models/user/user.schema';
 import { validate } from 'class-validator';
 import { BackendService } from '@src/app/core/services/backend.service';
+import { CommonService } from '@src/app/core/services/common.service';
+import { User } from '@src/app/core/models/user/user.model';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
 @Injectable()
-export class AuthService {
+export class AuthService extends CommonService<User> {
   // store the URL so we can redirect after logging in
   redirectUrl = '';
 
-  constructor(private backendService: BackendService) {}
+  constructor(protected backendService: BackendService) {
+    super();
+  }
 
   isLoggedIn(): boolean {
     return this.backendService.isLoggedIn();
