@@ -8,7 +8,6 @@ import { CommonService } from '@src/app/core/services/common.service';
 import { MessageService } from '@src/app/core/services/message.service';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { Part } from '@src/app/core/models/part/part.model';
-import { StitchService } from '@src/app/core/services/stitch.service';
 import { User } from '@src/app/core/models/user/user.model';
 import { BackendService } from '@src/app/core/services/backend.service';
 
