@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-// import { StitchService } from '@src/app/core/services/stitch.service';
-import { RealmService } from './realm.service';
+import { RealmService } from '@src/app/core/services/realm.service';
 
 @Injectable()
 export class BackendService extends RealmService {}
