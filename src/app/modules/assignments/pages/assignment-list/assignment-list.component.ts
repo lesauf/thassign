@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { DateTime } from 'luxon';
 
-import { SettingService } from 'src/app/core/services/setting.service';
+import { SettingService } from '@src/app/core/services/setting.service';
 
 @Component({
   selector: 'app-assignment-list',

@@ -4,10 +4,10 @@ import { MAT_DATE_LOCALE, DateAdapter } from '@angular/material/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AuthHeaderInterceptor } from './interceptors/auth-header.interceptor';
+import { AuthHeaderInterceptor } from '@src/app/core/interceptors/auth-header.interceptor';
 // import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
-import { LuxonDateAdapter } from './adapters/luxon-date-adapter/luxon-date-adapter';
-import { MatPaginationIntlService } from './services/mat-paginator-intl.service';
+import { LuxonDateAdapter } from '@src/app/core/adapters/luxon-date-adapter/luxon-date-adapter';
+import { MatPaginationIntlService } from '@src/app/core/services/mat-paginator-intl.service';
 
 @NgModule({
   declarations: [],

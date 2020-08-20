@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AssignmentService } from '../assignments/assignment.service';
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
-import { PartService } from 'src/app/core/services/part.service';
-import { AuthService } from '../auth/auth.service';
-import { Part } from 'src/app/core/models/part/part.model';
-import { UserService } from '../users/user.service';
-import { User } from 'src/app/core/models/user/user.model';
+import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
+import { PartService } from '@src/app/core/services/part.service';
+import { AuthService } from '@src/app/modules/auth/auth.service';
+import { Part } from '@src/app/core/models/part/part.model';
+import { UserService } from '@src/app/modules/users/user.service';
+import { User } from '@src/app/core/models/user/user.model';
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.component.html',
-  styleUrls: ['home.component.scss'],
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   parts: Part[];

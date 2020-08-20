@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ControlMessagesComponent } from './control-messages.component';
+import { ControlMessagesComponent } from '@src/app/shared/components/control-messages/control-messages.component';
 
 describe('ControlMessagesComponent', () => {
   let component: ControlMessagesComponent;

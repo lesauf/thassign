@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AssignmentWeekendComponent } from './assignment-weekend.component';
+import { AssignmentWeekendComponent } from '@src/app/modules/assignments/components/assignment-weekend/assignment-weekend.component';
 
 describe('AssignmentWeekendComponent', () => {
   let component: AssignmentWeekendComponent;

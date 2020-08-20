@@ -14,8 +14,8 @@ import {
 } from 'class-validator';
 import { DateTime } from 'luxon';
 
-import { Part, ObjectId } from '../part/part.model';
-import { User } from '../user/user.model';
+import { Part, ObjectId } from '@src/app/core/models/part/part.model';
+import { User } from '@src/app/core/models/user/user.model';
 
 export class Assignment {
   @IsObject()
@@ -66,7 +66,7 @@ export class Assignment {
   // deleted: Joi.boolean().default(false),
   @IsBoolean()
   @IsOptional()
-  deleted: boolean = false;
+  deleted = false;
 
   // Joi.date(),
   @IsDate()

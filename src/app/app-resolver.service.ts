@@ -4,26 +4,25 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
-import { Part } from './core/models/part/part.model';
-import { User } from './core/models/user/user.model';
+import { Part } from '@src/app/core/models/part/part.model';
+import { User } from '@src/app/core/models/user/user.model';
 import { Observable, EMPTY, of } from 'rxjs';
-import { PartService } from './core/services/part.service';
-import { UserService } from './modules/users/user.service';
-import { AssignmentService } from './modules/assignments/assignment.service';
-import { StitchService } from './core/services/stitch.service';
-import { AuthService } from './modules/auth/auth.service';
-import { RealmService } from './core/services/realm.service';
+import { PartService } from '@src/app/core/services/part.service';
+import { UserService } from '@src/app/modules/users/user.service';
+import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
+import { BackendService } from '@src/app/core/services/backend.service';
+import { AuthService } from '@src/app/modules/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppResolverService implements Resolve<string> {
   constructor(
-    private authService: AuthService,
-    private assignmentService: AssignmentService,
-    private partService: PartService,
-    private userService: UserService,
-    private backendService: RealmService
+    protected authService: AuthService,
+    protected assignmentService: AssignmentService,
+    protected partService: PartService,
+    protected userService: UserService,
+    protected backendService: BackendService
   ) {}
 
   async resolve(
@@ -34,11 +33,11 @@ export class AppResolverService implements Resolve<string> {
       const data = await this.backendService.callFunction('getData');
 
       // this.userService.destroy();
-      const allParts = this.partService.storeParts(data.parts);
-      const allUsers = this.userService.storeUsers(data.users, allParts);
+      const allParts = this.partService.storeParts(data?.parts);
+      const allUsers = this.userService.storeUsers(data?.users, allParts);
 
       this.assignmentService.storeAssignments(
-        data.assignments,
+        data?.assignments,
         allParts,
         allUsers
       );

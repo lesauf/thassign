@@ -6,7 +6,7 @@ import {
 } from '@angular/material/dialog';
 
 // const debug = require('debug')('todo');
-import { MessageService } from 'src/app/core/services/message.service';
+import { MessageService } from '@src/app/core/services/message.service';
 
 @Component({
   selector: 'app-toolbar-notification',

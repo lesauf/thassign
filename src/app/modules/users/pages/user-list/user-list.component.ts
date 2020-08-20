@@ -15,12 +15,12 @@ import { tap } from 'rxjs/operators';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 
 // import { any } from '../../../../../../server/src/modules/users/user.schema';
-// import { User } from 'src/app/models/users.schema';
-import { UserDetailComponent } from '../../components/user-detail/user-detail.component';
-import { UserService } from '../../user.service';
-import { UserSortComponent } from '../../components/user-sort/user-sort.component';
-import { User } from 'src/app/core/models/user/user.model';
-import { PartService } from 'src/app/core/services/part.service';
+// import { User } from '@src/app/models/users.schema';
+import { UserDetailComponent } from '@src/app/modules/users/components/user-detail/user-detail.component';
+import { UserService } from '@src/app/modules/users/user.service';
+import { UserSortComponent } from '@src/app/modules/users/components/user-sort/user-sort.component';
+import { User } from '@src/app/core/models/user/user.model';
+import { PartService } from '@src/app/core/services/part.service';
 
 @Component({
   selector: 'app-user-list',

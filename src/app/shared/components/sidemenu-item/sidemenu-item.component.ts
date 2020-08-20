@@ -14,7 +14,7 @@ export class SidemenuItemComponent implements OnInit {
      * Emit event to close sidenav on menu select
      */
     @Output() onMenuSelected: EventEmitter<boolean> = new EventEmitter();
-    
+
 
     constructor() { }
 
@@ -28,7 +28,7 @@ export class SidemenuItemComponent implements OnInit {
     chechForChildMenu() {
       return (this.menu && this.menu.sub) ? true : false;
     }
-    
+
     /**
      * Emit an event to close the drawer when menu is clicked
      */

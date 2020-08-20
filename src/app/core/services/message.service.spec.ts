@@ -1,7 +1,7 @@
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 
-import { MessageService } from './message.service';
-import { StitchService } from 'src/app/core/services/stitch.service';
+import { MessageService } from '@src/app/core/services/message.service';
+import { StitchService } from '@src/app/core/services/stitch.service';
 
 describe('MessageService', () => {
   let MessageServiceSpectator: SpectatorService<MessageService>;

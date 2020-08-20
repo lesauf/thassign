@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { DateTime, Interval } from 'luxon';
 
-import { AuthService } from '../auth/auth.service';
-import { CommonService } from '../../core/services/common.service';
-import { MessageService } from '../../core/services/message.service';
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
-import { Part } from 'src/app/core/models/part/part.model';
-import { StitchService } from 'src/app/core/services/stitch.service';
-import { User } from 'src/app/core/models/user/user.model';
-import { RealmService } from 'src/app/core/services/realm.service';
+import { AuthService } from '@src/app/modules/auth/auth.service';
+import { CommonService } from '@src/app/core/services/common.service';
+import { MessageService } from '@src/app/core/services/message.service';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
+import { Part } from '@src/app/core/models/part/part.model';
+import { StitchService } from '@src/app/core/services/stitch.service';
+import { User } from '@src/app/core/models/user/user.model';
+import { BackendService } from '@src/app/core/services/backend.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -50,7 +50,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   constructor(
     protected messageService: MessageService,
     private authService: AuthService,
-    protected backendService: RealmService
+    protected backendService: BackendService
   ) {
     super();
 

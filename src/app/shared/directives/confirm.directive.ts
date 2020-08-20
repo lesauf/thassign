@@ -7,7 +7,7 @@ import {
   Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Directive({
   selector: '[appConfirm]'

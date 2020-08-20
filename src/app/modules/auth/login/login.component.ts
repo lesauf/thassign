@@ -2,12 +2,14 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../auth.service';
+import { AuthService } from '@src/app/modules/auth/auth.service';
+import { LoginHelper } from '@src/app/modules/auth/login/login-helper';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['../auth.component.scss'],
+  providers: [LoginHelper],
 })
 export class LoginComponent implements OnInit {
   @Input() message: string;
@@ -34,7 +36,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private loginHelper: LoginHelper
   ) {}
 
   // email: string;
@@ -42,6 +45,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
+    // this.loginHelper.hideActionBar();
   }
 
   buildForm() {

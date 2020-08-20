@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LanguagePickerComponent } from './language-picker.component';
+import { LanguagePickerComponent } from '@src/app/shared/components/language-picker/language-picker.component';
 
 describe('LanguagePickerComponent', () => {
   let component: LanguagePickerComponent;

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AssignmentListComponent } from './pages/assignment-list/assignment-list.component';
+import { AssignmentListComponent } from '@src/app/modules/assignments/pages/assignment-list/assignment-list.component';
 
 const assigmentsRoutes: Routes = [
   {

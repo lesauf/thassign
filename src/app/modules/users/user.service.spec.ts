@@ -2,10 +2,10 @@
 // import { TranslateService } from '@ngx-translate/core';
 
 // import { UserService } from './user.service';
-// import { StitchService } from 'src/app/core/services/stitch.service';
-// import { PartService } from 'src/app/core/services/part.service';
-// import { partMocks } from 'src/app/core/mocks/parts.mock';
-// import { generateUsers } from 'src/app/core/mocks/users.mock';
+// import { StitchService } from '@src/app/core/services/stitch.service';
+// import { PartService } from '@src/app/core/services/part.service';
+// import { partMocks } from '@src/app/core/mocks/parts.mock';
+// import { generateUsers } from '@src/app/core/mocks/users.mock';
 
 // describe('UserService', () => {
 //   let UserServiceStitchSpectator: SpectatorService<UserService>;

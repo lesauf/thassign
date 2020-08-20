@@ -1,12 +1,15 @@
+import { Injectable } from '@angular/core';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 
-import { StitchService } from './stitch.service';
-import { MessageService } from './message.service';
-import { RealmService } from './realm.service';
+import { StitchService } from '@src/app/core/services/stitch.service';
+import { MessageService } from '@src/app/core/services/message.service';
+import { BackendService } from '@src/app/core/services/backend.service';
+// import { RealmService } from '@src/app/core/services/realm.service';
 
 /**
  * M type stand for 'Model', the model type
  */
+@Injectable()
 export abstract class CommonService<M> {
   /**
    * Attempt to code a Observable data service
@@ -18,7 +21,7 @@ export abstract class CommonService<M> {
   protected collectionName: string;
   protected serviceName: string;
   protected messageService: MessageService;
-  protected backendService: RealmService;
+  protected backendService: BackendService;
 
   constructor() {}
 
@@ -32,12 +35,12 @@ export abstract class CommonService<M> {
   /**
    * Generic function to encapsulate any Baas used
    */
-  protected callFunctionViaHook<T>(
-    functionName,
-    parameters?: T[]
-  ): Promise<any> {
-    return this.backendService.callFunctionViaHook(functionName, parameters);
-  }
+  // protected callFunctionViaHook<T>(
+  //   functionName,
+  //   parameters?: T[]
+  // ): Promise<any> {
+  //   return this.backendService.callFunctionViaHook(functionName, parameters);
+  // }
 
   protected updateStore(values: M[]): void {
     this.dataStore.next(values);

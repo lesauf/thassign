@@ -1,7 +1,7 @@
 import * as faker from 'faker'; // /locale/en_US'
 import { ObjectId } from 'mongodb';
 
-import { Part } from '../models/part/part.model';
+import { Part } from '@src/app/core/models/part/part.model';
 
 /**
  * Available values for meeting parts

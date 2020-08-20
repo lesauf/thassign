@@ -12,7 +12,6 @@
 //     FormsModule,
 //     FlexLayoutModule
 //   ],
-//   entryComponents: [MonthPickerComponent],
 //   exports: [MonthPickerComponent]
 // })
 

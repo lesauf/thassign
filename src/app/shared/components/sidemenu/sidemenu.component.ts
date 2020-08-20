@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { menus } from './menu-element';
+import { menus } from '@src/app/shared/components/sidemenu/menu-element';
 
 @Component({
   selector: 'app-sidemenu',
@@ -16,7 +16,7 @@ export class SidemenuComponent implements OnInit {
    */
   language: string;
 
-  @Input() iconOnly: boolean = false;
+  @Input() iconOnly = false;
 
   public menus = menus;
 

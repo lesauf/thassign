@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ToolbarNotificationComponent } from './toolbar-notification.component';
+import { ToolbarNotificationComponent } from '@src/app/shared/components/toolbar-notification/toolbar-notification.component';
 
 describe('ToolbarNotificationComponent', () => {
   let component: ToolbarNotificationComponent;

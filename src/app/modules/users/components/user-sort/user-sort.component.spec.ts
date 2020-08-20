@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserSortComponent } from './user-sort.component';
+import { UserSortComponent } from '@src/app/modules/users/components/user-sort/user-sort.component';
 
 describe('UserSortComponent', () => {
   let component: UserSortComponent;

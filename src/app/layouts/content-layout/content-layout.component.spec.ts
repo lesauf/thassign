@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MaComponent } from './content-layout.component';
+import { MaComponent } from '@src/app/layouts/content-layout/content-layout.component';
 
 describe('MaComponent', () => {
   let component: MaComponent;

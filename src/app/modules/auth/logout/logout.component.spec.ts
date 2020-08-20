@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 
-import { LogoutComponent } from './logout.component';
+import { LogoutComponent } from '@src/app/modules/auth/logout/logout.component';
 
 describe('LogoutComponent', () => {
   let component: LogoutComponent;

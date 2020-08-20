@@ -3,20 +3,23 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 // import { Subject } from 'rxjs/Subject';
 
-import { StitchService } from 'src/app/core/services/stitch.service';
-import { first } from 'rxjs/operators';
-// import { userSchema } from 'src/app/core/models/user/user.schema';
-import { User } from 'src/app/core/models/user/user.model';
+import { StitchService } from '@src/app/core/services/stitch.service';
+// import { userSchema } from '@src/app/core/models/user/user.schema';
 import { validate } from 'class-validator';
+import { BackendService } from '@src/app/core/services/backend.service';
 import { RealmService } from 'src/app/core/services/realm.service';
+import { CommonService } from '@src/app/core/services/common.service';
+import { User } from '@src/app/core/models/user/user.model';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
 @Injectable()
-export class AuthService {
+export class AuthService extends CommonService<User> {
   // store the URL so we can redirect after logging in
   redirectUrl = '';
 
-  constructor(private backendService: RealmService) {}
+  constructor(protected backendService: BackendService) {
+    super();
+  }
 
   isLoggedIn(): boolean {
     return this.backendService.isLoggedIn();
@@ -48,7 +51,7 @@ export class AuthService {
     // Create user then authenticate him at one
     try {
       if (password !== repeatPassword) {
-        throw 'Password does not match';
+        throw new Error('Password does not match');
       }
 
       password = password; // Apply the hash here

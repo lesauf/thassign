@@ -16,11 +16,11 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { MatSelectionList } from '@angular/material/list';
 import { MatDialogRef } from '@angular/material/dialog';
 
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
-import { Part } from 'src/app/core/models/part/part.model';
-import { User } from 'src/app/core/models/user/user.model';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
+import { Part } from '@src/app/core/models/part/part.model';
+import { User } from '@src/app/core/models/user/user.model';
 import { MatSelectChange } from '@angular/material/select';
-import { AssignableListComponent } from '../assignable-list/assignable-list.component';
+import { AssignableListComponent } from '@src/app/modules/assignments/components/assignable-list/assignable-list.component';
 
 @Component({
   selector: 'app-assignment',

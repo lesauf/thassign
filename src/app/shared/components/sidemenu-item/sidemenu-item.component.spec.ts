@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SidemenuItemComponent } from './sidemenu-item.component';
+import { SidemenuItemComponent } from '@src/app/shared/components/sidemenu-item/sidemenu-item.component';
 
 describe('SidemenuItemComponent', () => {
   let component: SidemenuItemComponent;

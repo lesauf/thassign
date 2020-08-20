@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { CommonService } from './common.service';
-import { MessageService } from './message.service';
+import { CommonService } from '@src/app/core/services/common.service';
+import { MessageService } from '@src/app/core/services/message.service';
 // import { any } from 'server/src/modules/parts/part.model';
-import { Part } from '../models/part/part.model';
+import { StitchService } from '@src/app/core/services/stitch.service';
+import { Part } from '@src/app/core/models/part/part.model';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { RealmService } from './realm.service';
+import { BackendService } from '@src/app/core/services/backend.service';
 
 /**
  * Get data about parts from storage
@@ -43,7 +44,7 @@ export class PartService extends CommonService<Part> {
 
   constructor(
     protected messageService: MessageService,
-    protected backendService: RealmService
+    protected backendService: BackendService
   ) {
     super();
 

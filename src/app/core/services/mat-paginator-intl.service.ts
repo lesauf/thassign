@@ -26,7 +26,7 @@ export class MatPaginationIntlService extends MatPaginatorIntl {
 
     const endIndex = Math.min(startIndex + pageSize, length);
     return startIndex + 1 + ' - ' + endIndex + ' ' + of + ' ' + length;
-  };
+  }
 
   injectTranslateService(translate: TranslateService) {
     this.translate = translate;

@@ -1,4 +1,4 @@
-import { User } from 'src/app/core/models/user/user.model';
+import { User } from '@src/app/core/models/user/user.model';
 
 export class AssignmentDropdown<T> {
   value: T;

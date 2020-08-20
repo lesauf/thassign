@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MonthPickerComponent } from './month-picker.component';
+import { MonthPickerComponent } from '@src/app/shared/components/month-picker/month-picker.component';
 
 describe('MonthPickerComponent', () => {
   let component: MonthPickerComponent;

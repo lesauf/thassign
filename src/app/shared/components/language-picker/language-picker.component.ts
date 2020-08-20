@@ -5,7 +5,7 @@ import {
   HostListener,
   ElementRef,
 } from '@angular/core';
-import { User } from 'src/app/core/models/user/user.model';
+import { User } from '@src/app/core/models/user/user.model';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -21,7 +21,7 @@ export class LanguagePickerComponent implements OnInit {
    */
   language: string;
 
-  isOpen: boolean = false;
+  isOpen = false;
 
   @HostListener('document:click', ['$event', '$event.target'])
   onClick(event: MouseEvent, targetElement: HTMLElement) {

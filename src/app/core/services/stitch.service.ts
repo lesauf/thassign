@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-const {
+import {
   AnonymousCredential,
   BSON,
   RemoteMongoClient,
   Stitch,
   UserPasswordAuthProviderClient,
   UserPasswordCredential,
-} = require('mongodb-stitch-browser-sdk');
-const {
+} from 'mongodb-stitch-browser-sdk';
+import {
   HttpMethod,
   HttpRequest,
   HttpServiceClient,
-} = require('mongodb-stitch-browser-services-http');
+} from 'mongodb-stitch-browser-services-http';
 
 @Injectable()
 export class StitchService {
@@ -66,7 +66,7 @@ export class StitchService {
     firstName: string;
     lastName: string;
   }): void {
-    this.stitchAppClient.auth.user.customData = data;
+    // this.stitchAppClient.auth.user.customData = data;
   }
 
   logout() {

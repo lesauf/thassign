@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormArray } from '@angular/forms';
 
-import { AssignmentDropdown } from './assignment-dropdown';
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
+import { AssignmentDropdown } from '@src/app/modules/assignments/assignment-dropdown';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 
 @Injectable()
 export class AssignmentControlService {
@@ -12,7 +12,7 @@ export class AssignmentControlService {
     const group: any = {};
 
     assignmentsByWeek.forEach((wAssignments, wIndex) => {
-      let weekArray = [];
+      const weekArray = [];
 
       wAssignments.forEach((assignment) => {
         // console.log(assignment);

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AssignmentService } from './assignment.service';
+import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
 
 describe('AssignmentService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

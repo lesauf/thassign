@@ -4,16 +4,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { AuthService } from '../auth/auth.service';
-import { CommonService } from '../../core/services/common.service';
-import { generateUsers } from 'src/app/core/mocks/users.mock';
-import { MessageService } from '../../core/services/message.service';
-import { PartService } from 'src/app/core/services/part.service';
-import { StitchService } from 'src/app/core/services/stitch.service';
-import { User } from 'src/app/core/models/user/user.model';
-import { Part } from 'src/app/core/models/part/part.model';
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
-import { RealmService } from 'src/app/core/services/realm.service';
+
+import { AuthService } from '@src/app/modules/auth/auth.service';
+import { CommonService } from '@src/app/core/services/common.service';
+import { generateUsers } from '@src/app/core/mocks/users.mock';
+import { MessageService } from '@src/app/core/services/message.service';
+import { PartService } from '@src/app/core/services/part.service';
+import { User } from '@src/app/core/models/user/user.model';
+import { Part } from '@src/app/core/models/part/part.model';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
+import { BackendService } from '@src/app/core/services/backend.service';
+import { RealmService } from '@src/app/core/services/realm.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -71,7 +72,7 @@ export class UserService extends CommonService<User> {
     private partService: PartService,
     private authService: AuthService,
     private translate: TranslateService,
-    protected backendService: RealmService
+    protected backendService: BackendService
   ) {
     super();
 

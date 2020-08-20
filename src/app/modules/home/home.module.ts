@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { HomeComponent } from './home.component';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { HomeComponent } from '@src/app/modules/home/home.component';
+import { SharedModule } from '@src/app/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -20,4 +20,4 @@ import { SharedModule } from 'src/app/shared/shared.module';
   ],
   declarations: [HomeComponent],
 })
-export class HomeComponentModule {}
+export class HomeModule {}

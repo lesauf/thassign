@@ -7,8 +7,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { CommonService } from '../../core/services/common.service';
 import { MessageService } from '../../core/services/message.service';
-import { StitchService } from 'src/app/core/services/stitch.service';
-// import { PartService } from 'src/app/core/services/part.service';
+import { StitchService } from '@src/app/core/services/stitch.service';
+// import { PartService } from '@src/app/core/services/part.service';
 // import * as mockUsers from '../../mocks/users.mock';
 // import { User } from '../../models/users.schema';
 // import { any } from 'server/src/modules/users/user.schema';

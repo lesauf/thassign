@@ -1,9 +1,9 @@
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 import { TranslateService } from '@ngx-translate/core';
 
-import { PartService } from './part.service';
-import { StitchService } from './stitch.service';
-import { partMocks } from '../mocks/parts.mock';
+import { PartService } from '@src/app/core/services/part.service';
+import { StitchService } from '@src/app/core/services/stitch.service';
+import { partMocks } from '@src/app/core/mocks/parts.mock';
 
 describe('PartService', () => {
   let PartServiceStitchSpectator: SpectatorService<PartService>;

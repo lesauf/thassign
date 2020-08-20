@@ -17,18 +17,18 @@ import {
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap, defaultIfEmpty } from 'rxjs/operators';
 
-import { ControlMessagesComponent } from '../../../../shared/components/control-messages/control-messages.component';
-import { UserEditProvider } from './user-edit.provider';
+import { ControlMessagesComponent } from '@src/app/shared/components/control-messages/control-messages.component';
+import { UserEditProvider } from '@src/app/modules/users/pages/user-edit/user-edit.provider';
 
 // import { any } from '../../../../../../server/src/modules/parts/part.model';
 // import { Part } from '../../../models/parts.schema';
 // import { UserModel } from '../../../../../server/src/modules/users/user.model';
-import { User } from 'src/app/core/models/user/user.model';
-import { ValidationService } from '../../../../core/services/validation.service';
-import { PartService } from 'src/app/core/services/part.service';
-import { UserService } from '../../user.service';
-import { MessageService } from '../../../../core/services/message.service';
-import { Part } from 'src/app/core/models/part/part.model';
+import { User } from '@src/app/core/models/user/user.model';
+import { ValidationService } from '@src/app/core/services/validation.service';
+import { PartService } from '@src/app/core/services/part.service';
+import { UserService } from '@src/app/modules/users/user.service';
+import { MessageService } from '@src/app/core/services/message.service';
+import { Part } from '@src/app/core/models/part/part.model';
 // import { translate } from './../../utils/common';
 
 @Component({
