@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "thassign-94fe2": {
+      "hosting": {
+        "thassign": [
+          "thassign-94fe2"
+        ]
+      }
+    }
+  }
+}

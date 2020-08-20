@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-// import { Page } from '@nativescript/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 // import { AuthService } from './modules/auth/auth.service';
 
@@ -23,12 +23,59 @@ export class AppComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription;
   public user: any;
 
+  cities: Observable<any[]>;
+
   constructor(
     // private authService: AuthService,
+    private firestore: AngularFirestore,
     private router: Router,
     private translate: TranslateService
-  ) // private page: Page
-  {}
+  ) {
+    // var citiesRef = firestore.collection('cities', (ref) =>
+    //   ref.where('capital', '==', true)
+    // );
+    // this.cities = citiesRef.valueChanges();
+    // citiesRef.doc('SF').set({
+    //   name: 'San Francisco',
+    //   state: 'CA',
+    //   country: 'USA',
+    //   capital: false,
+    //   population: 860000,
+    //   regions: ['west_coast', 'norcal'],
+    // });
+    // citiesRef.doc('LA').set({
+    //   name: 'Los Angeles',
+    //   state: 'CA',
+    //   country: 'USA',
+    //   capital: false,
+    //   population: 3900000,
+    //   regions: ['west_coast', 'socal'],
+    // });
+    // citiesRef.doc('DC').set({
+    //   name: 'Washington, D.C.',
+    //   state: null,
+    //   country: 'USA',
+    //   capital: true,
+    //   population: 680000,
+    //   regions: ['east_coast'],
+    // });
+    // citiesRef.doc('TOK').set({
+    //   name: 'Tokyo',
+    //   state: null,
+    //   country: 'Japan',
+    //   capital: true,
+    //   population: 9000000,
+    //   regions: ['kanto', 'honshu'],
+    // });
+    // citiesRef.doc('BJ').set({
+    //   name: 'Beijing',
+    //   state: null,
+    //   country: 'China',
+    //   capital: true,
+    //   population: 21500000,
+    //   regions: ['jingjinji', 'hebei'],
+    // });
+  }
 
   ngOnInit(): void {
     // init this.user on startup
