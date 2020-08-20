@@ -56,7 +56,7 @@ export class Assignment {
   // Joi.date().default(Date.now()),
   @IsDate()
   @IsOptional()
-  createdAt: Date = new Date();
+  createdAt: Date;
 
   // Joi.date(),
   @IsDate()
@@ -153,6 +153,17 @@ export class Assignment {
     }
     if (!this.updatedAt) {
       delete this.updatedAt;
+    }
+    if (!this.title) {
+      delete this.title;
+    }
+    if (!this.number) {
+      delete this.number;
+    }
+
+    // Remove also createdAt ?
+    if (this.createdAt) {
+      delete this.createdAt;
     }
   }
 }

@@ -440,7 +440,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
 
       toSave[i] = {};
       Object.assign(toSave[i], ass);
-      toSave[i].week = ass.week.toJSDate();
+      toSave[i].week = ass.week.toISO();
       toSave[i].part = ass.part._id;
       toSave[i].assignee = ass.assignee?._id;
       if (ass.assistant) {
@@ -451,8 +451,8 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     try {
       //  Save the assignments and fetch all of them from the DB
       const result = await this.callFunction('Assignments_insertMany', [
-        startDate.toISODate(),
-        endDate.toISODate(),
+        startDate.toISO(),
+        endDate.toISO(),
         toSave,
       ]);
 

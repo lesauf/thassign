@@ -43,7 +43,7 @@ export const generateOneUser = (parts: Part[], ownerId) => {
     parts: generateParts(parts), // Parts names
     assignments: [],
     disabled: false,
-    createdAt: new Date(),
+    // createdAt: new Date(),
     deleted: false,
     ownerId: ownerId,
   };

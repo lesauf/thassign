@@ -110,7 +110,7 @@ export class User {
   // Joi.date().default(Date.now()),
   @IsDate()
   @IsOptional()
-  createdAt: Date = new Date();
+  createdAt: Date;
 
   // Joi.date(),
   @IsDate()
