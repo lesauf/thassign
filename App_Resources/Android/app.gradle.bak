@@ -8,7 +8,7 @@
 android {  
   defaultConfig {  
     generatedDensities = []
-    applicationId = "org.lesauf.thassign" 
+    applicationId = "com.lesauf.thassign" 
     
     //override supported platforms
     // ndk {

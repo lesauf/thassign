@@ -2,5 +2,12 @@
   <!-- This will contain any angular routes you setup -->
 
   <!-- <page-router-outlet actionBarVisibility="never"></page-router-outlet> -->
+  <label text="Cities" textWrap="true"></label>
+  <StackLayout>
+    <label text="" textWrap="true" *ngFor="let city of cities | async">
+      {{ city.name }}
+    </label>
+  </StackLayout>
+
   <page-router-outlet></page-router-outlet>
 </GridLayout>

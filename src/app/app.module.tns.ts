@@ -20,6 +20,7 @@ import { AuthGuard } from '@src/app/modules/auth/auth.guard';
 import { AuthModule } from '@src/app/modules/auth/auth.module';
 import { AuthService } from '@src/app/modules/auth/auth.service';
 import { BackendService } from '@src/app/core/services/backend.service';
+import { FirebaseService } from '@src/app/core/services/firebase.service';
 import { CoreModule } from '@src/app/core/core.module';
 import { SharedModule } from '@src/app/shared/shared.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';

@@ -43,18 +43,20 @@
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^4.0.0",
     "class-validator": "^0.11.1",
+    "firebase": "^7.13.1",
     "luxon": "^1.24.1",
     "messageformat": "^2.3.0",
     "mongodb-stitch-browser-sdk": "^4.8.0",
     "mongodb-stitch-browser-services-http": "^4.8.0",
+    "nativescript-plugin-firebase": "^10.5.2",
     "nativescript-pro-ui": "^3.4.1",
     "ngx-translate-messageformat-compiler": "^4.6.0",
     "realm-web": "^0.8.1",
     "reflect-metadata": "~0.1.12",
     "rxjs": "^6.5.5",
+    "tns-core-modules": "^6.5.15",
     "tslib": "^2.0.0",
-    "zone.js": "~0.10.2",
-    "firebase": "^7.13.1"
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1000.6",
@@ -121,7 +123,7 @@
     }
   },
   "nativescript": {
-    "id": "org.lesauf.thassign",
+    "id": "com.lesauf.thassign",
     "tns-android": {
       "version": "6.5.3"
     }

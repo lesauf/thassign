@@ -4,6 +4,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription, Observable } from 'rxjs';
 
+import { BackendService } from '@src/app/core/services/backend.service';
+
 // import { AuthService } from './modules/auth/auth.service';
 
 // import { SharedModule } from './shared.module';
@@ -27,14 +29,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     // private authService: AuthService,
-    private firestore: AngularFirestore,
+    private backendService: BackendService,
     private router: Router,
     private translate: TranslateService
   ) {
-    // var citiesRef = firestore.collection('cities', (ref) =>
-    //   ref.where('capital', '==', true)
-    // );
-    // this.cities = citiesRef.valueChanges();
+    // this.cities = backendService.test();
     // citiesRef.doc('SF').set({
     //   name: 'San Francisco',
     //   state: 'CA',
@@ -90,6 +89,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // this.page.actionBarHidden = true;
 
+    this.backendService.init();
     this._initTranslationLanguage();
   }
 

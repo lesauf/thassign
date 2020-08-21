@@ -18,9 +18,9 @@ export const routes: Routes = [
     path: '',
     // component: ContentLayoutComponent,
     canActivate: [AuthGuard],
-    resolve: {
-      message: AppResolverService,
-    },
+    // resolve: {
+    //   message: AppResolverService,
+    // },
     children: [
       {
         path: '',
