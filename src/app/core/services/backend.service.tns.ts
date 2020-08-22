@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 
 // import { RealmService } from '@src/app/core/services/realm.service';
-// import { FirebaseService } from '@src/app/core/services/firebase.service';
+import { FirebaseService } from '@src/app/core/services/firebase.service';
 
 @Injectable()
-export class BackendService {
-  init() {}
+export class BackendService extends FirebaseService {
+  // init() {}
 
   /**
    * Some test queries to check the connexion
    */
-  test() {}
+  // test() {}
 
   async callFunction(functionName, parameters?: any[]) {
     try {

@@ -33,7 +33,34 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private translate: TranslateService
   ) {
-    // this.cities = backendService.test();
+    // this.backendService.init();
+  }
+
+  async ngOnInit() {
+    // init this.user on startup
+    // this.authService.me().subscribe(data => {
+    //   this.user = data.user;
+    // });
+
+    // update this.user after login/register/logout
+    // this.userSubscription = this.authService.$userSource.subscribe(user => {
+    //   this.user = user;
+    // });
+
+    // this.page.actionBarHidden = true;
+
+    await this.backendService.init();
+    this._initTranslationLanguage();
+
+    this.cities = this.backendService.test();
+
+    // this.backendService.test().subscribe((res) => {
+    //   console.log('hay', res);
+    // });
+    // this.cities.toPromise().then((res) => {
+    //   console.log('RES', res);
+    // });
+
     // citiesRef.doc('SF').set({
     //   name: 'San Francisco',
     //   state: 'CA',
@@ -74,23 +101,6 @@ export class AppComponent implements OnInit, OnDestroy {
     //   population: 21500000,
     //   regions: ['jingjinji', 'hebei'],
     // });
-  }
-
-  ngOnInit(): void {
-    // init this.user on startup
-    // this.authService.me().subscribe(data => {
-    //   this.user = data.user;
-    // });
-
-    // update this.user after login/register/logout
-    // this.userSubscription = this.authService.$userSource.subscribe(user => {
-    //   this.user = user;
-    // });
-
-    // this.page.actionBarHidden = true;
-
-    this.backendService.init();
-    this._initTranslationLanguage();
   }
 
   logout(): void {
