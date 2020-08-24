@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
     //   firstName: 'trtr',
     //   // lastName: 'hghgh',
     //   email: 'lesauf@gmailcom',
-    //   ownerId: this.authservice.getUser().id,
+    //   ownerId: this.authservice.getUser()._id,
     // };
     // const validation = userSchema.validate(newUser, { abortEarly: false });
     // this.user = validation.value as User;

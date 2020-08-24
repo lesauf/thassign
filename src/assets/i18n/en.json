@@ -63,9 +63,11 @@
   "elder": "Elder",
   "email": "Email",
   "error": {
+    "occurred": "An error occured",
     "email": {
       "string": {
-        "email": "This address is incomplete"
+        "email": "This address is incomplete",
+        "already-in-use": "An account already exist with this address. Did you forget your password ?"
       }
     },
     "firstName": {

@@ -52,7 +52,7 @@ export type ObjectId = {
 export class Part {
   @IsObject()
   @IsOptional()
-  _id: ObjectId;
+  _id: string;
 
   // @(jf.string().required())
   @IsString()

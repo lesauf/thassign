@@ -145,7 +145,7 @@ export class PartService extends CommonService<Part> {
 
 // getPartById(partId): Part {
 //   // const part = this.allParts.find(
-//   const part = this.getParts().find((p) => p._id.equals(partId));
+//   const part = this.getParts().find((p) => p._id === partId);
 
 //   return part;
 // }

@@ -4,9 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageService } from '@src/app/core/services/message.service';
 import { ToolbarHelpers } from '@src/app/shared/components/toolbar/toolbar.helpers';
 import { ToolbarNotificationComponent } from '@src/app/shared/components/toolbar-notification/toolbar-notification.component';
-import { AuthService } from '@src/app/modules/auth/auth.service';
 import { User } from '@src/app/core/models/user/user.model';
 import { TranslateService } from '@ngx-translate/core';
+import { BackendService } from '@src/app/core/services/backend.service';
 
 @Component({
   selector: 'ma-toolbar',
@@ -26,12 +26,13 @@ export class ToolbarComponent implements OnInit {
 
   constructor(
     private _matDialog: MatDialog,
-    private authService: AuthService,
+    private backendService: BackendService,
+
     public messageService: MessageService
   ) {}
 
   ngOnInit() {
-    this.currentUser = this.authService.getUser();
+    this.currentUser = this.backendService.getSignedInUser();
   }
 
   // Call the dialog

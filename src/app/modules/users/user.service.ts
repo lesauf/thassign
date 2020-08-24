@@ -4,7 +4,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-
 import { AuthService } from '@src/app/modules/auth/auth.service';
 import { CommonService } from '@src/app/core/services/common.service';
 import { generateUsers } from '@src/app/core/mocks/users.mock';
@@ -12,9 +11,9 @@ import { MessageService } from '@src/app/core/services/message.service';
 import { PartService } from '@src/app/core/services/part.service';
 import { User } from '@src/app/core/models/user/user.model';
 import { Part } from '@src/app/core/models/part/part.model';
+import { UserConverter } from '@src/app/core/models/user/user.converter';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { BackendService } from '@src/app/core/services/backend.service';
-import { RealmService } from '@src/app/core/services/realm.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -70,7 +69,6 @@ export class UserService extends CommonService<User> {
     private http: HttpClient,
     protected messageService: MessageService,
     private partService: PartService,
-    private authService: AuthService,
     private translate: TranslateService,
     protected backendService: BackendService
   ) {
@@ -79,6 +77,10 @@ export class UserService extends CommonService<User> {
     // this.users = this.store.asObservable();
 
     // this.fetchUsers();
+
+    // this.backendService.listenToCollection('users').subscribe((data) => {
+    //   this.updateStore(this.createUser(data, partService.allParts) as User[]);
+    // });
   }
 
   /**
@@ -126,7 +128,7 @@ export class UserService extends CommonService<User> {
     const parts = this.partService.getParts();
     const generatedUsers = generateUsers(
       parts,
-      this.authService.getUser().id,
+      this.backendService.getSignedInUser()._id,
       numberToGenerate
     );
 
@@ -166,7 +168,7 @@ export class UserService extends CommonService<User> {
       // We need to pass the ownerId as parameter because Stitch
       // does not support lookup on user context
       // const result = await this.callFunction('Users_find', [
-      //   { ownerId: this.authService.getUser().id },
+      //   { ownerId: this.backendService.getSignedInUser()._id },
       // ]);
 
       const allUsers = this.createUser(users, allParts) as User[];
@@ -191,15 +193,13 @@ export class UserService extends CommonService<User> {
         // Get user from store
         this.log(`fetched user id=${userId}`);
 
-        return this.getUsers().find(
-          (user) => user._id.toHexString() === userId
-        );
+        return this.getUsers().find((user) => user._id === userId);
       } else {
         // create an empty user with default values
         return new User({
           // firstName: '',
           // lastName: '',
-          ownerId: this.authService.getUser().id,
+          ownerId: this.backendService.getSignedInUser()._id,
           // genre: '',
           child: false,
           baptized: false,
@@ -286,8 +286,7 @@ export class UserService extends CommonService<User> {
     return users.filter(
       (user) =>
         (user.parts as Part[]).find(
-          (assignablePart) =>
-            assignablePart._id.toHexString() === part._id.toHexString()
+          (assignablePart) => assignablePart._id === part._id
         ) !== undefined
     );
     //   tap((h) => {
@@ -398,13 +397,20 @@ export class UserService extends CommonService<User> {
   //////// Save methods //////////
 
   /**
-   * @POST add a new user to the server
+   * Add a new user to the server
    */
-  async addUser(user: User, allParts: Part[]): Promise<any> {
+  async addUser(user: User, allParts?: Part[]): Promise<any> {
     try {
-      const users = await this.callFunction('Users_insertMany', [[user]]);
+      await this.backendService.upsertOneDoc(
+        'users',
+        new UserConverter(),
+        user,
+        user._id
+      );
 
-      this.updateStore(this.createUser(users, allParts) as User[]);
+      // const users = await this.callFunction('Users_insertMany', [[user]]);
+
+      // this.updateStore(this.createUser(users, allParts) as User[]);
 
       this.log(`added user`);
     } catch (error) {
@@ -449,7 +455,7 @@ export class UserService extends CommonService<User> {
       const deleteProps = {
         deleted: true,
         deletedAt: new Date(),
-        deletedBy: this.authService.getUser().id,
+        deletedBy: this.backendService.getSignedInUser()._id,
       };
 
       const users = await this.callFunction('Users_updateByIds', [

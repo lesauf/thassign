@@ -7,6 +7,7 @@ import { validate } from 'class-validator';
 import { BackendService } from '@src/app/core/services/backend.service';
 import { CommonService } from '@src/app/core/services/common.service';
 import { User } from '@src/app/core/models/user/user.model';
+import { UserService } from '@src/app/modules/users/user.service';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
 @Injectable()
@@ -14,7 +15,10 @@ export class AuthService extends CommonService<User> {
   // store the URL so we can redirect after logging in
   redirectUrl = '';
 
-  constructor(protected backendService: BackendService) {
+  constructor(
+    protected backendService: BackendService,
+    protected userService: UserService
+  ) {
     super();
   }
 
@@ -31,19 +35,19 @@ export class AuthService extends CommonService<User> {
   }
 
   async register(
-    firstname: string,
-    lastname: string,
     email: string,
     password: string,
-    repeatPassword: string
+    repeatPassword: string,
+    firstname?: string,
+    lastname?: string
   ): Promise<void> {
-    console.log('User: ', {
-      firstname,
-      lastname,
-      email,
-      password,
-      repeatPassword,
-    });
+    // console.log('User: ', {
+    //   email,
+    //   password,
+    //   repeatPassword,
+    //   firstname,
+    //   lastname,
+    // });
 
     // Create user then authenticate him at one
     try {
@@ -74,16 +78,17 @@ export class AuthService extends CommonService<User> {
         password
       );
       // Link the user data to stitch auth provider
-      user.userId = authedUser.id;
-      console.log('Created: ', authedUser);
+      // user.userId = authedUser.id;
+      // console.log('Created: ', authedUser);
 
       // Save custom user data
-      this.backendService.callFunction('Profiles_upsertCustomData', [user]);
+      // this.backendService.callFunction('Profiles_upsertCustomData', [user]);
+      await this.userService.addUser(this.backendService.getSignedInUser());
 
       // Set the user data immediately since he is authenticated
-      this.backendService.refreshCustomData();
+      // this.backendService.refreshCustomData();
 
-      console.log('Logged :', this.backendService.getUser());
+      console.log('Logged :', this.backendService.getSignedInUser());
       // user.hashedPassword = password;
       // return await this.backendService.authenticate(email, password);
     } catch (error) {
@@ -93,8 +98,8 @@ export class AuthService extends CommonService<User> {
 
   setUser(user) {}
 
-  getUser() {
-    return this.backendService.getUser();
+  getUser(): User {
+    return this.backendService.getSignedInUser();
   }
 
   me() {}

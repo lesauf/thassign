@@ -9,12 +9,10 @@
             fxLayoutAlign="start stretch"
             fxLayoutGap="1em"
             [formGroup]="userForm"
-            (ngSubmit)="login()"
+            (ngSubmit)="submit()"
           >
             <div *ngIf="formMessages.all" class="help is-danger">
-              <mat-form-field class="full-width">
-                <legend>{{ formMessages.all }}</legend>
-              </mat-form-field>
+              <legend>{{ formMessages.all | translate }}</legend>
             </div>
             <mat-form-field class="full-width">
               <input
@@ -28,7 +26,7 @@
               />
             </mat-form-field>
             <div *ngIf="formMessages.email" class="help is-danger">
-              {{ formMessages.email }}
+              {{ formMessages.email | translate }}
             </div>
             <mat-form-field class="full-width">
               <input
@@ -42,7 +40,7 @@
               />
             </mat-form-field>
             <div *ngIf="formMessages.password" class="help is-danger">
-              {{ formMessages.password }}
+              {{ formMessages.password | translate }}
             </div>
             <mat-form-field class="full-width" *ngIf="!isLoggingIn">
               <input
@@ -56,7 +54,7 @@
               />
             </mat-form-field>
             <div *ngIf="formMessages.repeatPassword" class="help is-danger">
-              {{ formMessages.repeatPassword }}
+              {{ formMessages.repeatPassword | translate }}
             </div>
             <app-loader *ngIf="isLoading"></app-loader>
 
@@ -76,6 +74,9 @@
                   | translate
                   | titlecase
               }}
+            </button>
+            <button mat-raised-button type="button" (click)="googleAuth()">
+              {{ "Google" | translate | titlecase }}
             </button>
           </form>
         </mat-card-content>

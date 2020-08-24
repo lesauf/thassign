@@ -11,16 +11,17 @@ import {
   IsDate,
   IsDateString,
 } from 'class-validator';
-import { Part, ObjectId } from '@src/app/core/models/part/part.model';
-import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { DateTime } from 'luxon';
+
+import { Part } from '@src/app/core/models/part/part.model';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 
 export class User {
   @IsObject()
   @IsOptional()
   // Joi.string().alphanum()
   // tslint:disable-next-line: variable-name
-  _id: ObjectId;
+  _id: string;
 
   // @(jf.string().required())
   @MinLength(1, { message: 'error.firstName.any.empty' })
@@ -97,7 +98,7 @@ export class User {
    */
   // Joi.array().allow(null),
   @IsArray()
-  parts: Part[] | ObjectId[];
+  parts: Part[] | string[];
 
   @IsArray()
   assignments: any[];
@@ -155,7 +156,7 @@ export class User {
         if (allAssignments && userProperties['_id']) {
           userProperties['assignments'] = allAssignments.filter(
             (ass: Assignment) => {
-              return ass.assignee._id.equals(userProperties['_id']);
+              return ass.assignee._id == userProperties['_id'];
             }
           );
         }

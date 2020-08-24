@@ -63,9 +63,11 @@
   "elder": "Ancien",
   "email": "Email",
   "error": {
+    "occurred": "Une erreur est survenue",
     "email": {
       "string": {
-        "email": "Cette adresse n'est pas complete"
+        "email": "Cette adresse n'est pas complete",
+        "already-in-use": "Un compte existe deja avec cette adresse. As-tu oublié ton mot de passe ?"
       }
     },
     "firstName": {

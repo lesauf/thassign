@@ -34,11 +34,11 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   checkLogin(url: string): boolean {
     if (this.authService.isLoggedIn()) {
-      if (!this.authService.getUser().customData.hasOwnProperty('_id')) {
-        // I noticed that Custom data are empty on page reload ...
-        // Refresh them manually
-        this.authService.refreshCustomData();
-      }
+      // if (!this.backendService.getSignedInUser().customData.hasOwnProperty('_id')) {
+      //   // I noticed that Custom data are empty on page reload ...
+      //   // Refresh them manually
+      //   this.authService.refreshCustomData();
+      // }
       return true;
     }
 

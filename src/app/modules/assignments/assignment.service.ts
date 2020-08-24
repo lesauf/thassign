@@ -115,12 +115,12 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   //       this.log(`fetched assignment id=${id}`);
 
   //       return this.getAssignments().find(
-  //         (assignment) => assignment._id.toHexString() === id
+  //         (assignment) => assignment._id === id
   //       );
   //     } else {
   //       // create an empty assignment with default values
   //       return new Assignment({
-  //         ownerId: this.authService.getUser().id,
+  //         ownerId: this.backendService.getSignedInUser()._id,
   //       });
   //     }
   //   } catch (error) {
@@ -146,20 +146,20 @@ export abstract class AssignmentService extends CommonService<Assignment> {
         if (obj.part.hasOwnProperty('id')) {
           // from DB
           delete obj._id; // Remove the _id, so in case it should be saved, mongoDb regenerate
-          obj.part = allParts.find((part) => part._id.equals(obj.part));
-          obj.assignee = allUsers.find((user) => user._id.equals(obj.assignee));
+          obj.part = allParts.find((part) => part._id === obj.part);
+          obj.assignee = allUsers.find((user) => user._id === obj.assignee);
           obj.assistant = obj.assistant
-            ? allUsers.find((user) => user._id.equals(obj.assistant))
+            ? allUsers.find((user) => user._id === obj.assistant)
             : null;
         } else if (obj.part.hasOwnProperty('_id')) {
           // from form, with selected part
           obj.position = index;
-          obj.part = allParts.find((part) => part._id.equals(obj.part._id));
+          obj.part = allParts.find((part) => part._id === obj.part._id);
           obj.assignee = obj.assignee
-            ? allUsers.find((user) => user._id.equals(obj.assignee._id))
+            ? allUsers.find((user) => user._id === obj.assignee._id)
             : null;
           obj.assistant = obj.assistant
-            ? allUsers.find((user) => user._id.equals(obj.assistant._id))
+            ? allUsers.find((user) => user._id === obj.assistant._id)
             : null;
         }
 
@@ -246,7 +246,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     if (assignments !== null) {
       pAssignments = assignments.filter(
         (assignment) =>
-          listOfParts.find((part) => part._id.equals(assignment.part._id)) !==
+          listOfParts.find((part) => part._id === assignment.part._id) !==
             undefined && month.get('month') === assignment.week.get('month')
       );
 

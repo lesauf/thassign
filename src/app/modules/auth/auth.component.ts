@@ -68,7 +68,6 @@ export class AuthComponent implements OnInit {
   toggleDisplay() {
     this.isLoggingIn = !this.isLoggingIn;
     this.buildForm();
-    console.log(this.userForm);
   }
 
   buildForm() {
@@ -90,7 +89,7 @@ export class AuthComponent implements OnInit {
         ],
       ],
       ...(!this.isLoggingIn && {
-        repeatPassword: ['', [this.passwordsMatchValidator]],
+        repeatPassword: ['a123456', [this.passwordsMatchValidator]],
       }),
     });
 
@@ -135,38 +134,55 @@ export class AuthComponent implements OnInit {
     }
   }
 
-  submit() {
-    if (this.isLoggingIn) {
-      this.login();
-    } else {
-      this.signUp();
+  async submit() {
+    try {
+      if (this.isLoggingIn) {
+        await this.login();
+      } else {
+        await this.signUp();
+      }
+    } catch (error) {
+      this.isLoading = false;
+
+      console.log(error.message, error);
+
+      if (error.code === 'auth/email-already-in-use') {
+        this.formMessages.email = 'error.email.string.already-in-use';
+      } else {
+        this.formMessages.all = 'error.occurred';
+      }
     }
   }
 
-  login(): void {
-    this.isLoading = true;
+  async login(): Promise<void> {
+    try {
+      this.isLoading = true;
 
-    setTimeout(() => {
-      this.isLoading = false;
-      alert('Login completed');
-      this.router.navigate([this.authService.redirectUrl]);
-    }, 2000);
+      setTimeout(() => {
+        this.isLoading = false;
+        alert('Login completed');
+        this.router.navigate([this.authService.redirectUrl]);
+      }, 2000);
 
-    // this.authService
-    //   .login(this.userForm.value.email, this.userForm.value.password)
-    //   .then((authedUser) => {
-    //     console.log(`successfully logged in`);
-    //     alert(`successfully logged in`);
-    //     this.isLoading = false;
+      // this.authService
+      //   .login(this.userForm.value.email, this.userForm.value.password)
+      //   .then((authedUser) => {
+      //     console.log(`successfully logged in`);
+      //     alert(`successfully logged in`);
+      //     this.isLoading = false;
 
-    //     this.router.navigate([this.authService.redirectUrl]);
-    //   })
-    //   .catch((error) => {
-    //     this.formMessages.all = error.message;
-    //   });
+      //     this.router.navigate([this.authService.redirectUrl]);
+      //   })
+      //   .catch((error) => {
+      //     this.formMessages.all = error.message;
+      //   });
+    } catch (error) {
+      throw error;
+    }
   }
 
-  signUp() {
+  async signUp() {
+    // try {
     if (!this.userForm.valid) {
       return;
     }
@@ -175,16 +191,23 @@ export class AuthComponent implements OnInit {
 
     const { email, password, repeatPassword } = this.userForm.getRawValue();
 
-    setTimeout(() => {
-      this.isLoading = false;
-      alert('Signup completed');
-    }, 2000);
-    // this.authService
-    //   .register(email, password, repeatPassword)
-    //   .then((authedUser) => {
-    //     this.isLoading = false;
-    //     this.router.navigate(['']);
-    //   });
+    const res = await this.authService.register(
+      email,
+      password,
+      repeatPassword
+    );
+    console.log(res);
+
+    this.isLoading = false;
+
+    // this.router.navigate(['']);
+    // } catch (error) {
+    //   throw error;
+    // }
+  }
+
+  googleAuth() {
+    alert('Logging in with Google ...');
   }
 
   logout() {

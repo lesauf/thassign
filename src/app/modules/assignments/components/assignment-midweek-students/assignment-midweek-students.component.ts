@@ -34,6 +34,7 @@ import { ValidationService } from '@src/app/core/services/validation.service';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { Part } from '@src/app/core/models/part/part.model';
 import { AssignmentControlService } from '@src/app/modules/assignments/assignment-control.service';
+import { BackendService } from '@src/app/core/services/backend.service';
 
 // export const DATE_FORMATS = {
 //   parse: {
@@ -99,7 +100,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   constructor(
     private acs: AssignmentControlService,
     protected assignmentService: AssignmentService,
-    protected authService: AuthService,
+    protected backendService: BackendService,
     protected partService: PartService,
     protected userService: UserService,
     protected messageService: MessageService,
@@ -211,7 +212,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
         new Assignment({
           week: week.start,
           position: this.assignmentsByWeek[wIndex].length,
-          ownerId: this.authService.getUser().id,
+          ownerId: this.backendService.getSignedInUser()._id,
           // part: new Part({}),
           // assignee: {},
           // assistant: {},

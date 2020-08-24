@@ -33,13 +33,13 @@ export class BackendService extends FirebaseService {
 
   refreshCustomData() {}
 
-  createUserAccount(email: string, password: string) {
-    return { id: null };
-  }
+  // createUserAccount(email: string, password: string) {
+  //   return { id: null };
+  // }
 
-  logout() {}
+  // logout() {}
 
-  getUser() {
-    return { id: null, customData: {} };
-  }
+  // getUser() {
+  //   return { id: null, customData: {} };
+  // }
 }

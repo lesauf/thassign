@@ -248,8 +248,7 @@ export class UserEditComponent implements OnInit {
       if (selectedParts !== null) {
         // search
         selectedPartIndex = selectedParts.findIndex(
-          (selectedPart, index, sParts) =>
-            selectedPart._id.toHexString() === part._id.toHexString()
+          (selectedPart, index, sParts) => selectedPart._id === part._id
         );
       } else {
         selectedParts = [];
@@ -285,7 +284,7 @@ export class UserEditComponent implements OnInit {
         // partValue.find((selectedPart) => selectedPart.name === part.name) !==
         // undefined
         partValue.find((selectedPart) => {
-          return selectedPart._id.toHexString() === part._id.toHexString();
+          return selectedPart._id === part._id;
         }) !== undefined
       );
     }
