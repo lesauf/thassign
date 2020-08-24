@@ -25,6 +25,7 @@ export class AuthComponent implements OnInit {
     all: '',
     email: '',
     password: '',
+    repeatPassword: '',
   };
   validationMessages = {
     email: {
@@ -36,6 +37,13 @@ export class AuthComponent implements OnInit {
       pattern: 'The password must contain numbers and letters',
       minlength: 'Please enter more than 6 characters',
       maxlength: 'Please enter less than 25 characters',
+    },
+    repeatPassword: {
+      required: 'please retype your password',
+      pattern: 'The password must contain numbers and letters',
+      minlength: 'Please enter more than 6 characters',
+      maxlength: 'Please enter less than 25 characters',
+      passwordMatch: 'Password mismatch',
     },
   };
 
@@ -59,6 +67,8 @@ export class AuthComponent implements OnInit {
 
   toggleDisplay() {
     this.isLoggingIn = !this.isLoggingIn;
+    this.buildForm();
+    console.log(this.userForm);
   }
 
   buildForm() {
@@ -79,11 +89,13 @@ export class AuthComponent implements OnInit {
           Validators.maxLength(25),
         ],
       ],
-      repeatPassword: ['', [Validators.required, this.passwordsMatchValidator]],
+      ...(!this.isLoggingIn && {
+        repeatPassword: ['', [this.passwordsMatchValidator]],
+      }),
     });
 
     this.userForm.valueChanges.subscribe((data) => this.onValueChanged(data));
-    this.onValueChanged();
+    // this.onValueChanged();
   }
 
   passwordsMatchValidator(control: FormControl): ValidationErrors {

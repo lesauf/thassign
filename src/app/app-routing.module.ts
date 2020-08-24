@@ -9,6 +9,12 @@ import { AppResolverService } from '@src/app/app-resolver.service';
 
 const routes: Routes = [
   {
+    path: 'auth',
+    // component: AuthLayoutComponent,
+    loadChildren: () =>
+      import('@src/app/modules/auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
     path: '',
     component: ContentLayoutComponent,
     canActivate: [AuthGuard],
@@ -51,12 +57,7 @@ const routes: Routes = [
   //   loadChildren: () =>
   //     import('./modules/admin/admin.module').then((m) => m.AdminModule),
   // },
-  {
-    path: 'auth',
-    component: AuthLayoutComponent,
-    loadChildren: () =>
-      import('@src/app/modules/auth/auth.module').then((m) => m.AuthModule),
-  },
+
   // { path: 'test', component: TestComponent },
   // { path: 'auth', loadChildren: './modules/auth/auth.module#AuthModule' },
   // { path: 'ma', loadChildren: './modules/ma/ma.module#MaModule' },

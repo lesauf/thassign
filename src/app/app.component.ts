@@ -52,7 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
     await this.backendService.init();
     this._initTranslationLanguage();
 
-    this.cities = this.backendService.test();
+    // this.cities = this.backendService.test();
 
     // this.backendService.test().subscribe((res) => {
     //   console.log('hay', res);

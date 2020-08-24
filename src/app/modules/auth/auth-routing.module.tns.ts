@@ -28,8 +28,4 @@ const routes: Routes = [
 })
 export class AuthRoutingModule {}
 
-export const navigatableAuthComponents = [
-  AuthComponent,
-  LogoutComponent,
-  RegisterComponent,
-];
+export const navigatableAuthComponents = [AuthComponent, LogoutComponent];
