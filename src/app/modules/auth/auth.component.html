@@ -1,86 +1,122 @@
 <div fxLayout="column" fxFlexFill fxLayoutAlign="center center" id="auth">
-  <div fxLayout="column">
-    <div class="mat-elevation-z4">
-      <mat-card>
-        <mat-card-title>User login</mat-card-title>
-        <mat-card-content>
-          <form
-            fxLayout="column"
-            fxLayoutAlign="start stretch"
-            fxLayoutGap="1em"
-            [formGroup]="userForm"
-            (ngSubmit)="submit('emailPassword')"
-          >
-            <div *ngIf="formMessages.all" class="help is-danger">
-              <legend>{{ formMessages.all | translate }}</legend>
-            </div>
-            <mat-form-field class="full-width">
-              <input
-                type="email"
-                id="email"
-                class="input"
-                placeholder="Please enter your email"
-                formControlName="email"
-                required
-                matInput
-              />
-            </mat-form-field>
-            <div *ngIf="formMessages.email" class="help is-danger">
-              {{ formMessages.email | translate }}
-            </div>
-            <mat-form-field class="full-width">
-              <input
-                type="password"
-                id="password"
-                class="input"
-                placeholder="Please enter your password"
-                formControlName="password"
-                required
-                matInput
-              />
-            </mat-form-field>
-            <div *ngIf="formMessages.password" class="help is-danger">
-              {{ formMessages.password | translate }}
-            </div>
-            <mat-form-field class="full-width" *ngIf="!isLoggingIn">
-              <input
-                type="password"
-                id="repeatPassword"
-                class="input"
-                placeholder="Repeat password"
-                formControlName="repeatPassword"
-                required
-                matInput
-              />
-            </mat-form-field>
-            <div *ngIf="formMessages.repeatPassword" class="help is-danger">
-              {{ formMessages.repeatPassword | translate }}
-            </div>
-            <app-loader *ngIf="isLoading"></app-loader>
+  <div fxLayout="column" class="mat-elevation-z4 login-block">
+    <mat-card>
+      <mat-card-title><h1>Thassign</h1></mat-card-title>
+      <mat-card-content>
+        <h2>{{ "log-in-to-your-account" | translate }}</h2>
 
+        <form
+          fxLayout="column"
+          fxLayoutAlign="start stretch"
+          fxLayoutGap="1em"
+          [formGroup]="userForm"
+          (ngSubmit)="submit('emailPassword')"
+        >
+          <div *ngIf="formMessages.all" class="help is-danger">
+            <legend>{{ formMessages.all | translate }}</legend>
+          </div>
+          <mat-form-field
+            class="full-width"
+            attr.aria-label="{{ 'email-required' | translate }}"
+          >
+            <input
+              type="email"
+              id="email"
+              class="input"
+              placeholder="{{ 'email-required' | translate }}"
+              formControlName="email"
+              required
+              autofocus
+              matInput
+            />
+          </mat-form-field>
+          <div *ngIf="formMessages.email" class="help is-danger">
+            {{ formMessages.email | translate }}
+          </div>
+          <mat-form-field
+            class="full-width"
+            attr.aria-label="{{ 'password-required' | translate }}"
+          >
+            <input
+              type="password"
+              id="password"
+              class="input"
+              placeholder="{{ 'password-required' | translate }}"
+              formControlName="password"
+              required
+              matInput
+            />
+          </mat-form-field>
+          <div *ngIf="formMessages.password" class="help is-danger">
+            {{ formMessages.password | translate }}
+          </div>
+          <mat-form-field
+            class="full-width"
+            *ngIf="!isLoggingIn"
+            attr.aria-label="{{ 'password2-required' | translate }}"
+          >
+            <input
+              type="password"
+              id="repeatPassword"
+              class="input"
+              placeholder="{{ 'password2-required' | translate }}"
+              formControlName="repeatPassword"
+              required
+              matInput
+            />
+          </mat-form-field>
+          <div *ngIf="formMessages.repeatPassword" class="help is-danger">
+            {{ formMessages.repeatPassword | translate }}
+          </div>
+          <app-loader *ngIf="isLoading"></app-loader>
+          <div fxLayout="row-reverse" fxLayoutAlign="space-between center">
+            <!-- Sign in button -->
             <button
               mat-raised-button
+              fxAlign="start"
               color="primary"
               type="submit"
               [disabled]="!userForm.valid"
+              attr.aria-label="{{
+                (isLoggingIn ? 'sign-in' : 'sign-up') | translate
+              }}"
             >
-              {{
-                (isLoggingIn ? "sign-in" : "sign-up") | translate | titlecase
-              }}
+              {{ (isLoggingIn ? "sign-in" : "sign-up") | translate }}
             </button>
-            <button mat-raised-button type="button" (click)="toggleDisplay()">
-              {{
-                (isLoggingIn ? "sign-up" : "back-to-login")
-                  | translate
-                  | titlecase
-              }}
+
+            <!-- Sign up button -->
+            <button
+              mat-raised-button
+              type="button"
+              (click)="toggleDisplay()"
+              attr.aria-label="{{
+                (isLoggingIn ? 'sign-up' : 'sign-in') | translate
+              }}"
+            >
+              {{ (isLoggingIn ? "sign-up" : "sign-in") | translate }}
             </button>
-            <button mat-raised-button type="button" (click)="submit('google')">
-              {{ "Google" | translate | titlecase }}
+          </div>
+          <!-- Social login button -->
+          <div fxLayout="row" fxLayoutAlign="center stretch">
+            <button
+              mat-raised-button
+              type="button"
+              (click)="submit('google')"
+              attr.aria-label="{{ 'google-sign-in' | translate }}"
+            >
+              <mat-icon
+                svgIcon="google-logo"
+                aria-hidden="false"
+                aria-label="Google logo"
+                matPrefix
+              ></mat-icon>
+              &nbsp;
+              <!-- <img src="/assets/icon/google-logo.svg" /> -->
+              {{ "google-sign-in" | translate }}
             </button>
-          </form>
-        </mat-card-content>
-      </mat-card>
-    </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>

@@ -42,10 +42,12 @@ $prefix: "sigin";
   background-size: cover;
 }
 
-#auth mat-card {
-  width: 300px;
+.login-block {
+  width: 90%;
+  max-width: 300px;
 }
 
 #auth mat-card-title {
   text-align: center;
+  margin: 0 auto 1em;
 }

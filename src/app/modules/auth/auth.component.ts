@@ -6,6 +6,9 @@ import {
   FormControl,
   ValidationErrors,
 } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material/icon';
+
 import { Router } from '@angular/router';
 
 import { AuthService } from '@src/app/modules/auth/auth.service';
@@ -54,8 +57,15 @@ export class AuthComponent implements OnInit {
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private loginHelper: AuthHelper
-  ) {}
+    private loginHelper: AuthHelper,
+    iconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer
+  ) {
+    iconRegistry.addSvgIcon(
+      'google-logo',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icon/google-logo.svg')
+    );
+  }
 
   // email: string;
   // password: string;

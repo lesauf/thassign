@@ -62,6 +62,7 @@
   "edit-user-infos": "informations d'un utilisateur",
   "elder": "Ancien",
   "email": "Email",
+  "email-required": "Entre ton adresse e-mail",
   "error": {
     "occurred": "Une erreur est survenue",
     "email": {
@@ -93,11 +94,13 @@
   "form-error": "SVP corriger d'abord les erreurs dans le formulaire",
   "generate": "Generer",
   "go": "Rechercher",
+  "google-sign-in": "Se connecter avec Google",
   "home": "Accueil",
   "language": "langue",
   "last": "dernier",
   "last-name": "Nom",
   "login": "Nom d'utilisateur",
+  "log-in-to-your-account": "Connecte-toi",
   "ma": {
     "bible-reading": "Lecture de la Bible",
     "bible-study": "Etude biblique",
@@ -125,6 +128,8 @@
   "not-disabled": "Non désactivé",
   "ok": "Ok",
   "parts": "Attributions",
+  "password-required": "Entre ton mot de passe",
+  "password2-required": "Entre ton mot de passe encore",
   "phone": "Téléphone",
   "pluralization": {
     "people": "{gender, select, male{Son nom est} female{Son nom, est} other{Leurs noms sont}} {name}",
@@ -144,6 +149,7 @@
   "search-users": "Rechercher un utilisateur",
   "select-all": "sélectionner tout",
   "sign-in": "Se connecter",
+  "sign-out": "Se déconnecter",
   "sign-up": "S'inscrire",
   "sort-by": "trier par",
   "sort-order": "ordre de tri",

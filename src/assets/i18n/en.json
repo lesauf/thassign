@@ -62,6 +62,7 @@
   "edit-user-infos": "user informations",
   "elder": "Elder",
   "email": "Email",
+  "email-required": "Please enter your email",
   "error": {
     "occurred": "An error occured",
     "email": {
@@ -93,11 +94,13 @@
   "form-error": "Please correct the errors in the form first",
   "generate": "Generate",
   "go": "Go",
+  "google-sign-in": "Sign in with Google",
   "home": "Home",
   "language": "language",
   "last": "last",
   "last-name": "Last name",
   "login": "Login",
+  "log-in-to-your-account": "Log in to your account",
   "ma": {
     "bible-reading": "Bible reading",
     "bible-study": "Bible study",
@@ -126,6 +129,8 @@
   "not-disabled": "Not disabled",
   "ok": "Ok",
   "parts": "Parts",
+  "password-required": "Please enter your password",
+  "password2-required": "Please enter your password again",
   "phone": "Phone",
   "pluralization": {
     "people": "{gender, select, male{His name is} female{Her name is} other{Their names are }} {name}",
@@ -145,7 +150,8 @@
   "search-users": "Search a user",
   "select-all": "select all",
   "sign-in": "Sign in",
-  "sign-up": "Sign up",
+  "sign-out": "Sign out",
+  "sign-up": "Create an account",
   "sort-by": "sort by",
   "sort-order": "sort order",
   "sort-users-by-any-assignment": "Sort Users by Any Assignment",
