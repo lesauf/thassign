@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-// import { RealmService } from '@src/app/core/services/realm.service';
 import { FirebaseService } from '@src/app/core/services/firebase.service';
 
 @Injectable()
@@ -20,23 +19,23 @@ export class BackendService extends FirebaseService {
     }
   }
 
-  isLoggedIn(): boolean {
-    return false;
-  }
+  // isLoggedIn(): boolean {
+  //   return false;
+  // }
 
-  async authenticate(username, password) {
-    return { id: null };
-  }
+  // async authenticate(username, password) {
+  //   return { id: null };
+  // }
 
   refreshCustomData() {}
 
-  createUserAccount(email: string, password: string) {
-    return { id: null };
-  }
+  // createUserAccount(email: string, password: string) {
+  //   return { id: null };
+  // }
 
-  logout() {}
+  // logout() {}
 
-  getUser() {
-    return { id: null, customData: {} };
-  }
+  // getUser() {
+  //   return { id: null, customData: {} };
+  // }
 }

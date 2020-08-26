@@ -4,7 +4,6 @@ import { NativeScriptRouterModule } from '@nativescript/angular';
 
 import { AuthComponent } from '@src/app/modules/auth/auth.component';
 import { LogoutComponent } from '@src/app/modules/auth/logout/logout.component';
-import { RegisterComponent } from '@src/app/modules/auth/register/register.component';
 
 const routes: Routes = [
   {

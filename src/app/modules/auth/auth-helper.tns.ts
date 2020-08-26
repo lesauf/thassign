@@ -13,4 +13,6 @@ export class AuthHelper {
   public hideActionBar() {
     this.page.actionBarHidden = true;
   }
+
+  configureMatIcon() {}
 }

@@ -6,8 +6,6 @@ import {
   FormControl,
   ValidationErrors,
 } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
-import { MatIconRegistry } from '@angular/material/icon';
 
 import { Router } from '@angular/router';
 
@@ -57,14 +55,9 @@ export class AuthComponent implements OnInit {
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private loginHelper: AuthHelper,
-    iconRegistry: MatIconRegistry,
-    sanitizer: DomSanitizer
+    private authHelper: AuthHelper
   ) {
-    iconRegistry.addSvgIcon(
-      'google-logo',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/icon/google-logo.svg')
-    );
+    authHelper.configureMatIcon();
   }
 
   // email: string;
@@ -72,7 +65,7 @@ export class AuthComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
-    // this.loginHelper.hideActionBar();
+    // this.authHelper.hideActionBar();
   }
 
   toggleDisplay() {

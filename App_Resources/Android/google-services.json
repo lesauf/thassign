@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "975280216341-15jrgu4ktlgs2lcscceeebd459ann1to.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lesauf.thassign",
+            "certificate_hash": "f2b9b64c848b3ac12f3396412b34a3279608fd23"
+          }
+        },
+        {
           "client_id": "975280216341-m4n4j0ft7s8q8g4t1r8gbruqnc7leiso.apps.googleusercontent.com",
           "client_type": 3
         }

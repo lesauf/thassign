@@ -1,13 +1,13 @@
 @import "~@nativescript/theme/scss/variables";
 
-FlexboxLayout {
+FlexboxLayout#auth {
   justify-content: center;
   align-items: center;
   background-size: cover;
   background-image: url("~/assets/login11.jpg");
 }
 
-GridLayout {
+FlexboxLayout#loginForm {
   width: 300;
   background-color: light(background);
 

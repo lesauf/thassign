@@ -7,14 +7,22 @@ import { first } from 'rxjs/operators';
 // import { userSchema } from '@src/app/core/models/user/user.schema';
 import { User } from '@src/app/core/models/user/user.model';
 import { validate } from 'class-validator';
+import { BackendService } from '@src/app/core/services/backend.service.tns';
+import { UserService } from '@src/app/modules/users/user.service';
+import { CommonService } from '@src/app/core/services/common.service';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
 @Injectable()
-export class AuthService {
+export class AuthService extends CommonService<User> {
   // store the URL so we can redirect after logging in
   redirectUrl = '';
 
-  constructor() {}
+  constructor(
+    protected backendService: BackendService,
+    protected userService: UserService
+  ) {
+    super();
+  }
 
   isLoggedIn(): boolean {
     return false;

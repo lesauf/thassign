@@ -122,6 +122,7 @@ export class FirebaseService {
   getCollectionWithConverter(collName, converter): CollectionReference {
     return firebase.firestore().collection(collName).withConverter(converter);
   }
+
   /**
    * Return an observable on a collection
    * @param collName
