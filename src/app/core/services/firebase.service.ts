@@ -19,9 +19,11 @@ export class FirebaseService {
       if (user) {
         this.user = new User({
           _id: user.uid,
+          firstName: user.displayName,
           email: user.email,
           ownerId: user.uid,
         });
+        // console.log('Auth Changed', this.user);
       } else {
         this.user = null;
       }
@@ -49,7 +51,30 @@ export class FirebaseService {
     }
   }
 
-  async login(email: string, password: string) {}
+  async authenticate(provider: any, email?: string, password?: string) {
+    try {
+      if (provider === 'emailPassword') {
+        return await this.fireAuth.signInWithEmailAndPassword(email, password);
+      }
+
+      if (provider === 'google') {
+        return await this.fireAuth.signInWithPopup(
+          new firebase.auth.GoogleAuthProvider()
+        );
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   *
+   */
+  async isLoggedIn(): Promise<boolean> {
+    var user = await this.fireAuth.currentUser;
+
+    return user != null;
+  }
 
   logout() {
     return this.fireAuth.signOut();

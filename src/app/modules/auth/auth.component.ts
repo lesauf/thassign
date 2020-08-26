@@ -134,22 +134,33 @@ export class AuthComponent implements OnInit {
     }
   }
 
-  async submit() {
+  async submit(provider) {
     try {
-      if (this.isLoggingIn) {
-        await this.login();
-      } else {
-        await this.signUp();
+      switch (provider) {
+        case 'emailPassword':
+          if (this.isLoggingIn) {
+            await this.login();
+          } else {
+            await this.signUp();
+          }
+          break;
+        case 'google':
+          await this.googleAuth();
+          break;
       }
+
+      this.router.navigate([this.authService.redirectUrl]);
     } catch (error) {
       this.isLoading = false;
 
-      console.log(error.message, error);
-
       if (error.code === 'auth/email-already-in-use') {
         this.formMessages.email = 'error.email.string.already-in-use';
+      } else if (error.code === 'auth/user-not-found') {
+        this.formMessages.all = 'error.email.string.no-record';
       } else {
         this.formMessages.all = 'error.occurred';
+
+        console.log(error.message, error);
       }
     }
   }
@@ -158,25 +169,16 @@ export class AuthComponent implements OnInit {
     try {
       this.isLoading = true;
 
-      setTimeout(() => {
-        this.isLoading = false;
-        alert('Login completed');
-        this.router.navigate([this.authService.redirectUrl]);
-      }, 2000);
+      await this.authService.emailLogin(
+        this.userForm.value.email,
+        this.userForm.value.password
+      );
 
-      // this.authService
-      //   .login(this.userForm.value.email, this.userForm.value.password)
-      //   .then((authedUser) => {
-      //     console.log(`successfully logged in`);
-      //     alert(`successfully logged in`);
-      //     this.isLoading = false;
+      console.log(`successfully logged in`);
 
-      //     this.router.navigate([this.authService.redirectUrl]);
-      //   })
-      //   .catch((error) => {
-      //     this.formMessages.all = error.message;
-      //   });
+      this.isLoading = false;
     } catch (error) {
+      this.formMessages.all = error.message;
       throw error;
     }
   }
@@ -196,7 +198,6 @@ export class AuthComponent implements OnInit {
       password,
       repeatPassword
     );
-    console.log(res);
 
     this.isLoading = false;
 
@@ -206,8 +207,12 @@ export class AuthComponent implements OnInit {
     // }
   }
 
-  googleAuth() {
-    alert('Logging in with Google ...');
+  async googleAuth() {
+    try {
+      await this.authService.googleLogin();
+    } catch (error) {
+      throw error;
+    }
   }
 
   logout() {

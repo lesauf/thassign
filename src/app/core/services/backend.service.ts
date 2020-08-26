@@ -23,13 +23,13 @@ export class BackendService extends FirebaseService {
     }
   }
 
-  isLoggedIn(): boolean {
-    return false;
-  }
+  // isLoggedIn(): boolean {
+  //   return false;
+  // }
 
-  async authenticate(username, password) {
-    return { id: null };
-  }
+  // async authenticate(username, password) {
+  //   return { id: null };
+  // }
 
   refreshCustomData() {}
 

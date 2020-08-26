@@ -421,14 +421,21 @@ export class UserService extends CommonService<User> {
   /**
    * @PUT: update the user on the server
    */
-  async updateUser(userData: User, allParts: Part[]): Promise<void> {
+  async updateUser(user: User, allParts?: Part[]): Promise<void> {
     try {
-      const users = await this.callFunction('Users_updateByIds', [
-        [userData._id],
-        userData,
-      ]);
-
-      this.updateStore(this.createUser(users, allParts) as User[]);
+      // const users = await this.callFunction('Users_updateByIds', [
+      //   [userData._id],
+      //   userData,
+      // ]);
+      // console.log(user);
+      // this.updateStore(this.createUser(users, allParts) as User[]);
+      await this.backendService.upsertOneDoc(
+        'users',
+        new UserConverter(),
+        user,
+        user._id,
+        true
+      );
 
       this.log(`updated user`);
     } catch (error) {

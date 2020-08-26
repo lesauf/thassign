@@ -21,16 +21,20 @@ export class LogoutComponent implements OnInit {
     this.logout();
   }
 
-  logout() {
-    if (this.authService.isLoggedIn()) {
-      const authedUser = this.backendService.getSignedInUser();
+  async logout() {
+    try {
+      const userState = await this.authService.isLoggedIn();
 
-      this.authService.logout();
-      console.log(`successfully logged out`);
+      if (userState) {
+        // const authedUser = this.backendService.getSignedInUser();
 
-      const message = 'Logged out';
+        this.authService.logout();
+        console.log(`successfully logged out`);
+      }
+
+      this.router.navigate(['/auth/login']);
+    } catch (error) {
+      throw error;
     }
-
-    this.router.navigate(['/auth/login']);
   }
 }

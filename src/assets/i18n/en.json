@@ -66,8 +66,9 @@
     "occurred": "An error occured",
     "email": {
       "string": {
+        "already-in-use": "An account already exist with this address. Did you forget your password ?",
         "email": "This address is incomplete",
-        "already-in-use": "An account already exist with this address. Did you forget your password ?"
+        "no-record": "There is no user record. Check your address or sign up"
       }
     },
     "firstName": {

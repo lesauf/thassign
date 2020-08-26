@@ -22,12 +22,23 @@ export class AuthService extends CommonService<User> {
     super();
   }
 
-  isLoggedIn(): boolean {
-    return this.backendService.isLoggedIn();
+  async isLoggedIn(): Promise<boolean> {
+    return await this.backendService.isLoggedIn();
   }
 
-  login(username: string, password: string): Promise<any> {
-    return this.backendService.authenticate(username, password);
+  emailLogin(username: string, password: string): Promise<any> {
+    return this.backendService.authenticate(
+      'emailPassword',
+      username,
+      password
+    );
+  }
+
+  async googleLogin(): Promise<void> {
+    await this.backendService.authenticate('google');
+
+    // Store the user info on my side
+    await this.userService.updateUser(this.backendService.getSignedInUser());
   }
 
   refreshCustomData() {
@@ -77,27 +88,28 @@ export class AuthService extends CommonService<User> {
         email,
         password
       );
-      // Link the user data to stitch auth provider
-      // user.userId = authedUser.id;
-      // console.log('Created: ', authedUser);
 
       // Save custom user data
-      // this.backendService.callFunction('Profiles_upsertCustomData', [user]);
       await this.userService.addUser(this.backendService.getSignedInUser());
 
-      // Set the user data immediately since he is authenticated
-      // this.backendService.refreshCustomData();
-
-      console.log('Logged :', this.backendService.getSignedInUser());
-      // user.hashedPassword = password;
-      // return await this.backendService.authenticate(email, password);
+      // console.log('Logged :', this.backendService.getSignedInUser());
     } catch (error) {
       throw error;
     }
   }
 
-  setUser(user) {}
+  /**
+   * Set logged in user infos
+   * @param user
+   */
+  setUser(user: any) {
+    this.backendService.user = new User(user);
+  }
 
+  /**
+   * Get logged in user infos
+   * @param user
+   */
   getUser(): User {
     return this.backendService.getSignedInUser();
   }

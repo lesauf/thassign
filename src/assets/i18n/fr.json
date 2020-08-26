@@ -66,8 +66,9 @@
     "occurred": "Une erreur est survenue",
     "email": {
       "string": {
+        "already-in-use": "Un compte existe deja avec cette adresse. As-tu oublié ton mot de passe ?",
         "email": "Cette adresse n'est pas complete",
-        "already-in-use": "Un compte existe deja avec cette adresse. As-tu oublié ton mot de passe ?"
+        "no-record": "Utilisateur inexistant. Verifie ton adresse ou inscris-toi"
       }
     },
     "firstName": {
