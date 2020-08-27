@@ -26,7 +26,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private assignmentService: AssignmentService,
     private partService: PartService,
-    private userService: UserService // private authservice: AuthService
+    private userService: UserService,
+    private authservice: AuthService
   ) {
     // const newUser = {
     //   firstName: 'trtr',
@@ -55,5 +56,9 @@ export class HomeComponent implements OnInit {
 
   addUser() {
     // this.userService.testOs();
+  }
+
+  logout() {
+    this.authservice.logout();
   }
 }

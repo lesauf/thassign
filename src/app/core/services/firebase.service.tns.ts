@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
+import { Router } from '@angular/router';
 import firebase from 'nativescript-plugin-firebase';
 import { Observable } from 'rxjs';
 
@@ -19,33 +20,44 @@ export class FirebaseService {
 
   private data: Array<any> = [];
 
-  constructor(private ngZone: NgZone) {} // private authService: AuthService,
+  constructor(private ngZone: NgZone, protected router: Router) {} // private authService: AuthService,
 
   async init() {
     try {
       await firebase.init({
         // Listen to changes on auth state
-        // onAuthStateChanged: (data) => {
-        //   // optional but useful to immediately re-logon the user when they revisit your app
-        //   console.log(
-        //     data.loggedIn ? 'Logged in to Firebase' : 'Logged out from Firebase'
-        //   );
-        //   if (data.loggedIn) {
-        //     this.user = new User({
-        //       _id: data.user.uid,
-        //       firstName: data.user.displayName,
-        //       email: data.user.email,
-        //       ownerId: data.user.uid,
-        //     });
-        //     console.log(
-        //       "User's email address:" +
-        //         (data.user.email ? data.user.email : 'N/A')
-        //     );
-        //   } else {
-        //     this.user = null;
-        //   }
-        // },
+        onAuthStateChanged: (data) => {
+          // optional but useful to immediately re-logon the user when they revisit your app
+          console.log(
+            data.loggedIn ? 'Logged in to Firebase' : 'Logged out from Firebase'
+          );
+          if (data.loggedIn) {
+            this.user = new User({
+              _id: data.user.uid,
+              firstName: data.user.displayName,
+              email: data.user.email,
+              ownerId: data.user.uid,
+            });
+            console.log(
+              "FirebaseService: User's email address:" +
+                (data.user.email ? data.user.email : 'N/A')
+            );
+          } else {
+            this.user = null;
+
+            // On disconnect state change, redirect to auth page
+            this.ngZone.run(() => {
+              this.router
+                .navigateByUrl('/auth')
+                .then()
+                .catch((error) => {
+                  console.log('Firebase Redirect error :' + error);
+                });
+            });
+          }
+        },
       });
+
       console.log('firebase.init done');
     } catch (error) {
       console.log(`firebase.init error: ${error}`);

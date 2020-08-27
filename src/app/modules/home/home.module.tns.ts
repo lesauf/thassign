@@ -17,13 +17,18 @@ import {
     NativeScriptHttpClientModule,
     NativeScriptRouterModule,
     FormsModule,
+    SharedModule,
     NativeScriptRouterModule.forChild([
       {
         path: '',
         component: HomeComponent,
       },
+      {
+        path: 'home',
+        redirectTo: '/',
+        pathMatch: 'full',
+      },
     ]),
-    SharedModule,
   ],
   declarations: [HomeComponent],
   schemas: [NO_ERRORS_SCHEMA], // Useful to use NS custom elements

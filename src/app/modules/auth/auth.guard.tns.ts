@@ -9,9 +9,9 @@ import {
   UrlSegment,
 } from '@angular/router';
 import firebase from 'nativescript-plugin-firebase';
+import { Observable } from 'rxjs';
 
 import { AuthService } from '@src/app/modules/auth/auth.service';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
@@ -28,25 +28,53 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     const url: string = state.url;
 
     return new Promise((resolve, reject) => {
-      firebase.addAuthStateListener({
-        onAuthStateChanged: (data: firebase.AuthStateData) => {
-          if (data.user) {
-            this.authService.setUser({
-              _id: data.user.uid,
-              firstName: data.user.displayName,
-              email: data.user.email,
-              ownerId: data.user.uid,
-            });
+      firebase
+        .getCurrentUser()
+        .then((currentUser) => {
+          if (currentUser != null) {
             resolve(true);
           } else {
-            this.authService.setUser(null);
+            // if not connected redirect to auth page
             this.ngZone.run(() => {
-              this.router.navigateByUrl('/auth').then();
+              this.router
+                .navigateByUrl('/auth')
+                .then()
+                .catch((error1) => {
+                  console.log('AuthGuard: Redirect Error', error1);
+                });
             });
+
             resolve(false);
           }
-        },
-      });
+        })
+        .catch((error) => {
+          console.log('AuthGuard: getCurrentUser Error: ', error);
+        });
+
+      // firebase.addAuthStateListener({
+      //   onAuthStateChanged: (data: firebase.AuthStateData) => {
+      //     if (data.user) {
+      //       console.log('User logged in: ' + data.user.email);
+      //       this.authService.setUser({
+      //         _id: data.user.uid,
+      //         firstName: data.user.displayName,
+      //         email: data.user.email,
+      //         ownerId: data.user.uid,
+      //       });
+      //       // this.ngZone.run(() => {
+      //       //   this.router.navigateByUrl('/home').then();
+      //       // });
+      //       resolve(true);
+      //     } else {
+      //       console.log('User not logged in');
+      //       this.authService.setUser(null);
+      //       this.ngZone.run(() => {
+      //         this.router.navigateByUrl('/auth').then();
+      //       });
+      //       resolve(false);
+      //     }
+      //   },
+      // });
     });
   }
 

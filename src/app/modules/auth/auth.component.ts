@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -6,7 +6,6 @@ import {
   FormControl,
   ValidationErrors,
 } from '@angular/forms';
-
 import { Router } from '@angular/router';
 
 import { AuthService } from '@src/app/modules/auth/auth.service';
@@ -55,7 +54,8 @@ export class AuthComponent implements OnInit {
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private authHelper: AuthHelper
+    private authHelper: AuthHelper,
+    private ngZone: NgZone
   ) {
     authHelper.configureMatIcon();
   }
@@ -153,6 +153,10 @@ export class AuthComponent implements OnInit {
       }
 
       this.router.navigate([this.authService.redirectUrl]);
+      // this.router.navigate(['/home']);
+      // this.ngZone.run(() => {
+      //   this.router.navigateByUrl('/auto-generated').then();
+      // });
     } catch (error) {
       this.isLoading = false;
 
