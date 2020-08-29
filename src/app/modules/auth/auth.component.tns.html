@@ -99,11 +99,20 @@
     >
       <button (tap)="submit('google')" class="p-10">
         <FormattedString>
-          <image
+          <!-- <image
             src="../../../assets/icon/google-logo.png"
             stretch="aspectFill"
-          ></image>
-          <span text="{{ 'google-sign-in' | translate }}"></span>
+          ></image> -->
+          <!-- <span text="{{ 'google-sign-in' | translate }}"></span> -->
+
+          <span
+            text="&#xf1a0;"
+            fontFamily="Font Awesome 5 Brands, fa-brands-400"
+          ></span>
+          <span text=" {{ 'google-sign-in' | translate }}"></span>
+
+          <!-- <label class="fas" style="margin-top: 10px" text="&#xf013;"></label>
+          <label text=" Settings"></label> -->
         </FormattedString>
       </button>
     </FlexboxLayout>
