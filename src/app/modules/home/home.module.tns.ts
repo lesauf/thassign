@@ -20,13 +20,13 @@ import {
     SharedModule,
     NativeScriptRouterModule.forChild([
       {
-        path: '',
+        path: 'home',
         component: HomeComponent,
       },
       {
-        path: 'home',
+        path: '',
         redirectTo: '/',
-        pathMatch: 'full',
+        // pathMatch: 'full',
       },
     ]),
   ],

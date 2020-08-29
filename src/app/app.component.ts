@@ -12,6 +12,7 @@ import { BackendService } from '@src/app/core/services/backend.service';
 
 @Component({
   selector: 'app-root',
+  moduleId: module.id,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

@@ -2,7 +2,6 @@ import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   NativeScriptCommonModule,
-  NativeScriptModule,
   NativeScriptFormsModule,
   NativeScriptHttpClientModule,
   NativeScriptRouterModule,

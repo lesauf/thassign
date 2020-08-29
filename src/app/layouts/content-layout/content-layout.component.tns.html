@@ -1,1 +1,60 @@
-<page-router-outlet></page-router-outlet>
+<!-- <StackLayout>
+  <label text="hummmmm"></label>
+  <page-router-outlet name="homeTab"></page-router-outlet>
+</StackLayout> -->
+
+<StackLayout>
+  <BottomNavigation selectedIndex="0">
+    <!-- The bottom tab UI is created via TabStrip (the container) 
+    and TabStripItem (for each tab) -->
+    <TabStrip>
+      <TabStripItem>
+        <label text="Home"></label>
+        <image src="font://&#xf015;" class="fas"></image>
+      </TabStripItem>
+
+      <!-- <TabStripItem class="special">
+        <label text="Members"></label>
+
+        <image src="font://&#xf0c0;" class="fas"></image>
+      </TabStripItem> -->
+
+      <!-- 
+            The below two conventions (shorthand vs exteded syntax) are 
+            identical in UI outcome but the second one will provide you 
+            with greater control over your TabStripItem UI.
+            When using the first shorthand syntax then your Icon Font CSS 
+            class should be set on the BottomNavigation element.
+         -->
+      <!-- <TabStripItem title="Search" iconSource="font://&#xf00e;"></TabStripItem> -->
+
+      <!-- <TabStripItem class="special">
+        <label text="Assignments"></label>
+        <image src="font://&#xf3c9;" class="fas"></image>
+      </TabStripItem> -->
+    </TabStrip>
+
+    <!-- The number of TabContentItem components should corespond 
+    to the number of TabStripItem components  -->
+    <TabContentItem>
+      <StackLayout>
+        <label text="HOME here"></label>
+        <page-router-outlet name="homeTab"></page-router-outlet>
+      </StackLayout>
+    </TabContentItem>
+    <!-- <TabContentItem>
+      <StackLayout>
+        <label text="USERS list"></label>
+
+        <page-router-outlet name="usersTab"></page-router-outlet>
+      </StackLayout>
+    </TabContentItem>
+    <TabContentItem>
+      <StackLayout>
+        <label text="ASSIGNMENTS here"></label>
+
+        <page-router-outlet name="assignmentsTab"></page-router-outlet>
+      </StackLayout>
+    </TabContentItem> -->
+  </BottomNavigation>
+</StackLayout>
