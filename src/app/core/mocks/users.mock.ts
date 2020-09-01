@@ -11,7 +11,7 @@ const generateParts = (parts: Part[], count = faker.random.number(10)) => {
 
   for (let i = 1; i <= count + 1; i++) {
     const randomPart = faker.random.arrayElement(parts);
-    res.push(randomPart._id);
+    res.push(randomPart.name);
   }
 
   return res;

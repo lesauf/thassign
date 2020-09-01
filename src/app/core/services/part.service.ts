@@ -5,6 +5,7 @@ import { MessageService } from '@src/app/core/services/message.service';
 // import { any } from 'server/src/modules/parts/part.model';
 import { StitchService } from '@src/app/core/services/stitch.service';
 import { Part } from '@src/app/core/models/part/part.model';
+import { partMocks } from '@src/app/core/mocks/parts.mock';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BackendService } from '@src/app/core/services/backend.service';
 
@@ -49,6 +50,7 @@ export class PartService extends CommonService<Part> {
     super();
 
     // this.fetchParts();
+    this.storeParts(partMocks);
   }
 
   /**
@@ -126,6 +128,10 @@ export class PartService extends CommonService<Part> {
       return new Part(props) as Part;
     }
   }
+
+  getPartByName(partName: string) {
+    return this.getParts().find((p) => p.name === partName);
+  }
 }
 
 // async getPartsNames() {
@@ -135,21 +141,4 @@ export class PartService extends CommonService<Part> {
 //     partsNames.push(part.name);
 //   });
 //   return partsNames;
-// }
-
-// getPartName(partId): string {
-//   const part = this.getPartById(partId);
-
-//   return part.name;
-// }
-
-// getPartById(partId): Part {
-//   // const part = this.allParts.find(
-//   const part = this.getParts().find((p) => p._id === partId);
-
-//   return part;
-// }
-
-// getPartByName(partName: string) {
-//   return this.getParts().find((p) => p.name === partName);
 // }

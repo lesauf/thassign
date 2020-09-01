@@ -146,7 +146,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
         if (obj.part.hasOwnProperty('id')) {
           // from DB
           delete obj._id; // Remove the _id, so in case it should be saved, mongoDb regenerate
-          obj.part = allParts.find((part) => part._id === obj.part);
+          obj.part = allParts.find((part) => part.name === obj.part);
           obj.assignee = allUsers.find((user) => user._id === obj.assignee);
           obj.assistant = obj.assistant
             ? allUsers.find((user) => user._id === obj.assistant)
@@ -154,7 +154,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
         } else if (obj.part.hasOwnProperty('_id')) {
           // from form, with selected part
           obj.position = index;
-          obj.part = allParts.find((part) => part._id === obj.part._id);
+          obj.part = allParts.find((part) => part.name === obj.part.name);
           obj.assignee = obj.assignee
             ? allUsers.find((user) => user._id === obj.assignee._id)
             : null;
@@ -246,7 +246,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     if (assignments !== null) {
       pAssignments = assignments.filter(
         (assignment) =>
-          listOfParts.find((part) => part._id === assignment.part._id) !==
+          listOfParts.find((part) => part.name === assignment.part.name) !==
             undefined && month.get('month') === assignment.week.get('month')
       );
 
@@ -440,7 +440,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
       toSave[i] = {};
       Object.assign(toSave[i], ass);
       toSave[i].week = ass.week.toISO();
-      toSave[i].part = ass.part._id;
+      toSave[i].part = ass.part.name;
       toSave[i].assignee = ass.assignee?._id;
       if (ass.assistant) {
         toSave[i].assistant = ass.assistant?._id;

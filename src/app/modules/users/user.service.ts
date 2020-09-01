@@ -171,6 +171,7 @@ export class UserService extends CommonService<User> {
       //   { ownerId: this.backendService.getSignedInUser()._id },
       // ]);
 
+      // convert to User objects
       const allUsers = this.createUser(users, allParts) as User[];
 
       this.updateStore(allUsers);
@@ -286,7 +287,7 @@ export class UserService extends CommonService<User> {
     return users.filter(
       (user) =>
         (user.parts as Part[]).find(
-          (assignablePart) => assignablePart._id === part._id
+          (assignablePart) => assignablePart.name === part.name
         ) !== undefined
     );
     //   tap((h) => {
@@ -307,16 +308,16 @@ export class UserService extends CommonService<User> {
   //     map((result) => {
   //       // Arranging
   //       const chairmanResults = result.find(
-  //         (part) => part._id === 'weekend.publicTalk.chairman'
+  //         (part) => part.name === 'weekend.publicTalk.chairman'
   //       );
   //       const speakerResults = result.find(
-  //         (part) => part._id === 'weekend.publicTalk.speaker'
+  //         (part) => part.name === 'weekend.publicTalk.speaker'
   //       );
   //       const conductorResults = result.find(
-  //         (part) => part._id === 'weekend.watchtower.conductor'
+  //         (part) => part.name === 'weekend.watchtower.conductor'
   //       );
   //       const readerResults = result.find(
-  //         (part) => part._id === 'weekend.watchtower.reader'
+  //         (part) => part.name === 'weekend.watchtower.reader'
   //       );
 
   //       const weekeendAssignableList = {
@@ -486,7 +487,7 @@ export class UserService extends CommonService<User> {
     // : Observable<any> {
     user.prepareToSave();
 
-    // this.parts = (this.parts as Part[]).map((part) => part._id);
+    // this.parts = (this.parts as Part[]).map((part) => part.name);
 
     if (user._id !== null) {
       // user update

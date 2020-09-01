@@ -233,10 +233,6 @@ export class UserEditComponent implements OnInit {
     }
   }
 
-  // getPartName(partId) {
-  //   return this.partService.getPartName(partId);
-  // }
-
   /**
    * Allow the user to just click on a part to select/deselect it
    */
@@ -248,7 +244,7 @@ export class UserEditComponent implements OnInit {
       if (selectedParts !== null) {
         // search
         selectedPartIndex = selectedParts.findIndex(
-          (selectedPart, index, sParts) => selectedPart._id === part._id
+          (selectedPart, index, sParts) => selectedPart.name === part.name
         );
       } else {
         selectedParts = [];
@@ -284,7 +280,7 @@ export class UserEditComponent implements OnInit {
         // partValue.find((selectedPart) => selectedPart.name === part.name) !==
         // undefined
         partValue.find((selectedPart) => {
-          return selectedPart._id === part._id;
+          return selectedPart.name === part.name;
         }) !== undefined
       );
     }

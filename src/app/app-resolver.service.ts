@@ -33,14 +33,24 @@ export class AppResolverService implements Resolve<string> {
       const data = await this.backendService.callFunction('getData');
 
       // this.userService.destroy();
-      const allParts = this.partService.storeParts(data?.parts);
-      const allUsers = this.userService.storeUsers(data?.users, allParts);
+      // const allParts = this.partService.storeParts(data?.parts);
 
-      this.assignmentService.storeAssignments(
-        data?.assignments,
-        allParts,
-        allUsers
-      );
+      this.backendService.listenToCollection('users').subscribe((users) => {
+        const allUsers = this.userService.storeUsers(
+          users,
+          this.partService.getParts()
+        );
+      });
+
+      this.backendService
+        .listenToCollection('assignments')
+        .subscribe((assignments) => {
+          this.assignmentService.storeAssignments(
+            assignments,
+            this.partService.getParts(),
+            this.userService.getUsers()
+          );
+        });
 
       return 'Data fetched';
     } catch (error) {

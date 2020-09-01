@@ -144,22 +144,23 @@ export class User {
     if (userProperties) {
       // If the Users are coming from the DB (first part is an ObjectId),
       // convert parts id array to an array of Part
-      if (allParts && userProperties['parts'][0].hasOwnProperty('id')) {
-        if (allParts) {
-          userProperties['parts'] = userProperties['parts'].map((partId: any) =>
-            allParts.find((part: Part) => {
-              return partId.equals(part._id);
-            })
-          );
-        }
+      // console.log(userProperties);
+      if (allParts) {
+        userProperties['parts'] = userProperties['parts']
+          ? userProperties['parts'].map((partName: any) =>
+              allParts.find((part: Part) => {
+                return partName.equals(part.name);
+              })
+            )
+          : [];
+      }
 
-        if (allAssignments && userProperties['_id']) {
-          userProperties['assignments'] = allAssignments.filter(
-            (ass: Assignment) => {
-              return ass.assignee._id == userProperties['_id'];
-            }
-          );
-        }
+      if (allAssignments && userProperties['_id']) {
+        userProperties['assignments'] = allAssignments.filter(
+          (ass: Assignment) => {
+            return ass.assignee._id == userProperties['_id'];
+          }
+        );
       }
 
       // Assign the properties to this object
@@ -173,7 +174,7 @@ export class User {
    */
   prepareToSave(): void {
     // Replace parts with their ids
-    this.parts = (this.parts as Part[]).map((part) => part._id);
+    this.parts = (this.parts as Part[]).map((part) => part.name);
 
     // Remove empty fields
     if (!this.email) {

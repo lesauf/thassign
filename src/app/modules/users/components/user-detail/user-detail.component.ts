@@ -63,8 +63,8 @@ export class UserDetailComponent implements OnInit {
   //     });
   // }
 
-  // getPartName(partId) {
-  //   return this.partService.getPartName(partId);
+  // getPartName(partName) {
+  //   return this.partService.getPartName(partName);
   // }
 
   openUserEdit(): void {

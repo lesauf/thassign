@@ -50,7 +50,7 @@ export type ObjectId = {
  * Minimum data for a standard part
  */
 export class Part {
-  @IsObject()
+  @IsString()
   @IsOptional()
   _id: string;
 
