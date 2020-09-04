@@ -78,8 +78,9 @@ export class UserListComponent implements OnInit, AfterViewInit {
       this.pUsers$ = this.userService.pUsers;
 
       // this.userService.pUsers.subscribe((t) => console.log('test', t));
-      this.getUsers();
     });
+
+    this.getUsers();
   }
 
   ngAfterViewInit(): void {
@@ -121,6 +122,8 @@ export class UserListComponent implements OnInit, AfterViewInit {
   getUsers(paginator?: MatPaginator): void {
     // Clear users list to display the loader
     // this.users = null;
+    console.log('Component getUsers called');
+
     this.dataLength = this.userService.paginateUsers(
       this.sort,
       this.sortOrder,

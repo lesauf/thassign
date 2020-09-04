@@ -101,16 +101,16 @@ export class FirebaseService {
     id?: string,
     merge = false
   ): Promise<any> {
-    if (id) {
-      // update/merge
-      return this.firestore
-        .collection(this.getCollectionWithConverter(collection, converter))
-        .doc(id)
-        .set(data, { merge: merge });
-    } else {
-      // add
-      return this.firestore.collection(collection).add(data);
+    if (!id) {
+      // Generate id
+      id = this.firestore.createId();
+      data['_id'] = id;
     }
+    // add/update/merge
+    return this.firestore
+      .collection(this.getCollectionWithConverter(collection, converter))
+      .doc(id)
+      .set(data, { merge: merge });
   }
 
   /**

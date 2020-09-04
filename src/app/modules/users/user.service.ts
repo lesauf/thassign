@@ -49,7 +49,7 @@ export class UserService extends CommonService<User> {
    * Paginated user list store
    */
   private pUsersStore: BehaviorSubject<User[]> = new BehaviorSubject<User[]>(
-    null
+    []
   );
 
   /**
@@ -405,8 +405,7 @@ export class UserService extends CommonService<User> {
       await this.backendService.upsertOneDoc(
         'users',
         new UserConverter(),
-        user,
-        user._id
+        user
       );
 
       // const users = await this.callFunction('Users_insertMany', [[user]]);

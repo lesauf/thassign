@@ -109,7 +109,10 @@ export class UserEditComponent implements OnInit {
         genre: new FormControl(this.user.genre),
         child: new FormControl(this.user.child),
         phone: new FormControl(this.user.phone),
-        email: new FormControl(this.user.email),
+        email: new FormControl(
+          this.user.email,
+          ValidationService.emailValidator
+        ),
         overseer: new FormControl(this.user.overseer),
         disabled: new FormControl(this.user.disabled),
         // familyMembers: new FormControl(this.user.familyMembers),
@@ -152,10 +155,11 @@ export class UserEditComponent implements OnInit {
 
   async saveUser() {
     const saved = false;
-
+    // console.log('Before ', this.userForm.value);
     // trigger validation
     this.validationService.validateAllFormFields(this.userForm);
 
+    // console.log('After validation ', this.userForm.value);
     try {
       if (this.userForm.valid) {
         // Make sure to create a deep copy of the form-model
@@ -166,6 +170,7 @@ export class UserEditComponent implements OnInit {
           this.partService.getParts()
         ) as User;
 
+        // console.log('After: ', result);
         // Do useful stuff with the gathered data
         const insertedUser = await this.userService.upsertUser(
           result,
@@ -265,13 +270,17 @@ export class UserEditComponent implements OnInit {
         onlySelf: false,
         emitEvent: true,
       });
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
    * To populate the form, check if the part chip should be selected
    */
   partSelected(part: Part): boolean {
+    // console.log(part);
+
     if (this.userForm.controls.parts.value !== null) {
       const partValue = this.userForm.controls.parts.value;
 

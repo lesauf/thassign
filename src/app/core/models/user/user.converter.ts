@@ -1,14 +1,12 @@
 import { User } from '@src/app/core/models/user/user.model';
 
 export class UserConverter {
-  toFirestore(user) {
-    return {
-      _id: user._id,
-      email: user.email,
-      ownerId: user._id,
-      firstName: user.firstName,
-      deleted: user.deleted,
-    };
+  /**
+   * Change nothing here, the prepareToSave method of user handle this already
+   * @param user User
+   */
+  toFirestore(user: User) {
+    return user.toObject();
   }
 
   fromFirestore(snapshot, options) {

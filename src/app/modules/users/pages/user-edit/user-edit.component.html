@@ -1,4 +1,4 @@
-<h2>{{ 'user-form-title' | translate }}</h2>
+<h2>{{ "user-form-title" | translate }}</h2>
 
 <mat-divider></mat-divider>
 
@@ -38,10 +38,10 @@
           (change)="toggleManFields('genre', $event)"
         >
           <mat-radio-button value="man" name="genre">
-            {{ 'man' | translate }}
+            {{ "man" | translate }}
           </mat-radio-button>
           <mat-radio-button fxFlex value="woman" name="genre">
-            {{ 'woman' | translate }}
+            {{ "woman" | translate }}
           </mat-radio-button>
         </mat-radio-group>
         <app-control-messages [control]="userForm.controls['genre']">
@@ -65,7 +65,6 @@
             autocomplete="off"
             placeholder="{{ 'last-name' | translate }}"
             formControlName="lastName"
-            required
           />
         </mat-form-field>
         <app-control-messages [control]="userForm.controls['lastName']">
@@ -85,6 +84,7 @@
         <mat-form-field fxFill>
           <input
             matInput
+            type="email"
             autocomplete="off"
             placeholder="{{ 'email' | translate }}"
             formControlName="email"
@@ -101,10 +101,10 @@
           [hidden]="overseerFieldsDisabled"
         >
           <mat-radio-button value="elder" name="overseer">
-            {{ 'elder' | translate }}
+            {{ "elder" | translate }}
           </mat-radio-button>
           <mat-radio-button value="ministerial-servant" name="overseer">
-            {{ 'ministerial-servant' | translate }}
+            {{ "ministerial-servant" | translate }}
           </mat-radio-button>
         </mat-radio-group>
       </div>
@@ -128,7 +128,7 @@
           formControlName="child"
           (change)="toggleManFields('child', $event)"
         >
-          {{ 'child' | translate }}
+          {{ "child" | translate }}
         </mat-checkbox>
         <!-- baptized -->
         <mat-checkbox
@@ -137,7 +137,7 @@
           formControlName="baptized"
           (change)="toggleManFields('baptized', $event)"
         >
-          {{ 'baptized' | translate }}
+          {{ "baptized" | translate }}
         </mat-checkbox>
         <!-- publisher -->
         <mat-checkbox
@@ -146,7 +146,7 @@
           formControlName="publisher"
           (change)="toggleManFields('publisher', $event)"
         >
-          {{ 'publisher' | translate }}
+          {{ "publisher" | translate }}
         </mat-checkbox>
         <!-- disabled -->
         <mat-checkbox
@@ -154,7 +154,7 @@
           labelPosition="after"
           formControlName="disabled"
         >
-          {{ 'disabled' | translate }}
+          {{ "disabled" | translate }}
         </mat-checkbox>
       </div>
       <!-- /Right column -->
@@ -169,7 +169,7 @@
       <div fxFlex="90" *ngIf="allPartsGrouped$ | async as allPartsGrouped">
         <div>
           <!-- Midweek parts -->
-          <h3>{{ 'assignable-parts' | translate | titlecase }}</h3>
+          <h3>{{ "assignable-parts" | translate | titlecase }}</h3>
           <mat-chip-list multiple="true" fxLayout="row">
             <fieldset
               fxFlex="100"
@@ -205,10 +205,10 @@
       <!-- BUTTONS -->
       <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-around stretch">
         <button type="button" mat-raised-button (click)="cancel()">
-          {{ 'cancel' | translate | titlecase }}
+          {{ "cancel" | translate | titlecase }}
         </button>
         <button type="submit" mat-raised-button color="primary">
-          {{ 'save' | translate | titlecase }}
+          {{ "save" | translate | titlecase }}
         </button>
       </div>
 

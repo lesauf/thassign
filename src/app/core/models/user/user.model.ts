@@ -29,6 +29,7 @@ export class User {
 
   // @(jf.string().required())
   @MinLength(1, { message: 'error.lastName.any.empty' })
+  @IsOptional()
   lastName: string;
 
   // Joi.string().optional().allow('man', 'woman')
@@ -98,10 +99,10 @@ export class User {
    */
   // Joi.array().allow(null),
   @IsArray()
-  parts: Part[] | string[];
+  parts: Part[] | string[] = [];
 
   @IsArray()
-  assignments: any[];
+  assignments: any[] = [];
 
   // Joi.boolean().optional().default(false), // Can modify programs
   @IsBoolean()
@@ -143,13 +144,18 @@ export class User {
   ) {
     if (userProperties) {
       // If the Users are coming from the DB (first part is an ObjectId),
-      // convert parts id array to an array of Part
-      // console.log(userProperties);
-      if (allParts) {
+      // convert parts names array to an array of Part
+      // console.log('User props: ', userProperties);
+
+      if (
+        allParts &&
+        userProperties['parts'] &&
+        typeof userProperties['parts'][0] === 'string'
+      ) {
         userProperties['parts'] = userProperties['parts']
           ? userProperties['parts'].map((partName: any) =>
               allParts.find((part: Part) => {
-                return partName.equals(part.name);
+                return partName === part.name;
               })
             )
           : [];
@@ -173,7 +179,7 @@ export class User {
    * for example, replace parts with their ids
    */
   prepareToSave(): void {
-    // Replace parts with their ids
+    // Replace parts with their names
     this.parts = (this.parts as Part[]).map((part) => part.name);
 
     // Remove empty fields
@@ -189,6 +195,46 @@ export class User {
     if (!this.congregation) {
       delete this.congregation;
     }
+
+    console.log('To save: ', this);
+  }
+
+  /**
+   * Convert to a standard object for saving
+   */
+  toObject() {
+    // Define updatedAt field if the _id field exist
+    if (this._id === undefined) {
+      this.createdAt = new Date();
+    } else {
+      this.updatedAt = new Date();
+    }
+
+    return {
+      ...(this._id && { _id: this._id }),
+      ownerId: this.ownerId,
+      firstName: this.firstName,
+      deleted: this.deleted,
+      genre: this.genre,
+      parts: this.parts,
+      assignments: this.assignments,
+
+      ...(this.email && { email: this.email }),
+      ...(this.lastName && { lastName: this.lastName }),
+      ...(this.congregation && { congregation: this.congregation }),
+      ...(this.baptized && { baptized: this.baptized }),
+      ...(this.publisher && { publisher: this.publisher }),
+      ...(this.child && { child: this.child }),
+      ...(this.phone && { phone: this.phone }),
+      ...(this.overseer && { overseer: this.overseer }),
+      ...(this.disabled && { disabled: this.disabled }),
+      ...(this.hashedPassword && { hashedPassword: this.hashedPassword }),
+      ...(this.activated && { activated: this.activated }),
+      ...(this.createdAt && { createdAt: this.createdAt }),
+      ...(this.updatedAt && { updatedAt: this.updatedAt }),
+      ...(this.deletedAt && { deletedAt: this.deletedAt }),
+      ...(this.deletedBy && { deletedBy: this.deletedBy }),
+    };
   }
 
   /**
@@ -206,10 +252,13 @@ export class User {
 
   // Some virtual properties
   get fullName() {
-    return this.firstName + ' ' + this.lastName;
+    if (this.lastName !== undefined) {
+      return this.firstName + ' ' + this.lastName;
+    }
+    return this.firstName;
   }
 
-  get type() {
+  get type(): string {
     let generatedType = '';
     if (this.genre === 'man') {
       if (this.child) {
@@ -221,8 +270,10 @@ export class User {
       } else {
         generatedType = 'man';
       }
-    } else {
+    } else if (this.genre === 'woman') {
       generatedType = this.child ? 'girl' : 'woman';
+    } else {
+      generatedType = 'unknown';
     }
 
     return generatedType;
@@ -246,7 +297,7 @@ export class User {
   get meetingsAssignable(): string[] {
     const _meetingsAssignable = [];
 
-    this.parts.forEach((part) => {
+    this.parts?.forEach((part) => {
       if (!_meetingsAssignable.includes(part['meeting'])) {
         _meetingsAssignable.push(part['meeting']);
       }
@@ -258,7 +309,7 @@ export class User {
   get assignmentsDisplay(): string {
     let aDisplay = '';
 
-    this.assignments.forEach((a) => {
+    this.assignments?.forEach((a) => {
       aDisplay = aDisplay + DateTime.fromJSDate(a.week).toLocaleString();
     });
 
@@ -266,7 +317,7 @@ export class User {
   }
 
   get lastAssignment(): Assignment {
-    if (!this.assignments.length) {
+    if (!this.assignments?.length) {
       return null;
     }
     // sort by assignment

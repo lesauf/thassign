@@ -112,7 +112,7 @@ export class PartService extends CommonService<Part> {
         meetings.push(part.meeting);
       }
     });
-
+    // console.log(allPartsGrouped, meetings);
     return { parts: allPartsGrouped, meetings: meetings };
   }
 
