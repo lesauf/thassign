@@ -434,6 +434,7 @@ export class UserService extends CommonService<User> {
         new UserConverter(),
         user,
         user._id,
+        'set',
         true
       );
 

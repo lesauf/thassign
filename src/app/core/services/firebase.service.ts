@@ -88,10 +88,12 @@ export class FirebaseService {
   }
 
   /**
-   * Insert, replace or merge one document in the specified collection
+   * Insert, replace, merge or delete one document in the specified collection
    * @param collection
+   * @param converter
    * @param data
    * @param id
+   * @param operation
    * @param merge
    */
   upsertOneDoc(
@@ -99,18 +101,78 @@ export class FirebaseService {
     converter: object,
     data: any,
     id?: string,
+    operation: 'set' | 'delete' = 'set',
     merge = false
   ): Promise<any> {
     if (!id) {
-      // Generate id
-      id = this.firestore.createId();
-      data['_id'] = id;
+      if (operation === 'set') {
+        // Generate id for that insert
+        id = this.firestore.createId();
+        data['_id'] = id;
+      } else {
+        // Error: delete operation without specified id
+        throw new Error('No doc id specified for a delete operation');
+      }
     }
-    // add/update/merge
-    return this.firestore
-      .collection(this.getCollectionWithConverter(collection, converter))
-      .doc(id)
-      .set(data, { merge: merge });
+
+    if (operation === 'set') {
+      // add/update/merge
+      return this.firestore
+        .collection(this.getCollectionWithConverter(collection, converter))
+        .doc(id)
+        .set(data, { merge: merge });
+    } else {
+      // Delete
+      return this.firestore
+        .collection(this.getCollectionWithConverter(collection, converter))
+        .doc(id)
+        .delete();
+    }
+  }
+
+  /**
+   * Insert, replace, merge or delete many documents in the specified collection
+   * @param collection
+   * @param converter
+   * @param data
+   * @param operation
+   * @param merge
+   */
+  upsertManyDocs(
+    collection: string,
+    converter: object,
+    data: any[],
+    operation: 'set' | 'delete' = 'set',
+    merge = false
+  ) {
+    // Get a new write batch
+    var batch = this.firestore.firestore.batch();
+
+    // Loop through the array to add them to the batch
+    data.forEach((item) => {
+      if (!item._id) {
+        if (operation === 'set') {
+          // Generate id for that insert
+          item['_id'] = this.firestore.createId();
+        } else {
+          // delete operation without specified id
+          throw new Error('No doc id specified for a delete operation');
+        }
+      }
+
+      const colRef = this.firestore
+        .collection(this.getCollectionWithConverter(collection, converter))
+        .doc(item['_id']);
+
+      if (operation === 'set') {
+        batch.set(colRef.ref, item, { merge: merge });
+      } else {
+        batch.delete(item['_id']);
+      }
+    });
+
+    // Commit the batch
+    batch.commit().catch((err) => console.error(err));
   }
 
   /**
