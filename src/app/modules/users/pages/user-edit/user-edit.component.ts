@@ -205,7 +205,7 @@ export class UserEditComponent implements OnInit {
 
   deleteUser() {
     // TODO show confirmation alert
-    this.userService.deleteUser(this.user, this.partService.getParts());
+    this.userService.deleteUser(this.user);
 
     // Go to users list, passing dummy data to force reload
     this.router.navigate(['users', { dummyData: new Date().getTime() }]);

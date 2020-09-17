@@ -14,6 +14,7 @@ import { Part } from '@src/app/core/models/part/part.model';
 import { UserConverter } from '@src/app/core/models/user/user.converter';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { BackendService } from '@src/app/core/services/backend.service';
+import { IsArray } from 'class-validator';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -444,36 +445,36 @@ export class UserService extends CommonService<User> {
     }
   }
 
-  /** DELETE: delete the user from the server */
-  async deleteUser(userId: string[], allParts: Part[]): Promise<any> {
+  /**
+   * DELETE: delete the user from the server
+   */
+  async deleteUser(userId: string | string[]): Promise<any> {
     try {
-      const users = await this.callFunction('Users_deleteByIds', [userId]);
+      if (userId.hasOwnProperty('length')) {
+        // many users
+        await this.backendService.upsertManyDocs(
+          'users',
+          new UserConverter(),
+          userId as String[],
+          'delete'
+        );
 
-      this.updateStore(this.createUser(users, allParts) as User[]);
+        this.log(`deleted users`);
+      } else {
+        // Only one user
+        await this.backendService.upsertOneDoc(
+          'users',
+          new UserConverter(),
+          null,
+          userId as string,
+          'delete'
+        );
 
-      this.log(`deleted user`);
-    } catch (error) {
-      this.handleError<any>('deleteUser', error);
-    }
-  }
+        this.log(`deleted user`);
+      }
+      // const users = await this.callFunction('Users_deleteByIds', [userId]);
 
-  /** SOFT DELETE: mark the users as deleted from the server */
-  async softDeleteUsers(userId: string[], allParts: Part[]): Promise<any> {
-    try {
-      const deleteProps = {
-        deleted: true,
-        deletedAt: new Date(),
-        deletedBy: this.backendService.getSignedInUser()._id,
-      };
-
-      const users = await this.callFunction('Users_updateByIds', [
-        userId,
-        deleteProps,
-      ]);
-
-      this.updateStore(this.createUser(users, allParts) as User[]);
-
-      this.log(`deleted user`);
+      //   this.updateStore(this.createUser(users, allParts) as User[]);
     } catch (error) {
       this.handleError<any>('deleteUser', error);
     }

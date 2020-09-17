@@ -134,7 +134,7 @@ export class FirebaseService {
    * Insert, replace, merge or delete many documents in the specified collection
    * @param collection
    * @param converter
-   * @param data
+   * @param data Inca se of delete, contains an array of ids to delete
    * @param operation
    * @param merge
    */
@@ -144,35 +144,38 @@ export class FirebaseService {
     data: any[],
     operation: 'set' | 'delete' = 'set',
     merge = false
-  ) {
+  ): Promise<any> {
     // Get a new write batch
     var batch = this.firestore.firestore.batch();
 
     // Loop through the array to add them to the batch
     data.forEach((item) => {
+      let currentId;
       if (!item._id) {
         if (operation === 'set') {
           // Generate id for that insert
           item['_id'] = this.firestore.createId();
+          currentId = item['id'];
         } else {
           // delete operation without specified id
-          throw new Error('No doc id specified for a delete operation');
+          // The item is the id to delete
+          currentId = item;
         }
       }
 
       const colRef = this.firestore
         .collection(this.getCollectionWithConverter(collection, converter))
-        .doc(item['_id']);
+        .doc(currentId);
 
       if (operation === 'set') {
         batch.set(colRef.ref, item, { merge: merge });
       } else {
-        batch.delete(item['_id']);
+        batch.delete(colRef.ref);
       }
     });
 
     // Commit the batch
-    batch.commit().catch((err) => console.error(err));
+    return batch.commit(); // .catch((err) => console.error(err));
   }
 
   /**

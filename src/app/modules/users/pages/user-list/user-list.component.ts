@@ -190,12 +190,9 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.router.navigate([path]);
   }
 
-  async delete(userId?: string[]) {
+  async delete(userId?: string | string[]) {
     try {
-      await this.userService.softDeleteUsers(
-        userId,
-        this.partService.getParts()
-      );
+      await this.userService.deleteUser(userId);
       // Refresh the list
       this.getUsers();
     } catch (error) {
