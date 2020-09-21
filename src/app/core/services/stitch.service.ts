@@ -58,7 +58,6 @@ export class StitchService {
   }
 
   logout() {
-    this.stitchAppClient.auth.logoutUserWithId('5e8a39cc6898b88af6a67163');
     return this.stitchAppClient.auth.logout();
   }
 
