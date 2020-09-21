@@ -357,7 +357,9 @@ export class UserService extends CommonService<User> {
 
     const assignableUsers = users.filter((user) => {
       const meetings = user.meetingsAssignable;
-      return meetings.includes(meetingName);
+
+      // No disabled user in the assignable list
+      return meetings.includes(meetingName) && !user.disabled;
     });
 
     // Arranging by part,

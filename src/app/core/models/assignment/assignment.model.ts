@@ -154,5 +154,9 @@ export class Assignment {
     if (!this.updatedAt) {
       delete this.updatedAt;
     }
+    // Remove also createdAt ?
+    if (this.createdAt) {
+      delete this.createdAt;
+    }
   }
 }

@@ -187,6 +187,21 @@ export class User {
     if (!this.congregation) {
       delete this.congregation;
     }
+
+
+    if (!this.deletedAt) {
+      delete this.deletedAt;
+    }
+    if (!this.deletedBy) {
+      delete this.deletedBy;
+    }
+    if (!this.updatedAt) {
+      delete this.updatedAt;
+    }
+    // Remove also createdAt ?
+    if (this.createdAt) {
+      delete this.createdAt;
+    }
   }
 
   /**
