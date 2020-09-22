@@ -35,15 +35,18 @@ export class AppResolverService implements Resolve<string> {
       // this.userService.destroy();
       // const allParts = this.partService.storeParts(data?.parts);
 
-      this.backendService.listenToCollection('users').subscribe((users) => {
-        const allUsers = this.userService.storeUsers(
-          users,
-          this.partService.getParts()
-        );
-      });
+      this.backendService
+        .listenToCollection('users', 'firstname')
+        .subscribe((users) => {
+          console.log(users);
+          const allUsers = this.userService.storeUsers(
+            users,
+            this.partService.getParts()
+          );
+        });
 
       this.backendService
-        .listenToCollection('assignments')
+        .listenToCollection('assignments', 'week')
         .subscribe((assignments) => {
           this.assignmentService.storeAssignments(
             assignments,
