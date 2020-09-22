@@ -261,7 +261,7 @@ export class UserService extends CommonService<User> {
     }
 
     const users = this.dataStore.getValue();
-
+    console.log(users);
     if (users !== null) {
       const fUsers = users.filter((user) => filterFunction(user));
 

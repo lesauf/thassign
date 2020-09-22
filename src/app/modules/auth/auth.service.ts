@@ -104,7 +104,7 @@ export class AuthService extends CommonService<User> {
    * @param user
    */
   setUser(user: any) {
-    this.backendService.user = new User(user);
+    this.backendService.signedInUser = new User(user);
   }
 
   /**

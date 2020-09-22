@@ -88,7 +88,7 @@ export class Assignment {
    */
   constructor(props?: object) {
     if (props) {
-      if (!props['week'].hasOwnProperty('isLuxonDateTime')) {
+      if (!props['week']?.hasOwnProperty('isLuxonDateTime')) {
         const refDate = DateTime.utc();
         props['week'] = DateTime.fromJSDate(props['week'], {
           zone: refDate.zone,

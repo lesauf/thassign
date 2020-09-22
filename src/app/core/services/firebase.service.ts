@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class FirebaseService {
-  user: User;
+  signedInUser: User;
 
   constructor(
     // private authService: AuthService,
@@ -17,15 +17,15 @@ export class FirebaseService {
   ) {
     this.fireAuth.onAuthStateChanged((user: firebase.User) => {
       if (user) {
-        this.user = new User({
+        this.signedInUser = new User({
           _id: user.uid,
           firstName: user.displayName,
           email: user.email,
           ownerId: user.uid,
         });
-        // console.log('Auth Changed', this.user);
+        // console.log('Auth Changed', this.signedInUser);
       } else {
-        this.user = null;
+        this.signedInUser = null;
       }
     });
   }
@@ -71,7 +71,7 @@ export class FirebaseService {
    *
    */
   async isLoggedIn(): Promise<boolean> {
-    var user = await this.fireAuth.currentUser;
+    const user = await this.fireAuth.currentUser;
 
     return user != null;
   }
@@ -84,7 +84,7 @@ export class FirebaseService {
    * return the current signed in user (or null)
    */
   getSignedInUser(): User {
-    return this.user;
+    return this.signedInUser;
   }
 
   /**
@@ -200,8 +200,35 @@ export class FirebaseService {
       this.firestore.firestore
         .collection(collName)
         // .withConverter(converter)
-        .where('ownerId', '==', this.user._id)
+        .where('ownerId', '==', this.signedInUser._id)
     );
+  }
+
+  paginateQuery(
+    collName: string,
+    converter: firebase.firestore.FirestoreDataConverter<unknown>,
+    sortField: string = 'lastName',
+    sortOrder: firebase.firestore.OrderByDirection = 'asc',
+    pageSize: number = 50,
+    pageIndex: number = 1,
+    filters: Array<{
+      field: string;
+      opStr: firebase.firestore.WhereFilterOp;
+      value: any;
+    }>
+  ) {
+    const colRef = this.firestore.firestore
+      .collection(collName)
+      .withConverter(converter)
+      .where('ownerId', '==', this.signedInUser._id)
+      .orderBy(sortField, sortOrder)
+      .startAfter(pageSize * pageIndex)
+      .limit(pageSize);
+    if (filters.length) {
+      filters.forEach((filter) =>
+        colRef.where(filter.field, filter.opStr, filter.value)
+      );
+    }
   }
 
   test() {

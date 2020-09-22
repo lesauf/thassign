@@ -38,17 +38,18 @@ export class AppResolverService implements Resolve<string> {
       // this.userService.destroy();
       // const allParts = this.partService.storeParts(data?.parts);
 
+      // Set a listener on users collections
       this.backendService
         .getQueryForCurrentUser('users', UserConverter)
-        .onSnapshot(usersSnapshot => {
+        .onSnapshot((usersSnapshot) => {
           const users = [];
 
           usersSnapshot.forEach((doc) => {
-            users.push(doc.data())
+            users.push(doc.data());
           });
 
           console.log('Updated users from DB: ', users);
-          
+
           const allUsers = this.userService.storeUsers(
             users,
             this.partService.getParts()
