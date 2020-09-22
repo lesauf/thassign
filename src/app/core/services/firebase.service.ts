@@ -192,10 +192,16 @@ export class FirebaseService {
    * Return an observable on a collection
    * @param collName
    */
-  listenToCollection(collName): Observable<any> {
-    return this.firestore
-      .collection(collName, (ref) => ref.where('ownerId', '==', this.user._id))
-      .valueChanges();
+  getQueryForCurrentUser(
+    collName,
+    converter
+  ): firebase.firestore.Query<unknown> {
+    return (
+      this.firestore.firestore
+        .collection(collName)
+        // .withConverter(converter)
+        .where('ownerId', '==', this.user._id)
+    );
   }
 
   test() {

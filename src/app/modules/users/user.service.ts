@@ -164,7 +164,7 @@ export class UserService extends CommonService<User> {
   /**
    * Get all users from server
    */
-  storeUsers(users: [], allParts: Part[]): User[] {
+  storeUsers(users: any[], allParts: Part[]): User[] {
     try {
       // We need to pass the ownerId as parameter because Stitch
       // does not support lookup on user context
@@ -360,7 +360,7 @@ export class UserService extends CommonService<User> {
 
     const assignableUsers = users.filter((user) => {
       const meetings = user.meetingsAssignable;
-      return meetings.includes(meetingName);
+      return meetings.includes(meetingName) && !user.disabled;
     });
 
     // Arranging by part,
