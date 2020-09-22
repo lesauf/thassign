@@ -197,7 +197,7 @@ export class FirebaseService {
       .collection(
         collName,
         (ref) => ref.where('ownerId', '==', this.signedInUser._id)
-        //.orderBy(orderBy)
+        // .orderBy(orderBy)
       )
       .snapshotChanges();
   }
