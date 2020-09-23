@@ -4,6 +4,7 @@ import { Observable, of, BehaviorSubject } from 'rxjs';
 import { StitchService } from '@src/app/core/services/stitch.service';
 import { MessageService } from '@src/app/core/services/message.service';
 import { BackendService } from '@src/app/core/services/backend.service';
+import { shareReplay } from 'rxjs/operators';
 // import { RealmService } from '@src/app/core/services/realm.service';
 
 /**
@@ -16,14 +17,16 @@ export abstract class CommonService<M> {
    */
   protected dataStore: BehaviorSubject<M[]> = new BehaviorSubject<M[]>(null);
 
-  public readonly data: Observable<M[]> = this.dataStore.asObservable();
+  public readonly data: Observable<M[]>; //  = this.dataStore.asObservable();
 
   protected collectionName: string;
   protected serviceName: string;
   protected messageService: MessageService;
   protected backendService: BackendService;
 
-  constructor() {}
+  constructor() {
+    this.data = this.dataStore.asObservable();
+  }
 
   /**
    * Generic function to encapsulate any Baas used
@@ -42,6 +45,10 @@ export abstract class CommonService<M> {
   //   return this.backendService.callFunctionViaHook(functionName, parameters);
   // }
 
+  /**
+   * Update the store with the most recent data from the DB
+   * @param values
+   */
   protected updateStore(values: M[]): void {
     this.dataStore.next(values);
   }

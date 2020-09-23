@@ -255,7 +255,7 @@ export class User {
     if (this.lastName !== undefined) {
       return this.firstName + ' ' + this.lastName;
     }
-    return this.firstName;
+    return this.firstName ? this.firstName : 'UPDATE INFOS !';
   }
 
   get type(): string {

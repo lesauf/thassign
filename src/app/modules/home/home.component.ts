@@ -45,7 +45,6 @@ export class HomeComponent implements OnInit {
 
     this.parts = this.partService.getParts();
     this.users$ = this.userService.data;
-    this.users = this.userService.getUsers();
     this.assignments = this.assignmentService.getAssignments();
     // });
     // this.partService.getPartsNames().then((partsNames) => {

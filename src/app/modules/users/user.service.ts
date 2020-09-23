@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, interval, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { AuthService } from '@src/app/modules/auth/auth.service';
 import { CommonService } from '@src/app/core/services/common.service';
@@ -174,6 +174,7 @@ export class UserService extends CommonService<User> {
 
       // convert to User objects
       const allUsers = this.createUser(users, allParts) as User[];
+console.log('Users to put in the store :', allUsers);
 
       this.updateStore(allUsers);
       this.log('Stored users');
@@ -260,6 +261,31 @@ export class UserService extends CommonService<User> {
       return sortOrder === 'asc' ? sortResult : -sortResult;
     }
 
+    let totalUsers;
+
+    // this.pUsers = this.dataStore.pipe(
+    //   switchMap((users) => {
+    //     console.log(users);
+
+    //     if (users !== null) {
+    //       const fUsers = users.filter((user) => filterFunction(user));
+    //       this.pUsersStore.next(
+    //         fUsers
+    //           .sort((a: User, b: User) => sortFunction(a, b))
+    //           .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
+    //       );
+
+    //       totalUsers = users.length;
+    //     } else {
+    //       this.pUsersStore.next(null);
+    //       totalUsers = 0;
+    //     }
+
+    //     return this.pUsersStore.asObservable();
+    //   })
+    // );
+
+    // return totalUsers;
     const users = this.dataStore.getValue();
     console.log(users);
     if (users !== null) {

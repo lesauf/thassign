@@ -11,8 +11,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { tap } from 'rxjs/operators';
-import { Observable, of, BehaviorSubject } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject, merge } from 'rxjs';
 
 // import { any } from '../../../../../../server/src/modules/users/user.schema';
 // import { User } from '@src/app/models/users.schema';
@@ -85,16 +85,31 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     // Handle paginators
+    let obsForPagination;
     this.paginators.forEach((paginator) => {
-      paginator.page
+      merge(paginator.page, this.userService.data)
         .pipe(
           tap(() => {
             this.getUsers(paginator);
             this.pageSize = paginator.pageSize;
             this.pageIndex = paginator.pageIndex;
-          })
+          }),
+          // switchMap((pageEvent) => {
+          //   console.log(pageEvent);
+
+          //   this.dataLength = this.userService.paginateUsers(
+          //     this.sort,
+          //     this.sortOrder,
+          //     paginator !== undefined ? paginator.pageSize : this.pageSize,
+          //     paginator !== undefined ? paginator.pageIndex : this.pageIndex,
+          //     this.filters
+          //   );
+
+          //   return this.userService.pUsers;
+          // })
         )
-        .subscribe();
+
+        .subscribe(val => {console.log('OBS value', val)});
     });
 
     // Handle master checkbox
