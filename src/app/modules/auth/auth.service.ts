@@ -38,8 +38,11 @@ export class AuthService extends CommonService<User> {
   async googleLogin(): Promise<void> {
     await this.backendService.authenticate('google');
 
-    // Store the user info on my side
-    await this.userService.updateUser(this.backendService.getSignedInUser());
+    const sUser = this.backendService.getSignedInUser();
+    // Store/update the user info on my side if not already done
+    if ((await this.userService.getUserFromDb(sUser._id)) === null) {
+      await this.userService.updateUser(sUser);
+    }
   }
 
   refreshCustomData() {

@@ -215,7 +215,7 @@ export class User {
       ownerId: this.ownerId,
       firstName: this.firstName,
       deleted: this.deleted,
-      genre: this.genre,
+      ...(this.genre && { genre: this.genre }),
       parts: this.parts,
       assignments: this.assignments,
 
