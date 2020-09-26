@@ -13,9 +13,10 @@
           <input
             #searchBar
             matInput
+            [(ngModel)]="searchText"
             placeholder="{{ 'search-users' | translate }}"
             (click)="$event.stopPropagation()"
-            (input)="search(searchBar.value)"
+            (input)="search()"
             (keydown.space)="$event.stopPropagation()"
             (keydown.enter)="$event.stopPropagation(); searchUsers()"
           />
@@ -37,22 +38,6 @@
           </mat-option>
         </mat-autocomplete> -->
 
-        <!-- Search button -->
-        <div
-          fxFlex="40px"
-          fxFlexAlign="center"
-          fxLayoutlign="start center"
-          fxLayout="row"
-        >
-          <button
-            fxFlex
-            fxFill
-            mat-icon-button
-            (click)="$event.stopPropagation(); searchUsers()"
-          >
-            <mat-icon matSuffix>search</mat-icon>
-          </button>
-        </div>
         <!-- More button -->
         <!-- <div
           fxHide
@@ -74,21 +59,30 @@
     </mat-expansion-panel-header>
 
     <!-- Chips -->
-    <!-- <p>{{ 'type' | translate | titlecase }} :</p>
-    <mat-chip-list>
-      <mat-chip> {{ 'elder' | translate }} </mat-chip>
-      <mat-chip>{{ 'ministerial-servant' | translate }} </mat-chip>
-      <mat-chip>{{ 'man' | translate }} </mat-chip>
-      <mat-chip>{{ 'woman' | translate }} </mat-chip>
-      <mat-chip>{{ 'child' | translate }} </mat-chip>
-      <mat-chip>{{ 'baptized' | translate }} </mat-chip>
-      <mat-chip>{{ 'baptized' | translate }} </mat-chip>
-      <mat-chip>{{ 'disabled' | translate }} </mat-chip>
-      <mat-chip>{{ 'not-disabled' | translate }} </mat-chip>
-      <mat-chip>{{ 'publisher' | translate }} </mat-chip>
-    </mat-chip-list> -->
+    <p>{{ 'type' | translate | titlecase }} :</p>
+    <mat-chip-list multiple="true">
+      <mat-chip
+        *ngFor="let filter of filtersName"
+        [selected]="filterSelected(filter)"
+        (click)="toggleFilter(filter)"
+      >
+        {{ filter | translate }}
+      </mat-chip>
+    </mat-chip-list>
 
     <mat-action-row>
+      <!-- Search button -->
+
+      <button mat-button (click)="searchUsers()">
+        <!-- <mat-icon matSuffix>search</mat-icon> -->
+        {{ 'apply-filters' | translate | titlecase }}
+      </button>
+
+      <button mat-button (click)="clearFilters()">
+        <!-- <mat-icon matSuffix>search</mat-icon> -->
+        {{ 'clear-filters' | translate | titlecase }}
+      </button>
+
       <button mat-button (click)="mepSearch.expanded = false">
         {{ 'close' | translate | titlecase }}
       </button>

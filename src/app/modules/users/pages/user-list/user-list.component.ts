@@ -47,7 +47,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   // State of all checkboxes
   noUserChecked = true;
   display = 'grid'; // 'grid' or 'list'
-  sort = 'firstName';
+  sortField = 'firstName';
   sortOrder = 'asc';
   /**
    * Number of total users filtered
@@ -57,7 +57,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   pageSizeOptions: number[] = [1, 2, 5, 10, 25, 100];
   usersTotal: number;
-  filters = ''; // TODO: retrieve value from input field in component UserFilter
+  searchTerm = '';
 
   // MatPaginator Output
   @ViewChildren(MatPaginator) paginators: QueryList<MatPaginator>;
@@ -93,23 +93,23 @@ export class UserListComponent implements OnInit, AfterViewInit {
             this.getUsers(paginator);
             this.pageSize = paginator.pageSize;
             this.pageIndex = paginator.pageIndex;
-          }),
+          })
           // switchMap((pageEvent) => {
           //   console.log(pageEvent);
 
           //   this.dataLength = this.userService.paginateUsers(
-          //     this.sort,
+          //     this.sortField,
           //     this.sortOrder,
           //     paginator !== undefined ? paginator.pageSize : this.pageSize,
           //     paginator !== undefined ? paginator.pageIndex : this.pageIndex,
-          //     this.filters
+          //     this.searchTerm
           //   );
 
           //   return this.userService.pUsers;
           // })
         )
 
-        .subscribe(val => {console.log('OBS value', val)});
+        .subscribe();
     });
 
     // Handle master checkbox
@@ -136,16 +136,17 @@ export class UserListComponent implements OnInit, AfterViewInit {
    */
   getUsers(paginator?: MatPaginator): void {
     // Clear users list to display the loader
-    // this.users = null;
-    console.log('Component getUsers called');
+    this.users = null;
 
-    this.dataLength = this.userService.paginateUsers(
-      this.sort,
-      this.sortOrder,
-      paginator !== undefined ? paginator.pageSize : this.pageSize,
-      paginator !== undefined ? paginator.pageIndex : this.pageIndex,
-      this.filters
-    );
+    this.userService.sortField = this.sortField;
+    this.userService.sortOrder = this.sortOrder;
+    this.userService.pageSize =
+      paginator !== undefined ? paginator.pageSize : this.pageSize;
+    this.userService.pageIndex =
+      paginator !== undefined ? paginator.pageIndex : this.pageIndex;
+    this.userService.searchTerm = this.searchTerm;
+
+    this.dataLength = this.userService.paginateUsers();
 
     // Handle users checkboxes
     // this.usersCheckboxes.forEach((c, index, usersCheckboxes) => {
@@ -177,7 +178,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
    * Perform a search from the filter input
    */
   searchByName(searchTerms: string) {
-    this.filters = searchTerms;
+    this.searchTerm = searchTerms;
 
     this.pageIndex = 0; // Set the paginator pack to the first page
     this.getUsers();
@@ -262,12 +263,12 @@ export class UserListComponent implements OnInit, AfterViewInit {
     const dialogRef = this.dialog.open(UserSortComponent, {
       data: {
         trigger: target,
-        sort: this.sort,
+        sort: this.sortField,
       },
     });
     dialogRef.afterClosed().subscribe((sort) => {
-      if (sort && this.sort !== sort) {
-        this.sort = sort;
+      if (sort && this.sortField !== sort) {
+        this.sortField = sort;
         this.getUsers();
       }
     });

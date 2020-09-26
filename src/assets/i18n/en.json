@@ -6,6 +6,7 @@
   "Week-end": "Week-end",
   "actions": "actions",
   "all": "All",
+  "apply-filters": "Apply filters",
   "assignable-parts": "Assignable parts",
   "assignee": "Assignee",
   "assignment": "Assignment",
@@ -15,6 +16,7 @@
   "cancel": "Cancel",
   "chairman": "Chairman",
   "child": "Child",
+  "clear-filters": "Clear filters",
   "clm": {
     "chairman": "CLM - Chairman",
     "christianLiving": {

@@ -6,6 +6,7 @@
   "Week-end": "Week-end",
   "actions": "actions",
   "all": "Tous",
+  "apply-filters": "Appliquer les filtres",
   "assignable-parts": "Attributions possible",
   "assignee": "Élève",
   "assignment": "Attribution",
@@ -15,6 +16,7 @@
   "cancel": "Annuler",
   "chairman": "President",
   "child": "Enfant",
+  "clear-filters": "Effacer les filtres",
   "clm": {
     "chairman": "VCM - President",
     "christianLiving": {

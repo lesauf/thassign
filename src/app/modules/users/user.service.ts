@@ -58,10 +58,19 @@ export class UserService extends CommonService<User> {
    */
   pUsers: Observable<User[]> = this.pUsersStore.asObservable();
 
+  /**
+   * Pagination properties
+   */
   sortField = 'lastName';
-  sortOrder = 'ASC';
+  sortOrder = 'asc';
   pageSize = 10;
   pageIndex = 1;
+  searchTerm = '';
+
+  /**
+   * List of filters on the form filterName => dbField | type of dbField
+   */
+  filters = {};
 
   protected collectionName = 'users';
   protected serviceName = 'UserService';
@@ -174,7 +183,7 @@ export class UserService extends CommonService<User> {
 
       // convert to User objects
       const allUsers = this.createUser(users, allParts) as User[];
-console.log('Users to put in the store :', allUsers);
+      // console.log('Users to put in the store :', allUsers);
 
       this.updateStore(allUsers);
       this.log('Stored users');
@@ -218,83 +227,78 @@ console.log('Users to put in the store :', allUsers);
   }
 
   /* GET users whose name contains search term */
-  async searchUsers(term: string): Promise<User[]> {
-    // term = term ? encodeURIComponent(term.trim()) : null;
+  // async searchUsers(term: string): Promise<User[]> {
+  //   // term = term ? encodeURIComponent(term.trim()) : null;
 
-    try {
-      const result = await this.callFunction('Users_search', [term]);
+  //   try {
+  //     const result = await this.callFunction('Users_search', [term]);
 
-      // const users = this.createUser(result) as User[];
-      const users = result;
-      this.log(`found users matching "${term}"`);
+  //     // const users = this.createUser(result) as User[];
+  //     const users = result;
+  //     this.log(`found users matching "${term}"`);
 
-      return users;
-    } catch (error) {
-      this.handleError<any>('searchUsers', []);
+  //     return users;
+  //   } catch (error) {
+  //     this.handleError<any>('searchUsers', []);
+  //   }
+  // }
+
+  /**
+   * Check if a given user pass the filters
+   */
+  filterUser(user: User): boolean {
+    let passFiltering = true; // Do this user pass all the filters ?
+
+    // Loop on the filters keys
+    Object.keys(this.filters).forEach((fKey) => {
+      if (this.filters[fKey] === 'boolean') {
+        // pass if field value is true
+        passFiltering = passFiltering && user[fKey] === true;
+      } else if (this.filters[fKey] === 'boolean-false') {
+        // pass if field value is false
+        passFiltering = passFiltering && user[fKey] === false;
+      } else {
+        // filter key is the value, filter value is the name of the field
+        const fValue = this.filters[fKey];
+        passFiltering = passFiltering && user[fValue] === fKey;
+      }
+    });
+
+    return passFiltering;
+  }
+
+  sortUsers(a: User, b: User): number {
+    if (a[this.sortField] === b[this.sortField]) {
+      return 0;
     }
+
+    const sortResult = a[this.sortField] > b[this.sortField] ? 1 : -1;
+
+    return this.sortOrder === 'asc' ? sortResult : -sortResult;
   }
 
   /**
-   * Query users from the server
-   * rename to Paginate users
+   * Paginate users
    *
    * @returns the total number of filtered users for pagination
    */
-  paginateUsers(
-    sortField: string = 'lastName',
-    sortOrder: string = 'asc',
-    pageSize: number = 50,
-    pageIndex: number = 1,
-    filters: string = ''
-  ): number {
-    function filterFunction(user: User) {
-      return user.fullName.match(new RegExp(filters, 'i')) !== null;
-    }
-
-    function sortFunction(a: User, b: User): number {
-      if (a[sortField] === b[sortField]) {
-        return 0;
-      }
-
-      const sortResult = a[sortField] > b[sortField] ? 1 : -1;
-
-      return sortOrder === 'asc' ? sortResult : -sortResult;
-    }
-
-    let totalUsers;
-
-    // this.pUsers = this.dataStore.pipe(
-    //   switchMap((users) => {
-    //     console.log(users);
-
-    //     if (users !== null) {
-    //       const fUsers = users.filter((user) => filterFunction(user));
-    //       this.pUsersStore.next(
-    //         fUsers
-    //           .sort((a: User, b: User) => sortFunction(a, b))
-    //           .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
-    //       );
-
-    //       totalUsers = users.length;
-    //     } else {
-    //       this.pUsersStore.next(null);
-    //       totalUsers = 0;
-    //     }
-
-    //     return this.pUsersStore.asObservable();
-    //   })
-    // );
-
-    // return totalUsers;
+  paginateUsers(): number {
     const users = this.dataStore.getValue();
-    console.log(users);
+
     if (users !== null) {
-      const fUsers = users.filter((user) => filterFunction(user));
+      const fUsers = users.filter(
+        (user) =>
+          user.fullName.match(new RegExp(this.searchTerm, 'i')) !== null &&
+          this.filterUser(user)
+      );
 
       this.pUsersStore.next(
         fUsers
-          .sort((a: User, b: User) => sortFunction(a, b))
-          .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
+          .sort((a: User, b: User) => this.sortUsers(a, b))
+          .slice(
+            this.pageIndex * this.pageSize,
+            (this.pageIndex + 1) * this.pageSize
+          )
       );
 
       return fUsers.length;

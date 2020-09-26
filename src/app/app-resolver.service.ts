@@ -48,7 +48,7 @@ export class AppResolverService implements Resolve<string> {
             users.push(doc.data());
           });
 
-          console.log('Updated users from DB: ', users);
+          // console.log('Updated users from DB: ', users);
 
           const allUsers = this.userService.storeUsers(
             users,
