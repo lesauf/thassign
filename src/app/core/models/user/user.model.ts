@@ -256,11 +256,9 @@ export class User {
   get assignmentsDisplay(): string {
     let aDisplay = '';
 
-    if (this.assignments.length) {
-      this.assignments.forEach((a) => {
-        aDisplay = aDisplay + DateTime.fromJSDate(a.week).toLocaleString();
-      });
-    }
+    this.assignments?.forEach((a) => {
+      aDisplay = aDisplay + DateTime.fromJSDate(a.week).toLocaleString();
+    });
 
     return aDisplay;
   }
