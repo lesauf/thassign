@@ -160,7 +160,7 @@ export class User {
           );
         }
       }
-
+      // console.log(userProperties);
       // Assign the properties to this object
       Object.assign(this, userProperties);
     }
@@ -187,6 +187,9 @@ export class User {
     if (!this.congregation) {
       delete this.congregation;
     }
+
+    // Remove the get properties
+    // delete this.fullName;
   }
 
   /**
@@ -207,6 +210,8 @@ export class User {
     return this.firstName + ' ' + this.lastName;
   }
 
+  set fullName(fullName: string) {}
+
   get type() {
     let generatedType = '';
     if (this.genre === 'man') {
@@ -226,6 +231,8 @@ export class User {
     return generatedType;
   }
 
+  set type(type: string) {}
+
   get progress() {
     let progress = '';
     if (!this.baptized) {
@@ -237,6 +244,8 @@ export class User {
 
     return progress;
   }
+
+  set progress(progress) {}
 
   /**
    * List of meetings the users have parts on
@@ -253,6 +262,8 @@ export class User {
     return _meetingsAssignable;
   }
 
+  set meetingsAssignable(meetingsAssignable) {}
+
   get assignmentsDisplay(): string {
     let aDisplay = '';
 
@@ -262,6 +273,8 @@ export class User {
 
     return aDisplay;
   }
+
+  set assignmentsDisplay(assignmentsDisplay) {}
 
   get lastAssignment(): Assignment {
     if (!this.assignments?.length) {
@@ -281,4 +294,6 @@ export class User {
 
     return this.assignments[0];
   }
+
+  set lastAssignment(lastAssignment) {}
 }
