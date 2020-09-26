@@ -264,11 +264,11 @@ export class User {
   }
 
   get lastAssignment(): Assignment {
-    if (!this.assignments.length) {
+    if (!this.assignments?.length) {
       return null;
     }
     // sort by assignment
-    this.assignments.sort((a, b) => {
+    this.assignments?.sort((a, b) => {
       if (a.week < b.week) {
         return 1;
       }
