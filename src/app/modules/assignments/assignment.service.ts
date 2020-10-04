@@ -10,6 +10,7 @@ import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { Part } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
 import { BackendService } from '@src/app/core/services/backend.service';
+import { AssignmentConverter } from '@src/app/core/models/assignment/assignment.converter';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -56,6 +57,101 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     // generateAssignments(userService, partSer);
   }
 
+  destroy() {
+    this.pAssignmentsStore.complete();
+    this.dataStore.complete();
+  }
+
+  /**
+   * Create Assignment instances from JSON or array of JSON objects
+   *
+   * @param props JSON object/array with properties
+   */
+  createAssignment(
+    props: object,
+    allParts: Part[],
+    allUsers: User[]
+  ): Assignment | Assignment[] {
+    if (props instanceof Array) {
+      return props.map((obj, index) => {
+        // Set the assignment position as its position in the array
+
+        // Replace part, assignee and assistant with model object
+        if (obj.part.hasOwnProperty('id')) {
+          // from DB
+          // delete obj._id; // Remove the _id, so in case it should be saved, mongoDb regenerate
+          obj.part = allParts.find((part) => part.name === obj.part);
+          obj.assignee = allUsers.find((user) => user._id === obj.assignee);
+          obj.assistant = obj.assistant
+            ? allUsers.find((user) => user._id === obj.assistant)
+            : null;
+        } else if (obj.part.hasOwnProperty('_id')) {
+          // from form, with selected part
+          obj.ownerId = this.backendService.getSignedInUser()._id;
+          obj.position = index;
+          obj.part = allParts.find((part) => part.name === obj.part.name);
+          obj.assignee = obj.assignee
+            ? allUsers.find((user) => user._id === obj.assignee._id)
+            : null;
+          obj.assistant = obj.assistant
+            ? allUsers.find((user) => user._id === obj.assistant._id)
+            : null;
+        }
+
+        // obj.part = this.partService
+        return new Assignment(obj);
+      }) as Assignment[];
+    } else {
+      return new Assignment(props) as Assignment;
+    }
+  }
+
+  generateAssignments(
+    meeting: string,
+    month: DateTime,
+    listOfParts: object,
+    assignableUsersByPart: object
+  ) {
+    const assignments: Assignment[] = [];
+    const weeks = this.getAllWeeksOfTheSelectedMonth(month);
+    const listOfPartsByWeek = this.getListOfPartsByWeek(meeting, month);
+    // console.log(weeks);
+    weeks.forEach((week, index) => {
+      let position = 1;
+      // TODO fetch from the db, from the epub
+
+      listOfPartsByWeek[index].forEach((partName) => {
+        // Set the position for repetitive parts
+
+        const previous = assignments.slice(-1)[0];
+
+        if (previous?.part.name === listOfParts[partName].name) {
+          position = previous.position + 1;
+        }
+
+        assignments.push(
+          new Assignment({
+            week: week.start.toJSDate(),
+            part: listOfParts[partName],
+            assignee: {},
+            position: position,
+            assignableUsers: assignableUsersByPart[partName],
+            // https://stackoverflow.com/a/40560953
+            ...(listOfParts[partName]['withAssistant'] && {
+              assistant: {},
+            }),
+            ...(listOfParts[partName]['withTitle'] && { title: '' }),
+            ...(listOfParts[partName]['withAssistant'] && {
+              assignableAssistants: assignableUsersByPart['studentAssistant'],
+            }),
+          })
+        );
+      });
+    });
+
+    return assignments;
+  }
+
   /**
    * Get users from store
    */
@@ -67,13 +163,11 @@ export abstract class AssignmentService extends CommonService<Assignment> {
    * Get all users from the server
    */
   storeAssignments(
-    assignments: [],
+    assignments: any[],
     allParts: Part[],
     allUsers: User[]
   ): Assignment[] {
     try {
-      // let result = await this.callFunction('Assignments_find');
-
       // Convert results to Assignment objects
       const allAssignments = this.createAssignment(
         assignments,
@@ -127,49 +221,6 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   //     this.handleError<any>(`getAssignment id=${id}`, error);
   //   }
   // }
-
-  /**
-   * Create User instances from JSON or array of JSON objects
-   *
-   * @param props JSON object/array with properties
-   */
-  createAssignment(
-    props: object,
-    allParts: Part[],
-    allUsers: User[]
-  ): Assignment | Assignment[] {
-    if (props instanceof Array) {
-      return props.map((obj, index) => {
-        // Set the assignment position as its position in the array
-
-        // Replace part, assignee and assistant with model object
-        if (obj.part.hasOwnProperty('id')) {
-          // from DB
-          delete obj._id; // Remove the _id, so in case it should be saved, mongoDb regenerate
-          obj.part = allParts.find((part) => part.name === obj.part);
-          obj.assignee = allUsers.find((user) => user._id === obj.assignee);
-          obj.assistant = obj.assistant
-            ? allUsers.find((user) => user._id === obj.assistant)
-            : null;
-        } else if (obj.part.hasOwnProperty('_id')) {
-          // from form, with selected part
-          obj.position = index;
-          obj.part = allParts.find((part) => part.name === obj.part.name);
-          obj.assignee = obj.assignee
-            ? allUsers.find((user) => user._id === obj.assignee._id)
-            : null;
-          obj.assistant = obj.assistant
-            ? allUsers.find((user) => user._id === obj.assistant._id)
-            : null;
-        }
-
-        // obj.part = this.partService
-        return new Assignment(obj);
-      }) as Assignment[];
-    } else {
-      return new Assignment(props) as Assignment;
-    }
-  }
 
   /**
    * GET assignments by week
@@ -295,52 +346,6 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     // return assignmentsGrouped;
   }
 
-  generateAssignments(
-    meeting: string,
-    month: DateTime,
-    listOfParts: object,
-    assignableUsersByPart: object
-  ) {
-    const assignments: Assignment[] = [];
-    const weeks = this.getAllWeeksOfTheSelectedMonth(month);
-    const listOfPartsByWeek = this.getListOfPartsByWeek(meeting, month);
-    // console.log(weeks);
-    weeks.forEach((week, index) => {
-      let position = 1;
-      // TODO fetch from the db, from the epub
-
-      listOfPartsByWeek[index].forEach((partName) => {
-        // Set the position for repetitive parts
-
-        const previous = assignments.slice(-1)[0];
-
-        if (previous?.part.name === listOfParts[partName].name) {
-          position = previous.position + 1;
-        }
-
-        assignments.push(
-          new Assignment({
-            week: week.start.toJSDate(),
-            part: listOfParts[partName],
-            assignee: {},
-            position: position,
-            assignableUsers: assignableUsersByPart[partName],
-            // https://stackoverflow.com/a/40560953
-            ...(listOfParts[partName]['withAssistant'] && {
-              assistant: {},
-            }),
-            ...(listOfParts[partName]['withTitle'] && { title: '' }),
-            ...(listOfParts[partName]['withAssistant'] && {
-              assignableAssistants: assignableUsersByPart['studentAssistant'],
-            }),
-          })
-        );
-      });
-    });
-
-    return assignments;
-  }
-
   // async getWeekendChairmanAssignmentByWeek(week: DateTime) {
   //   const weekendChairmanPart = ['weekend.publicTalk.chairman'];
   //   const url =
@@ -373,11 +378,11 @@ export abstract class AssignmentService extends CommonService<Assignment> {
    */
   async addAssignment(assignment: Assignment): Promise<any> {
     try {
-      const assignments = await this.callFunction('Assignments_insertMany', [
-        [assignment],
-      ]);
-
-      this.updateStore(Assignment.fromJson(assignments) as Assignment[]);
+      await this.backendService.upsertOneDoc(
+        'assignments',
+        new AssignmentConverter(),
+        assignment
+      );
 
       this.log(`added assignment`);
     } catch (error) {
@@ -388,33 +393,50 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   /**
    * @PUT: update the assignment on the server
    */
-  // async updateAssignment(assignment: Assignment): Promise<void> {
-  //   try {
-  //     const assignments = await this.callFunction('Assignments_updateByIds', [
-  //       [assignment._id],
-  //       assignment,
-  //     ]);
+  async updateAssignment(assignment: Assignment): Promise<void> {
+    try {
+      await this.backendService.upsertOneDoc(
+        'assignments',
+        new AssignmentConverter(),
+        assignment,
+        assignment._id,
+        'set',
+        true
+      );
 
-  //     this.updateStore(Assignment.fromJson(assignments) as Assignment[]);
-
-  //     this.log(`updated assignment`);
-  //   } catch (error) {
-  //     this.handleError<any>('updateAssignment', error);
-  //   }
-  // }
+      this.log(`updated assignment`);
+    } catch (error) {
+      this.handleError<any>('updateAssignment', error);
+    }
+  }
 
   /**
    * DELETE: delete the assignment from the server
    */
-  async deleteAssignment(id: string[]): Promise<any> {
+  async deleteAssignment(assignmentId: string | string[]): Promise<any> {
     try {
-      const assignments = await this.callFunction('Assignments_deleteByIds', [
-        id,
-      ]);
+      if (assignmentId.hasOwnProperty('length')) {
+        // many assignments
+        await this.backendService.upsertManyDocs(
+          'assignments',
+          new AssignmentConverter(),
+          assignmentId as String[],
+          'delete'
+        );
 
-      this.updateStore(Assignment.fromJson(assignments) as Assignment[]);
+        this.log(`deleted assignments`);
+      } else {
+        // Only one assignment
+        await this.backendService.upsertOneDoc(
+          'users',
+          new AssignmentConverter(),
+          null,
+          assignmentId as string,
+          'delete'
+        );
 
-      this.log(`deleted assignment`);
+        this.log(`deleted assignment`);
+      }
     } catch (error) {
       this.handleError<any>('deleteAssignment', error);
     }
@@ -448,17 +470,24 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     });
 
     try {
-      //  Save the assignments and fetch all of them from the DB
-      const result = await this.callFunction('Assignments_insertMany', [
-        startDate.toISO(),
-        endDate.toISO(),
+      await this.backendService.upsertManyDocs(
+        'assignments',
+        new AssignmentConverter(),
         toSave,
-      ]);
+        'set'
+      );
+
+      //  Save the assignments and fetch all of them from the DB
+      // const result = await this.callFunction('Assignments_insertMany', [
+      //   startDate.toISO(),
+      //   endDate.toISO(),
+      //   toSave,
+      // ]);
 
       // Then update Store
-      this.updateStore(
-        this.createAssignment(result, allParts, allUsers) as Assignment[]
-      );
+      // this.updateStore(
+      //   this.createAssignment(result, allParts, allUsers) as Assignment[]
+      // );
     } catch (error) {
       this.handleError<any>('saveAssignments', error);
     }

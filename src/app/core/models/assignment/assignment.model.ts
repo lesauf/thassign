@@ -1,16 +1,10 @@
 import {
-  IsArray,
   IsBoolean,
   IsDate,
-  IsEmail,
   IsString,
-  IsIn,
   IsInt,
   IsObject,
   IsOptional,
-  IsUUID,
-  IsDefined,
-  MinLength,
 } from 'class-validator';
 import { DateTime } from 'luxon';
 
@@ -18,6 +12,12 @@ import { Part, ObjectId } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
 
 export class Assignment {
+  @IsObject()
+  @IsOptional()
+  // Joi.string().alphanum()
+  // tslint:disable-next-line: variable-name
+  _id: string;
+
   @IsObject()
   @IsOptional()
   week: DateTime;
@@ -165,5 +165,35 @@ export class Assignment {
     if (this.createdAt) {
       delete this.createdAt;
     }
+  }
+
+  /**
+   * Convert to a standard object for saving
+   */
+  toObject() {
+    // Define updatedAt field if the _id field exist
+    if (this._id === undefined) {
+      this.createdAt = new Date();
+    } else {
+      this.updatedAt = new Date();
+    }
+
+    return {
+      ...(this._id && { _id: this._id }),
+      ownerId: this.ownerId,
+      week: this.week,
+      part: this.part,
+      assignee: this.assignee,
+      position: this.position,
+
+      ...(this.assistant && { assistant: this.assistant }),
+      ...(this.title && { title: this.title }),
+      ...(this.hall && { hall: this.hall }),
+      ...(this.number && { number: this.number }),
+      ...(this.createdAt && { createdAt: this.createdAt }),
+      ...(this.updatedAt && { updatedAt: this.updatedAt }),
+      ...(this.deletedAt && { deletedAt: this.deletedAt }),
+      ...(this.deletedBy && { deletedBy: this.deletedBy }),
+    };
   }
 }

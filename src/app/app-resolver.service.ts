@@ -12,6 +12,7 @@ import { Observable, EMPTY, of } from 'rxjs';
 import { PartService } from '@src/app/core/services/part.service';
 import { UserService } from '@src/app/modules/users/user.service';
 import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
+import { AssignmentConverter } from './core/models/assignment/assignment.converter';
 import { BackendService } from '@src/app/core/services/backend.service';
 import { AuthService } from '@src/app/modules/auth/auth.service';
 import { UserConverter } from './core/models/user/user.converter';
@@ -56,15 +57,22 @@ export class AppResolverService implements Resolve<string> {
           );
         });
 
-      // this.backendService
-      //   .getQueryForCurrentUser('assignments', AssignmentsConverter)
-      //   .subscribe((assignments) => {
-      //     this.assignmentService.storeAssignments(
-      //       assignments,
-      //       this.partService.getParts(),
-      //       this.userService.getUsers()
-      //     );
-      //   });
+      // Set a listener on assignments collections
+      this.backendService
+        .getQueryForCurrentUser('assignments', AssignmentConverter)
+        .onSnapshot((assignmentsSnapshot) => {
+          const assignments = [];
+
+          assignmentsSnapshot.forEach((doc) => {
+            assignments.push(doc.data());
+          });
+
+          const allAssignments = this.assignmentService.storeAssignments(
+            assignments,
+            this.partService.getParts(),
+            this.userService.getUsers()
+          );
+        });
 
       return 'Data fetched';
     } catch (error) {

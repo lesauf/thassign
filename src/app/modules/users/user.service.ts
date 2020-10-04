@@ -38,8 +38,6 @@ interface AssignableUsersByPart {
   providedIn: 'root',
 })
 export class UserService extends CommonService<User> {
-  private usersUrl = 'api/user'; // URL to web api
-
   /**
    * Current user to edit or view
    * Used to pass it as a parameter and avoid query again from the DB
@@ -175,12 +173,6 @@ export class UserService extends CommonService<User> {
    */
   storeUsers(users: any[], allParts: Part[]): User[] {
     try {
-      // We need to pass the ownerId as parameter because Stitch
-      // does not support lookup on user context
-      // const result = await this.callFunction('Users_find', [
-      //   { ownerId: this.backendService.getSignedInUser()._id },
-      // ]);
-
       // convert to User objects
       const allUsers = this.createUser(users, allParts) as User[];
       // console.log('Users to put in the store :', allUsers);
@@ -452,10 +444,6 @@ export class UserService extends CommonService<User> {
         user
       );
 
-      // const users = await this.callFunction('Users_insertMany', [[user]]);
-
-      // this.updateStore(this.createUser(users, allParts) as User[]);
-
       this.log(`added user`);
     } catch (error) {
       this.handleError<any>('addUser', error);
@@ -467,12 +455,6 @@ export class UserService extends CommonService<User> {
    */
   async updateUser(user: User, allParts?: Part[]): Promise<void> {
     try {
-      // const users = await this.callFunction('Users_updateByIds', [
-      //   [userData._id],
-      //   userData,
-      // ]);
-      // console.log(user);
-      // this.updateStore(this.createUser(users, allParts) as User[]);
       await this.backendService.upsertOneDoc(
         'users',
         new UserConverter(),
