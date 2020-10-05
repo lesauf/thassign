@@ -134,7 +134,7 @@ export class FirebaseService {
    * Insert, replace, merge or delete many documents in the specified collection
    * @param collection
    * @param converter
-   * @param data Inca se of delete, contains an array of ids to delete
+   * @param data In case of delete, contains an array of ids to delete
    * @param operation
    * @param merge
    */
@@ -147,7 +147,7 @@ export class FirebaseService {
   ): Promise<any> {
     // Get a new write batch
     var batch = this.firestore.firestore.batch();
-
+console.log(data);
     // Loop through the array to add them to the batch
     data.forEach((item) => {
       let currentId;
@@ -155,7 +155,7 @@ export class FirebaseService {
         if (operation === 'set') {
           // Generate id for that insert
           item['_id'] = this.firestore.createId();
-          currentId = item['id'];
+          currentId = item['_id'];
         } else {
           // delete operation without specified id
           // The item is the id to delete
@@ -194,7 +194,7 @@ export class FirebaseService {
    */
   getQueryForCurrentUser(
     collName,
-    converter
+    converter?
   ): firebase.firestore.Query<unknown> {
     return (
       this.firestore.firestore
@@ -202,6 +202,28 @@ export class FirebaseService {
         // .withConverter(converter)
         .where('ownerId', '==', this.signedInUser._id)
     );
+  }
+
+  /**
+   * Get data in a given range
+   * @param collName Collection name
+   * @param field 
+   * @param start 
+   * @param end 
+   */
+  async getDocsInRange(collName: string, field: string, start: any, end: any): Promise<any[]> {
+    const querySnapshot = await this.getQueryForCurrentUser(collName)
+      .where(field, '>', start)
+      .where(field, '<', end)
+      .get();
+
+    const data = [];
+
+    querySnapshot.forEach((doc) => {
+      data.push(doc.data());
+    });
+    
+    return data;
   }
 
   paginateQuery(

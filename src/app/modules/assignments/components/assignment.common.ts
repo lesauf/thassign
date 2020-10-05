@@ -87,6 +87,13 @@ export abstract class AssignmentCommon {
     // this.validationService = validationService;
   }
 
+  /**
+   * Get some initial data :
+   * - listOfParts
+   * - firstWeekOfTheMonth
+   * - weeks of the current month
+   * - assignables users by part
+   */
   async initializeData() {
     await this.getParts();
 

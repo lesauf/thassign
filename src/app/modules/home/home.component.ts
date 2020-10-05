@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   users: User[];
   public users$: Observable<User[]>;
 
-  assignments: Assignment[];
+  assignments$: Observable<Assignment[]>;
 
   user: any;
 
@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
 
     this.parts = this.partService.getParts();
     this.users$ = this.userService.data;
-    this.assignments = this.assignmentService.getAssignments();
+    this.assignments$ = this.assignmentService.data;
     // });
     // this.partService.getPartsNames().then((partsNames) => {
     //   console.log('Parts names :', partsNames);

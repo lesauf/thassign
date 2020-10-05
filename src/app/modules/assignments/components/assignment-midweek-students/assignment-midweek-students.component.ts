@@ -61,7 +61,8 @@ import { BackendService } from '@src/app/core/services/backend.service';
   styleUrls: ['./assignment-midweek-students.component.scss'],
   providers: [AssignmentControlService],
 })
-export class AssignmentMidweekStudentsComponent extends AssignmentCommon
+export class AssignmentMidweekStudentsComponent
+  extends AssignmentCommon
   implements OnInit, OnChanges, OnDestroy {
   @Input()
   /**
@@ -86,7 +87,7 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   /**
    * paginated Assignments
    */
-  // pAssignments$: Observable<Assignment[]>;
+  pAssignments$: Observable<Assignment[]>;
 
   studentsForm: FormGroup;
 
@@ -114,6 +115,13 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
   }
 
   async ngOnInit() {
+    // Subscribe to the assignments
+    this.assignmentService.data.subscribe((users) => {
+      // this.users = users;
+      this.pAssignments$ = this.assignmentService.pAssignments;
+    });
+
+    // this.getUsers();
     // this._getTranslations();
     //   this.getAssignableList();
     // this.userService.data.subscribe((users) => {
@@ -172,6 +180,10 @@ export class AssignmentMidweekStudentsComponent extends AssignmentCommon
     );
 
     this.loading = false;
+  }
+
+  getAssignmentsForCurrentMonth() {
+    
   }
 
   /**

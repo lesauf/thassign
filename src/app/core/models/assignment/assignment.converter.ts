@@ -6,7 +6,7 @@ export class AssignmentConverter {
    * @param assignment Assignment
    */
   toFirestore(assignment: Assignment) {
-    return assignment.toObject();
+    return assignment;
   }
 
   fromFirestore(snapshot, options) {

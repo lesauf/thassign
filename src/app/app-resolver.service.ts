@@ -12,10 +12,10 @@ import { Observable, EMPTY, of } from 'rxjs';
 import { PartService } from '@src/app/core/services/part.service';
 import { UserService } from '@src/app/modules/users/user.service';
 import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
-import { AssignmentConverter } from './core/models/assignment/assignment.converter';
+import { AssignmentConverter } from '@src/app/core/models/assignment/assignment.converter';
 import { BackendService } from '@src/app/core/services/backend.service';
 import { AuthService } from '@src/app/modules/auth/auth.service';
-import { UserConverter } from './core/models/user/user.converter';
+import { UserConverter } from '@src/app/core/models/user/user.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -29,10 +29,10 @@ export class AppResolverService implements Resolve<string> {
     protected backendService: BackendService
   ) {}
 
-  async resolve(
+  resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Promise<string> {
+  ): string {
     try {
       // const data = await this.backendService.callFunction('getData');
 

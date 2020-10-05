@@ -31,6 +31,7 @@ const routes: Routes = [
       },
       {
         path: 'assignments',
+        canActivateChild: [AuthGuard],
         loadChildren: () =>
           import('@src/app/modules/assignments/assignments.module').then(
             (m) => m.AssignmentsModule

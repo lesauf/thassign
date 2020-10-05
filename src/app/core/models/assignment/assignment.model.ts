@@ -53,30 +53,30 @@ export class Assignment {
   @IsOptional()
   number: number; // like public talk number
 
-  // Joi.date().default(Date.now()),
-  @IsDate()
-  @IsOptional()
-  createdAt: Date;
+  // // Joi.date().default(Date.now()),
+  // @IsDate()
+  // @IsOptional()
+  // createdAt: Date;
 
-  // Joi.date(),
-  @IsDate()
-  @IsOptional()
-  updatedAt: Date;
+  // // Joi.date(),
+  // @IsDate()
+  // @IsOptional()
+  // updatedAt: Date;
 
-  // deleted: Joi.boolean().default(false),
-  @IsBoolean()
-  @IsOptional()
-  deleted = false;
+  // // deleted: Joi.boolean().default(false),
+  // @IsBoolean()
+  // @IsOptional()
+  // deleted = false;
 
-  // Joi.date(),
-  @IsDate()
-  @IsOptional()
-  deletedAt: Date;
+  // // Joi.date(),
+  // @IsDate()
+  // @IsOptional()
+  // deletedAt: Date;
 
-  // Joi.string(),
-  @IsInt()
-  @IsOptional()
-  deletedBy: string;
+  // // Joi.string(),
+  // @IsInt()
+  // @IsOptional()
+  // deletedBy: string;
 
   private _assignableUsers: User[];
 
@@ -145,15 +145,15 @@ export class Assignment {
     if (!this.assistant) {
       delete this.assistant;
     }
-    if (!this.deletedAt) {
-      delete this.deletedAt;
-    }
-    if (!this.deletedBy) {
-      delete this.deletedBy;
-    }
-    if (!this.updatedAt) {
-      delete this.updatedAt;
-    }
+    // if (!this.deletedAt) {
+    //   delete this.deletedAt;
+    // }
+    // if (!this.deletedBy) {
+    //   delete this.deletedBy;
+    // }
+    // if (!this.updatedAt) {
+    //   delete this.updatedAt;
+    // }
     if (!this.title) {
       delete this.title;
     }
@@ -162,9 +162,9 @@ export class Assignment {
     }
 
     // Remove also createdAt ?
-    if (this.createdAt) {
-      delete this.createdAt;
-    }
+    // if (this.createdAt) {
+    //   delete this.createdAt;
+    // }
   }
 
   /**
@@ -172,11 +172,11 @@ export class Assignment {
    */
   toObject() {
     // Define updatedAt field if the _id field exist
-    if (this._id === undefined) {
-      this.createdAt = new Date();
-    } else {
-      this.updatedAt = new Date();
-    }
+    // if (this._id === undefined) {
+    //   this.createdAt = new Date();
+    // } else {
+    //   this.updatedAt = new Date();
+    // }
 
     return {
       ...(this._id && { _id: this._id }),
@@ -190,10 +190,10 @@ export class Assignment {
       ...(this.title && { title: this.title }),
       ...(this.hall && { hall: this.hall }),
       ...(this.number && { number: this.number }),
-      ...(this.createdAt && { createdAt: this.createdAt }),
-      ...(this.updatedAt && { updatedAt: this.updatedAt }),
-      ...(this.deletedAt && { deletedAt: this.deletedAt }),
-      ...(this.deletedBy && { deletedBy: this.deletedBy }),
+      // ...(this.createdAt && { createdAt: this.createdAt }),
+      // ...(this.updatedAt && { updatedAt: this.updatedAt }),
+      // ...(this.deletedAt && { deletedAt: this.deletedAt }),
+      // ...(this.deletedBy && { deletedBy: this.deletedBy }),
     };
   }
 }

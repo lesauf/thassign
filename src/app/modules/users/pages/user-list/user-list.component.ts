@@ -76,8 +76,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.userService.data.subscribe((users) => {
       this.users = users;
       this.pUsers$ = this.userService.pUsers;
-
-      // this.userService.pUsers.subscribe((t) => console.log('test', t));
     });
 
     this.getUsers();

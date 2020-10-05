@@ -470,6 +470,23 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     });
 
     try {
+      // First delete all the assignments for the given period
+      const assToDelete = await this.backendService.getDocsInRange(
+        'assignments',
+        'week',
+        startDate.toISODate(),
+        endDate.toISODate()
+      );
+      if (assToDelete.length) {
+        this.backendService.upsertManyDocs(
+          'assignments',
+          AssignmentConverter,
+          assToDelete,
+          'delete'
+        );
+      }
+
+      // Then insert the new ones
       await this.backendService.upsertManyDocs(
         'assignments',
         new AssignmentConverter(),
