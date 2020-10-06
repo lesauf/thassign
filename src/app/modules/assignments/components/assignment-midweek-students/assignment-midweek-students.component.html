@@ -1,5 +1,7 @@
 <app-loader *ngIf="loading"></app-loader>
 
+<pre *ngIf="pAssignments$ | async as pAssignments"> {{ prettify(pAssignments) }}</pre>
+
 <div *ngIf="studentsForm">
   <form
     (ngSubmit)="onSubmit()"

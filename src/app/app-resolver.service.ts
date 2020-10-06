@@ -66,7 +66,7 @@ export class AppResolverService implements Resolve<string> {
           assignmentsSnapshot.forEach((doc) => {
             assignments.push(doc.data());
           });
-
+console.log(assignments);
           const allAssignments = this.assignmentService.storeAssignments(
             assignments,
             this.partService.getParts(),

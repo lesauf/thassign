@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, ɵConsole } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { DateTime, Interval } from 'luxon';
 
@@ -77,7 +77,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
         // Set the assignment position as its position in the array
 
         // Replace part, assignee and assistant with model object
-        if (obj.part.hasOwnProperty('id')) {
+        if (typeof(obj.part) === 'string') {
           // from DB
           // delete obj._id; // Remove the _id, so in case it should be saved, mongoDb regenerate
           obj.part = allParts.find((part) => part.name === obj.part);
@@ -85,7 +85,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
           obj.assistant = obj.assistant
             ? allUsers.find((user) => user._id === obj.assistant)
             : null;
-        } else if (obj.part.hasOwnProperty('_id')) {
+        } else { // if (obj.part.hasOwnProperty('_id')) {
           // from form, with selected part
           obj.ownerId = this.backendService.getSignedInUser()._id;
           obj.position = index;
@@ -288,62 +288,26 @@ export abstract class AssignmentService extends CommonService<Assignment> {
    * @param listOfParts Part[] List of parts we want to get the assignments on
    */
   getAssignmentsByPartsAndMonth(
+    assignments: Assignment[],
     month: DateTime,
     listOfParts: Part[]
   ): Assignment[] {
-    const assignments = this.getAssignments();
+    // const assignments = this.getAssignments();
     let pAssignments: Assignment[];
-
     if (assignments !== null) {
       pAssignments = assignments.filter(
         (assignment) =>
           listOfParts.find((part) => part.name === assignment.part.name) !==
             undefined && month.get('month') === assignment.week.get('month')
       );
+console.log(pAssignments);
 
       this.pAssignmentsStore.next(pAssignments);
     } else {
-      // pAssignments = this.generateAssignments(
-      //   meeting,
-      //   month,
-      //   listOfParts,
-      //   assignableUsersByPart
-      // );
-
-      // this.pAssignmentsStore.next(pAssignments);
-
       this.pAssignmentsStore.next([]);
     }
 
-    return pAssignments;
-    // // Get all the assignments of this month
-    // const assignments = await this.http
-    //   .get<any[]>(url)
-    //   .pipe(
-    //     tap((h) => {
-    // const outcome = h ? `fetched` : `did not find`;
-    // const monthFormatted = month.toFormat('L');
-    // this.log(
-    //   `${outcome} midweek-students assignments of month ${monthFormatted}`,
-    //   'AssignmentService'
-    // );
-    //   }),
-    //   catchError(this.handleError('getAssignmentsByMeetingAndMonth', []))
-    // )
-    // .toPromise();
-    // console.log('ORIG', assignments);
-    // Now group them by week then part name
-    // const assignmentsGrouped = [];
-    // assignments.forEach((week) => {
-    //   assignmentsGrouped[week._id] = [];
-    //   week.assignments.forEach((result) => {
-    //     const partName = result._id.part + '-' + result._id.position;
-    //     assignmentsGrouped[week._id][partName] = result.assignment;
-    //   });
-    // });
-
-    // console.log('Group', assignmentsGrouped);
-    // return assignmentsGrouped;
+    return pAssignments;    
   }
 
   // async getWeekendChairmanAssignmentByWeek(week: DateTime) {

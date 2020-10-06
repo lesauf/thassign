@@ -35,6 +35,7 @@ import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { Part } from '@src/app/core/models/part/part.model';
 import { AssignmentControlService } from '@src/app/modules/assignments/assignment-control.service';
 import { BackendService } from '@src/app/core/services/backend.service';
+import { tap } from 'rxjs/operators';
 
 // export const DATE_FORMATS = {
 //   parse: {
@@ -116,11 +117,10 @@ export class AssignmentMidweekStudentsComponent
 
   async ngOnInit() {
     // Subscribe to the assignments
-    this.assignmentService.data.subscribe((users) => {
-      // this.users = users;
-      this.pAssignments$ = this.assignmentService.pAssignments;
-    });
-
+    // this.assignmentService.data.subscribe((users) => {
+    //   // this.users = users;
+    //   this.pAssignments$ = this.assignmentService.pAssignments;
+    // });
     // this.getUsers();
     // this._getTranslations();
     //   this.getAssignableList();
@@ -144,27 +144,39 @@ export class AssignmentMidweekStudentsComponent
   async ngOnChanges(changes: SimpleChanges) {
     this.loading = true;
 
+    // Pipe to the assignments observable the filtering
+    this.assignmentService.data
+      .pipe(
+          tap(assignments => {
+            this.pAssignments$ = this.assignmentService.pAssignments;
+console.log(assignments);
+            this.getAssignmentsForCurrentMonth(assignments);
+          })
+        )
+      
+      .subscribe();
+
     await this.initializeData();
 
     if (changes.month.isFirstChange()) {
       // Fetch meeting parts once
       // await this.getParts('midweek-students');
 
-      this.assignmentService.pAssignments.subscribe((assignments) => {
-        delete this.studentsForm;
-        // Separate the assignments by week and assign them numbers
-        const assignmentsByWeek = [];
-        this.weeks.forEach((week, index) => {
-          this.assignmentsByWeek[index] = assignments.filter((ass) => {
-            return week.start.toISODate() === ass.week.toISODate();
-          });
-        });
+      // this.assignmentService.pAssignments.subscribe((assignments) => {
+      //   delete this.studentsForm;
+      //   // Separate the assignments by week and assign them numbers
+      //   const assignmentsByWeek = [];
+      //   this.weeks.forEach((week, index) => {
+      //     this.assignmentsByWeek[index] = assignments.filter((ass) => {
+      //       return week.start.toISODate() === ass.week.toISODate();
+      //     });
+      //   });
 
-        // The form has to be ready before assignmentsByWeek
-        this.prepareForm();
-        // this.assignmentsByWeek = assignmentsByWeek;
-        // this.studentsForm.updateValueAndValidity();
-      });
+      //   // The form has to be ready before assignmentsByWeek
+      //   this.prepareForm();
+      //   // this.assignmentsByWeek = assignmentsByWeek;
+      //   // this.studentsForm.updateValueAndValidity();
+      // });
     }
 
     // Check if the previous form was in edit mode
@@ -174,16 +186,29 @@ export class AssignmentMidweekStudentsComponent
     } else {
     }
 
-    this.assignmentService.getAssignmentsByPartsAndMonth(
-      this.month,
-      this.listOfParts
-    );
+    // this.assignmentService.getAssignmentsByPartsAndMonth(
+    //   this.month,
+    //   this.listOfParts
+    // );
 
     this.loading = false;
   }
 
-  getAssignmentsForCurrentMonth() {
-    
+  prettify(object) {
+    // console.log('Prettify: ', object);
+    return JSON.stringify(object, null, 4);
+  }
+  /**
+   * Update the observable of filtered assignments for the current month
+   */
+  async getAssignmentsForCurrentMonth(assignments: Assignment[]) {
+    await this.initializeData();
+
+    this.assignmentService.getAssignmentsByPartsAndMonth(
+      assignments,
+      this.month,
+      this.listOfParts
+    );
   }
 
   /**
