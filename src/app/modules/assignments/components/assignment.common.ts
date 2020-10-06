@@ -90,8 +90,6 @@ export abstract class AssignmentCommon {
   /**
    * Get some initial data :
    * - listOfParts
-   * - firstWeekOfTheMonth
-   * - weeks of the current month
    * - assignables users by part
    */
   async initializeData() {
@@ -103,24 +101,7 @@ export abstract class AssignmentCommon {
       );
     }
 
-    // Convert the month to the first day of the week
-    this.firstWeekOfTheMonth = this.assignmentService.getFirstWeekOfTheSelectedMonth(
-      this.month
-    ); // populate this.firstWeekOfMonth
-
-    this.weeks = this.assignmentService.getAllWeeksOfTheSelectedMonth(
-      this.month
-    );
-
-    // this.listOfPartsByWeek = this.assignmentService.getListOfPartsByWeek(
-    //   this.meetingName,
-    //   this.month
-    // );
-    // console.log('LIST PART WEEK', this.listOfPartsByWeek);
-    // this.studentsForm.reset(); // ??
-
     // Get the list of users assignable to parts
-    // console.log(this.meetingName);
     const assignables = this.userService.getAssignableUsersByParts(
       this.listOfParts,
       this.meetingName
@@ -129,13 +110,23 @@ export abstract class AssignmentCommon {
     this.assignableList = assignables.list;
     this.assignableListByPart = assignables.byPart;
 
-    // Generate and populate the form with the values for the selected month
-    // this.generateForm();
-    // console.log(this.assignableList);
-
-    // this.populateForm();
-
     this.isEditMode = false;
+  }
+
+  /**
+   * Get current month specific data
+   * - firstWeekOfTheMonth
+   * - weeks of the current month
+   */
+  initializeMonthData() {
+    // Convert the month to the first day of the week
+    this.firstWeekOfTheMonth = this.assignmentService.getFirstWeekOfTheSelectedMonth(
+      this.month
+    ); // populate this.firstWeekOfMonth
+
+    this.weeks = this.assignmentService.getAllWeeksOfTheSelectedMonth(
+      this.month
+    );
   }
 
   // generateForm() {}

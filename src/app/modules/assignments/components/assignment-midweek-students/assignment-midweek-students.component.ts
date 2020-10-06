@@ -21,7 +21,7 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime, Interval } from 'luxon';
-import { Observable } from 'rxjs';
+import { combineLatest, forkJoin, merge, Observable, Subscription, zip } from 'rxjs';
 
 import { AssignmentCommon } from '@src/app/modules/assignments/components/assignment.common';
 import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
@@ -35,7 +35,7 @@ import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { Part } from '@src/app/core/models/part/part.model';
 import { AssignmentControlService } from '@src/app/modules/assignments/assignment-control.service';
 import { BackendService } from '@src/app/core/services/backend.service';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 // export const DATE_FORMATS = {
 //   parse: {
@@ -90,6 +90,12 @@ export class AssignmentMidweekStudentsComponent
    */
   pAssignments$: Observable<Assignment[]>;
 
+  /**
+   * Subscription to observable created by combining 
+   * Users and Assignments observables
+   */
+  data$: Subscription;
+
   studentsForm: FormGroup;
 
   payLoad = '';
@@ -116,19 +122,20 @@ export class AssignmentMidweekStudentsComponent
   }
 
   async ngOnInit() {
-    // Subscribe to the assignments
-    // this.assignmentService.data.subscribe((users) => {
-    //   // this.users = users;
-    //   this.pAssignments$ = this.assignmentService.pAssignments;
-    // });
-    // this.getUsers();
-    // this._getTranslations();
-    //   this.getAssignableList();
-    // this.userService.data.subscribe((users) => {
-    //   this.users = users;
-    //   this.pUsers$ = this.userService.pUsers;
-    // this.getUsers();
-    // });
+    // Pipe to the assignments observable the filtering
+    this.data$ = combineLatest([
+      this.userService.data,
+      this.assignmentService.data,
+    ]).subscribe(async ([users, assignments]) => {
+      console.log(users, assignments);
+
+      if (users !== null && assignments !== null) {
+        // Display form only when observables have started emitting
+        await this.initializeData();
+
+        this.getAssignmentsForCurrentMonth(assignments);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -136,48 +143,14 @@ export class AssignmentMidweekStudentsComponent
     // Emit edit mode event (to enable navigation)
     // this.editMode.emit(false);
     // this.assignmentService.pAssignments.unsubscribe();
+    this.data$.unsubscribe();
   }
 
   /**
    * Called whenever a data bound property is changed
    */
   async ngOnChanges(changes: SimpleChanges) {
-    this.loading = true;
-
-    // Pipe to the assignments observable the filtering
-    this.assignmentService.data
-      .pipe(
-          tap(assignments => {
-            this.pAssignments$ = this.assignmentService.pAssignments;
-console.log(assignments);
-            this.getAssignmentsForCurrentMonth(assignments);
-          })
-        )
-      
-      .subscribe();
-
-    await this.initializeData();
-
-    if (changes.month.isFirstChange()) {
-      // Fetch meeting parts once
-      // await this.getParts('midweek-students');
-
-      // this.assignmentService.pAssignments.subscribe((assignments) => {
-      //   delete this.studentsForm;
-      //   // Separate the assignments by week and assign them numbers
-      //   const assignmentsByWeek = [];
-      //   this.weeks.forEach((week, index) => {
-      //     this.assignmentsByWeek[index] = assignments.filter((ass) => {
-      //       return week.start.toISODate() === ass.week.toISODate();
-      //     });
-      //   });
-
-      //   // The form has to be ready before assignmentsByWeek
-      //   this.prepareForm();
-      //   // this.assignmentsByWeek = assignmentsByWeek;
-      //   // this.studentsForm.updateValueAndValidity();
-      // });
-    }
+    this.getAssignmentsForCurrentMonth(this.assignmentService.getAssignments());
 
     // Check if the previous form was in edit mode
     if (this.isEditMode) {
@@ -185,30 +158,36 @@ console.log(assignments);
       changes.month.currentValue = changes.month.previousValue;
     } else {
     }
-
-    // this.assignmentService.getAssignmentsByPartsAndMonth(
-    //   this.month,
-    //   this.listOfParts
-    // );
-
-    this.loading = false;
   }
 
-  prettify(object) {
-    // console.log('Prettify: ', object);
-    return JSON.stringify(object, null, 4);
-  }
   /**
    * Update the observable of filtered assignments for the current month
    */
   async getAssignmentsForCurrentMonth(assignments: Assignment[]) {
-    await this.initializeData();
+    if (assignments !== null) {
+      await this.initializeMonthData();
 
-    this.assignmentService.getAssignmentsByPartsAndMonth(
-      assignments,
-      this.month,
-      this.listOfParts
-    );
+      this.assignmentService.getAssignmentsByPartsAndMonth(
+        this.month,
+        this.listOfParts,
+        assignments
+      );
+
+      delete this.studentsForm;
+      // Separate the assignments by week and assign them numbers
+      this.assignmentsByWeek = [];
+
+      this.weeks.forEach((week, index) => {
+        this.assignmentsByWeek[index] = assignments.filter((ass) => {
+          return week.start.toISODate() === ass.week.toISODate();
+        });
+      });
+      console.log(this.assignmentsByWeek);
+      // The form has to be ready before assignmentsByWeek
+      this.prepareForm();
+
+      this.pAssignments$ = this.assignmentService.pAssignments;
+    }
   }
 
   /**

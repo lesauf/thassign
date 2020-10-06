@@ -77,7 +77,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
         // Set the assignment position as its position in the array
 
         // Replace part, assignee and assistant with model object
-        if (typeof(obj.part) === 'string') {
+        if (typeof obj.part === 'string') {
           // from DB
           // delete obj._id; // Remove the _id, so in case it should be saved, mongoDb regenerate
           obj.part = allParts.find((part) => part.name === obj.part);
@@ -85,7 +85,8 @@ export abstract class AssignmentService extends CommonService<Assignment> {
           obj.assistant = obj.assistant
             ? allUsers.find((user) => user._id === obj.assistant)
             : null;
-        } else { // if (obj.part.hasOwnProperty('_id')) {
+        } else {
+          // if (obj.part.hasOwnProperty('_id')) {
           // from form, with selected part
           obj.ownerId = this.backendService.getSignedInUser()._id;
           obj.position = index;
@@ -288,11 +289,14 @@ export abstract class AssignmentService extends CommonService<Assignment> {
    * @param listOfParts Part[] List of parts we want to get the assignments on
    */
   getAssignmentsByPartsAndMonth(
-    assignments: Assignment[],
     month: DateTime,
-    listOfParts: Part[]
+    listOfParts: Part[],
+    assignments?: Assignment[]
   ): Assignment[] {
-    // const assignments = this.getAssignments();
+    if (assignments === undefined) {
+      const assignments = this.getAssignments();
+    }
+    
     let pAssignments: Assignment[];
     if (assignments !== null) {
       pAssignments = assignments.filter(
@@ -300,14 +304,14 @@ export abstract class AssignmentService extends CommonService<Assignment> {
           listOfParts.find((part) => part.name === assignment.part.name) !==
             undefined && month.get('month') === assignment.week.get('month')
       );
-console.log(pAssignments);
+      console.log(pAssignments);
 
       this.pAssignmentsStore.next(pAssignments);
     } else {
       this.pAssignmentsStore.next([]);
     }
 
-    return pAssignments;    
+    return pAssignments;
   }
 
   // async getWeekendChairmanAssignmentByWeek(week: DateTime) {

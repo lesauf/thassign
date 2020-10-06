@@ -1,8 +1,10 @@
-<app-loader *ngIf="loading"></app-loader>
+<ng-template #loading>
+  <app-loader></app-loader>
+</ng-template>
 
-<pre *ngIf="pAssignments$ | async as pAssignments"> {{ prettify(pAssignments) }}</pre>
+<!-- <pre *ngIf="pAssignments$ | async as pAssignments"> {{ prettify(pAssignments) }}</pre> -->
 
-<div *ngIf="studentsForm">
+<div *ngIf="pAssignments$ | async; else loading">
   <form
     (ngSubmit)="onSubmit()"
     [formGroup]="studentsForm"
@@ -98,7 +100,7 @@
             (cdkDropListDropped)="drop($event, wIndex)"
           >
             <ng-container
-              *ngIf="this.assignmentsByWeek[wIndex].length; else noAssignment"
+              *ngIf="this.assignmentsByWeek[wIndex]?.length; else noAssignment"
             >
               <div
                 *ngFor="let assignment of this.assignmentsByWeek[wIndex]"
