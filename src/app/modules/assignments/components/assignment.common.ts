@@ -89,24 +89,15 @@ export abstract class AssignmentCommon {
 
   /**
    * Get some initial data :
-   * - listOfParts
    * - assignables users by part
    */
   async initializeData() {
-    await this.getParts();
-
-    if (!this.listOfParts) {
-      this.listOfParts = await this.partService.getPartsByMeeting(
-        this.meetingName
-      );
-    }
-
     // Get the list of users assignable to parts
     const assignables = this.userService.getAssignableUsersByParts(
       this.listOfParts,
       this.meetingName
     );
-
+        console.log(assignables);
     this.assignableList = assignables.list;
     this.assignableListByPart = assignables.byPart;
 

@@ -27,6 +27,8 @@ export class AssignmentControlService {
   }
 
   toAssignmentControl(assignment: Assignment): FormGroup {
+    console.log('ACS', assignment);
+    
     return new FormGroup({
       week: new FormControl(assignment.week || ''),
       part: new FormControl(assignment.part || ''),

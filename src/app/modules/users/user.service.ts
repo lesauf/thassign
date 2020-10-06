@@ -144,11 +144,15 @@ export class UserService extends CommonService<User> {
       // Clear the list of users to activate loader
       this.updateStore(null);
 
-      const users = await this.callFunction('Users_insertMany', [
+      // insert users
+      await this.backendService.upsertManyDocs(
+        'users',
+        new UserConverter(),
         generatedUsers,
-      ]);
+        'set'
+      );
 
-      this.updateStore(this.createUser(users, allParts) as User[]);
+      // this.updateStore(this.createUser(users, allParts) as User[]);
 
       this.log('generated users');
     } catch (error) {
@@ -171,10 +175,22 @@ export class UserService extends CommonService<User> {
   /**
    * Get all users from server
    */
-  storeUsers(users: any[], allParts: Part[]): User[] {
+  storeUsers(
+    users: any[],
+    allParts: Part[],
+    allAssignments: Assignment[]
+  ): User[] {
     try {
       // convert to User objects
-      const allUsers = this.createUser(users, allParts) as User[];
+      const allUsers = this.createUser(
+        
+        users,
+      
+         allParts,
+      
+         allAssignments
+      
+      ) as User[];
       // console.log('Users to put in the store :', allUsers);
 
       this.updateStore(allUsers);

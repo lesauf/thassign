@@ -24,7 +24,7 @@ export const generateOneUser = (parts: Part[], ownerId) => {
   const baptized = faker.random.boolean();
   const publisher = faker.random.boolean();
 
-  return {
+  return new User({
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     genre: genre,
@@ -46,7 +46,7 @@ export const generateOneUser = (parts: Part[], ownerId) => {
     // createdAt: new Date(),
     deleted: false,
     ownerId: ownerId,
-  };
+  });
 };
 
 export const generateUsers = (

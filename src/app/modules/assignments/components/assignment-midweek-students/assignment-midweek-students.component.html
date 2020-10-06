@@ -100,7 +100,7 @@
             (cdkDropListDropped)="drop($event, wIndex)"
           >
             <ng-container
-              *ngIf="this.assignmentsByWeek[wIndex]?.length; else noAssignment"
+              *ngIf="this.assignmentsByWeek[wIndex].length; else noAssignment"
             >
               <div
                 *ngFor="let assignment of this.assignmentsByWeek[wIndex]"

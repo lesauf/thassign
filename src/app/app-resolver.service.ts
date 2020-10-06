@@ -8,7 +8,7 @@ import { switchMap } from 'rxjs/operators';
 
 import { Part } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
-import { Observable, EMPTY, of } from 'rxjs';
+import { Observable, EMPTY, of, combineLatest } from 'rxjs';
 import { PartService } from '@src/app/core/services/part.service';
 import { UserService } from '@src/app/modules/users/user.service';
 import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
@@ -40,39 +40,44 @@ export class AppResolverService implements Resolve<string> {
       // const allParts = this.partService.storeParts(data?.parts);
 
       // Set a listener on users collections
-      this.backendService
+      const users$ = this.backendService
         .getQueryForCurrentUser('users', UserConverter)
-        .onSnapshot((usersSnapshot) => {
-          const users = [];
-
-          usersSnapshot.forEach((doc) => {
-            users.push(doc.data());
-          });
-
-          // console.log('Updated users from DB: ', users);
-
-          const allUsers = this.userService.storeUsers(
-            users,
-            this.partService.getParts()
-          );
-        });
+        .valueChanges();
 
       // Set a listener on assignments collections
-      this.backendService
+      const assignments$ = this.backendService
         .getQueryForCurrentUser('assignments', AssignmentConverter)
-        .onSnapshot((assignmentsSnapshot) => {
-          const assignments = [];
+        .valueChanges();
 
-          assignmentsSnapshot.forEach((doc) => {
-            assignments.push(doc.data());
-          });
-console.log(assignments);
+      combineLatest([users$, assignments$]).subscribe(
+        ([users, assignments]) => {
+          const parts = this.partService.getParts();
+
+          // Handle assignments
+          // COnvert first the users as User objects to populate the assignments
+          const usersObjects = this.userService.createUser(
+            users,
+            parts
+          ) as User[];
+
           const allAssignments = this.assignmentService.storeAssignments(
             assignments,
-            this.partService.getParts(),
-            this.userService.getUsers()
+            parts,
+            usersObjects
           );
-        });
+
+          // Then store the users and pass them the converted assignments
+          // I know, a bit twisted, but it works
+          const allUsers = this.userService.storeUsers(
+            users,
+            this.partService.getParts(),
+            allAssignments
+          );
+
+          console.log('Updated data from DB: ', allUsers, allAssignments);
+        }
+      
+      );
 
       return 'Data fetched';
     } catch (error) {

@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
+import {
+  AngularFirestore,
+  AngularFirestoreCollection,
+  CollectionReference,
+} from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 
 import { User } from '@src/app/core/models/user/user.model';
@@ -147,7 +151,7 @@ export class FirebaseService {
   ): Promise<any> {
     // Get a new write batch
     var batch = this.firestore.firestore.batch();
-console.log(data);
+    console.log(data);
     // Loop through the array to add them to the batch
     data.forEach((item) => {
       let currentId;
@@ -195,25 +199,27 @@ console.log(data);
   getQueryForCurrentUser(
     collName,
     converter?
-  ): firebase.firestore.Query<unknown> {
-    return (
-      this.firestore.firestore
-        .collection(collName)
-        // .withConverter(converter)
-        .where('ownerId', '==', this.signedInUser._id)
+  ): AngularFirestoreCollection<unknown> {
+    return this.firestore.collection(collName, (ref) =>
+      ref.where('ownerId', '==', this.signedInUser._id)
     );
   }
 
   /**
    * Get data in a given range
    * @param collName Collection name
-   * @param field 
-   * @param start 
-   * @param end 
+   * @param field
+   * @param start
+   * @param end
    */
-  async getDocsInRange(collName: string, field: string, start: any, end: any): Promise<any[]> {
+  async getDocsInRange(
+    collName: string,
+    field: string,
+    start: any,
+    end: any
+  ): Promise<any[]> {
     const querySnapshot = await this.getQueryForCurrentUser(collName)
-      .where(field, '>', start)
+      .ref.where(field, '>', start)
       .where(field, '<', end)
       .get();
 
@@ -222,7 +228,7 @@ console.log(data);
     querySnapshot.forEach((doc) => {
       data.push(doc.data());
     });
-    
+
     return data;
   }
 

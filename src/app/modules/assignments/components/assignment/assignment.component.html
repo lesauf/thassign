@@ -18,16 +18,6 @@
       </div>
       <!-- PART -->
       <div fxFlex="30" fxFlex.lt-sm="auto">
-        <!-- <app-picker
-          title="{{ 'choose-assignment' | translate | titlecase }}"
-          placeholder="{{ 'assignment' | translate | titlecase }}"
-          [form]="form"
-          [controlPath]="[wIndex, assignment.position, 'part']"
-          [options]="listOfParts"
-          labelField="name"
-          (selectionChange)="onPartChange($event)">
-        </app-picker> -->
-
         <mat-form-field fxFill>
           <mat-select
             placeholder="{{ 'assignment' | translate | titlecase }}"
@@ -50,36 +40,6 @@
       </div>
       <!-- ASSIGNEE -->
       <div fxFlex="30" fxFlex.lt-sm="auto">
-        <!-- <ng-template #assignableList>
-          <mat-selection-list
-            #options
-            [multiple]="false"
-            (selectionChange)="closeDialog()"
-          >
-            <mat-list-option
-              *ngFor="
-                let user of assignableListByPart[
-                  form.get([wIndex, assignment.position, 'part']).value?.name
-                ];
-                let isFirst = first
-              "
-              [value]="user"
-              cdkFocusInitial
-            >
-              <h3 matLine>{{ user.fullName }}</h3>
-              <span matLine>Last {{ user.assignments.length }}</span>
-              <span matLine>
-                Last
-                {{
-                  user.assignments[0]?.week.toISOString()
-                    | translateDate: "DATE_SHORT"
-                    | async
-                }}
-              </span>
-            </mat-list-option>
-          </mat-selection-list>
-        </ng-template> -->
-        <!-- [optionsTemplate]="assignableList" -->
         <app-picker
           *ngIf="form.get([wIndex, assignment.position, 'part']).value"
           [optionsTemplate]="displayComponentRef.componentType"
@@ -95,31 +55,6 @@
           labelField="fullName"
         ></app-picker>
 
-        <!-- <mat-form-field
-          fxFill
-          *ngIf="form.get([wIndex, assignment.position, 'part']).value"
-        >
-          <mat-select
-            placeholder="{{ 'assignee' | translate | titlecase }}"
-            [compareWith]="compareFn"
-            formControlName="assignee"
-          >
-            <mat-select-trigger>
-              {{ assignment.assignee?.fullName }}
-            </mat-select-trigger>
-
-            <mat-option
-              *ngFor="
-                let assignee of assignableListByPart[
-                  form.get([wIndex, assignment.position, 'part']).value?.name
-                ]
-              "
-              [value]="assignee"
-            >
-              {{ assignee.fullName }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field> -->
       </div>
       <!-- ASSISTANT -->
       <div fxFlex="30" fxFlex.lt-sm="auto">
@@ -135,26 +70,7 @@
           [options]="assignableListByPart['clm.ministry.assistant']"
           labelField="fullName"
         ></app-picker>
-        <!-- <mat-form-field fxFill>
-          <mat-select
-            placeholder="{{ 'assistant' | translate | titlecase }}"
-            [compareWith]="compareFn"
-            formControlName="assistant"
-          >
-            <mat-select-trigger>
-              {{ assignment.assistant?.fullName }}
-            </mat-select-trigger>
-
-            <mat-option
-              *ngFor="
-                let assistant of assignableListByPart['clm.ministry.assistant']
-              "
-              [value]="assistant"
-            >
-              {{ assistant.fullName }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field> -->
+        
       </div>
     </div>
   </div>

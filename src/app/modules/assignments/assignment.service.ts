@@ -293,18 +293,18 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     listOfParts: Part[],
     assignments?: Assignment[]
   ): Assignment[] {
-    if (assignments === undefined) {
-      const assignments = this.getAssignments();
-    }
     
+    if (assignments === undefined) {
+      assignments = this.getAssignments();
+    }
+
     let pAssignments: Assignment[];
     if (assignments !== null) {
       pAssignments = assignments.filter(
-        (assignment) =>
-          listOfParts.find((part) => part.name === assignment.part.name) !==
-            undefined && month.get('month') === assignment.week.get('month')
+        (assignment) => {
+          listOfParts?.find((part) => part.name === assignment.part.name) !==
+            undefined && month.get('month') === assignment.week.get('month')}
       );
-      console.log(pAssignments);
 
       this.pAssignmentsStore.next(pAssignments);
     } else {

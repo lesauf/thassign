@@ -36,6 +36,7 @@ import { Part } from '@src/app/core/models/part/part.model';
 import { AssignmentControlService } from '@src/app/modules/assignments/assignment-control.service';
 import { BackendService } from '@src/app/core/services/backend.service';
 import { map, tap } from 'rxjs/operators';
+import { User } from '@src/app/core/models/user/user.model';
 
 // export const DATE_FORMATS = {
 //   parse: {
@@ -91,7 +92,7 @@ export class AssignmentMidweekStudentsComponent
   pAssignments$: Observable<Assignment[]>;
 
   /**
-   * Subscription to observable created by combining 
+   * Subscription to observable created by combining
    * Users and Assignments observables
    */
   data$: Subscription;
@@ -122,12 +123,20 @@ export class AssignmentMidweekStudentsComponent
   }
 
   async ngOnInit() {
+    await this.getParts();
+
+    if (!this.listOfParts) {
+      this.listOfParts = await this.partService.getPartsByMeeting(
+        this.meetingName
+      );
+    }
+
     // Pipe to the assignments observable the filtering
     this.data$ = combineLatest([
       this.userService.data,
       this.assignmentService.data,
     ]).subscribe(async ([users, assignments]) => {
-      console.log(users, assignments);
+      // console.log(users, assignments);
 
       if (users !== null && assignments !== null) {
         // Display form only when observables have started emitting
@@ -182,7 +191,7 @@ export class AssignmentMidweekStudentsComponent
           return week.start.toISODate() === ass.week.toISODate();
         });
       });
-      console.log(this.assignmentsByWeek);
+
       // The form has to be ready before assignmentsByWeek
       this.prepareForm();
 
@@ -221,6 +230,11 @@ export class AssignmentMidweekStudentsComponent
     });
   }
 
+  /**
+   * Insert a new assignment selector in the form
+   * @param week Week to insert at
+   * @param wIndex position within the week
+   */
   addAssignment(week: Interval, wIndex: string) {
     (this.studentsForm.get([wIndex]) as FormArray).insert(
       this.assignmentsByWeek[wIndex].length,
@@ -229,12 +243,14 @@ export class AssignmentMidweekStudentsComponent
           week: week.start,
           position: this.assignmentsByWeek[wIndex].length,
           ownerId: this.backendService.getSignedInUser()._id,
-          // part: new Part({}),
-          // assignee: {},
-          // assistant: {},
+          // part: null,
+          // assignee: null,
+          // assistant: null,
         })
       )
     );
+
+    console.log('FORM', this.studentsForm);
   }
 
   removeAssignment(assignment: Assignment, wIndex: string) {

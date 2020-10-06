@@ -64,6 +64,10 @@ export class AssignmentComponent implements OnInit, OnDestroy {
     const componentFactory = this.resolver.resolveComponentFactory(
       AssignableListComponent
     );
+
+
+    console.log('CINUT', this.assignment);
+
     this.displayComponentRef = componentFactory.create(this.injector);
     // this.appRef.attachView(componentRef.hostView);
   }
@@ -80,6 +84,7 @@ export class AssignmentComponent implements OnInit, OnDestroy {
    * Clear the assignment everytime its part changes
    */
   onPartChange(partSelected: MatSelectChange) {
+    console.log('CURRENT ASSIGNMENT', this.assignment, partSelected.value);
     this.form
       .get([this.wIndex, this.assignment.position])
       .setValue(this.assignment);
@@ -87,6 +92,7 @@ export class AssignmentComponent implements OnInit, OnDestroy {
       .get([this.wIndex, this.assignment.position])
       .patchValue({ part: partSelected.value });
 
+    console.log('CURRENT FORM', this.form);
     // this.assignableList = this.assignableListByPart[partSelected.value.name];
 
     // console.log(this.assignableList);
