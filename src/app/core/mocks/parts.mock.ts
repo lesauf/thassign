@@ -66,7 +66,7 @@ export const partMocks: any[] = [
   {
     _id: '',
     name: 'clm.ministry.assistant',
-    meeting: 'midweek-students',
+    meeting: 'any',
   },
   {
     _id: '',

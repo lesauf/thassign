@@ -32,9 +32,11 @@
               }}
             </mat-select-trigger>
 
-            <mat-option *ngFor="let part of listOfParts" [value]="part">
-              {{ part.name | translate }}
-            </mat-option>
+            <ng-container *ngFor="let part of listOfParts">
+              <mat-option *ngIf="part.meeting!=='any'" [value]="part">
+                {{ part.name | translate }}
+              </mat-option>
+            </ng-container>
           </mat-select>
         </mat-form-field>
       </div>

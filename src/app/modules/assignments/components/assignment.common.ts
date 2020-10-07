@@ -97,7 +97,7 @@ export abstract class AssignmentCommon {
       this.listOfParts,
       this.meetingName
     );
-        console.log(assignables);
+
     this.assignableList = assignables.list;
     this.assignableListByPart = assignables.byPart;
 

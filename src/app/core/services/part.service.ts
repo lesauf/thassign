@@ -32,8 +32,8 @@ export class PartService extends CommonService<Part> {
     'midweek-students': [
       'clm.treasures.bible-reading',
       'clm.ministry.initial-call',
-      'clm.ministry.first-return-visit',
-      'clm.ministry.second-return-visit',
+      'clm.ministry.return-visit',
+      'clm.ministry.return-visit',
       'clm.ministry.bible-study',
       'clm.ministry.talk',
       'clm.ministry.assistant',
@@ -79,6 +79,8 @@ export class PartService extends CommonService<Part> {
    */
   getPartsByMeeting(meetingName: string): Part[] {
     const parts = this.getParts();
+
+
     const partsOfMeeting = parts.filter((part) =>
       this.meetingParts[meetingName].includes(part.name)
     );

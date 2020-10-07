@@ -155,6 +155,7 @@ export class FirebaseService {
     // Loop through the array to add them to the batch
     data.forEach((item) => {
       let currentId;
+
       if (!item._id) {
         if (operation === 'set') {
           // Generate id for that insert
@@ -165,6 +166,8 @@ export class FirebaseService {
           // The item is the id to delete
           currentId = item;
         }
+      } else {
+        currentId = item._id;
       }
 
       const colRef = this.firestore

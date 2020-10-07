@@ -232,6 +232,8 @@ export class AssignmentMidweekStudentsComponent
 
   /**
    * Insert a new assignment selector in the form
+   * With the subscription to the form valueChanges the assignmentsByWeek is
+   * automatically updated too
    * @param week Week to insert at
    * @param wIndex position within the week
    */
@@ -249,8 +251,6 @@ export class AssignmentMidweekStudentsComponent
         })
       )
     );
-
-    console.log('FORM', this.studentsForm);
   }
 
   removeAssignment(assignment: Assignment, wIndex: string) {

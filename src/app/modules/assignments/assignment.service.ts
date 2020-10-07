@@ -80,23 +80,29 @@ export abstract class AssignmentService extends CommonService<Assignment> {
         if (typeof obj.part === 'string') {
           // from DB
           // delete obj._id; // Remove the _id, so in case it should be saved, mongoDb regenerate
-          obj.part = allParts.find((part) => part.name === obj.part);
-          obj.assignee = allUsers.find((user) => user._id === obj.assignee);
+          obj.part = obj.part
+            ? allParts.find((part) => part.name === obj.part)
+            : '';
+          obj.assignee = obj.assignee
+            ? allUsers.find((user) => user._id === obj.assignee)
+            : '';
           obj.assistant = obj.assistant
             ? allUsers.find((user) => user._id === obj.assistant)
-            : null;
+            : '';
         } else {
           // if (obj.part.hasOwnProperty('_id')) {
           // from form, with selected part
           obj.ownerId = this.backendService.getSignedInUser()._id;
           obj.position = index;
-          obj.part = allParts.find((part) => part.name === obj.part.name);
+          obj.part = obj.part
+            ? allParts.find((part) => part.name === obj.part.name)
+            : '';
           obj.assignee = obj.assignee
             ? allUsers.find((user) => user._id === obj.assignee._id)
-            : null;
+            : '';
           obj.assistant = obj.assistant
             ? allUsers.find((user) => user._id === obj.assistant._id)
-            : null;
+            : '';
         }
 
         // obj.part = this.partService

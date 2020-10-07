@@ -58,7 +58,7 @@
       <span matLine *ngIf="user.lastAssignment">
         {{ "last" | translate | titlecase }}
         {{
-          user.lastAssignment?.week.toISOString()
+          user.lastAssignment?.week.toISO()
             | translateDate: "DATE_MED"
             | async
         }}
