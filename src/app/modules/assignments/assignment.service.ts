@@ -93,10 +93,12 @@ export abstract class AssignmentService extends CommonService<Assignment> {
           // if (obj.part.hasOwnProperty('_id')) {
           // from form, with selected part
           obj.ownerId = this.backendService.getSignedInUser()._id;
-          obj.position = index;
           obj.part = obj.part
             ? allParts.find((part) => part.name === obj.part.name)
             : '';
+          // By default the position is the same as the part
+          // obj.position = obj.part.constructor.name === 'Part' ? obj.part.position : index;
+          obj.position = index;
           obj.assignee = obj.assignee
             ? allUsers.find((user) => user._id === obj.assignee._id)
             : '';
@@ -160,14 +162,14 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   }
 
   /**
-   * Get users from store
+   * Get assignments from store
    */
   getAssignments(): Assignment[] {
     return this.dataStore.getValue();
   }
 
   /**
-   * Get all users from the server
+   * Get all assignments from the server
    */
   storeAssignments(
     assignments: any[],
@@ -299,18 +301,23 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     listOfParts: Part[],
     assignments?: Assignment[]
   ): Assignment[] {
-    
     if (assignments === undefined) {
       assignments = this.getAssignments();
     }
 
     let pAssignments: Assignment[];
     if (assignments !== null) {
-      pAssignments = assignments.filter(
-        (assignment) => {
-          listOfParts?.find((part) => part.name === assignment.part.name) !==
-            undefined && month.get('month') === assignment.week.get('month')}
-      );
+      pAssignments = assignments.filter((assignment) => {
+        const isForMeeting = listOfParts.find((part) => 
+          part.name === assignment.part.name) !== undefined;
+
+        const isForMonth = month.get('month') === assignment.week.get('month');
+
+        return isForMeeting && isForMonth;
+      });
+
+      pAssignments = pAssignments.sort((a, b) => a.part.position - b.part.position);
+      // console.log('PASS', pAssignments);
 
       this.pAssignmentsStore.next(pAssignments);
     } else {

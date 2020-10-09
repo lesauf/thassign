@@ -151,7 +151,7 @@ export class FirebaseService {
   ): Promise<any> {
     // Get a new write batch
     var batch = this.firestore.firestore.batch();
-    console.log(data);
+
     // Loop through the array to add them to the batch
     data.forEach((item) => {
       let currentId;
@@ -201,11 +201,18 @@ export class FirebaseService {
    */
   getQueryForCurrentUser(
     collName,
-    converter?
+    sortField?: string,
+    sortDirection: firebase.firestore.OrderByDirection = 'asc'
   ): AngularFirestoreCollection<unknown> {
-    return this.firestore.collection(collName, (ref) =>
-      ref.where('ownerId', '==', this.signedInUser._id)
-    );
+    return this.firestore.collection(collName, (ref) => {
+      const query = ref.where('ownerId', '==', this.signedInUser._id);
+
+      if (sortField !== undefined) {
+        return query.orderBy(sortField, sortDirection);
+      } else {
+        return query;
+      }
+    });
   }
 
   /**

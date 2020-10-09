@@ -91,12 +91,17 @@ export class Assignment {
       // Converting week to Luxon date
       if (!props['week']?.hasOwnProperty('isLuxonDateTime')) {
         const refDate = DateTime.utc();
-        
+
         props['week'] = DateTime.fromISO(props['week'], {
           zone: refDate.zone,
           locale: refDate.locale,
         });
       }
+
+      // Setting position
+      // if (props['part']) {
+      //   this.position = props['part'].position;
+      // }
 
       // converting part to Part
       // if (props['part'].constructor.name !== 'Part') {

@@ -2,6 +2,16 @@
   color: red;
 }
 
+body { 
+  font-size: 1.2em 
+}
+
+.assignment-box:not(last-child) {
+  margin: 0 0 1em;
+}
+          
+/* .assignments-list {  } */
+
 .assignments-container {
   margin: 0;
 }

@@ -41,12 +41,12 @@ export class AppResolverService implements Resolve<string> {
 
       // Set a listener on users collections
       const users$ = this.backendService
-        .getQueryForCurrentUser('users', UserConverter)
+        .getQueryForCurrentUser('users')
         .valueChanges();
 
       // Set a listener on assignments collections
       const assignments$ = this.backendService
-        .getQueryForCurrentUser('assignments', AssignmentConverter)
+        .getQueryForCurrentUser('assignments', 'week')
         .valueChanges();
 
       combineLatest([users$, assignments$]).subscribe(
@@ -74,7 +74,7 @@ export class AppResolverService implements Resolve<string> {
             allAssignments
           );
 
-          console.log('Updated data from DB: ', allUsers, allAssignments);
+          // console.log('Updated data from DB: ', allUsers, allAssignments);
         }
       
       );

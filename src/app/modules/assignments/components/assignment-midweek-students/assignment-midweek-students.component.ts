@@ -142,9 +142,44 @@ export class AssignmentMidweekStudentsComponent
         // Display form only when observables have started emitting
         await this.initializeData();
 
-        this.getAssignmentsForCurrentMonth(assignments);
+        // Load the assignments of the default month (current)
+        await this.initializeMonthData();
+
+        this.assignmentService.getAssignmentsByPartsAndMonth(
+          this.month,
+          this.listOfParts
+        );
+
+        // Get the observable of the filtered assignments
+        this.pAssignments$ = this.assignmentService.pAssignments.pipe(
+          tap((pAssignments) => {
+            this.separateAssignmentsByWeek(pAssignments);
+
+            // Build the form
+            this.prepareForm();
+          })
+        );
       }
     });
+  }
+
+  /**
+   * Called whenever a data bound property is changed
+   */
+  async ngOnChanges(changes: SimpleChanges) {
+    await this.initializeMonthData();
+    
+    this.assignmentService.getAssignmentsByPartsAndMonth(
+      this.month,
+      this.listOfParts
+    );
+
+    // Check if the previous form was in edit mode : useful ??
+    if (this.isEditMode) {
+      // alert('save first please');
+      changes.month.currentValue = changes.month.previousValue;
+    } else {
+    }
   }
 
   ngOnDestroy(): void {
@@ -156,47 +191,16 @@ export class AssignmentMidweekStudentsComponent
   }
 
   /**
-   * Called whenever a data bound property is changed
+   * Separate the assignments of the month by week
    */
-  async ngOnChanges(changes: SimpleChanges) {
-    this.getAssignmentsForCurrentMonth(this.assignmentService.getAssignments());
+  separateAssignmentsByWeek(pAssignments: Assignment[]) {
+    this.assignmentsByWeek = [];
 
-    // Check if the previous form was in edit mode
-    if (this.isEditMode) {
-      // alert('save first please');
-      changes.month.currentValue = changes.month.previousValue;
-    } else {
-    }
-  }
-
-  /**
-   * Update the observable of filtered assignments for the current month
-   */
-  async getAssignmentsForCurrentMonth(assignments: Assignment[]) {
-    if (assignments !== null) {
-      await this.initializeMonthData();
-
-      this.assignmentService.getAssignmentsByPartsAndMonth(
-        this.month,
-        this.listOfParts,
-        assignments
-      );
-
-      delete this.studentsForm;
-      // Separate the assignments by week and assign them numbers
-      this.assignmentsByWeek = [];
-
-      this.weeks.forEach((week, index) => {
-        this.assignmentsByWeek[index] = assignments.filter((ass) => {
-          return week.start.toISODate() === ass.week.toISODate();
-        });
+    this.weeks.forEach((week, index) => {
+      this.assignmentsByWeek[index] = pAssignments.filter((ass) => {
+        return week.start.toISODate() === ass.week.toISODate();
       });
-
-      // The form has to be ready before assignmentsByWeek
-      this.prepareForm();
-
-      this.pAssignments$ = this.assignmentService.pAssignments;
-    }
+    });
   }
 
   /**
@@ -206,6 +210,8 @@ export class AssignmentMidweekStudentsComponent
    *   - Subscribe to the form changes to update assignementsByWeek
    */
   prepareForm(assignmentsByWeek?: Assignment[][]) {
+    delete this.studentsForm;
+
     if (!assignmentsByWeek) {
       assignmentsByWeek = this.assignmentsByWeek;
     }
@@ -283,34 +289,39 @@ export class AssignmentMidweekStudentsComponent
     this.prepareForm();
   }
 
+  /**
+   * @todo extract the styles
+   */
   saveAsPdf() {
     // window.print();
+
+    const mywindow = window.open('', '', 'height=400,width=600');
 
     this._translate.get('assignments').subscribe((pageTitle) => {
       const printContents = this.printable.nativeElement.innerHTML;
 
-      const mywindow = window.open('', 'new div', 'height=400,width=600');
       mywindow.document.write(
-        '<html><head><title>' +
+        '<!DOCTYPE html><html><head><title>' +
           pageTitle +
           ': ' +
           this.month.toFormat('MMMM yyyy') +
           '</title>'
       );
-      // Styling
+      // Styling 
       mywindow.document.write(
         '<style>' +
           'body { font-size: 1.2em }' +
           '.assignment-box:not(last-child) { margin: 0 0 1em; }' +
-          '.assignments-list {  }' +
+          '.week-box-view { width: 80%; margin: 0 auto; }' +
+          '.assignment-assignee { font-weight: bold; }' +
           '</style>'
       );
       /*optional stylesheet*/
       mywindow.document.write('</head><body>');
       mywindow.document.write(printContents);
       mywindow.document.write('</body></html>');
-
-      mywindow.print();
+      
+      mywindow.document.execCommand('print');
       mywindow.close();
     });
   }

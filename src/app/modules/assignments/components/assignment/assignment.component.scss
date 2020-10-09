@@ -1,7 +1,11 @@
 // .assignment-name {}
 
-.assignment-assignee {
-  font-weight: bold;
-}
 
+
+// @media print {
+  .assignment-assignee {
+    font-weight: bold;
+  }
+
+// }
 // .assignment-assistant {}

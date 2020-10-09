@@ -5,6 +5,8 @@ import {
   IsOptional,
   IsUUID,
   IsObject,
+  IsNumber,
+  IsInt,
 } from 'class-validator';
 
 /**
@@ -62,6 +64,12 @@ export class Part {
   @IsString()
   @IsIn(['midweek', 'midweek-students', 'weekend'])
   meeting: string;
+
+  /**
+   * Zero-based position of the assignment in its week
+   */
+  @IsInt()
+  position = 0;
 
   /**
    * Does it need a title
