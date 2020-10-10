@@ -86,7 +86,11 @@ export class Assignment {
    * @todo Sanitize/clean the object passed (apply some rules,
    * like women can not give public talks ...)
    */
-  constructor(props?: object) {
+  constructor(
+    props?: object,
+    allParts?: Part[],
+    allUsers?: User[]
+  ) {
     if (props) {
       // Converting week to Luxon date
       if (!props['week']?.hasOwnProperty('isLuxonDateTime')) {
@@ -98,53 +102,26 @@ export class Assignment {
         });
       }
 
-      // Setting position
-      // if (props['part']) {
-      //   this.position = props['part'].position;
-      // }
+      // Replace part, assignee and assistant with model object
+      // if coming from the DB. The form contain already the right Objects types
+      if (
+        allParts &&
+        props['part']) {
+        props['part'] = props['part']
+          ? allParts.find((part) => part.name === props['part'])
+          : '';
+      }
 
-      // converting part to Part
-      // if (props['part'].constructor.name !== 'Part') {
-
-      // }
+      if (allUsers && props['_id']) {
+        props['assignee'] = props['assignee']
+          ? allUsers.find((user) => user._id === props['assignee'])
+          : '';
+        props['assistant'] = props['assistant']
+          ? allUsers.find((user) => user._id === props['assistant'])
+          : '';
+      }
 
       Object.assign(this, props);
-    }
-  }
-
-  /**
-   * The unique identifier of this assignment in the form
-   */
-  get key() {
-    return this.week.toISODate() + this.position;
-  }
-
-  set assignableUsers(users: User[]) {
-    this._assignableUsers = users;
-  }
-
-  get assignableUsers() {
-    return this._assignableUsers;
-  }
-
-  set assignableAssistants(users: User[]) {
-    this._assignableAssistants = users;
-  }
-
-  get assignableAssistants() {
-    return this._assignableAssistants;
-  }
-
-  /**
-   * Create instances from JSON or array of JSON objects
-   *
-   * @param properties JSON object with properties
-   */
-  public static fromJson(properties?: object) {
-    if (properties instanceof Array) {
-      return properties.map((obj) => new Assignment(obj));
-    } else {
-      return new Assignment(properties);
     }
   }
 
@@ -207,5 +184,41 @@ export class Assignment {
       // ...(this.deletedAt && { deletedAt: this.deletedAt }),
       // ...(this.deletedBy && { deletedBy: this.deletedBy }),
     };
+  }
+
+  /**
+   * Create instances from JSON or array of JSON objects
+   *
+   * @param properties JSON object with properties
+   */
+  public static fromJson(properties?: object) {
+    if (properties instanceof Array) {
+      return properties.map((obj) => new Assignment(obj));
+    } else {
+      return new Assignment(properties);
+    }
+  }
+
+  /**
+   * The unique identifier of this assignment in the form
+   */
+  get key() {
+    return this.week.toISODate() + this.position;
+  }
+
+  set assignableUsers(users: User[]) {
+    this._assignableUsers = users;
+  }
+
+  get assignableUsers() {
+    return this._assignableUsers;
+  }
+
+  set assignableAssistants(users: User[]) {
+    this._assignableAssistants = users;
+  }
+
+  get assignableAssistants() {
+    return this._assignableAssistants;
   }
 }

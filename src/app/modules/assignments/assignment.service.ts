@@ -11,6 +11,7 @@ import { Part } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
 import { BackendService } from '@src/app/core/services/backend.service';
 import { AssignmentConverter } from '@src/app/core/models/assignment/assignment.converter';
+import { AssignmentsModule } from './assignments.module';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -69,47 +70,22 @@ export abstract class AssignmentService extends CommonService<Assignment> {
    */
   createAssignment(
     props: object,
-    allParts: Part[],
-    allUsers: User[]
+    allParts?: Part[],
+    allUsers?: User[]
   ): Assignment | Assignment[] {
     if (props instanceof Array) {
-      return props.map((obj, index) => {
-        // Set the assignment position as its position in the array
+      const assignments = props.map((obj, index) => {
+        // if (typeof obj.part !== 'string') {
+        //   // Assignment from form, with selected part
+        //   // Set the assignment position as its position in the array
+        //   // By default the position is the same as the part
+        //   obj.position = index;
+        // }
 
-        // Replace part, assignee and assistant with model object
-        if (typeof obj.part === 'string') {
-          // from DB
-          // delete obj._id; // Remove the _id, so in case it should be saved, mongoDb regenerate
-          obj.part = obj.part
-            ? allParts.find((part) => part.name === obj.part)
-            : '';
-          obj.assignee = obj.assignee
-            ? allUsers.find((user) => user._id === obj.assignee)
-            : '';
-          obj.assistant = obj.assistant
-            ? allUsers.find((user) => user._id === obj.assistant)
-            : '';
-        } else {
-          // if (obj.part.hasOwnProperty('_id')) {
-          // from form, with selected part
-          obj.ownerId = this.backendService.getSignedInUser()._id;
-          obj.part = obj.part
-            ? allParts.find((part) => part.name === obj.part.name)
-            : '';
-          // By default the position is the same as the part
-          // obj.position = obj.part.constructor.name === 'Part' ? obj.part.position : index;
-          obj.position = index;
-          obj.assignee = obj.assignee
-            ? allUsers.find((user) => user._id === obj.assignee._id)
-            : '';
-          obj.assistant = obj.assistant
-            ? allUsers.find((user) => user._id === obj.assistant._id)
-            : '';
-        }
-
-        // obj.part = this.partService
-        return new Assignment(obj);
+        return new Assignment(obj, allParts, allUsers);
       }) as Assignment[];
+
+      return assignments;
     } else {
       return new Assignment(props) as Assignment;
     }
@@ -308,15 +284,18 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     let pAssignments: Assignment[];
     if (assignments !== null) {
       pAssignments = assignments.filter((assignment) => {
-        const isForMeeting = listOfParts.find((part) => 
-          part.name === assignment.part.name) !== undefined;
+        const isForMeeting =
+          listOfParts.find((part) => part.name === assignment.part.name) !==
+          undefined;
 
         const isForMonth = month.get('month') === assignment.week.get('month');
 
         return isForMeeting && isForMonth;
       });
 
-      pAssignments = pAssignments.sort((a, b) => a.part.position - b.part.position);
+      pAssignments = pAssignments.sort(
+        (a, b) => a.part.position - b.part.position
+      );
       // console.log('PASS', pAssignments);
 
       this.pAssignmentsStore.next(pAssignments);

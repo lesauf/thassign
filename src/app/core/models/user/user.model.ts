@@ -161,10 +161,11 @@ export class User {
           : [];
       }
 
-      if (allAssignments && userProperties['_id']) {
+      // get the assignments of the user
+      if (allAssignments && userProperties['_id'] !== undefined) {
         userProperties['assignments'] = allAssignments.filter(
           (ass: Assignment) => {
-            return ass.assignee._id == userProperties['_id'];
+            return ass.assignee?._id === userProperties['_id'];
           }
         );
       }
@@ -195,8 +196,6 @@ export class User {
     if (!this.congregation) {
       delete this.congregation;
     }
-
-    console.log('To save: ', this);
   }
 
   /**

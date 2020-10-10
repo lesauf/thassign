@@ -125,18 +125,16 @@ export class AssignmentMidweekStudentsComponent
   async ngOnInit() {
     await this.getParts();
 
-    if (!this.listOfParts) {
-      this.listOfParts = await this.partService.getPartsByMeeting(
-        this.meetingName
-      );
-    }
-
     // Pipe to the assignments observable the filtering
     this.data$ = combineLatest([
       this.userService.data,
       this.assignmentService.data,
     ]).subscribe(async ([users, assignments]) => {
-      // console.log(users, assignments);
+      if (this.listOfParts === undefined) {
+        this.listOfParts = await this.partService.getPartsByMeeting(
+          this.meetingName
+        );
+      }
 
       if (users !== null && assignments !== null) {
         // Display form only when observables have started emitting
@@ -169,10 +167,12 @@ export class AssignmentMidweekStudentsComponent
   async ngOnChanges(changes: SimpleChanges) {
     await this.initializeMonthData();
     
-    this.assignmentService.getAssignmentsByPartsAndMonth(
-      this.month,
-      this.listOfParts
-    );
+    if (this.listOfParts) {
+      this.assignmentService.getAssignmentsByPartsAndMonth(
+        this.month,
+        this.listOfParts
+      );
+    }
 
     // Check if the previous form was in edit mode : useful ??
     if (this.isEditMode) {
@@ -194,7 +194,7 @@ export class AssignmentMidweekStudentsComponent
    * Separate the assignments of the month by week
    */
   separateAssignmentsByWeek(pAssignments: Assignment[]) {
-    this.assignmentsByWeek = [];
+    // this.assignmentsByWeek = [];
 
     this.weeks.forEach((week, index) => {
       this.assignmentsByWeek[index] = pAssignments.filter((ass) => {
@@ -228,10 +228,9 @@ export class AssignmentMidweekStudentsComponent
    */
   updatePositions() {
     this.weeks.forEach((week, wIndex) => {
+      // convert the form data to Assignments Objects
       this.assignmentsByWeek[wIndex] = this.assignmentService.createAssignment(
-        this.studentsForm.value[wIndex],
-        this.partService.getParts(),
-        this.userService.getUsers()
+        this.studentsForm.value[wIndex]
       ) as Assignment[];
     });
   }

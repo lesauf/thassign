@@ -1,5 +1,4 @@
 import * as faker from 'faker'; // /locale/en_US'
-import { PartService } from '@src/app/core/services/part.service';
 import { Part } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
 
