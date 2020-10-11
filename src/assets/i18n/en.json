@@ -71,7 +71,7 @@
       "string": {
         "already-in-use": "An account already exist with this address. Did you forget your password ?",
         "email": "This address is incomplete",
-        "no-record": "There is no user record. Check your address or sign up"
+        "no-record": "User not found or wrong password. Check your address/password or sign up"
       }
     },
     "firstName": {

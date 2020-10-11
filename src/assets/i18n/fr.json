@@ -71,7 +71,7 @@
       "string": {
         "already-in-use": "Un compte existe deja avec cette adresse. As-tu oublié ton mot de passe ?",
         "email": "Cette adresse n'est pas complete",
-        "no-record": "Utilisateur inexistant. Verifie ton adresse ou inscris-toi"
+        "no-record": "Utilisateur inexistant. Verifie ton adresse/mot de passe ou inscris-toi"
       }
     },
     "firstName": {

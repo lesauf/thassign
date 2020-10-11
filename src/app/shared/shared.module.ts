@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ConfirmDialogComponent } from '@src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { ConfirmDirective } from '@src/app/shared/directives/confirm.directive';
 import { ControlMessagesComponent } from '@src/app/shared/components/control-messages/control-messages.component';
+import { ImportEpubComponent } from '@src/app/shared/components/import-epub/import-epub.component';
 import { MessagesComponent } from '@src/app/shared/components/messages/messages.component';
 import { TranslateDatePipe } from '@src/app/shared/pipes/translate-date.pipe';
 import { MonthPickerComponent } from '@src/app/shared/components/month-picker/month-picker.component';
@@ -21,8 +22,8 @@ import { OptionsDialogComponent } from '@src/app/shared/components/options-dialo
     ConfirmDialogComponent,
     ConfirmDirective,
     ControlMessagesComponent,
+    ImportEpubComponent,
     LoaderComponent,
-    // ImportEpubComponent,
     MessagesComponent,
     TranslateDatePipe,
     MonthPickerComponent,
@@ -52,6 +53,7 @@ import { OptionsDialogComponent } from '@src/app/shared/components/options-dialo
     ConfirmDirective,
     ControlMessagesComponent,
     ControlMessagesComponent,
+    ImportEpubComponent,
     LoaderComponent,
     MessagesComponent,
     TranslateDatePipe,

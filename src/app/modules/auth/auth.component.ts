@@ -162,7 +162,7 @@ export class AuthComponent implements OnInit {
 
       if (error.code === 'auth/email-already-in-use') {
         this.formMessages.email = 'error.email.string.already-in-use';
-      } else if (error.code === 'auth/user-not-found') {
+      } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
         this.formMessages.all = 'error.email.string.no-record';
       } else {
         this.formMessages.all = 'error.occurred';
