@@ -11,7 +11,7 @@ export class UserConverter {
 
   fromFirestore(snapshot, options) {
     const data = snapshot.data(options);
-    console.log(data);
+
     return new User(data);
   }
 }

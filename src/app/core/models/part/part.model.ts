@@ -71,6 +71,10 @@ export class Part {
   @IsInt()
   position = 0;
 
+  @IsString()
+  @IsIn(['prayer', 'chairman', 'treasures', 'ministry', "christianLiving", 'publicTalk', 'watchtower'])
+  section: string;
+
   /**
    * Does it need a title
    */
@@ -86,11 +90,6 @@ export class Part {
   @IsBoolean()
   @IsOptional()
   withAssistant?: boolean;
-
-  @IsString()
-  @IsOptional()
-  // @(jf.string().optional())
-  after?: string;
 
   /**
    * Is it an overseer assignment?

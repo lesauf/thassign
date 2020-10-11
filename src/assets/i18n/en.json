@@ -21,26 +21,28 @@
     "chairman": "CLM - Chairman",
     "christianLiving": {
       "congregation-bible-study": "Congregation Bible Study",
+      "congregation-bible-study-reader": "Reader - Congregation Bible Study",
       "first-part": "First Part",
       "second-part": "Second Part",
+      "talks": "Christian Life - Parts",
       "third-part": "Third Part",
       "title": "Christian Life Title"
     },
-    "closing-prayer": "CLM - Closing Prayer",
     "ministry": {
       "assistant": "Assistant",
       "bible-study": "Bible Study",
       "return-visit": "Return Visit",
       "initial-call": "Initial Call",
       "second-return-visit": "Second Return Visit",
-      "talk": "Talk",
+      "talk": "Student Talk",
       "title": "Ministry Meeting Title"
     },
-    "opening-prayer": "CLM - Opening prayer",
+    "prayer": "Prayer",
     "treasures": {
       "bible-reading": "Bible Reading",
       "digging": "Digging for Spiritual Gems",
       "first-part": "Treasures - First Part",
+      "talk": "Treasures - Talk",
       "title": "Treasures Meeting Title"
     }
   },
@@ -175,8 +177,6 @@
   "weekend-meeting": "Weekend Meeting",
   "weekend": {
     "chairman": "Weekend - Chairman",
-    "closing-prayer": "Weekend - Closing prayer",
-    "opening-prayer": "Weekend - Opening Prayer",
     "publicTalk": {
       "chairman": "Weekend - Chairman",
       "speaker": "Weekend - Speaker",

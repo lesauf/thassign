@@ -47,6 +47,10 @@ export class Assignment {
 
   @IsString()
   @IsOptional()
+  description: string; // theme of the assignment
+
+  @IsString()
+  @IsOptional()
   hall = 'main'; // "main" | "second" | "third"
 
   @IsInt()
@@ -86,11 +90,7 @@ export class Assignment {
    * @todo Sanitize/clean the object passed (apply some rules,
    * like women can not give public talks ...)
    */
-  constructor(
-    props?: object,
-    allParts?: Part[],
-    allUsers?: User[]
-  ) {
+  constructor(props?: object, allParts?: Part[], allUsers?: User[]) {
     if (props) {
       // Converting week to Luxon date
       if (!props['week']?.hasOwnProperty('isLuxonDateTime')) {
@@ -104,9 +104,7 @@ export class Assignment {
 
       // Replace part, assignee and assistant with model object
       // if coming from the DB. The form contain already the right Objects types
-      if (
-        allParts &&
-        props['part']) {
+      if (allParts && props['part']) {
         props['part'] = props['part']
           ? allParts.find((part) => part.name === props['part'])
           : '';

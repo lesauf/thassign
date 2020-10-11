@@ -21,26 +21,28 @@
     "chairman": "VCM - President",
     "christianLiving": {
       "congregation-bible-study": "Etude biblique de l'assemblée",
+      "congregation-bible-study-reader": "Lecteur - Etude biblique de l'assemblée",
       "first-part": "Premiere partie",
       "second-part": "Deuxieme partie",
+      "talks": "Vie chretienne - Parties",
       "third-part": "Troisieme partie",
       "title": "Title Vie Chretienne"
     },
-    "closing-prayer": "Prière de cloture",
     "ministry": {
       "assistant": "Interlocuteur",
       "bible-study": "Etude biblique",
       "return-visit": "Nouvelle visite",
       "initial-call": "Premier contact",
       "second-return-visit": "Deuxieme nouvelle visite",
-      "talk": "Discours",
+      "talk": "Discours d'Eleve",
       "title": "Ministere"
     },
-    "opening-prayer": "Priere d'ouverture",
+    "prayer": "Priere",
     "treasures": {
       "bible-reading": "Lecture de la bible",
       "digging": "Recherchons des perles",
       "first-part": "Premiere partie",
+      "talk": "Joyaux - Discours",
       "title": "Recherchons des perles spirituelles"
     }
   },
@@ -117,7 +119,8 @@
     "items_per_page": "Nombre par page",
     "last_page": "Fin",
     "next_page": "Suivant",
-    "of": "sur"
+    "of": "sur",
+    "previous_page": "Fin"
   },
   "menu": "menu",
   "midweek": "Milieu de semaine",
@@ -174,8 +177,6 @@
   "weekend-meeting": "Reunion du week-end",
   "weekend": {
     "chairman": "Week-end - Président",
-    "closing-prayer": "Week-end - Prière de cloture",
-    "opening-prayer": "Week-end - Prière d'ouverture",
     "publicTalk": {
       "chairman": "President",
       "speaker": "Orateur",
