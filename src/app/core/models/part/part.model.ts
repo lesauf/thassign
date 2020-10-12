@@ -62,7 +62,7 @@ export class Part {
 
   // @(jf.string().required().allow('midweek', 'midweek-students', 'weekend'))
   @IsString()
-  @IsIn(['midweek', 'midweek-students', 'weekend'])
+  @IsIn(['midweek', 'weekend'])
   meeting: string;
 
   /**
@@ -72,8 +72,9 @@ export class Part {
   position = 0;
 
   @IsString()
-  @IsIn(['prayer', 'chairman', 'treasures', 'ministry', "christianLiving", 'publicTalk', 'watchtower'])
-  section: string;
+  @IsIn(['student', 'talk-or-discussion'])
+  //@IsIn(['prayer', 'chairman', 'treasures', 'ministry', "christianLiving", 'publicTalk', 'watchtower'])
+  type: 'student' | 'talk-or-discussion' | 'general';
 
   /**
    * Does it need a title

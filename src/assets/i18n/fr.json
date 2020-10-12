@@ -38,6 +38,7 @@
       "title": "Ministere"
     },
     "prayer": "Priere",
+    "talk-or-discussion": "Partie a la reunion de semaine",
     "treasures": {
       "bible-reading": "Lecture de la bible",
       "digging": "Recherchons des perles",
@@ -162,6 +163,7 @@
   "sort-users-by-name": "Trier suivant le nom",
   "sort-users-by-this-assignment": "Trier suivant cette attribution",
   "speaker": "Orateur",
+  "Student": "Eleve",
   "submit": "Enregistrer",
   "this": "Ceci",
   "total": "total",
@@ -185,7 +187,7 @@
     "speaker": "Week-end - Orateur",
     "watchtower": {
       "conductor": "Conducteur TG",
-      "reader": "Lecteur TG",
+      "reader": "Lecteur - TG",
       "title": "Tour de Garde"
     }
   },

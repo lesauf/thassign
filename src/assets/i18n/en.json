@@ -38,6 +38,7 @@
       "title": "Ministry Meeting Title"
     },
     "prayer": "Prayer",
+    "talk-or-discussion": "Midweek part",
     "treasures": {
       "bible-reading": "Bible Reading",
       "digging": "Digging for Spiritual Gems",
@@ -162,6 +163,7 @@
   "sort-users-by-name": "Sort users by name",
   "sort-users-by-this-assignment": "Sort users by this assignment",
   "speaker": "Speaker",
+  "Student": "Student",
   "submit": "Submit",
   "this": "This",
   "total": "total",
@@ -179,12 +181,12 @@
     "chairman": "Weekend - Chairman",
     "publicTalk": {
       "chairman": "Weekend - Chairman",
-      "speaker": "Weekend - Speaker",
+      "speaker": "Public Speaker",
       "title": "Public Talk title"
     },
     "watchtower": {
       "conductor": "Watchtower conductor",
-      "reader": "Watchtower Reader",
+      "reader": "Reader - Watchtower",
       "title": "Watchtower Study Title"
     }
   },

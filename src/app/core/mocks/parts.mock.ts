@@ -15,136 +15,123 @@ export const partMocks: any[] = [
     _id: '',
     name: 'clm.chairman',
     meeting: 'midweek',
-    section: 'chairman',
+    type: 'general',
+    byAnOverseer: true,
   },
   {
     _id: '',
     name: 'clm.prayer',
     meeting: 'any',
-    section: 'prayer',
+    type: 'general',
+    byABrother: true,
   },
   {
     _id: '',
-    name: 'clm.treasures.talk',
-    meeting: 'midweek-treasures',
-    section: 'treasures',
+    name: 'clm.talk-or-discussion',
+    meeting: 'midweek',
+    type: 'talk-or-discussion',
     withTitle: true,
     byAnOverseer: true,
   },
-  {
-    _id: '',
-    name: 'clm.treasures.digging',
-    meeting: 'midweek-treasures',
-    section: 'treasures',
-    byAnOverseer: true,
-  },
+  // {
+  //   _id: '',
+  //   name: 'clm.treasures.digging',
+  //   meeting: 'midweek',
+  //   type: 'talk-or-discussion',
+  //   byAnOverseer: true,
+  // },
   {
     _id: '',
     name: 'clm.treasures.bible-reading',
-    meeting: 'midweek-treasures',
-    section: 'treasures',
+    meeting: 'midweek',
+    type: 'student',
     byABrother: true,
     position: 0,
   },
   {
     _id: '',
     name: 'clm.ministry.initial-call',
-    meeting: 'midweek-students',
-    section: 'ministry',
+    meeting: 'midweek',
+    type: 'student',
     withAssistant: true,
     position: 1,
   },
   {
     _id: '',
     name: 'clm.ministry.return-visit',
-    meeting: 'midweek-students',
-    section: 'ministry',
+    meeting: 'midweek',
+    type: 'student',
     withAssistant: true,
     position: 2,
   },
   {
     _id: '',
     name: 'clm.ministry.bible-study',
-    meeting: 'midweek-students',
-    section: 'ministry',
+    meeting: 'midweek',
+    type: 'student',
     withAssistant: true,
     position: 3,
   },
   {
     _id: '',
     name: 'clm.ministry.talk',
-    meeting: 'midweek-students',
-    section: 'ministry',
+    meeting: 'midweek',
+    type: 'student',
+    byABrother: true,
     position: 4,
   },
   {
     _id: '',
     name: 'clm.ministry.assistant',
-    section: 'ministry',
+    type: 'student',
     meeting: 'any',
   },
-  {
-    _id: '',
-    name: 'clm.christianLiving.talks',
-    meeting: 'midweek-christianLiving',
-    section: 'christianLiving',
-    withTitle: true,
-  },
-  {
-    _id: '',
-    name: 'clm.christianLiving.congregation-bible-study',
-    meeting: 'midweek-christianLiving',
-    section: 'christianLiving',
-  },
+  // {
+  //   _id: '',
+  //   name: 'clm.christianLiving.talks',
+  //   meeting: 'midweek',
+  //   type: 'talk-or-discussion',
+  //   withTitle: true,
+  //   byAnOverseer: true,
+  // },
+  // {
+  //   _id: '',
+  //   name: 'clm.christianLiving.congregation-bible-study',
+  //   meeting: 'midweek',
+  //   type: 'talk-or-discussion',
+  //   byAnOverseer: true,
+  // },
   {
     _id: '',
     name: 'clm.christianLiving.congregation-bible-study-reader',
-    meeting: 'midweek-christianLiving',
-    section: 'christianLiving',
+    meeting: 'midweek',
+    type: 'general',
   },
   {
     _id: '',
     name: 'weekend.publicTalk.chairman',
-    meeting: 'weekend-publicTalk',
-    section: 'publicTalk',
+    meeting: 'weekend',
+    type: 'general',
     byAnOverseer: true,
   },
   {
     _id: '',
     name: 'weekend.publicTalk.speaker',
-    meeting: 'weekend-publicTalk',
-    section: 'publicTalk',
+    meeting: 'weekend',
+    type: 'talk-or-discussion',
     byAnOverseer: true,
   },
   {
     _id: '',
-    name: 'weekend.watchtower.conductor',
-    meeting: 'weekend-watchtower',
-    section: 'watchtower',
+    name: 'weekend.watchtower.reader',
+    meeting: 'weekend',
+    type: 'general',
   },
   {
     _id: '',
-    name: 'weekend.watchtower.reader',
-    meeting: 'weekend-watchtower',
-    section: 'watchtower',
+    name: 'weekend.watchtower.conductor',
+    meeting: 'weekend',
+    type: 'talk-or-discussion',
+    byAnOverseer: true,
   },
 ];
-// } else {
-//   return await PartModel.find();
-// }
-
-// let part: PartSchema;
-
-// export const PARTS: PartType[] = getParts();
-
-// export const generateParts = async (count = faker.random.number(10)) => {
-//   const parts = await PartModel.find();
-//   const res = [];
-
-//   for (let i = 1; i <= count + 1; i++) {
-//     const randomPart = faker.random.arrayElement(parts);
-//     res.push(randomPart);
-//   }
-
-//   return res;
-// };

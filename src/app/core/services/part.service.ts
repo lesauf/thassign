@@ -97,25 +97,26 @@ export class PartService extends CommonService<Part> {
    */
   async getPartsGroupedByMeeting() {
     const allPartsGrouped = [];
-    // list of meeting names
-    const meetings = [];
+    // list of part types (General, Talk or Discussion, Students)
+    const types = [];
 
     this.getParts().forEach((part) => {
-      // if the meeting name is already saved, we skip
+      // if the meeting type is already saved, we skip
+
       if (
-        !meetings.find((meeting) => {
-          return meeting === part.meeting;
+        !types.find((type) => {
+          return type === part.type;
         })
       ) {
         allPartsGrouped.push(
-          this.getParts().filter((p) => p.meeting === part.meeting)
+          this.getParts().filter((p) => p.type === part.type)
         );
 
-        meetings.push(part.meeting);
+        types.push(part.type);
       }
     });
     // console.log(allPartsGrouped, meetings);
-    return { parts: allPartsGrouped, meetings: meetings };
+    return { parts: allPartsGrouped, meetings: types };
   }
 
   /**
