@@ -75,13 +75,6 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   ): Assignment | Assignment[] {
     if (props instanceof Array) {
       const assignments = props.map((obj, index) => {
-        // if (typeof obj.part !== 'string') {
-        //   // Assignment from form, with selected part
-        //   // Set the assignment position as its position in the array
-        //   // By default the position is the same as the part
-        //   obj.position = index;
-        // }
-
         return new Assignment(obj, allParts, allUsers);
       }) as Assignment[];
 

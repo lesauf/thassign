@@ -44,7 +44,7 @@ export class EpubService {
 
   async getProgramsFromEpub(epubFilename: string) {
     this.epubFilename = epubFilename;
-    this.getMonthFromEpubFilename();
+    this.getMonthFromEpubFilename(epubFilename);
 
     this.book = ePub(this.epubPath + epubFilename + '.epub');
     console.log(
@@ -82,7 +82,7 @@ export class EpubService {
   async extractMwbPrograms() {
     // Fetch book
     await this.book.ready;
-
+    
     const weekPages = await this.getXmlOfSections();
 
     // Store the current week
@@ -135,11 +135,12 @@ export class EpubService {
             partSection = classes.substr(classes.indexOf(' ')).trim();
           }
 
-          // The part title is separated with a column,
-          // so we can split and extract the description
-          const partTitle: string[] = parts.item(index).textContent.split(':');
+          const partTitle: string[] = this.extractPartTitleAndDescription(
+            parts.item(index).textContent
+          );
 
           program.assignments.push({
+            meeting: 'midweek',
             week: currentWeek,
             position: index,
             partSection,
@@ -154,6 +155,32 @@ export class EpubService {
         this.programs.push(program);
       }
     });
+  }
+
+  /**
+   * The part title is separated from the description with a column,
+   * or an opening bracket so we can split and extract the description
+   * @param partText Coming from the epub part description
+   * @param separators list of known separators
+   */
+  extractPartTitleAndDescription(
+    partText: string,
+    separators = [':', '(']
+  ): string[] {
+    let fsPos = 500; // great value so that the first separator update it
+    let firstSeparator = separators[0];
+    separators.forEach((sep) => {
+      const sIndex = partText.indexOf(sep);
+      if (sIndex !== -1 && fsPos > sIndex) {
+        // Separator found before the default
+        firstSeparator = sep;
+        fsPos = sIndex;
+      }
+    });
+
+    // get the position of each separator and then keep the first appearing
+    // return partText.split(firstSeparator);
+    return [partText.substr(0, fsPos), partText.substr(fsPos)];
   }
 
   /**
@@ -193,20 +220,37 @@ export class EpubService {
    * Extract the month from the epub filename
    * ex: mwb_F_201908 => 201908
    */
-  getMonthFromEpubFilename(pubCode: string = 'mwb') {
-    const startLanguage =
-      this.epubFilename.lastIndexOf(pubCode + '_') + pubCode.length + 1;
-    const endLanguage = this.epubFilename.length - 7;
-    this.epubLangCode = this.epubFilename.substring(startLanguage, endLanguage);
+  getMonthFromEpubFilename(epubFilename?: string, pubCode: string = 'mwb') {
+    if (epubFilename === undefined) {
+      epubFilename = this.epubFilename;
+    }
+
+    this.epubLangCode = this.getLanguageFromEpubFilename(pubCode, epubFilename);
 
     const startMonth =
-      this.epubFilename.lastIndexOf(pubCode + '_' + this.epubLangCode + '_') +
+      epubFilename.lastIndexOf(pubCode + '_' + this.epubLangCode + '_') +
       pubCode.length +
       this.epubLangCode.length +
       2;
 
-    const month = this.epubFilename.substring(startMonth);
+    const month = epubFilename.substring(startMonth);
     this.epubMonth = DateTime.fromISO(month);
+  }
+
+  /**
+   * Extract the month from the epub filename
+   * ex: mwb_F_201908 => F
+   */
+  getLanguageFromEpubFilename(epubFilename?: string, pubCode: string = 'mwb') {
+    if (epubFilename === undefined) {
+      epubFilename = this.epubFilename;
+    }
+
+    const startLanguage =
+      epubFilename.lastIndexOf(pubCode + '_') + pubCode.length + 1;
+    const endLanguage = epubFilename.length - 7;
+
+    return epubFilename.substring(startLanguage, endLanguage);
   }
 
   /**

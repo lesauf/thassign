@@ -93,6 +93,14 @@ export class Part {
   withAssistant?: boolean;
 
   /**
+   * Does it need a reader
+   */
+  // @(jf.boolean().optional())
+  @IsBoolean()
+  @IsOptional()
+  withReader?: boolean;
+
+  /**
    * Is it an overseer assignment?
    */
   // @(jf.boolean().optional())

@@ -41,13 +41,19 @@ export class Assignment {
   @IsInt()
   position = 1;
 
+  /**
+   * Theme of the assignment
+   */
   @IsString()
   @IsOptional()
-  title: string; // theme of the assignment
+  title: string;
 
+  /**
+   * Description of the assignment
+   */
   @IsString()
   @IsOptional()
-  description: string; // theme of the assignment
+  description: string;
 
   @IsString()
   @IsOptional()
@@ -92,7 +98,7 @@ export class Assignment {
    */
   constructor(props?: object, allParts?: Part[], allUsers?: User[]) {
     if (props) {
-      // Converting week to Luxon date
+      // Converting week to Luxon date if not
       if (!props['week']?.hasOwnProperty('isLuxonDateTime')) {
         const refDate = DateTime.utc();
 

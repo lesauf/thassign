@@ -21,7 +21,6 @@
     "chairman": "CLM - Chairman",
     "christianLiving": {
       "congregation-bible-study": "Congregation Bible Study",
-      "congregation-bible-study-reader": "Reader - Congregation Bible Study",
       "first-part": "First Part",
       "second-part": "Second Part",
       "talks": "Christian Life - Parts",
@@ -38,6 +37,7 @@
       "title": "Ministry Meeting Title"
     },
     "prayer": "Prayer",
+    "reader": "Reader - Midweek",
     "talk-or-discussion": "Midweek part",
     "treasures": {
       "bible-reading": "Bible Reading",
@@ -48,6 +48,10 @@
     }
   },
   "close": "close",
+  "comments": {
+    "concluding": "Concluding comments",
+    "opening": "Opening comments"
+  },
   "conductor": "Conductor",
   "confirm-success": "User removed",
   "delete": "delete",
@@ -157,6 +161,7 @@
   "sign-in": "Sign in",
   "sign-out": "Sign out",
   "sign-up": "Create an account",
+  "song": "Song",
   "sort-by": "sort by",
   "sort-order": "sort order",
   "sort-users-by-any-assignment": "Sort Users by Any Assignment",
@@ -165,6 +170,7 @@
   "speaker": "Speaker",
   "Student": "Student",
   "submit": "Submit",
+  "talk": "Talk",
   "this": "This",
   "total": "total",
   "type": "type",
@@ -184,9 +190,9 @@
       "speaker": "Public Speaker",
       "title": "Public Talk title"
     },
+    "reader": "Reader - Watchtower",
     "watchtower": {
       "conductor": "Watchtower conductor",
-      "reader": "Reader - Watchtower",
       "title": "Watchtower Study Title"
     }
   },

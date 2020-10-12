@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { CommonService } from '@src/app/core/services/common.service';
 import { MessageService } from '@src/app/core/services/message.service';
@@ -45,7 +46,8 @@ export class PartService extends CommonService<Part> {
 
   constructor(
     protected messageService: MessageService,
-    protected backendService: BackendService
+    protected backendService: BackendService,
+    protected translateService: TranslateService
   ) {
     super();
 
@@ -75,11 +77,73 @@ export class PartService extends CommonService<Part> {
   }
 
   /**
+   *
+   * @param title translated title
+   * @param partSection
+   */
+  getPartByTranslatedTitle(
+    title: string,
+    partSection: 'chairman' | 'treasures' | 'ministry' | 'christianLiving',
+    description: string
+  ) {
+    const parts = this.getParts();
+
+    // Get if the title is among the translated part
+    // Text comparisons are made on lowercase
+    const correspondingPart = parts.find((part) => {
+      const t: string = this.translateService.instant(part.name);
+      return t.toLowerCase() === title.toLowerCase();
+    });
+
+    if (correspondingPart !== undefined) {
+      return correspondingPart;
+    } else if (
+      partSection === 'ministry' &&
+      this.translateService.instant('talk').toLowerCase() ===
+        title.toLowerCase()
+    ) {
+      // student talk
+      return this.getPartByName('clm.ministry.talk');
+    } else if (partSection === 'treasures') {
+      // Digging or Treasures talk
+      return this.getPartByName('clm.talk-or-discussion');
+    } else {
+      // Song and prayer
+      const song = this.translateService.instant('song').toLowerCase();
+      const prayer = this.translateService.instant('prayer').toLowerCase();
+      if (
+        title.toLowerCase().includes(song) &&
+        title.toLowerCase().includes(prayer)
+      ) {
+        return this.getPartByName('clm.prayer');
+      }
+
+      // Songs, Opening/concluding comments 
+      // or presentation videos (last from ministry)
+      const openingComments = this.translateService.instant('comments.opening').toLowerCase();
+      const concludingComments = this.translateService
+        .instant('comments.concluding')
+        .toLowerCase();
+      if (
+        (title.toLowerCase().includes(song) && description === '') || //song
+        title.toLowerCase() === openingComments.toLowerCase() || // op comment
+        title.toLowerCase() === concludingComments.toLowerCase() || // concl co
+        partSection === 'ministry' // presentation vids
+      ) {
+        return this.getPartByName('clm.chairman');
+      }
+
+      return this.getPartByName('clm.talk-or-discussion');
+    }
+
+    console.log(title, partSection);
+  }
+
+  /**
    * get the parts objects of the current meeting
    */
   getPartsByMeeting(meetingName: string): Part[] {
     const parts = this.getParts();
-
 
     const partsOfMeeting = parts.filter((part) =>
       this.meetingParts[meetingName].includes(part.name)

@@ -20,8 +20,7 @@
   "clm": {
     "chairman": "VCM - President",
     "christianLiving": {
-      "congregation-bible-study": "Etude biblique de l'assemblée",
-      "congregation-bible-study-reader": "Lecteur - Etude biblique de l'assemblée",
+      "congregation-bible-study": "Étude biblique de l'assemblée",
       "first-part": "Premiere partie",
       "second-part": "Deuxieme partie",
       "talks": "Vie chretienne - Parties",
@@ -38,6 +37,7 @@
       "title": "Ministere"
     },
     "prayer": "Priere",
+    "reader": "Lecteur - Milieu de semaine",
     "talk-or-discussion": "Partie a la reunion de semaine",
     "treasures": {
       "bible-reading": "Lecture de la bible",
@@ -48,6 +48,10 @@
     }
   },
   "close": "fermer",
+  "comments": {
+    "concluding": "Paroles de conclusion",
+    "opening": "Paroles d’introduction"
+  },
   "conductor": "Conducteur",
   "confirm-success": "Utilisateur supprimé",
   "delete": "supprimer",
@@ -141,7 +145,7 @@
     "people": "{gender, select, male{Son nom est} female{Son nom, est} other{Leurs noms sont}} {name}",
     "things": "Il y a {count, plural, =0{is} one{is} other{are}} {count, plural, =0{} one{a} other{several}} {count, plural, =0{nothing} one{thing} other{things}}"
   },
-  "prayer": "Priere",
+  "prayer": "Prière",
   "previous-week": "Semaine precedente",
   "print": "impression",
   "publisher": "Proclamateur",
@@ -157,6 +161,7 @@
   "sign-in": "Se connecter",
   "sign-out": "Se déconnecter",
   "sign-up": "S'inscrire",
+  "song": "Cantique",
   "sort-by": "trier par",
   "sort-order": "ordre de tri",
   "sort-users-by-any-assignment": "Trier suivant toutes les attributions",
@@ -165,6 +170,7 @@
   "speaker": "Orateur",
   "Student": "Eleve",
   "submit": "Enregistrer",
+  "talk": "Discours",
   "this": "Ceci",
   "total": "total",
   "type": "type",
@@ -184,10 +190,10 @@
       "speaker": "Orateur",
       "title": "Discours public"
     },
+    "reader": "Lecteur - TG",
     "speaker": "Week-end - Orateur",
     "watchtower": {
       "conductor": "Conducteur TG",
-      "reader": "Lecteur - TG",
       "title": "Tour de Garde"
     }
   },

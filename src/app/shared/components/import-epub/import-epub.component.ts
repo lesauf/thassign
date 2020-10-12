@@ -24,7 +24,7 @@ export class ImportEpubComponent implements OnInit {
   renderArea: ElementRef;
 
   @Input()
-  epubFilename = 'mwb_F_202011';
+  epubFilename = 'mwb_E_202011';
 
   // public epubPath = '/assets/epubs/';
 
@@ -65,11 +65,13 @@ export class ImportEpubComponent implements OnInit {
     // this.getMonthAndLangFromEpub();
 
     // await this.extractPrograms();
-    
-    this.programs = await this.epubService.getProgramsFromEpub(this.epubFilename);
+
+    this.programs = await this.epubService.getProgramsFromEpub(
+      this.epubFilename
+    );
 
     this.book = this.epubService.book;
-    
+
     // Display the program of first week
     this.rendition = this.book.renderTo(this.renderArea.nativeElement, {
       flow: 'scrolled',

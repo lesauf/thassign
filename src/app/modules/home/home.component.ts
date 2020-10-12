@@ -3,10 +3,11 @@ import { Observable } from 'rxjs';
 
 import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
-import { PartService } from '@src/app/core/services/part.service';
 import { AuthService } from '@src/app/modules/auth/auth.service';
-import { Part } from '@src/app/core/models/part/part.model';
+import { PartService } from '@src/app/core/services/part.service';
 import { UserService } from '@src/app/modules/users/user.service';
+import { ProgramService } from '@src/app/core/services/program.service';
+import { Part } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
 
 @Component({
@@ -27,9 +28,10 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private assignmentService: AssignmentService,
+    private authservice: AuthService,
     private partService: PartService,
-    private userService: UserService,
-    private authservice: AuthService
+    private programService: ProgramService,
+    private userService: UserService
   ) {
     // const newUser = {
     //   firstName: 'trtr',

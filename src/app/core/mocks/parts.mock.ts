@@ -69,7 +69,6 @@ export const partMocks: any[] = [
     name: 'clm.ministry.bible-study',
     meeting: 'midweek',
     type: 'student',
-    withAssistant: true,
     position: 3,
   },
   {
@@ -94,16 +93,17 @@ export const partMocks: any[] = [
   //   withTitle: true,
   //   byAnOverseer: true,
   // },
-  // {
-  //   _id: '',
-  //   name: 'clm.christianLiving.congregation-bible-study',
-  //   meeting: 'midweek',
-  //   type: 'talk-or-discussion',
-  //   byAnOverseer: true,
-  // },
   {
     _id: '',
-    name: 'clm.christianLiving.congregation-bible-study-reader',
+    name: 'clm.christianLiving.congregation-bible-study',
+    meeting: 'midweek',
+    type: 'talk-or-discussion',
+    byAnOverseer: true,
+    withReader: true,
+  },
+  {
+    _id: '',
+    name: 'clm.reader',
     meeting: 'midweek',
     type: 'general',
   },
@@ -123,7 +123,7 @@ export const partMocks: any[] = [
   },
   {
     _id: '',
-    name: 'weekend.watchtower.reader',
+    name: 'weekend.reader',
     meeting: 'weekend',
     type: 'general',
   },
@@ -133,5 +133,6 @@ export const partMocks: any[] = [
     meeting: 'weekend',
     type: 'talk-or-discussion',
     byAnOverseer: true,
+    withReader: true,
   },
 ];
