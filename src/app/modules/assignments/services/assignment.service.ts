@@ -167,7 +167,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
       // });
 
       this.updateStore(allAssignments);
-      this.log('fetched Assignments', 'AssignmentService');
+      // this.log('fetched Assignments', 'AssignmentService');
 
       return allAssignments;
     } catch (error) {

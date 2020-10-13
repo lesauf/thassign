@@ -17,13 +17,16 @@ import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { Part } from './part/part.model';
 
 export class Program {
+  /**
+   * For reference programs the _id is the month string
+   */
   @IsObject()
   @IsOptional()
   _id: string;
 
   @IsString()
   meeting: 'midweek' | 'weekend';
-  
+
   /**
    * Store the month to speed up search
    */
@@ -47,6 +50,20 @@ export class Program {
    */
   constructor(props?: object, allParts?: Part[]) {
     if (props) {
+      // Converting week and month to Luxon date if not
+      if (!props['week']?.hasOwnProperty('isLuxonDateTime')) {
+        const refDate = DateTime.utc();
+
+        props['week'] = DateTime.fromISO(props['week'], {
+          zone: refDate.zone,
+          locale: refDate.locale,
+        });
+        props['month'] = DateTime.fromISO(props['month'], {
+          zone: refDate.zone,
+          locale: refDate.locale,
+        });
+      }
+
       // Object to convert
       if (allParts) {
         props['assignments'] = props['assignments']
@@ -67,8 +84,8 @@ export class Program {
   toObject(): object {
     let assignments = [];
 
-    // Convert assignments to simbpel objects
-    this.assignments.forEach(ass => {
+    // Convert assignments to simple objects
+    this.assignments.forEach((ass) => {
       assignments.push(ass.toObject());
     });
 
@@ -76,6 +93,9 @@ export class Program {
       month: this.month.toISO(),
       week: this.week.toISO(),
       assignments: assignments,
+      meeting: this.meeting,
+      ...(this._id ? { _id: this._id } : null),
+      ...(this.ownerId ? { ownerId: this.ownerId } : null),
     };
   }
 }

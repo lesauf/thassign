@@ -183,18 +183,16 @@ export class UserService extends CommonService<User> {
     try {
       // convert to User objects
       const allUsers = this.createUser(
-        
         users,
-      
-         allParts,
-      
-         allAssignments
-      
+
+        allParts,
+
+        allAssignments
       ) as User[];
       // console.log('Users to put in the store :', allUsers);
 
       this.updateStore(allUsers);
-      this.log('Stored users');
+      // this.log('Stored users');
 
       return allUsers;
     } catch (error) {

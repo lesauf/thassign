@@ -66,7 +66,7 @@ export class PartService extends CommonService<Part> {
    * Get all parts from the server and store them
    */
   storeParts(parts: any[]): Part[] {
-    this.log('Stored parts', 'PartService');
+    // this.log('Stored parts', 'PartService');
 
     // const result = await this.callFunction('getAllParts');
 

@@ -88,9 +88,11 @@ export abstract class CommonService<M> {
     // };
   }
 
-  /** Log a UserService message with the MessageService */
+  /**
+   * Log an error/message to send the developer
+   */
   protected log(message: string, service?: string) {
-    service = service !== undefined ? service : 'UserService';
+    service = service !== undefined ? service : this.constructor.name;
     this.messageService.add(`${service}: ${message}`);
   }
 }

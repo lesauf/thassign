@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
 
-import { BackendService } from './backend.service';
+import { BackendService } from '@src/app/core/services/backend.service';
+import { CommonService } from '@src/app/core/services/common.service';
 import { EpubService } from '@src/app/core/services/epub.service';
+import { MessageService } from '@src/app/core/services/message.service';
 import { PartService } from './part.service';
 import { meetingName } from '@src/app/core/types/meeting.type';
 import { ProgramConverter } from '@src/app/core/models/program.converter';
@@ -13,46 +15,58 @@ import { Program } from '@src/app/core/models/program.model';
 @Injectable({
   providedIn: 'root',
 })
-export class ProgramService {
+export class ProgramService extends CommonService<Program> {
   program: Program;
 
   constructor(
-    private backendService: BackendService,
-    private epubService: EpubService,
-    private partService: PartService
-  ) {}
+    protected backendService: BackendService,
+    protected epubService: EpubService,
+    protected messageService: MessageService,
+    protected partService: PartService
+  ) {
+    super();
+  }
 
-  async getPrograms(meeting: meetingName, month: DateTime) {
-    let programs: any[];
+  /**
+   * Get the english programs list (the reference) either from the DB
+   * or the epub file
+   * @param meeting
+   * @param month
+   */
+  async getReferencePrograms(meeting: meetingName, month: DateTime) {
+    let programs = new Map();
 
     if (meeting === 'midweek') {
-        // get the midweek meeting from the db ()
-        const dbResults = await this.backendService
-          .getCollectionWithConverter('programReferences', ProgramConverter)
-          .where('month', '==', month.toISO())
-          .get();
-        programs = dbResults.docs;
-console.log(month.toISO());
-        if (!programs.length) {
-          // If not in the db get from the epub and save in the db
-          const epubFilename = 'mwb_E_' + month.toFormat('yyyyMM');
-          programs = (await this.getProgramFromEnglishEpub(
-            epubFilename
-          )) as Program[];
-          
-          await this.backendService.upsertManyDocs(
-            'programReferences',
-            new ProgramConverter(),
-            programs,
-            'set',
-            false
-          );
-        }
+      // get the midweek meeting from the db ()
+      const dbResults = await this.backendService
+        .getCollectionWithConverter('referencePrograms', new ProgramConverter())
+        .where('month', '==', month.toISO())
+        .get();
+      
+      if (!dbResults.empty) {
+        dbResults.forEach(function(doc) {
+          programs.set(doc.id, doc.data());
+        });
+      } else {
+        // If not in the db get from the epub and save in the db
         // if not found in the epub throw error
-    } else if (meeting === 'weekend') {
+        const epubFilename = 'mwb_E_' + month.toFormat('yyyyMM');
+        programs = (await this.getProgramFromEnglishEpub(
+          epubFilename
+        ));
 
-    } else {
-        throw meeting + ': There is not such meeting for now';
+        // console.log(programs[0].month.toISO(), month.toISO());
+        await this.backendService.upsertManyDocs(
+          'referencePrograms',
+          new ProgramConverter(),
+          Array.from(programs.values)
+        );
+      }
+    }
+    else if (meeting === 'weekend') {
+    }
+    else {
+      this.messageService.add(meeting + ': There is not such meeting for now');
     }
 
     return programs;
@@ -66,14 +80,18 @@ console.log(month.toISO());
    */
   async getProgramFromEnglishEpub(epubFilename: string, week?: DateTime) {
     if (this.epubService.getLanguageFromEpubFilename(epubFilename) !== 'E') {
-      throw 'Please provide the english epub for ' + epubFilename;
+      this.messageService.log('Please provide the english epub for ' + epubFilename);
     }
 
     const roughPrograms = await this.epubService.getProgramsFromEpub(
       epubFilename
     );
 
-    const programs = this.convertPrograms(roughPrograms);
+    const convPrograms = this.convertPrograms(roughPrograms) as Program[];
+    const programs = new Map();
+    convPrograms.forEach(program => {
+      programs.set(program.week.toISO(), program);
+    });
 
     return programs;
   }

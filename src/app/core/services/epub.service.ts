@@ -14,10 +14,13 @@ import Section from 'epubjs/types/section';
 import { DateTime } from 'luxon';
 import { indexOfElementNode } from 'epubjs/types/utils/core';
 
+import { CommonService } from '@src/app/core/services/common.service';
+import { MessageService } from '@src/app/core/services/message.service';
+
 @Injectable({
   providedIn: 'root',
 })
-export class EpubService {
+export class EpubService extends CommonService<any> {
   epubFilename = '';
 
   public epubPath = '/assets/epubs/';
@@ -26,7 +29,11 @@ export class EpubService {
 
   public rendition: Rendition;
 
-  public programs: Array<any> = new Array();
+  /**
+   * English program coming straight from the epub.
+   * It will be used to create all the other programs
+   */
+  public referencePrograms: Array<any> = new Array();
 
   /**
    * Language of the book,
@@ -38,10 +45,16 @@ export class EpubService {
    * Month of the epub,
    * taken from the filename
    */
-  public epubMonth: DateTime;
+  public epubMonth: string;
 
-  constructor() {}
+  constructor(protected messageService: MessageService) {
+    super();
+  }
 
+  /**
+   * Extract the meeting parts from the epub
+   * @param epubFilename
+   */
   async getProgramsFromEpub(epubFilename: string) {
     this.epubFilename = epubFilename;
     this.getMonthFromEpubFilename(epubFilename);
@@ -52,16 +65,23 @@ export class EpubService {
       await this.book.open(this.epubPath + epubFilename + '.epub');
     } catch (error) {
       if (error.status === 404) {
-        throw epubFilename + ' epub not available';
+        this.messageService.log(
+          'Please provide the english epub for ' + epubFilename
+        );
+        this.messageService.presentToast(
+          'Sorry, you cannot create the program for now: ' + this.epubMonth
+        );
+        // Return empty array as reference program
+        return [];
+      } else {
+        throw error;
       }
-
-      throw error;
     }
 
-    // Populate this.programs
+    // Populate this.referencePrograms
     await this.extractMwbPrograms();
 
-    return this.programs;
+    return this.referencePrograms;
   }
 
   /**
@@ -88,24 +108,25 @@ export class EpubService {
   async extractMwbPrograms() {
     // Fetch book
     await this.book.ready;
-    
+
     const weekPages = await this.getXmlOfSections();
 
     // Store the current week
     let currentWeek: DateTime;
 
     weekPages.forEach((weekPage) => {
-      // We look for the sections/pages containing the program
+      // We look for the sections/pages containing the referenceProgram
       const ministrySection = weekPage.xml.getElementsByClassName('ministry');
 
       if (ministrySection.length !== 0) {
         // Get the week
         const weekString = weekPage.xml.querySelector("[id='p1']")
           .lastElementChild.innerHTML;
+        const weekStringFull = this.convertWeekToDateString(weekString);
 
         if (currentWeek === undefined) {
           // First week
-          currentWeek = this.convertWeekToDatetime(weekString);
+          currentWeek = DateTime.fromISO(weekStringFull);
         } else {
           // subsequent weeks just get calculated
           // so that they can cross the months easily
@@ -113,10 +134,12 @@ export class EpubService {
         }
 
         // Prepare the Program object
-        const program = {
+        const referenceProgram = {
+          _id: currentWeek.toISO(), // referenceProgram reference key is week
+          meeting: 'midweek',
           sectionIndex: weekPage.index,
-          week: currentWeek,
-          month: currentWeek.set({ day: 1 }), // also store the month
+          week: currentWeek.toFormat('yyyyMMdd'),
+          month: currentWeek.set({ day: 1 }).toFormat('yyyyMMdd'), // also store the month
           xhtml: weekPage.xml,
           assignments: [],
         };
@@ -146,7 +169,7 @@ export class EpubService {
             parts.item(index).textContent
           );
 
-          program.assignments.push({
+          referenceProgram.assignments.push({
             meeting: 'midweek',
             week: currentWeek,
             position: index,
@@ -161,7 +184,7 @@ export class EpubService {
           });
         }
 
-        this.programs.push(program);
+        this.referencePrograms.push(referenceProgram);
       }
     });
   }
@@ -194,10 +217,10 @@ export class EpubService {
 
   /**
    * Convert the first day of a week string to
-   * Luxon DateTime Object
+   * a complete date string of type yyyymmdd
    * @param week
    */
-  convertWeekToDatetime(
+  convertWeekToDateString(
     weekString: string,
     separatorSameMonth = '-',
     separatorDiffMonth = '–'
@@ -219,7 +242,11 @@ export class EpubService {
     var matches = firstPart.match(/(\d+)/);
 
     if (matches) {
-      return this.epubMonth.set({ day: parseInt(matches[0]) });
+      // If day number is only one character convert it to 2 char
+      const dayAsNumber = parseInt(matches[0]);
+      const day = matches[0].length === 1 ? '0' + dayAsNumber : dayAsNumber;
+
+      return this.epubMonth + day;
     } else {
       throw 'No day in the week string provided';
     }
@@ -242,9 +269,16 @@ export class EpubService {
       this.epubLangCode.length +
       2;
 
-    const month = epubFilename.substring(startMonth);
+    this.epubMonth = epubFilename.substring(startMonth);
 
-    this.epubMonth = DateTime.fromISO(month);
+    // const month = epubFilename.substring(startMonth);
+
+    // UTC date used here
+    // const refDate = DateTime.utc();
+    // this.epubMonth = DateTime.fromISO(month, {
+    //   zone: refDate.zone,
+    //   locale: refDate.locale,
+    // });
   }
 
   /**

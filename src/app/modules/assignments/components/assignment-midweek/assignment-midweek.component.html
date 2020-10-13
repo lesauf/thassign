@@ -1,1 +1,5 @@
-<p>{{ month | translateDate: 'DATE_SHORT' | async }}</p>
+<!-- <p>{{ month | translateDate: 'DATE_SHORT' | async }}</p> -->
+
+<p *ngFor="let program of programs | keyvalue">
+    {{ program.value.week | translateDate: 'DATE_SHORT' | async }}
+</p>

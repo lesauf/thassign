@@ -35,7 +35,10 @@ export class AssignmentMidweekComponent
 
   dateFormat = MY_FORMATS.display.dateA11yLabel;
 
-  programs: Program[];
+  /**
+   * Map of week to programs
+   */
+  programs: Map<string, Program>;
 
   constructor(protected programService: ProgramService) {}
 
@@ -43,20 +46,11 @@ export class AssignmentMidweekComponent
 
   async ngOnChanges(changes: SimpleChanges) {
     // Get the first week as the first monday of the month
-    this.currentWeek = this.month.set({ weekday: 8 }).setLocale('fr');
+    this.currentWeek = this.month.set({ weekday: 8 });
 
-    this.programs = await this.programService.getPrograms(
-      
-      
-      
+    this.programs = await this.programService.getReferencePrograms(
       'midweek',
- 
- 
- 
-                  this.month
-    
-    
-    
+      this.month
     );
   }
 
