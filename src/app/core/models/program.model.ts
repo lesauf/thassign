@@ -23,6 +23,13 @@ export class Program {
 
   @IsString()
   meeting: 'midweek' | 'weekend';
+  
+  /**
+   * Store the month to speed up search
+   */
+  @IsObject()
+  @IsOptional()
+  month: DateTime;
 
   @IsObject()
   @IsOptional()
@@ -52,5 +59,23 @@ export class Program {
       // Assign the properties to this object
       Object.assign(this, props);
     }
+  }
+
+  /**
+   * Convert to a standard object for saving
+   */
+  toObject(): object {
+    let assignments = [];
+
+    // Convert assignments to simbpel objects
+    this.assignments.forEach(ass => {
+      assignments.push(ass.toObject());
+    });
+
+    return {
+      month: this.month.toISO(),
+      week: this.week.toISO(),
+      assignments: assignments,
+    };
   }
 }

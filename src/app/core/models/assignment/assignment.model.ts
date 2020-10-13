@@ -174,8 +174,8 @@ export class Assignment {
     return {
       ...(this._id && { _id: this._id }),
       ownerId: this.ownerId,
-      week: this.week,
-      part: this.part,
+      week: this.week.toISO(),
+      part: this.part.name,
       assignee: this.assignee,
       position: this.position,
 

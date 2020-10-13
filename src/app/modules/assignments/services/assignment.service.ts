@@ -11,7 +11,7 @@ import { Part } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
 import { BackendService } from '@src/app/core/services/backend.service';
 import { AssignmentConverter } from '@src/app/core/models/assignment/assignment.converter';
-import { AssignmentsModule } from './assignments.module';
+import { AssignmentsModule } from '../assignments.module';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

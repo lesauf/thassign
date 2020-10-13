@@ -24,7 +24,7 @@ import { DateTime, Interval } from 'luxon';
 import { combineLatest, forkJoin, merge, Observable, Subscription, zip } from 'rxjs';
 
 import { AssignmentCommon } from '@src/app/modules/assignments/components/assignment.common';
-import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
+import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
 import { AuthService } from '@src/app/modules/auth/auth.service';
 import { MessageService } from '@src/app/core/services/message.service';
 import { PartService } from '@src/app/core/services/part.service';
@@ -33,7 +33,7 @@ import { UserService } from '@src/app/modules/users/user.service';
 import { ValidationService } from '@src/app/core/services/validation.service';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { Part } from '@src/app/core/models/part/part.model';
-import { AssignmentControlService } from '@src/app/modules/assignments/assignment-control.service';
+import { AssignmentControlService } from '@src/app/modules/assignments/services/assignment-control.service';
 import { BackendService } from '@src/app/core/services/backend.service';
 import { map, tap } from 'rxjs/operators';
 import { User } from '@src/app/core/models/user/user.model';

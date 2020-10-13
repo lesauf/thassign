@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime, Interval } from 'luxon';
 
-import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
+import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
 import { MessageService } from '@src/app/core/services/message.service';
 import { PartService } from '@src/app/core/services/part.service';
 import { SettingService } from '@src/app/core/services/setting.service';

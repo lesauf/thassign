@@ -11,7 +11,7 @@ import { User } from '@src/app/core/models/user/user.model';
 import { Observable, EMPTY, of, combineLatest } from 'rxjs';
 import { PartService } from '@src/app/core/services/part.service';
 import { UserService } from '@src/app/modules/users/user.service';
-import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
+import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
 import { AssignmentConverter } from '@src/app/core/models/assignment/assignment.converter';
 import { BackendService } from '@src/app/core/services/backend.service';
 import { AuthService } from '@src/app/modules/auth/auth.service';

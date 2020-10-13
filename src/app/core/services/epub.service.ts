@@ -46,11 +46,17 @@ export class EpubService {
     this.epubFilename = epubFilename;
     this.getMonthFromEpubFilename(epubFilename);
 
-    this.book = ePub(this.epubPath + epubFilename + '.epub');
-    console.log(
-      'DATE Full data if enero ',
-      new Intl.DateTimeFormat('es', { month: 'long' }).format(new Date(9e8))
-    );
+    this.book = new Book();
+    // this.book = ePub(this.epubPath + epubFilename + '.epub');
+    try {
+      await this.book.open(this.epubPath + epubFilename + '.epub');
+    } catch (error) {
+      if (error.status === 404) {
+        throw epubFilename + ' epub not available';
+      }
+
+      throw error;
+    }
 
     // Populate this.programs
     await this.extractMwbPrograms();
@@ -110,6 +116,7 @@ export class EpubService {
         const program = {
           sectionIndex: weekPage.index,
           week: currentWeek,
+          month: currentWeek.set({ day: 1 }), // also store the month
           xhtml: weekPage.xml,
           assignments: [],
         };
@@ -144,6 +151,8 @@ export class EpubService {
             week: currentWeek,
             position: index,
             partSection,
+            ownerId: null,
+            assignee: null,
             title: partTitle[0].trim(),
             // part with a description (separated by column :)
             ...(partTitle.length > 1
@@ -225,7 +234,7 @@ export class EpubService {
       epubFilename = this.epubFilename;
     }
 
-    this.epubLangCode = this.getLanguageFromEpubFilename(pubCode, epubFilename);
+    this.epubLangCode = this.getLanguageFromEpubFilename(epubFilename, pubCode);
 
     const startMonth =
       epubFilename.lastIndexOf(pubCode + '_' + this.epubLangCode + '_') +
@@ -234,6 +243,7 @@ export class EpubService {
       2;
 
     const month = epubFilename.substring(startMonth);
+
     this.epubMonth = DateTime.fromISO(month);
   }
 

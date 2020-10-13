@@ -8,7 +8,7 @@ import { AssignmentListComponent } from '@src/app/modules/assignments/pages/assi
 import { AssigmentsRoutingModule } from '@src/app/modules/assignments/assignments-routing.module';
 // import { AssignmentWeekendComponent } from './components/assignment-weekend/assignment-weekend.component';
 import { AssignmentMidweekStudentsComponent } from '@src/app/modules/assignments/components/assignment-midweek-students/assignment-midweek-students.component';
-// import { AssignmentMidweekComponent } from './components/assignment-midweek/assignment-midweek.component';
+import { AssignmentMidweekComponent } from './components/assignment-midweek/assignment-midweek.component';
 import { AssignmentComponent } from '@src/app/modules/assignments/components/assignment/assignment.component';
 import { AssignableListComponent } from '@src/app/modules/assignments/components/assignable-list/assignable-list.component';
 
@@ -24,7 +24,7 @@ import { AssignableListComponent } from '@src/app/modules/assignments/components
     AssignmentListComponent,
     // AssignmentWeekendComponent,
     AssignmentMidweekStudentsComponent,
-    // AssignmentMidweekComponent,
+    AssignmentMidweekComponent,
     AssignmentComponent,
   ],
 })

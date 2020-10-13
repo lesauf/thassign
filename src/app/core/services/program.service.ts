@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
 
+import { BackendService } from './backend.service';
 import { EpubService } from '@src/app/core/services/epub.service';
 import { PartService } from './part.service';
+import { meetingName } from '@src/app/core/types/meeting.type';
+import { ProgramConverter } from '@src/app/core/models/program.converter';
 import { Program } from '@src/app/core/models/program.model';
 /**
  * - Parse epub to extract all the assignments
@@ -14,10 +17,45 @@ export class ProgramService {
   program: Program;
 
   constructor(
+    private backendService: BackendService,
     private epubService: EpubService,
     private partService: PartService
-  ) {
-    this.getProgramFromEnglishEpub('mwb_E_202011');
+  ) {}
+
+  async getPrograms(meeting: meetingName, month: DateTime) {
+    let programs: any[];
+
+    if (meeting === 'midweek') {
+        // get the midweek meeting from the db ()
+        const dbResults = await this.backendService
+          .getCollectionWithConverter('programReferences', ProgramConverter)
+          .where('month', '==', month.toISO())
+          .get();
+        programs = dbResults.docs;
+console.log(month.toISO());
+        if (!programs.length) {
+          // If not in the db get from the epub and save in the db
+          const epubFilename = 'mwb_E_' + month.toFormat('yyyyMM');
+          programs = (await this.getProgramFromEnglishEpub(
+            epubFilename
+          )) as Program[];
+          
+          await this.backendService.upsertManyDocs(
+            'programReferences',
+            new ProgramConverter(),
+            programs,
+            'set',
+            false
+          );
+        }
+        // if not found in the epub throw error
+    } else if (meeting === 'weekend') {
+
+    } else {
+        throw meeting + ': There is not such meeting for now';
+    }
+
+    return programs;
   }
 
   /**

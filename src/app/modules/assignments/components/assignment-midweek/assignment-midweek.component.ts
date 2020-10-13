@@ -12,6 +12,8 @@ import { AssignmentCommon } from '@src/app/modules/assignments/components/assign
 import { DateTime, Interval } from 'luxon';
 
 import { MY_FORMATS } from '@src/app/shared/components/month-picker/month-picker.component';
+import { ProgramService } from '@src/app/core/services/program.service';
+import { Program } from '@src/app/core/models/program.model';
 
 @Component({
   selector: 'app-assignment-midweek',
@@ -29,20 +31,33 @@ export class AssignmentMidweekComponent
   @Output()
   editMode: EventEmitter<any> = new EventEmitter();
 
-  week: Interval;
+  currentWeek: DateTime;
 
   dateFormat = MY_FORMATS.display.dateA11yLabel;
 
-  constructor() {}
+  programs: Program[];
+
+  constructor(protected programService: ProgramService) {}
 
   ngOnInit() {}
 
   async ngOnChanges(changes: SimpleChanges) {
-    const firstMondayOfMonth = this.month.set({ weekday: 8 }).setLocale('fr'); // set the date as the first monday of the month
-    const endTime = firstMondayOfMonth.plus({ days: 6 }).setLocale('fr');
+    // Get the first week as the first monday of the month
+    this.currentWeek = this.month.set({ weekday: 8 }).setLocale('fr');
 
-    this.week = Interval.fromDateTimes(firstMondayOfMonth, endTime);
-    // console.log(firstMondayOfMonth);
+    this.programs = await this.programService.getPrograms(
+      
+      
+      
+      'midweek',
+ 
+ 
+ 
+                  this.month
+    
+    
+    
+    );
   }
 
   ngOnDestroy() {}

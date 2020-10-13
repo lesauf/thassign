@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
+import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { AuthService } from '@src/app/modules/auth/auth.service';
 import { PartService } from '@src/app/core/services/part.service';
