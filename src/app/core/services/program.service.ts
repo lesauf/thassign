@@ -48,18 +48,17 @@ export class ProgramService extends CommonService<Program> {
           programs.set(doc.id, doc.data());
         });
       } else {
-        // If not in the db get from the epub and save in the db
+        // If not in the db get it from the epub and save in the db
         // if not found in the epub throw error
         const epubFilename = 'mwb_E_' + month.toFormat('yyyyMM');
         programs = (await this.getProgramFromEnglishEpub(
           epubFilename
         ));
 
-        // console.log(programs[0].month.toISO(), month.toISO());
         await this.backendService.upsertManyDocs(
           'referencePrograms',
           new ProgramConverter(),
-          Array.from(programs.values)
+          Array.from(programs.values())
         );
       }
     }

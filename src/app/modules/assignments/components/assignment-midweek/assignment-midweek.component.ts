@@ -45,6 +45,8 @@ export class AssignmentMidweekComponent
   ngOnInit() {}
 
   async ngOnChanges(changes: SimpleChanges) {
+    this.programs = undefined; // to start the loader
+
     // Get the first week as the first monday of the month
     this.currentWeek = this.month.set({ weekday: 8 });
 

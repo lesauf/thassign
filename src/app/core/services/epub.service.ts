@@ -78,10 +78,10 @@ export class EpubService extends CommonService<any> {
       }
     }
 
-    // Populate this.referencePrograms
-    await this.extractMwbPrograms();
+    // Extract the programs
+    const referencePrograms = await this.extractMwbPrograms();
 
-    return this.referencePrograms;
+    return referencePrograms;
   }
 
   /**
@@ -106,6 +106,8 @@ export class EpubService extends CommonService<any> {
    * from the epub
    */
   async extractMwbPrograms() {
+    const referencePrograms = [];
+
     // Fetch book
     await this.book.ready;
 
@@ -184,9 +186,11 @@ export class EpubService extends CommonService<any> {
           });
         }
 
-        this.referencePrograms.push(referenceProgram);
+        referencePrograms.push(referenceProgram);
       }
     });
+
+    return referencePrograms;
   }
 
   /**
