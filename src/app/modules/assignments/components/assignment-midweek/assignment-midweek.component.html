@@ -1,13 +1,57 @@
 <ng-template #loading>
-    <app-loader></app-loader>
+  <app-loader></app-loader>
 </ng-template>
 
-<ng-container *ngIf="programs; else loading">
-    <div *ngFor="let program of programs | keyvalue">
+<div *ngIf="(mPrograms$ | async) as mPrograms; else loading">
+  <form [formGroup]="programsForm" 
+    (ngSubmit)="onSubmit()">
+    <button type="submit" mat-raised-button class="mat-primary">
+        <mat-icon>save</mat-icon>
+        {{ "save" | translate | titlecase }}
+      </button>
+
+    <div *ngFor="let program of mPrograms | keyvalue" [formGroupName]="program.key">
+      <div>
         <h2>{{ program.key | translateDate: "MMM-D" : {days: 6} | async }}</h2>
 
-        <div *ngFor="let assignment of program.value.assignments" [title]="assignment.description">
-            {{ assignment.title }}
+        <div formArrayName="assignments">
+          <div *ngFor="let assignment of program.value.assignments" 
+            [formGroupName]="assignment.position"
+            [title]="assignment.description">
+            <div>
+              {{ assignment.title }}
+              
+              <div fxFlex="30" fxFlex.lt-sm="auto">
+                <app-picker
+                  title="{{ 'assignee' | translate | titlecase }}"
+                  placeholder="{{ 'assignee' | translate | titlecase }}"
+                  [form]="programsForm"
+                  [controlPath]="[program.key, 
+                    'assignments', 
+                    assignment.position, 
+                    'assignee']"
+                  [options]="assignableListByPart[assignment.part.name]"
+                  labelField="fullName"
+                ></app-picker>
+
+                <!-- <select formControlName="assignee"> 
+                  <option value="tst">tst</option>
+                  <option value="tstdfgd">tstdfgd</option>
+                  <option value="dfgssew">dfgssew</option>
+                </select> -->
+              </div>
+
+              <div *ngIf="assignment.part.withAssistant" fxFlex="30" fxFlex.lt-sm="auto">
+                <select formControlName="assistant"> 
+                  <option value="Assiatana">Assiatana</option>
+                  <option value="Assiatana2">Assiatana2</option>
+                  <option value="Assiatana1">Assiatana1</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</ng-container>
+  </form>
+</div>

@@ -246,23 +246,6 @@ export class UserService extends CommonService<User> {
     }
   }
 
-  /* GET users whose name contains search term */
-  // async searchUsers(term: string): Promise<User[]> {
-  //   // term = term ? encodeURIComponent(term.trim()) : null;
-
-  //   try {
-  //     const result = await this.callFunction('Users_search', [term]);
-
-  //     // const users = this.createUser(result) as User[];
-  //     const users = result;
-  //     this.log(`found users matching "${term}"`);
-
-  //     return users;
-  //   } catch (error) {
-  //     this.handleError<any>('searchUsers', []);
-  //   }
-  // }
-
   /**
    * Check if a given user pass the filters
    */
@@ -403,9 +386,13 @@ export class UserService extends CommonService<User> {
    * 'weekend.publicTalk.chairman' part
    * nb: Sort assignments by week desc
    */
-  getAssignableUsersByParts(parts: Part[], meetingName: string): any {
+  getAssignableUsersByParts(parts?: Part[], meetingName?: string): any {
+    if (parts === undefined) {
+      parts = this.partService.getParts();
+    }
+    
     const users = this.getUsers();
-
+// console.log(users);
     const assignableUsersByPart = {};
 
     const assignableUsers = users.filter((user) => {
@@ -415,7 +402,7 @@ export class UserService extends CommonService<User> {
 
     // Arranging by part,
     parts.forEach((part) => {
-      assignableUsersByPart[part.name] = assignableUsers.filter(
+      assignableUsersByPart[part.name] = users.filter(
         (user) =>
           (user.parts as Part[]).find(
             (userPart) => userPart.name === part.name
