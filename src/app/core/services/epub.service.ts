@@ -65,9 +65,7 @@ export class EpubService extends CommonService<any> {
       await this.book.open(this.epubPath + epubFilename + '.epub');
     } catch (error) {
       if (error.status === 404) {
-        this.messageService.log(
-          'Please provide the english epub for ' + epubFilename
-        );
+        this.messageService.log('Please provide the epub for ' + epubFilename);
         this.messageService.presentToast(
           'Sorry, you cannot create the program for now: ' + this.epubMonth
         );
@@ -137,12 +135,12 @@ export class EpubService extends CommonService<any> {
 
         // Prepare the Program object
         const referenceProgram = {
-          _id: currentWeek.toISO(), // referenceProgram reference key is week
+          _id: currentWeek.toFormat('yyyyMMdd'), // referenceProgram reference key is week
           meeting: 'midweek',
-          sectionIndex: weekPage.index,
           week: currentWeek.toFormat('yyyyMMdd'),
-          month: currentWeek.set({ day: 1 }).toFormat('yyyyMMdd'), // also store the month
-          xhtml: weekPage.xml,
+          month: currentWeek.toFormat('yyyyMM'), // also store the month
+          // xhtml: weekPage.xml.toString(),
+          // sectionIndex: weekPage.index,
           assignments: [],
         };
 
@@ -173,7 +171,7 @@ export class EpubService extends CommonService<any> {
 
           referenceProgram.assignments.push({
             meeting: 'midweek',
-            week: currentWeek,
+            week: currentWeek.toFormat('yyyyMMdd'),
             position: index,
             partSection,
             ownerId: null,

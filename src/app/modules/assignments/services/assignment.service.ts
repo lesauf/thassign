@@ -333,8 +333,11 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     try {
       await this.backendService.upsertOneDoc(
         'assignments',
-        new AssignmentConverter(),
-        assignment
+        assignment,
+        null,
+        'set',
+        false,
+        new AssignmentConverter()
       );
 
       this.log(`added assignment`);
@@ -350,11 +353,11 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     try {
       await this.backendService.upsertOneDoc(
         'assignments',
-        new AssignmentConverter(),
         assignment,
         assignment._id,
         'set',
-        true
+        true,
+        new AssignmentConverter()
       );
 
       this.log(`updated assignment`);
@@ -372,9 +375,10 @@ export abstract class AssignmentService extends CommonService<Assignment> {
         // many assignments
         await this.backendService.upsertManyDocs(
           'assignments',
-          new AssignmentConverter(),
           assignmentId as String[],
-          'delete'
+          'delete',
+          false,
+          new AssignmentConverter()
         );
 
         this.log(`deleted assignments`);
@@ -382,10 +386,11 @@ export abstract class AssignmentService extends CommonService<Assignment> {
         // Only one assignment
         await this.backendService.upsertOneDoc(
           'users',
-          new AssignmentConverter(),
           null,
           assignmentId as string,
-          'delete'
+          'delete',
+          false,
+          new AssignmentConverter()
         );
 
         this.log(`deleted assignment`);
@@ -433,18 +438,20 @@ export abstract class AssignmentService extends CommonService<Assignment> {
       if (assToDelete.length) {
         this.backendService.upsertManyDocs(
           'assignments',
-          AssignmentConverter,
           assToDelete,
-          'delete'
+          'delete',
+          false,
+          new AssignmentConverter()
         );
       }
 
       // Then insert the new ones
       await this.backendService.upsertManyDocs(
         'assignments',
-        new AssignmentConverter(),
         toSave,
-        'set'
+        'set',
+        false,
+        new AssignmentConverter()
       );
 
       //  Save the assignments and fetch all of them from the DB

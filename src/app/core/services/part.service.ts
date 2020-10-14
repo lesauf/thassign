@@ -91,7 +91,7 @@ export class PartService extends CommonService<Part> {
     // Get if the title is among the translated part
     // Text comparisons are made on lowercase
     const correspondingPart = parts.find((part) => {
-      const t: string = this.translateService.instant(part.name);
+      const t: string = this.getTranslationOf(part.name);
       return t.toLowerCase() === title.toLowerCase();
     });
 
@@ -99,8 +99,7 @@ export class PartService extends CommonService<Part> {
       return correspondingPart;
     } else if (
       partSection === 'ministry' &&
-      this.translateService.instant('talk').toLowerCase() ===
-        title.toLowerCase()
+      this.getTranslationOf('talk').toLowerCase() === title.toLowerCase()
     ) {
       // student talk
       return this.getPartByName('clm.ministry.talk');
@@ -109,8 +108,8 @@ export class PartService extends CommonService<Part> {
       return this.getPartByName('clm.talk-or-discussion');
     } else {
       // Song and prayer
-      const song = this.translateService.instant('song').toLowerCase();
-      const prayer = this.translateService.instant('prayer').toLowerCase();
+      const song = this.getTranslationOf('song').toLowerCase();
+      const prayer = this.getTranslationOf('prayer').toLowerCase();
       if (
         title.toLowerCase().includes(song) &&
         title.toLowerCase().includes(prayer)
@@ -118,12 +117,14 @@ export class PartService extends CommonService<Part> {
         return this.getPartByName('clm.prayer');
       }
 
-      // Songs, Opening/concluding comments 
+      // Songs, Opening/concluding comments
       // or presentation videos (last from ministry)
-      const openingComments = this.translateService.instant('comments.opening').toLowerCase();
-      const concludingComments = this.translateService
-        .instant('comments.concluding')
-        .toLowerCase();
+      const openingComments = this.getTranslationOf(
+        'comments.opening'
+      ).toLowerCase();
+      const concludingComments = this.getTranslationOf(
+        'comments.concluding'
+      ).toLowerCase();
       if (
         (title.toLowerCase().includes(song) && description === '') || //song
         title.toLowerCase() === openingComments.toLowerCase() || // op comment
@@ -137,6 +138,14 @@ export class PartService extends CommonService<Part> {
     }
 
     console.log(title, partSection);
+  }
+
+  /**
+   * Get the translations of a key
+   * @param key
+   */
+  getTranslationOf(key: string, interpolateParams?: Object): string {
+    return this.translateService.instant(key, interpolateParams);
   }
 
   /**

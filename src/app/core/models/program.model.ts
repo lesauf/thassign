@@ -90,8 +90,8 @@ export class Program {
     });
 
     return {
-      month: this.month.toISO(),
-      week: this.week.toISO(),
+      month: this.week.toFormat('yyyyMM'),
+      week: this.week.toFormat('yyyyMMdd'),
       assignments: assignments,
       meeting: this.meeting,
       ...(this._id ? { _id: this._id } : null),

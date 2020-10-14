@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
+import { TranslateService } from '@ngx-translate/core';
 
 import { BackendService } from '@src/app/core/services/backend.service';
 import { CommonService } from '@src/app/core/services/common.service';
@@ -18,13 +19,25 @@ import { Program } from '@src/app/core/models/program.model';
 export class ProgramService extends CommonService<Program> {
   program: Program;
 
+  /**
+   * Map of lang -> shortLangCode
+   */
+  langs = { en: 'E', fr: 'F' };
+
+  mwbLangCode: string = 'F';
+
   constructor(
     protected backendService: BackendService,
     protected epubService: EpubService,
     protected messageService: MessageService,
-    protected partService: PartService
+    protected partService: PartService,
+    protected translateService: TranslateService
   ) {
     super();
+    this.translateService.onLangChange.subscribe((lang) => {
+      this.mwbLangCode = this.langs[this.translateService.currentLang];
+      console.log(this.mwbLangCode);
+    });
   }
 
   /**
@@ -34,41 +47,51 @@ export class ProgramService extends CommonService<Program> {
    * @param month
    */
   async getReferencePrograms(meeting: meetingName, month: DateTime) {
-    let programs = new Map();
+    
+    let programs = {};
 
     if (meeting === 'midweek') {
       // get the midweek meeting from the db ()
       const dbResults = await this.backendService
         .getCollectionWithConverter('referencePrograms', new ProgramConverter())
-        .where('month', '==', month.toISO())
+        .where('month', '==', month.toFormat('yyyyMM') + 'REMOVE!')
         .get();
-      
+
       if (!dbResults.empty) {
-        dbResults.forEach(function(doc) {
-          programs.set(doc.id, doc.data());
+        // if (dbResults.exists) {
+        dbResults.forEach(function (doc) {
+          programs[doc.id] = doc.data();
         });
       } else {
-        // If not in the db get it from the epub and save in the db
+        // If not in the db get it from the epub and
         // if not found in the epub throw error
-        const epubFilename = 'mwb_E_' + month.toFormat('yyyyMM');
-        programs = (await this.getProgramFromEnglishEpub(
-          epubFilename
-        ));
+        const epubFilename =
+          `mwb_${this.mwbLangCode}_${month.toFormat('yyyyMM')}`;
+        programs = await this.getProgramFromEnglishEpub(epubFilename);
 
-        await this.backendService.upsertManyDocs(
-          'referencePrograms',
-          new ProgramConverter(),
-          Array.from(programs.values())
-        );
+        // const fProgs = await this.getProgramFromEnglishEpub(
+        //   'mwb_F_' + month.toFormat('yyyyMM')
+        // );
+        // return fProgs;
+
+        // await this.backendService.upsertManyDocs(
+        //   'referencePrograms',
+        //   Object.values(programs),
+        //   'set',
+        //   false,
+        //   new ProgramConverter()
+        // );
+
+        // console.log('ttrt');
       }
-    }
-    else if (meeting === 'weekend') {
-    }
-    else {
+    } else if (meeting === 'weekend') {
+    } else {
       this.messageService.add(meeting + ': There is not such meeting for now');
     }
 
-    return programs;
+    // Optionally convert the programs here to a map
+    
+    return this.convertProgramsToMap(programs);
   }
 
   /**
@@ -78,29 +101,41 @@ export class ProgramService extends CommonService<Program> {
    * @param week
    */
   async getProgramFromEnglishEpub(epubFilename: string, week?: DateTime) {
-    if (this.epubService.getLanguageFromEpubFilename(epubFilename) !== 'E') {
-      this.messageService.log('Please provide the english epub for ' + epubFilename);
-    }
+    // if (this.epubService.getLanguageFromEpubFilename(epubFilename) !== 'E') {
+    //   this.messageService.log(
+    //     'Please provide the english epub for ' + epubFilename
+    //   );
+    // }
 
     const roughPrograms = await this.epubService.getProgramsFromEpub(
       epubFilename
     );
 
-    const convPrograms = this.convertPrograms(roughPrograms) as Program[];
-    const programs = new Map();
-    convPrograms.forEach(program => {
-      programs.set(program.week.toISO(), program);
+    const convPrograms = this.convertProgramModels(roughPrograms) as Program[];
+
+    // Convert the array to object{week -> program}
+    const programs = {};
+    convPrograms.forEach((program) => {
+      programs[program.week.toFormat('yyyyMMdd')] = program;
     });
 
     return programs;
   }
+
+  // async getTitlesAndDescriptionsForLang(month, langCode = 'F') {
+  //   const epubFilename = 'mwb_F_' + month.toFormat('yyyyMM');
+
+  //   const roughPrograms = await this.epubService.getProgramsFromEpub(
+  //     epubFilename
+  //   );
+  // }
 
   /**
    * Create Program instances from JSON or array of JSON objects
    *
    * @param roughPrograms JSON object/array with properties
    */
-  convertPrograms(roughPrograms: object): Program | Program[] {
+  convertProgramModels(roughPrograms: object): Program | Program[] {
     const allParts = this.partService.getParts();
 
     if (roughPrograms instanceof Array) {
@@ -128,5 +163,15 @@ export class ProgramService extends CommonService<Program> {
     });
 
     return roughProgram;
+  }
+
+  convertProgramsToMap(programs:any) {
+    const convPrograms = new Map();
+
+    Object.keys(programs).forEach(week => {
+      convPrograms.set(week, programs[week]);
+    });
+
+    return convPrograms;
   }
 }

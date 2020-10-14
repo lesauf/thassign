@@ -38,7 +38,7 @@ export class AssignmentMidweekComponent
   /**
    * Map of week to programs
    */
-  programs: Map<string, Program>;
+  programs: Map<string, Program[]>;
 
   constructor(protected programService: ProgramService) {}
 

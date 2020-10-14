@@ -63,31 +63,6 @@ export class Assignment {
   @IsOptional()
   number: number; // like public talk number
 
-  // // Joi.date().default(Date.now()),
-  // @IsDate()
-  // @IsOptional()
-  // createdAt: Date;
-
-  // // Joi.date(),
-  // @IsDate()
-  // @IsOptional()
-  // updatedAt: Date;
-
-  // // deleted: Joi.boolean().default(false),
-  // @IsBoolean()
-  // @IsOptional()
-  // deleted = false;
-
-  // // Joi.date(),
-  // @IsDate()
-  // @IsOptional()
-  // deletedAt: Date;
-
-  // // Joi.string(),
-  // @IsInt()
-  // @IsOptional()
-  // deletedBy: string;
-
   private _assignableUsers: User[];
 
   private _assignableAssistants: User[];
@@ -108,25 +83,46 @@ export class Assignment {
         });
       }
 
-      // Replace part, assignee and assistant with model object
-      // if coming from the DB. The form contain already the right Objects types
-      if (allParts && props['part']) {
-        props['part'] = props['part']
-          ? allParts.find((part) => part.name === props['part'])
-          : '';
-      }
-
-      if (allUsers && props['_id']) {
-        props['assignee'] = props['assignee']
-          ? allUsers.find((user) => user._id === props['assignee'])
-          : '';
-        props['assistant'] = props['assistant']
-          ? allUsers.find((user) => user._id === props['assistant'])
-          : '';
-      }
+      // Get part, assignee, assistant
+      props = this.convertForeignKeys(props, allParts, allUsers);
 
       Object.assign(this, props);
     }
+  }
+
+  /**
+   * Replace part, assignee and assistant with model object.
+   * if coming from the DB. The form contain already the right Objects types 
+   * @param props 
+   * @param allParts 
+   * @param allUsers 
+   */
+  convertForeignKeys(props: object, allParts?: Part[], allUsers?: User[]) {
+    // Part
+    if (allParts && props['part']) {
+      const part = allParts.find((part) => part.name === props['part']);
+      props['part'] = part ? part : '';
+    }
+
+    if (allUsers) {
+      // Assignee
+      if (props['assignee']) {
+        const assignee = allUsers.find(
+          (user) => user._id === props['assignee']
+        );
+        props['assignee'] = assignee ? assignee : '';
+      }
+
+      // Assistant
+      if (props['assistant']) {
+        const assistant = allUsers.find(
+          (user) => user._id === props['assistant']
+        );
+        props['assistant'] = assistant ? assistant : '';
+      }
+    }
+
+    return props;
   }
 
   /**
@@ -138,55 +134,34 @@ export class Assignment {
     if (!this.assistant) {
       delete this.assistant;
     }
-    // if (!this.deletedAt) {
-    //   delete this.deletedAt;
-    // }
-    // if (!this.deletedBy) {
-    //   delete this.deletedBy;
-    // }
-    // if (!this.updatedAt) {
-    //   delete this.updatedAt;
-    // }
     if (!this.title) {
       delete this.title;
+    }
+    if (!this.description) {
+      delete this.description;
     }
     if (!this.number) {
       delete this.number;
     }
-
-    // Remove also createdAt ?
-    // if (this.createdAt) {
-    //   delete this.createdAt;
-    // }
   }
 
   /**
    * Convert to a standard object for saving
    */
   toObject() {
-    // Define updatedAt field if the _id field exist
-    // if (this._id === undefined) {
-    //   this.createdAt = new Date();
-    // } else {
-    //   this.updatedAt = new Date();
-    // }
-
     return {
       ...(this._id && { _id: this._id }),
       ownerId: this.ownerId,
-      week: this.week.toISO(),
+      week: this.week.toFormat('yyyyMMdd'),
       part: this.part.name,
       assignee: this.assignee,
       position: this.position,
 
       ...(this.assistant && { assistant: this.assistant }),
       ...(this.title && { title: this.title }),
+      ...(this.description && { description: this.description }),
       ...(this.hall && { hall: this.hall }),
       ...(this.number && { number: this.number }),
-      // ...(this.createdAt && { createdAt: this.createdAt }),
-      // ...(this.updatedAt && { updatedAt: this.updatedAt }),
-      // ...(this.deletedAt && { deletedAt: this.deletedAt }),
-      // ...(this.deletedBy && { deletedBy: this.deletedBy }),
     };
   }
 

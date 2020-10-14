@@ -147,9 +147,10 @@ export class UserService extends CommonService<User> {
       // insert users
       await this.backendService.upsertManyDocs(
         'users',
-        new UserConverter(),
         generatedUsers,
-        'set'
+        'set',
+        false,
+        new UserConverter()
       );
 
       // this.updateStore(this.createUser(users, allParts) as User[]);
@@ -454,8 +455,11 @@ export class UserService extends CommonService<User> {
     try {
       await this.backendService.upsertOneDoc(
         'users',
-        new UserConverter(),
-        user
+        user,
+        null,
+        'set',
+        false,
+        new UserConverter()
       );
 
       this.log(`added user`);
@@ -471,11 +475,11 @@ export class UserService extends CommonService<User> {
     try {
       await this.backendService.upsertOneDoc(
         'users',
-        new UserConverter(),
         user,
         user._id,
         'set',
-        true
+        true,
+        new UserConverter()
       );
 
       this.log(`updated user`);
@@ -493,9 +497,10 @@ export class UserService extends CommonService<User> {
         // many users
         await this.backendService.upsertManyDocs(
           'users',
-          new UserConverter(),
           userId as String[],
-          'delete'
+          'delete',
+          false,
+          new UserConverter()
         );
 
         this.log(`deleted users`);
@@ -503,10 +508,11 @@ export class UserService extends CommonService<User> {
         // Only one user
         await this.backendService.upsertOneDoc(
           'users',
-          new UserConverter(),
           null,
           userId as string,
-          'delete'
+          'delete',
+          false,
+          new UserConverter()
         );
 
         this.log(`deleted user`);

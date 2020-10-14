@@ -70,7 +70,7 @@ export class TranslateDatePipe implements PipeTransform {
 
     this.translate.onLangChange.subscribe(() => {
       // Rebuild the display of date
-      dateObs.next(this.format(value, format));
+      dateObs.next(this.format(value, format, intervalDisplay));
     });
 
     return dateObs; // needs to be piped into the async pipe

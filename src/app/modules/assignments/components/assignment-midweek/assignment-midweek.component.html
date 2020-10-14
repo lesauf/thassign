@@ -4,7 +4,7 @@
 
 <ng-container *ngIf="programs; else loading">
     <div *ngFor="let program of programs | keyvalue">
-        <h2>{{ program.value.week | translateDate: "MMM-D":{days: 6} | async }}</h2>
+        <h2>{{ program.key | translateDate: "MMM-D" : {days: 6} | async }}</h2>
 
         <div *ngFor="let assignment of program.value.assignments" [title]="assignment.description">
             {{ assignment.title }}

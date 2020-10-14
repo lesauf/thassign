@@ -102,11 +102,11 @@ export class FirebaseService {
    */
   upsertOneDoc(
     collection: string,
-    converter: object,
     data: any,
     id?: string,
     operation: 'set' | 'delete' = 'set',
-    merge = false
+    merge = false,
+    converter?: object
   ): Promise<any> {
     if (!id) {
       if (operation === 'set') {
@@ -144,10 +144,10 @@ export class FirebaseService {
    */
   upsertManyDocs(
     collection: string,
-    converter: object,
     data: any[],
     operation: 'set' | 'delete' = 'set',
-    merge = false
+    merge = false,
+    converter?: object,
   ): Promise<any> {
     // Get a new write batch
     var batch = this.firestore.firestore.batch();
@@ -191,8 +191,12 @@ export class FirebaseService {
    * @param collName
    * @param converter
    */
-  getCollectionWithConverter(collName, converter): CollectionReference {
-    return firebase.firestore().collection(collName).withConverter(converter);
+  getCollectionWithConverter(collName, converter?: any): CollectionReference {
+    if (converter !== undefined) {
+      return firebase.firestore().collection(collName).withConverter(converter);
+    } else {
+      return firebase.firestore().collection(collName);
+    }
   }
 
   /**
