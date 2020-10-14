@@ -1,6 +1,10 @@
 import {
+  ApplicationRef,
   Component,
+  ComponentFactoryResolver,
+  ComponentRef,
   EventEmitter,
+  Injector,
   Input,
   OnChanges,
   OnDestroy,
@@ -15,6 +19,7 @@ import { combineLatest, Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { AssignmentCommon } from '@src/app/modules/assignments/components/assignment.common';
+import { AssignableListComponent } from '@src/app/modules/assignments/components/assignable-list/assignable-list.component';
 import { MY_FORMATS } from '@src/app/shared/components/month-picker/month-picker.component';
 import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
 import { BackendService } from '@src/app/core/services/backend.service';
@@ -22,6 +27,8 @@ import { PartService } from '@src/app/core/services/part.service';
 import { ProgramService } from '@src/app/core/services/program.service';
 import { UserService } from '@src/app/modules/users/user.service';
 import { Program } from '@src/app/core/models/program.model';
+import { User } from '@src/app/core/models/user/user.model';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 
 @Component({
   selector: 'app-assignment-midweek',
@@ -39,6 +46,8 @@ export class AssignmentMidweekComponent
 
   @Output()
   editMode: EventEmitter<any> = new EventEmitter();
+
+  public displayComponentRef: ComponentRef<AssignableListComponent<User>>;
 
   currentWeek: DateTime;
 
@@ -66,6 +75,8 @@ export class AssignmentMidweekComponent
   programsForm: FormGroup;
 
   constructor(
+    private resolver: ComponentFactoryResolver,
+    private injector: Injector,
     protected assignmentService: AssignmentService,
     protected backendService: BackendService,
     protected partService: PartService,
@@ -77,8 +88,6 @@ export class AssignmentMidweekComponent
   }
 
   async ngOnInit() {
-    // await this.getParts();
-
     // Pipe to the assignments observable
     this.data$ = combineLatest([
       this.userService.data,
@@ -93,7 +102,6 @@ export class AssignmentMidweekComponent
 
         await this.programService.getProgramsByMonth('midweek', this.month);
 
-
         // Get the observable of the this month programs
         this.mPrograms$ = this.programService.mPrograms.pipe(
           tap((mPrograms) => {
@@ -104,13 +112,21 @@ export class AssignmentMidweekComponent
         );
       }
     });
+
+    // Getting the template of the picker
+    const componentFactory = this.resolver.resolveComponentFactory(
+      AssignableListComponent
+    );
+    this.displayComponentRef = componentFactory.create(this.injector);
   }
 
   async ngOnChanges(changes: SimpleChanges) {
     // Get the first week as the first monday of the month
     this.currentWeek = this.month.set({ weekday: 8 });
 
-    this.mPrograms$ = undefined; // to start the loader
+    // this.mPrograms$ = undefined; // to start the loader
+
+    await this.programService.getProgramsByMonth('midweek', this.month);
 
     // Check if the previous form was in edit mode : useful ??
     if (this.isEditMode) {
@@ -120,11 +136,12 @@ export class AssignmentMidweekComponent
     }
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this.displayComponentRef.destroy();
+  }
 
   /**
-   * Prepare the form Data :
-   *   - Assignments by week
+   * Prepare the formGroup :
    *   - FormGroup
    *   - Subscribe to the form changes to update assignementsByWeek
    */
@@ -134,48 +151,28 @@ export class AssignmentMidweekComponent
     const group: any = {};
 
     this.mPrograms.forEach((program, week) => {
-      const assignmentsArray = [];
-
-      // Prepare the assignments form array
-      program.assignments.forEach((assignment) => {
-        // console.log(assignment);
-        assignmentsArray[assignment.position] = new FormGroup({
-          week: new FormControl(assignment.week || ''),
-          part: new FormControl(assignment.part || ''),
-          assignee: new FormControl(assignment.assignee || ''),
-          hall: new FormControl(assignment.hall || ''),
-          ownerId: new FormControl(assignment.ownerId || ''),
-          position: new FormControl(assignment.position),
-          // ...(assignment.part?.withAssistant && {
-          assistant: new FormControl(assignment.assistant || ''),
-          // }),
-          // ...(assignment.part?.withTitle && {
-          title: new FormControl(assignment.title || ''),
-          // }),
-          // ...(assignment.part?.withTitle && {
-          description: new FormControl(assignment.description || ''),
-          // }),
-          // ...(assignment.number && {
-          number: new FormControl(assignment.number || ''),
-          // }),
-        });
-      });
-
-      // Now prepare the program form itself
-      group[week] = new FormGroup({
-        _id: new FormControl(program._id || ''),
-        month: new FormControl(program.month || ''),
-        week: new FormControl(program.week || ''),
-        meeting: new FormControl(program.meeting || ''),
-        ownerId: new FormControl(
-          program.ownerId || this.backendService.getSignedInUser()._id
-        ),
-        assignments: new FormArray(assignmentsArray),
-      });
+      group[week] = program.toFormGroup(
+        this.backendService.getSignedInUser()._id
+      );
     });
 
     //
     this.programsForm = new FormGroup(group);
+
+    // On form change, update the assignments so that we should know
+    // the last assignment of any user
+    this.programsForm.valueChanges.subscribe((editedPrograms) => {
+      Object.keys(editedPrograms).forEach((week) => {
+        editedPrograms[week].assignments.forEach((assignment) => {
+          if (assignment.assignee !== '') {
+            // user assigned, add it to his list of assignments
+            assignment = new Assignment(assignment);
+            (assignment.assignee as User).assignments[assignment.key] = assignment;
+            
+          }
+        });
+      });
+    });
   }
 
   onSubmit() {

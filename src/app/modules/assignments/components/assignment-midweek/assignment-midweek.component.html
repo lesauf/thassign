@@ -5,10 +5,48 @@
 <div *ngIf="(mPrograms$ | async) as mPrograms; else loading">
   <form [formGroup]="programsForm" 
     (ngSubmit)="onSubmit()">
-    <button type="submit" mat-raised-button class="mat-primary">
+    <!-- FORM BUTTONS-->
+    <div *ngIf="isEditMode; else viewButtons">
+      <!-- 
+      fxLayout="row" fxLayoutAlign="space-around center" -->
+      <button
+        type="reset"
+        mat-raised-button
+        class="mat-primary"
+        (click)="setEditMode(false)"
+      >
+        <mat-icon>undo</mat-icon>
+        {{ "cancel" | translate | titlecase }}
+      </button>
+
+      <button type="submit" mat-raised-button class="mat-primary">
         <mat-icon>save</mat-icon>
         {{ "save" | translate | titlecase }}
       </button>
+    </div>
+
+    <!-- PRINT BUTTONS -->
+    <ng-template #viewButtons>
+        <button
+          type="button"
+          mat-raised-button
+          class="mat-primary"
+          (click)="setEditMode(true)"
+        >
+          <mat-icon>edit</mat-icon>
+          {{ "edit" | translate | titlecase }}
+        </button>
+
+        <button
+          type="button"
+          mat-raised-button
+          class="mat-primary"
+          (click)="saveAsPdf()"
+        >
+          <mat-icon>print</mat-icon>
+          {{ "print" | translate | titlecase }}
+        </button>
+    </ng-template>
 
     <div *ngFor="let program of mPrograms | keyvalue" [formGroupName]="program.key">
       <div>
@@ -20,34 +58,43 @@
             [title]="assignment.description">
             <div>
               {{ assignment.title }}
-              
-              <div fxFlex="30" fxFlex.lt-sm="auto">
-                <app-picker
-                  title="{{ 'assignee' | translate | titlecase }}"
-                  placeholder="{{ 'assignee' | translate | titlecase }}"
-                  [form]="programsForm"
-                  [controlPath]="[program.key, 
-                    'assignments', 
-                    assignment.position, 
-                    'assignee']"
-                  [options]="assignableListByPart[assignment.part.name]"
-                  labelField="fullName"
-                ></app-picker>
+              <div *ngIf="isEditMode; else view">
+                <div fxFlex="30" fxFlex.lt-sm="auto">
+                  <app-picker
+                    [optionsTemplate]="displayComponentRef.componentType"
+                    title="{{ 'assignee' | translate | titlecase }}"
+                    placeholder="{{ 'assignee' | translate | titlecase }}"
+                    [form]="programsForm"
+                    [controlPath]="[program.key, 
+                      'assignments', 
+                      assignment.position, 
+                      'assignee']"
+                    [options]="assignableListByPart[assignment.part.name]"
+                    labelField="fullName"
+                  ></app-picker>
+                </div>
 
-                <!-- <select formControlName="assignee"> 
-                  <option value="tst">tst</option>
-                  <option value="tstdfgd">tstdfgd</option>
-                  <option value="dfgssew">dfgssew</option>
-                </select> -->
+                <div *ngIf="assignment.part.withAssistant" fxFlex="30" fxFlex.lt-sm="auto">
+                  <app-picker
+                    [optionsTemplate]="displayComponentRef.componentType"
+                    title="{{ 'assistant' | translate | titlecase }}"
+                    placeholder="{{ 'assistant' | translate | titlecase }}"
+                    [form]="programsForm"
+                    [controlPath]="[program.key, 
+                      'assignments', 
+                      assignment.position, 
+                      'assistant']"
+                    [options]="assignableListByPart['clm.ministry.assistant']"
+                    labelField="fullName"
+                  ></app-picker>
+                </div>
               </div>
 
-              <div *ngIf="assignment.part.withAssistant" fxFlex="30" fxFlex.lt-sm="auto">
-                <select formControlName="assistant"> 
-                  <option value="Assiatana">Assiatana</option>
-                  <option value="Assiatana2">Assiatana2</option>
-                  <option value="Assiatana1">Assiatana1</option>
-                </select>
-              </div>
+              <ng-template #view>
+                <span>{{ assignment.assignee}}</span>
+
+                <span *ngIf="assignment.part.withAssistant">&nbsp;/&nbsp;{{ assignment.assistant}}</span>
+              </ng-template>
             </div>
           </div>
         </div>

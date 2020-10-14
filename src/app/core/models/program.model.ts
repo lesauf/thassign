@@ -1,3 +1,4 @@
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import {
   IsArray,
   IsBoolean,
@@ -97,5 +98,24 @@ export class Program {
       ...(this._id ? { _id: this._id } : null),
       ...(this.ownerId ? { ownerId: this.ownerId } : null),
     };
+  }
+
+  toFormGroup(ownerId: string) {
+    const assignmentsArray = [];
+
+    // Prepare the assignments form array
+    this.assignments.forEach((assignment) => {
+      assignmentsArray[assignment.position] = assignment.toFormGroup();
+    });
+
+    // Now prepare the program form itself
+    return new FormGroup({
+      _id: new FormControl(this._id || ''),
+      month: new FormControl(this.month || ''),
+      week: new FormControl(this.week || ''),
+      meeting: new FormControl(this.meeting || ''),
+      ownerId: new FormControl(this.ownerId || ownerId),
+      assignments: new FormArray(assignmentsArray),
+    });
   }
 }

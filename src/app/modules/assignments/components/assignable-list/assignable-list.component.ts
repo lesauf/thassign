@@ -58,10 +58,19 @@ export class AssignableListComponent<T> implements OnInit {
     } else if (field === 'assignmentsNumber') {
       // Sort by assignments number
       this.data.options.sort((a: User, b: User) => {
-        if (a.assignments.length < b.assignments.length) {
+        if (
+          this.getAssignmentsNumber(a.assignments) <
+          this.getAssignmentsNumber(b.assignments)
+        ) {
           return -1;
         }
-        if (a.assignments.length > b.assignments.length) {
+        if (
+          
+          this.getAssignmentsNumber(a.assignments) >
+   
+                this.getAssignmentsNumber(b.assignments)
+        
+        ) {
           return 1;
         }
 
@@ -79,6 +88,10 @@ export class AssignableListComponent<T> implements OnInit {
         return 0;
       });
     }
+  }
+
+  getAssignmentsNumber(assignments: object): number {
+    return Object.keys(assignments).length;
   }
 
   /**

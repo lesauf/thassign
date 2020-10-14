@@ -102,7 +102,7 @@ export class User {
   parts: Part[] | string[] = [];
 
   @IsArray()
-  assignments: any[] = [];
+  assignments: object = null;
 
   // Joi.boolean().optional().default(false), // Can modify programs
   @IsBoolean()
@@ -162,12 +162,20 @@ export class User {
       }
 
       // get the assignments of the user
+      const assignments = {};
       if (allAssignments && userProperties['_id'] !== undefined) {
+        // First filter the user assignments
         userProperties['assignments'] = allAssignments.filter(
           (ass: Assignment) => {
             return ass.assignee?._id === userProperties['_id'];
           }
         );
+        // Convert them to Map
+        userProperties['assignments'].forEach((ass) => {
+          const key = ass.key;
+          assignments[key] = ass;
+        });
+        userProperties['assignments'] = assignments;
       }
 
       // Assign the properties to this object
@@ -308,29 +316,34 @@ export class User {
   get assignmentsDisplay(): string {
     let aDisplay = '';
 
-    this.assignments?.forEach((a) => {
-      aDisplay = aDisplay + DateTime.fromJSDate(a.week).toLocaleString();
+    Object.values(this.assignments).forEach((v, k) => {
+      aDisplay = aDisplay + v.week.toLocaleString();
     });
 
     return aDisplay;
   }
 
   get lastAssignment(): Assignment {
-    if (!this.assignments?.length) {
+    if (!Object.keys(this.assignments).length) {
       return null;
     }
-    // sort by assignment
-    this.assignments.sort((a, b) => {
-      if (a.week < b.week) {
-        return 1;
-      }
 
-      if (a.week > b.week) {
-        return -1;
-      }
-      return 0;
-    });
+    const keys = Object.keys(this.assignments);
+    // the key of the assignments is a string
+    keys.sort();
+    //   (a, b) => {
+    //   if (a.week < b.week) {
+    //     return 1;
+    //   }
 
-    return this.assignments[0];
+    //   if (a.week > b.week) {
+    //     return -1;
+    //   }
+    //   return 0;
+    // });
+    const lastKey = keys.pop();
+
+    return this.assignments[lastKey];
+    // return this.assignments[0];
   }
 }

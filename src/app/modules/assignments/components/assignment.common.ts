@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ElementRef, Injectable, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,6 +21,9 @@ export abstract class AssignmentCommon {
    * Starting day of the month of this program
    */
   month: DateTime;
+
+  @ViewChild('printableArea')
+  printable: ElementRef;
 
   /**
    * Used to generate the variables names
@@ -121,7 +124,11 @@ export abstract class AssignmentCommon {
     );
   }
 
-  // generateForm() {}
+  setEditMode(value: boolean) {
+    this.isEditMode = value;
+
+    this.editMode.emit(value);
+  }
 
   /**
    * Get parts of a meeting
@@ -465,6 +472,42 @@ export abstract class AssignmentCommon {
       }
 
       return sortValue;
+    });
+  }
+  /**
+   * @todo extract the styles
+   */
+  saveAsPdf() {
+    // window.print();
+
+    const mywindow = window.open('', '', 'height=400,width=600');
+
+    this._translate.get('assignments').subscribe((pageTitle) => {
+      const printContents = this.printable.nativeElement.innerHTML;
+
+      mywindow.document.write(
+        '<!DOCTYPE html><html><head><title>' +
+          pageTitle +
+          ': ' +
+          this.month.toFormat('MMMM yyyy') +
+          '</title>'
+      );
+      // Styling
+      mywindow.document.write(
+        '<style>' +
+          'body { font-size: 1.2em }' +
+          '.assignment-box:not(last-child) { margin: 0 0 1em; }' +
+          '.week-box-view { width: 80%; margin: 0 auto; }' +
+          '.assignment-assignee { font-weight: bold; }' +
+          '</style>'
+      );
+      /*optional stylesheet*/
+      mywindow.document.write('</head><body>');
+      mywindow.document.write(printContents);
+      mywindow.document.write('</body></html>');
+
+      mywindow.document.execCommand('print');
+      mywindow.close();
     });
   }
 

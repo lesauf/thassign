@@ -1,3 +1,4 @@
+import { FormControl, FormGroup } from '@angular/forms';
 import {
   IsBoolean,
   IsDate,
@@ -92,10 +93,10 @@ export class Assignment {
 
   /**
    * Replace part, assignee and assistant with model object.
-   * if coming from the DB. The form contain already the right Objects types 
-   * @param props 
-   * @param allParts 
-   * @param allUsers 
+   * if coming from the DB. The form contain already the right Objects types
+   * @param props
+   * @param allParts
+   * @param allUsers
    */
   convertForeignKeys(props: object, allParts?: Part[], allUsers?: User[]) {
     // Part
@@ -145,6 +146,21 @@ export class Assignment {
     }
   }
 
+  toFormGroup() {
+    return new FormGroup({
+      week: new FormControl(this.week || ''),
+      part: new FormControl(this.part || ''),
+      assignee: new FormControl(this.assignee || ''),
+      hall: new FormControl(this.hall || ''),
+      ownerId: new FormControl(this.ownerId || ''),
+      position: new FormControl(this.position),
+      assistant: new FormControl(this.assistant || ''),
+      title: new FormControl(this.title || ''),
+      description: new FormControl(this.description || ''),
+      number: new FormControl(this.number || ''),
+    });
+  }
+
   /**
    * Convert to a standard object for saving
    */
@@ -182,7 +198,7 @@ export class Assignment {
    * The unique identifier of this assignment in the form
    */
   get key() {
-    return this.week.toISODate() + this.position;
+    return this.week.toFormat('yyyyMMdd') + this.position;
   }
 
   set assignableUsers(users: User[]) {
