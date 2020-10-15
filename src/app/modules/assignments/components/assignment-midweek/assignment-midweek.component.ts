@@ -170,7 +170,9 @@ export class AssignmentMidweekComponent
   subscribeToFormChanges() {
     this.programsForm.valueChanges.subscribe((editedPrograms) => {
       // Add the assignments being made to the list
+      // TODO Get all the assignments from the programs instead
       let allAssignments = this.assignmentService.getAssignments();
+      
       Object.keys(editedPrograms).forEach((week) => {
         allAssignments = allAssignments.concat(
           editedPrograms[week].assignments
@@ -197,6 +199,8 @@ export class AssignmentMidweekComponent
     const toSave = this.programService.createProgram(formValue) as Program[];
  
     this.programService.savePrograms(toSave);
+
+    this.setEditMode(false);
   }
 
   /**

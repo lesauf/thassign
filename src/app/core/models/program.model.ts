@@ -67,16 +67,14 @@ export class Program {
       }
 
       // Object to convert
-      if (allParts) {
-        props['assignments'] = props['assignments']
-          ? props['assignments'].map(
-              (roughAssignment: any) =>
-               
-                new Assignment(roughAssignment, allParts, allUsers)
-            )
-          : [];
-      }
+      props['assignments'] = props['assignments']
+        ? props['assignments'].map(
+            (roughAssignment: any) =>
+              new Assignment(roughAssignment, allParts, allUsers)
+          )
+        : [];
 
+      console.log();
       // Assign the properties to this object
       Object.assign(this, props);
     }

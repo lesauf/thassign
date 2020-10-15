@@ -99,7 +99,7 @@ export class ProgramService extends CommonService<Program> {
     let storedPrograms = this.dataStore.getValue();
 
     if (storedPrograms !== null) { // Not the initial emission
-      let mPrograms: Map<any, any>;
+      let mPrograms: Map<any, any> = new Map();
 
       if (storedPrograms.length) {
         // If there are programs in the db filter the ones for
@@ -244,8 +244,7 @@ export class ProgramService extends CommonService<Program> {
       // }
       // console.log(ass.part);
       // roughProgram['assignments'][index] = ass;
-    console.log(roughProgram);
-    
+      // console.log(roughProgram);
     });
 
     return roughProgram;
@@ -270,6 +269,7 @@ export class ProgramService extends CommonService<Program> {
    */
   async savePrograms(programs: Program[]): Promise<void> {
     try {
+      // throw 'errr';
       await this.backendService.upsertManyDocs(
         'programs',
         programs,
@@ -278,8 +278,9 @@ export class ProgramService extends CommonService<Program> {
         new ProgramConverter()
       );
 
-      this.messageService.presentToast(this.translateService.instant('Updated program'));
+      this.messageService.presentToast('program-save-success');
     } catch (error) {
+      // this.messageService.presentToast('program-save-success');
       this.handleError<any>('saveProgram', error);
     }
   }

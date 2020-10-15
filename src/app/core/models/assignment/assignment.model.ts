@@ -86,8 +86,12 @@ export class Assignment {
       }
 
       // Get part, assignee, assistant
-      props = this.convertForeignKeys(props, allParts, allUsers);
-
+      if (
+        typeof props['part'] === 'string' ||
+        typeof props['assignee'] === 'string'
+      ) {
+        props = this.convertForeignKeys(props, allParts, allUsers);
+      }
       Object.assign(this, props);
     }
   }
@@ -100,23 +104,23 @@ export class Assignment {
    * @param allUsers
    */
   convertForeignKeys(props: object, allParts?: Part[], allUsers?: User[]) {
-    // Part
-    if (allParts && props['part']) {
+    // Part: converted only if it is a string (coming from DB)
+    if (allParts && typeof props['part'] === 'string') {
       const part = allParts.find((part) => part.name === props['part']);
       props['part'] = part ? part : '';
     }
 
     if (allUsers) {
-      // Assignee
-      if (props['assignee']) {
+      // Assignee coming from DB
+      if (props['assignee'] && typeof props['assignee'] === 'string') {
         const assignee = allUsers.find(
           (user) => user._id === props['assignee']
         );
         props['assignee'] = assignee ? assignee : '';
       }
 
-      // Assistant
-      if (props['assistant']) {
+      // Assistant coming from DB
+      if (props['assistant'] && typeof props['assistant'] === 'string') {
         const assistant = allUsers.find(
           (user) => user._id === props['assistant']
         );

@@ -178,8 +178,8 @@ export class EpubService extends CommonService<any> {
             week: currentWeek.toFormat('yyyyMMdd'),
             position: index,
             partSection,
-            ownerId: null,
-            assignee: null,
+            ownerId: '',
+            assignee: '',
             title: partTitle[0].trim(),
             // part with a description (separated by column :)
             ...(partTitle.length > 1

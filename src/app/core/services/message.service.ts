@@ -44,6 +44,8 @@ export class MessageService {
    * @param messageKey translated message key
    */
   async presentToast(messageKey: string) {
+
+    console.log();
     this.translate.get(messageKey).subscribe((message) => {
       this._snackBar.open(message, '', {
         duration: 2000,
