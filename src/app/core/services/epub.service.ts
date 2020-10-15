@@ -55,7 +55,7 @@ export class EpubService extends CommonService<any> {
    * Extract the meeting parts from the epub
    * @param epubFilename
    */
-  async getProgramsFromEpub(epubFilename: string) {
+  async getProgramsFromEpub(epubFilename: string, ownerId: string) {
     this.epubFilename = epubFilename;
     this.getMonthFromEpubFilename(epubFilename);
 
@@ -77,7 +77,7 @@ export class EpubService extends CommonService<any> {
     }
 
     // Extract the programs
-    const referencePrograms = await this.extractMwbPrograms();
+    const referencePrograms = await this.extractMwbPrograms(ownerId);
 
     return referencePrograms;
   }
@@ -103,7 +103,7 @@ export class EpubService extends CommonService<any> {
    * Get the list of parts for every week in the month
    * from the epub
    */
-  async extractMwbPrograms() {
+  async extractMwbPrograms(ownerId: string) {
     const referencePrograms = [];
 
     // Fetch book
@@ -133,15 +133,19 @@ export class EpubService extends CommonService<any> {
           currentWeek = currentWeek.plus({ days: 7 });
         }
 
-        // Prepare the Program object
+        // ------------------------------------
+        // Prepare the Program object         -
+        // ------------------------------------
         const referenceProgram = {
-          _id: currentWeek.toFormat('yyyyMMdd'), // referenceProgram reference key is week
+          // referenceProgram reference key is week + userId
+          _id: currentWeek.toFormat('yyyyMMdd') + ownerId,
           meeting: 'midweek',
           week: currentWeek.toFormat('yyyyMMdd'),
           month: currentWeek.toFormat('yyyyMM'), // also store the month
           // xhtml: weekPage.xml.toString(),
           // sectionIndex: weekPage.index,
           assignments: [],
+          ownerId: ownerId,
         };
 
         // The details for assignments are in ul.noMarker tags

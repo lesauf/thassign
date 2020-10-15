@@ -11,6 +11,7 @@ import { DateTime } from 'luxon';
 
 import { Part, ObjectId } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
+import { exit } from 'process';
 
 export class Assignment {
   @IsObject()
@@ -170,10 +171,10 @@ export class Assignment {
       ownerId: this.ownerId,
       week: this.week.toFormat('yyyyMMdd'),
       part: this.part.name,
-      assignee: this.assignee,
       position: this.position,
 
-      ...(this.assistant && { assistant: this.assistant }),
+      ...(this.assignee && { assignee: this.assignee._id }),
+      ...(this.assistant && { assistant: this.assistant._id }),
       ...(this.title && { title: this.title }),
       ...(this.description && { description: this.description }),
       ...(this.hall && { hall: this.hall }),

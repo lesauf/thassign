@@ -12,6 +12,7 @@ import Spine from 'epubjs/types/spine';
 import Section from 'epubjs/types/section';
 import { DateTime } from 'luxon';
 
+import { BackendService } from '@src/app/core/services/backend.service';
 import { EpubService } from '@src/app/core/services/epub.service';
 
 @Component({
@@ -48,7 +49,10 @@ export class ImportEpubComponent implements OnInit {
    */
   public epubMonth: DateTime;
 
-  constructor(private epubService: EpubService) {}
+  constructor(
+    protected backendService: BackendService,
+    private epubService: EpubService
+  ) {}
 
   async ngOnInit() {
     // this.book = ePub(this.epubFilename);
@@ -67,7 +71,8 @@ export class ImportEpubComponent implements OnInit {
     // await this.extractPrograms();
 
     this.programs = await this.epubService.getProgramsFromEpub(
-      this.epubFilename
+      this.epubFilename,
+      this.backendService.getSignedInUser()._id
     );
 
     this.book = this.epubService.book;

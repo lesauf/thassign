@@ -6,6 +6,7 @@ import { DateTime, Interval } from 'luxon';
 import { AuthService } from '@src/app/modules/auth/auth.service';
 import { CommonService } from '@src/app/core/services/common.service';
 import { MessageService } from '@src/app/core/services/message.service';
+import { UserService } from '@src/app/modules/users/user.service';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { Part } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
@@ -48,10 +49,17 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     Assignment[]
   > = this.pAssignmentsStore.asObservable();
 
+  /**
+   * All the assignments separated by users
+   * userId => Assignment[]
+   */
+  assignmentsByUser: Map<string, Assignment[]> = new Map();
+
   constructor(
-    protected messageService: MessageService,
     private authService: AuthService,
-    protected backendService: BackendService
+    protected backendService: BackendService,
+    protected messageService: MessageService,
+    protected userService: UserService
   ) {
     super();
 
@@ -73,6 +81,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     allParts?: Part[],
     allUsers?: User[]
   ): Assignment | Assignment[] {
+    
     if (props instanceof Array) {
       const assignments = props.map((obj, index) => {
         return new Assignment(obj, allParts, allUsers);
@@ -324,6 +333,24 @@ export abstract class AssignmentService extends CommonService<Assignment> {
 
   //   // return weekendChairman[0];
   // }
+
+  /**
+   * Populate assignmentsByUser
+   * @param allAssignments
+   */
+  groupAssignmentsByUser(allAssignments?: Assignment[]) {
+    if (allAssignments === undefined) {
+      allAssignments = this.getAssignments();
+    }
+
+    this.userService.getUsers().forEach((user) => {
+      let userAss = allAssignments.filter((ass: Assignment) => {
+        return ass.assignee?._id === user._id;
+      });
+
+      this.assignmentsByUser.set(user._id, userAss);
+    });
+  }
 
   //////// Save methods //////////
   /**

@@ -3,14 +3,19 @@ import { DateTime } from 'luxon';
 import { BehaviorSubject, interval, Observable, of } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
+import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
 import { BackendService } from '@src/app/core/services/backend.service';
 import { CommonService } from '@src/app/core/services/common.service';
 import { EpubService } from '@src/app/core/services/epub.service';
 import { MessageService } from '@src/app/core/services/message.service';
-import { PartService } from './part.service';
+import { PartService } from '@src/app/core/services/part.service';
+import { UserService } from '@src/app/modules/users/user.service';
 import { meetingName } from '@src/app/core/types/meeting.type';
 import { ProgramConverter } from '@src/app/core/models/program.converter';
+import { Part } from '@src/app/core/models/part/part.model';
 import { Program } from '@src/app/core/models/program.model';
+import { User } from '@src/app/core/models/user/user.model';
+import { exit } from 'process';
 /**
  * - Parse epub to extract all the assignments
  */
@@ -46,11 +51,13 @@ export class ProgramService extends CommonService<Program> {
   mwbLangCode: string;
 
   constructor(
+    protected assignmentService: AssignmentService,
     protected backendService: BackendService,
     protected epubService: EpubService,
     protected messageService: MessageService,
     protected partService: PartService,
-    protected translateService: TranslateService
+    protected translateService: TranslateService,
+    protected userService: UserService
   ) {
     super();
   }
@@ -60,17 +67,16 @@ export class ProgramService extends CommonService<Program> {
    *
    * @param roughPrograms JSON object/array with properties
    */
-  createProgram(roughPrograms: object): Program | Program[] {
-    const allParts = this.partService.getParts();
-
+  createProgram(roughPrograms: object, allParts?: Part[], allUsers?: User[]): Program | Program[] {
+    // const allParts = this.partService.getParts();
     if (roughPrograms instanceof Array) {
       return roughPrograms.map(
-        (obj) => new Program(this.convertAssignments(obj), allParts)
+        (obj) => new Program(this.convertAssignments(obj), allParts, allUsers)
       ) as Program[];
     } else {
       return new Program(
         this.convertAssignments(roughPrograms),
-        allParts
+        allParts, allUsers
       ) as Program;
     }
   }
@@ -89,37 +95,47 @@ export class ProgramService extends CommonService<Program> {
    */
   async getProgramsByMonth(meeting: meetingName, month: DateTime) {
     const monthStr = month.toFormat('yyyyMM'); // 202011
-    let mPrograms = this.convertProgramsToMap(this.dataStore.getValue()) as Map<
-      string,
-      Program
-    >;
 
-    if (mPrograms.size) {
-      // If there are programs
-      for (let [week, program] of mPrograms) {
-        // Remove the programs whose week are not in this month
-        if (program.meeting !== meeting && !program.month.equals(month)) {
-          mPrograms.delete(week);
-        }
+    let storedPrograms = this.dataStore.getValue();
+
+    if (storedPrograms !== null) { // Not the initial emission
+      let mPrograms: Map<any, any>;
+
+      if (storedPrograms.length) {
+        // If there are programs in the db filter the ones for
+        // this meeting and month       
+        let fPrograms = storedPrograms.filter((program) => {
+          // Remove the programs whose week are not in this month
+          return program.meeting === meeting && program.month.equals(month)
+        });
+
+        mPrograms = this.convertProgramsToMap(fPrograms) as Map<
+          string,
+          Program
+        >;
+      } 
+      
+      // If programs for this month, get the reference
+      if (mPrograms.size === 0) {
+        console.log('From Reference');
+        mPrograms = await this.getReferencePrograms(meeting, month);
+      } else {
+        console.log('From DB');
       }
 
+      console.log(mPrograms);
+      // Emit the program/reference for this month
       this.mProgramStore.next(mPrograms);
-    } 
-    
-    if (mPrograms.size === 0) {
-      mPrograms = await this.getReferencePrograms(meeting, month);
     }
-
-    this.mProgramStore.next(mPrograms);
   }
 
   /**
    * Get all programs from server
    */
-  storePrograms(programs: Program[]): Program[] {
+  storePrograms(programs: any[], allParts?: Part[], allUsers?: User[]): Program[] {
     try {
       // convert to Program objects
-      const allPrograms = this.createProgram(programs) as Program[];
+      const allPrograms = this.createProgram(programs, allParts, allUsers) as Program[];
       // const allPrograms = programs;
       // console.log('Programs to put in the store :', allPrograms);
       this.updateStore(allPrograms);
@@ -139,7 +155,7 @@ export class ProgramService extends CommonService<Program> {
   async getReferencePrograms(meeting: meetingName, month: DateTime) {
     this.mwbLangCode = this.langs[this.translateService.currentLang];
 
-    let programs = {};
+    let programs = [];
 
     if (meeting === 'midweek') {
       // get the midweek meeting from the db ()
@@ -193,24 +209,31 @@ export class ProgramService extends CommonService<Program> {
     //   );
     // }
 
+    const signedInUserId = this.backendService.getSignedInUser()._id;
     const roughPrograms = await this.epubService.getProgramsFromEpub(
-      epubFilename
+      epubFilename,
+      signedInUserId
     );
 
-    const convPrograms = this.createProgram(roughPrograms) as Program[];
+    return this.createProgram(roughPrograms, 
+      this.partService.getParts(), 
+      this.userService.getUsers()) as Program[];
 
-    // Convert the array to object{week -> program}
-    const programs = {};
-    convPrograms.forEach((program) => {
-      programs[program.week.toFormat('yyyyMMdd')] = program;
-    });
+    // // Convert the array to object{week -> program}
+    // const programs = [];
+    // // convPrograms.forEach((program) => {
+    // //   programs[program.week.toFormat('yyyyMMdd') + signedInUserId] = program;
+    // // });
 
-    return programs;
+    // return programs;
   }
 
   convertAssignments<T>(roughProgram: T): T {
+    
     // Try to get the corresponding parts of the assignments
     roughProgram['assignments'].forEach((ass, index) => {
+      // if (!ass.part) {
+      // This is when we build the program from the reference
       roughProgram['assignments'][
         index
       ].part = this.partService.getPartByTranslatedTitle(
@@ -218,6 +241,11 @@ export class ProgramService extends CommonService<Program> {
         ass.partSection,
         ass.description
       );
+      // }
+      // console.log(ass.part);
+      // roughProgram['assignments'][index] = ass;
+    console.log(roughProgram);
+    
     });
 
     return roughProgram;
@@ -227,8 +255,8 @@ export class ProgramService extends CommonService<Program> {
     const convPrograms = new Map();
 
     if (programs !== null) {
-      Object.keys(programs).forEach((week) => {
-        convPrograms.set(week, programs[week]);
+      programs.forEach((program) => {
+        convPrograms.set(program._id, program);
       });
     }
 
@@ -240,17 +268,17 @@ export class ProgramService extends CommonService<Program> {
    * Insert program if not existent, update it otherwise
    * @param program
    */
-  async saveProgram(programs: Program[]): Promise<void> {
+  async savePrograms(programs: Program[]): Promise<void> {
     try {
       await this.backendService.upsertManyDocs(
         'programs',
-        Object.values(programs),
+        programs,
         'set',
         false,
         new ProgramConverter()
       );
 
-      this.log(`updated program`);
+      this.messageService.presentToast(this.translateService.instant('Updated program'));
     } catch (error) {
       this.handleError<any>('saveProgram', error);
     }

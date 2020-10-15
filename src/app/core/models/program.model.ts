@@ -16,6 +16,7 @@ import { DateTime } from 'luxon';
 
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { Part } from './part/part.model';
+import { User } from './user/user.model';
 
 export class Program {
   /**
@@ -49,7 +50,7 @@ export class Program {
    * @todo Sanitize/clean the object passed (apply some rules,
    * like women can not give public talks ...)
    */
-  constructor(props?: object, allParts?: Part[]) {
+  constructor(props?: object, allParts?: Part[], allUsers?: User[]) {
     if (props) {
       // Converting week and month to Luxon date if not
       if (!props['week']?.hasOwnProperty('isLuxonDateTime')) {
@@ -69,7 +70,9 @@ export class Program {
       if (allParts) {
         props['assignments'] = props['assignments']
           ? props['assignments'].map(
-              (roughAssignment: any) => new Assignment(roughAssignment)
+              (roughAssignment: any) =>
+               
+                new Assignment(roughAssignment, allParts, allUsers)
             )
           : [];
       }

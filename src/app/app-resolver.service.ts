@@ -15,6 +15,7 @@ import { AssignmentService } from '@src/app/modules/assignments/services/assignm
 import { AssignmentConverter } from '@src/app/core/models/assignment/assignment.converter';
 import { BackendService } from '@src/app/core/services/backend.service';
 import { AuthService } from '@src/app/modules/auth/auth.service';
+import { ProgramService } from '@src/app/core/services/program.service';
 import { UserConverter } from '@src/app/core/models/user/user.converter';
 
 @Injectable({
@@ -24,9 +25,10 @@ export class AppResolverService implements Resolve<string> {
   constructor(
     protected authService: AuthService,
     protected assignmentService: AssignmentService,
+    protected backendService: BackendService,
     protected partService: PartService,
+    protected programService: ProgramService,
     protected userService: UserService,
-    protected backendService: BackendService
   ) {}
 
   resolve(
@@ -44,13 +46,18 @@ export class AppResolverService implements Resolve<string> {
         .getQueryForCurrentUser('users')
         .valueChanges();
 
+      // Set a listener on programs collections
+      const programs$ = this.backendService
+        .getQueryForCurrentUser('programs')
+        .valueChanges();
+
       // Set a listener on assignments collections
       const assignments$ = this.backendService
         .getQueryForCurrentUser('assignments', 'week')
         .valueChanges();
 
-      combineLatest([users$, assignments$]).subscribe(
-        ([users, assignments]) => {
+      combineLatest([users$, programs$, assignments$]).subscribe(
+        ([users, programs, assignments]) => {
           const parts = this.partService.getParts();
 
           // Handle assignments
@@ -74,9 +81,14 @@ export class AppResolverService implements Resolve<string> {
             allAssignments
           );
 
+          const allPrograms = this.programService.storePrograms(
+            programs,
+            parts,
+            allUsers
+          );
+          
           // console.log('Updated data from DB: ', allUsers, allAssignments);
         }
-      
       );
 
       return 'Data fetched';

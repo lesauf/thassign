@@ -50,22 +50,22 @@
     (selectionChange)="closeDialog()"
   >
     <mat-list-option
-      *ngFor="let user of data.options; let isFirst = first"
+      *ngFor="let user of userList"
       [value]="user"
       cdkFocusInitial
     >
       <h2 matLine>{{ user.fullName }}</h2>
-      <span matLine *ngIf="user.lastAssignment">
+      <span matLine *ngIf="getUserAssignments(user).length">
         {{ "last" | translate | titlecase }}
         {{
-          user.lastAssignment?.week.toISO()
+          getUserLastAssignmentDate(user)
             | translateDate: "DATE_MED"
             | async
         }}
       </span>
       <span matLine
         >{{ "total" | translate | titlecase }}
-        {{ getAssignmentsNumber(user.assignments) }}</span
+        {{ getAssignmentsNumber(user) }}</span
       >
     </mat-list-option>
 

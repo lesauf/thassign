@@ -106,8 +106,11 @@ export class AssignmentMidweekComponent
         this.mPrograms$ = this.programService.mPrograms.pipe(
           tap((mPrograms) => {
             this.mPrograms = mPrograms;
+
             // Build the form
             this.prepareForm();
+
+            this.subscribeToFormChanges();
           })
         );
       }
@@ -141,7 +144,7 @@ export class AssignmentMidweekComponent
   }
 
   /**
-   * Prepare the formGroup :
+   * Prepare / init the formGroup :
    *   - FormGroup
    *   - Subscribe to the form changes to update assignementsByWeek
    */
@@ -158,25 +161,56 @@ export class AssignmentMidweekComponent
 
     //
     this.programsForm = new FormGroup(group);
+  }
 
-    // On form change, update the assignments so that we should know
-    // the last assignment of any user
+  /**
+   * On form change, update the assignments so that we should know
+   * of all assignments
+   */
+  subscribeToFormChanges() {
     this.programsForm.valueChanges.subscribe((editedPrograms) => {
+      // Add the assignments being made to the list
+      let allAssignments = this.assignmentService.getAssignments();
       Object.keys(editedPrograms).forEach((week) => {
-        editedPrograms[week].assignments.forEach((assignment) => {
-          if (assignment.assignee !== '') {
-            // user assigned, add it to his list of assignments
-            assignment = new Assignment(assignment);
-            (assignment.assignee as User).assignments[assignment.key] = assignment;
-            
-          }
-        });
+        allAssignments = allAssignments.concat(
+          editedPrograms[week].assignments
+        );
       });
+
+      this.assignmentService.groupAssignmentsByUser(allAssignments);
     });
   }
 
+  cancelEdit() {
+    this.setEditMode(false);
+
+    this.prepareForm();
+
+    // Reset AssignmentService.assignmentsByUser
+    this.assignmentService.groupAssignmentsByUser();
+  }
+
   onSubmit() {
-    console.log(this.programsForm.value);
+    const formValue = Object.values(this.programsForm.value);
+
+    // convert to Program objects
+    const toSave = this.programService.createProgram(formValue) as Program[];
+ 
+    this.programService.savePrograms(toSave);
+  }
+
+  /**
+   * Add the assignment to the AssignmentService::assignmentsByUser
+   */
+  extractAllAssignmentsFromProgram(program: any) {
+    const assignments = [];
+    program.assignments.forEach((assignment) => {
+      if (assignment.assignee !== '') {
+        // user assigned, add it to his list of assignments
+        assignment = new Assignment(assignment);
+        (assignment.assignee as User).assignments[assignment.key] = assignment;
+      }
+    });
   }
 
   getMondays() {

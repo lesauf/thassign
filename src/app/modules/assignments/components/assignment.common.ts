@@ -68,6 +68,8 @@ export abstract class AssignmentCommon {
 
   assignmentsByWeek: Assignment[][] = [];
 
+  
+
   protected assignmentService: AssignmentService;
   protected partService: PartService;
   protected userService: UserService;
@@ -93,6 +95,7 @@ export abstract class AssignmentCommon {
   /**
    * Get some initial data :
    * - assignables users by part
+   * - assignments by User
    */
   async initializeData() {
     // Get the list of users assignable to parts
@@ -104,6 +107,8 @@ export abstract class AssignmentCommon {
 
     this.assignableList = assignables.list;
     this.assignableListByPart = assignables.byPart;
+
+    this.assignmentService.groupAssignmentsByUser();
 
     this.isEditMode = false;
   }

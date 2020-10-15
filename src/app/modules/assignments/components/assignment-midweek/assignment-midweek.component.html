@@ -13,7 +13,7 @@
         type="reset"
         mat-raised-button
         class="mat-primary"
-        (click)="setEditMode(false)"
+        (click)="cancelEdit()"
       >
         <mat-icon>undo</mat-icon>
         {{ "cancel" | translate | titlecase }}
@@ -48,12 +48,13 @@
         </button>
     </ng-template>
 
-    <div *ngFor="let program of mPrograms | keyvalue" [formGroupName]="program.key">
-      <div>
-        <h2>{{ program.key | translateDate: "MMM-D" : {days: 6} | async }}</h2>
+    <div *ngFor="let mProgram of mPrograms | keyvalue"
+      [formGroupName]="mProgram.key">
+      <div *ngIf="mProgram.value as program">
+        <h2>{{ program.week | translateDate: "MMM-D" : {days: 6} | async }}</h2>
 
         <div formArrayName="assignments">
-          <div *ngFor="let assignment of program.value.assignments" 
+          <div *ngFor="let assignment of program.assignments" 
             [formGroupName]="assignment.position"
             [title]="assignment.description">
             <div>
@@ -91,9 +92,10 @@
               </div>
 
               <ng-template #view>
-                <span>{{ assignment.assignee}}</span>
+                <span>{{ assignment.assignee?.fullName }}</span>
 
-                <span *ngIf="assignment.part.withAssistant">&nbsp;/&nbsp;{{ assignment.assistant}}</span>
+                <span *ngIf="assignment.assistant">
+                  &nbsp;/&nbsp;{{ assignment.assistant?.fullName }}</span>
               </ng-template>
             </div>
           </div>
