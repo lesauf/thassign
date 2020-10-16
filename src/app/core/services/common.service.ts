@@ -13,9 +13,10 @@ import { shareReplay } from 'rxjs/operators';
 @Injectable()
 export abstract class CommonService<M> {
   /**
-   * Attempt to code a Observable data service
+   * Observable data service
+   * the type will be converted to Map<string, M>
    */
-  protected dataStore: BehaviorSubject<M[]> = new BehaviorSubject<M[]>(null);
+  protected dataStore: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   public readonly data: Observable<M[]>; //  = this.dataStore.asObservable();
 
@@ -49,7 +50,7 @@ export abstract class CommonService<M> {
    * Update the store with the most recent data from the DB
    * @param values
    */
-  protected updateStore(values: M[]): void {
+  protected updateStore(values: any): void {
     this.dataStore.next(values);
   }
 

@@ -52,33 +52,26 @@ export class AppResolverService implements Resolve<string> {
         .valueChanges();
 
       // Set a listener on assignments collections
-      const assignments$ = this.backendService
-        .getQueryForCurrentUser('assignments', 'week')
-        .valueChanges();
+      // const assignments$ = this.backendService
+      //   .getQueryForCurrentUser('assignments', 'week')
+      //   .valueChanges();
 
-      combineLatest([users$, programs$, assignments$]).subscribe(
-        ([users, programs, assignments]) => {
+      combineLatest([users$, programs$]).subscribe(
+        ([users, programs]) => {
           const parts = this.partService.getParts();
 
           // Handle assignments
           // COnvert first the users as User objects to populate the assignments
-          const usersObjects = this.userService.createUser(
-            users,
-            parts
-          ) as User[];
-
-          const allAssignments = this.assignmentService.storeAssignments(
-            assignments,
-            parts,
-            usersObjects
-          );
+          // const usersObjects = this.userService.createUser(
+          //   users,
+          //   parts
+          // ) as User[];
 
           // Then store the users and pass them the converted assignments
           // I know, a bit twisted, but it works
           const allUsers = this.userService.storeUsers(
             users,
-            this.partService.getParts(),
-            allAssignments
+            this.partService.getParts()
           );
 
           const allPrograms = this.programService.storePrograms(
@@ -86,7 +79,14 @@ export class AppResolverService implements Resolve<string> {
             parts,
             allUsers
           );
-          
+
+          // TODO Delete this
+          // const allAssignments = this.assignmentService.storeAssignments(
+          //   assignments,
+          //   parts,
+          //   allUsers
+          // );
+
           // console.log('Updated data from DB: ', allUsers, allAssignments);
         }
       );

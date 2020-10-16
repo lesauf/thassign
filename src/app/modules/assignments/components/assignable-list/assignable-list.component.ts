@@ -120,6 +120,7 @@ export class AssignableListComponent<T> implements OnInit {
    */
   getUserAssignments(user: User): Assignment[] {
     const assignmentsByUser = this.assignmentService.assignmentsByUser;
+
     return assignmentsByUser.get(user._id);
   }
 

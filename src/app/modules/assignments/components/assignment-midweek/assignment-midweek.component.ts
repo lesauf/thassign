@@ -180,16 +180,25 @@ export class AssignmentMidweekComponent
   subscribeToFormChanges() {
     this.programsForm.valueChanges.subscribe((editedPrograms) => {
       // Add the assignments being made to the list
-      // TODO Get all the assignments from the programs instead
-      let allAssignments = this.assignmentService.getAssignments();
-
+      // 1. Build a map of all current edited assignments
+      let tmpArr = [];
       Object.keys(editedPrograms).forEach((week) => {
-        allAssignments = allAssignments.concat(
-          editedPrograms[week].assignments
+        tmpArr.concat(editedPrograms[week]
+          .assignments.map((a) => [a.key, a])
         );
       });
+      const currentAss = new Map(tmpArr);
 
-      this.assignmentService.groupAssignmentsByUser(allAssignments);
+      // 2. get a copy of the existing assignments
+      const allAssignments = new Map(this.assignmentService.getAssignments());
+
+      // 3. merge the two maps
+      const mergedAss = new Map([
+        ...allAssignments, 
+        ...currentAss
+      ]) as Map<string, Assignment>;
+
+      this.assignmentService.groupAssignmentsByUser(mergedAss);
     });
   }
 
@@ -227,16 +236,16 @@ export class AssignmentMidweekComponent
   /**
    * Add the assignment to the AssignmentService::assignmentsByUser
    */
-  extractAllAssignmentsFromProgram(program: any) {
-    const assignments = [];
-    program.assignments.forEach((assignment) => {
-      if (assignment.assignee !== '') {
-        // user assigned, add it to his list of assignments
-        assignment = new Assignment(assignment);
-        (assignment.assignee as User).assignments[assignment.key] = assignment;
-      }
-    });
-  }
+  // extractAllAssignmentsFromProgram(program: any) {
+  //   const assignments = [];
+  //   program.assignments.forEach((assignment) => {
+  //     if (assignment.assignee !== '') {
+  //       // user assigned, add it to his list of assignments
+  //       assignment = new Assignment(assignment);
+  //       (assignment.assignee as User).assignments[assignment.key] = assignment;
+  //     }
+  //   });
+  // }
 
   getMondays() {
     let d = new Date();

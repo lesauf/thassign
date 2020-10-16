@@ -120,10 +120,20 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> {
   createDate(year: number, month: number, date: number): DateTime {
     // luxon utc uses 1-12 for dates, but datepicker passes in 0-11 .
     month += 1;
+    return DateTime.utc(year, month, date).setLocale(this.locale);
+  }
+
+  createLocalDate(year: number, month: number, date: number): DateTime {
+    // luxon utc uses 1-12 for dates, but datepicker passes in 0-11 .
+    month += 1;
     return DateTime.local(year, month, date).setLocale(this.locale);
   }
 
   today(): DateTime {
+    return DateTime.utc().setLocale(this.locale);
+  }
+
+  todayLocal(): DateTime {
     return DateTime.local().setLocale(this.locale);
   }
 

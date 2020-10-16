@@ -92,6 +92,27 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     }
   }
 
+  /**
+   * Populate assignmentsByUser
+   * Sorted by week ( and position ?)
+   * @param allAssignments
+   */
+  groupAssignmentsByUser(allAssignments?: Map<string, Assignment>) {
+    if (allAssignments === undefined) {
+      allAssignments = this.getAssignments();
+    }
+
+    this.userService.getUsers().forEach((user) => {
+      // Convert the Map assignments to an array to make the search
+      const assMap = [...allAssignments.values()];
+      let userAss = assMap.filter((ass: Assignment) => {
+        return ass.assignee?._id === user._id;
+      });
+
+      this.assignmentsByUser.set(user._id, userAss);
+    });
+  }
+
   generateAssignments(
     meeting: string,
     month: DateTime,
@@ -141,7 +162,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   /**
    * Get assignments from store
    */
-  getAssignments(): Assignment[] {
+  getAssignments(): Map<string, Assignment> {
     return this.dataStore.getValue();
   }
 
@@ -149,17 +170,19 @@ export abstract class AssignmentService extends CommonService<Assignment> {
    * Get all assignments from the server
    */
   storeAssignments(
-    assignments: any[],
-    allParts: Part[],
-    allUsers: User[]
-  ): Assignment[] {
+    assignments: Map<string, Assignment>,
+    allParts?: Part[],
+    allUsers?: User[]
+  ) {
     try {
-      // Convert results to Assignment objects
-      const allAssignments = this.createAssignment(
-        assignments,
-        allParts,
-        allUsers
-      ) as Assignment[];
+      // Convert results to Assignment array
+      
+      
+      // const allAssignments = this.createAssignment(
+      //   assignments,
+      //   allParts,
+      //   allUsers
+      // ) as Assignment[];
       // Sort
       // result.sort((a: Assignment, b: Assignment) => {
       //   // sort desc
@@ -174,10 +197,10 @@ export abstract class AssignmentService extends CommonService<Assignment> {
       //   return 0;
       // });
 
-      this.updateStore(allAssignments);
+      this.updateStore(assignments);
       // this.log('fetched Assignments', 'AssignmentService');
 
-      return allAssignments;
+      // return allAssignments;
     } catch (error) {
       return this.handleError('storeAssignments', error, [], '');
     }
@@ -279,7 +302,8 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     assignments?: Assignment[]
   ): Assignment[] {
     if (assignments === undefined) {
-      assignments = this.getAssignments();
+      const assMap = this.getAssignments();
+      assignments = [...assMap.values()];
     }
 
     let pAssignments: Assignment[];
@@ -332,25 +356,6 @@ export abstract class AssignmentService extends CommonService<Assignment> {
 
   //   // return weekendChairman[0];
   // }
-
-  /**
-   * Populate assignmentsByUser
-   * Sorted by week ( and position ?)
-   * @param allAssignments
-   */
-  groupAssignmentsByUser(allAssignments?: Assignment[]) {
-    if (allAssignments === undefined) {
-      allAssignments = this.getAssignments();
-    }
-
-    this.userService.getUsers().forEach((user) => {
-      let userAss = allAssignments.filter((ass: Assignment) => {
-        return ass.assignee?._id === user._id;
-      });
-
-      this.assignmentsByUser.set(user._id, userAss);
-    });
-  }
 
   //////// Save methods //////////
   /**

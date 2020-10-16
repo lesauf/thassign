@@ -179,16 +179,13 @@ export class UserService extends CommonService<User> {
   storeUsers(
     users: any[],
     allParts: Part[],
-    allAssignments: Assignment[]
+    allAssignments?: Assignment[]
   ): User[] {
     try {
       // convert to User objects
       const allUsers = this.createUser(
         users,
-
-        allParts,
-
-        allAssignments
+        allParts
       ) as User[];
       // console.log('Users to put in the store :', allUsers);
 

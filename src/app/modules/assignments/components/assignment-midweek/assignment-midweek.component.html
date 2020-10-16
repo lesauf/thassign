@@ -7,7 +7,7 @@
   <ng-template [ngIf]="mProgramsWithLoading.value">
     <form *ngIf="mProgramsWithLoading.value as mPrograms" [formGroup]="programsForm" 
       (ngSubmit)="onSubmit()">
-      <div *ngIf="mPrograms.size">
+      <div *ngIf="mPrograms.size && !loading"> <!-- During loading no buttons-->
         <!-- FORM BUTTONS-->
         <div *ngIf="isEditMode; else viewButtons">
           <!-- 
