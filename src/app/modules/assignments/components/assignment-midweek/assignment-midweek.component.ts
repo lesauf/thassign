@@ -15,8 +15,8 @@ import {
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime, Interval } from 'luxon';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { combineLatest, concat, Observable, of, Subscription } from 'rxjs';
+import { delay, map, take, tap } from 'rxjs/operators';
 
 import { AssignmentCommon } from '@src/app/modules/assignments/components/assignment.common';
 import { AssignableListComponent } from '@src/app/modules/assignments/components/assignable-list/assignable-list.component';
@@ -74,6 +74,11 @@ export class AssignmentMidweekComponent
 
   programsForm: FormGroup;
 
+  /**
+   * Display the Loading msg
+   */
+  loading = false;
+
   constructor(
     private resolver: ComponentFactoryResolver,
     private injector: Injector,
@@ -102,14 +107,16 @@ export class AssignmentMidweekComponent
 
         await this.programService.getProgramsByMonth('midweek', this.month);
 
-        // Get the observable of the this month programs
         this.mPrograms$ = this.programService.mPrograms.pipe(
+          map((v) => (v === null ? new Map() : v)), // Map null to empty map
+          delay(0), // Useful to prevent an error about loading property
           tap((mPrograms) => {
             this.mPrograms = mPrograms;
 
             // Build the form
             this.prepareForm();
 
+            this.showLoader(false);
             this.subscribeToFormChanges();
           })
         );
@@ -124,10 +131,10 @@ export class AssignmentMidweekComponent
   }
 
   async ngOnChanges(changes: SimpleChanges) {
+    this.showLoader();
+
     // Get the first week as the first monday of the month
     this.currentWeek = this.month.set({ weekday: 8 });
-
-    // this.mPrograms$ = undefined; // to start the loader
 
     await this.programService.getProgramsByMonth('midweek', this.month);
 
@@ -149,15 +156,18 @@ export class AssignmentMidweekComponent
    *   - Subscribe to the form changes to update assignementsByWeek
    */
   prepareForm() {
-    delete this.programsForm;
+    // delete this.programsForm; // Why did I wanted to delete ?
 
     const group: any = {};
 
+    // if (this.mPrograms !== null) {
+    // We do nothing on the initial config
     this.mPrograms.forEach((program, week) => {
       group[week] = program.toFormGroup(
         this.backendService.getSignedInUser()._id
       );
     });
+    // }
 
     //
     this.programsForm = new FormGroup(group);
@@ -172,7 +182,7 @@ export class AssignmentMidweekComponent
       // Add the assignments being made to the list
       // TODO Get all the assignments from the programs instead
       let allAssignments = this.assignmentService.getAssignments();
-      
+
       Object.keys(editedPrograms).forEach((week) => {
         allAssignments = allAssignments.concat(
           editedPrograms[week].assignments
@@ -181,6 +191,15 @@ export class AssignmentMidweekComponent
 
       this.assignmentService.groupAssignmentsByUser(allAssignments);
     });
+  }
+
+  showLoader(status=true) {
+    this.loading = status;
+    
+    // While loading we disable the picker
+    if (status) {
+      // this.setEditMode(true);
+    }
   }
 
   cancelEdit() {
@@ -197,9 +216,11 @@ export class AssignmentMidweekComponent
 
     // convert to Program objects
     const toSave = this.programService.createProgram(formValue) as Program[];
- 
+
+    this.showLoader();
     this.programService.savePrograms(toSave);
 
+    this.showLoader(false);
     this.setEditMode(false);
   }
 

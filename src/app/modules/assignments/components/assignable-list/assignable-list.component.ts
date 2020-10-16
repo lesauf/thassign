@@ -24,8 +24,10 @@ export class AssignableListComponent<T> implements OnInit {
 
   public userList: User[];
 
-  constructor(private injector: Injector, 
-    protected assignmentService: AssignmentService,) {
+  constructor(
+    private injector: Injector,
+    protected assignmentService: AssignmentService
+  ) {
     this.dialogRef = this.injector.get(MatDialogRef, null);
     this.data = this.injector.get(MAT_DIALOG_DATA, null);
   }
@@ -53,14 +55,19 @@ export class AssignableListComponent<T> implements OnInit {
     } else {
       // Sort by the given field
       this.data.options.sort((a: User, b: User) => {
-        if (a[field] < b[field]) {
-          return -1;
-        }
-        if (a[field] > b[field]) {
-          return 1;
-        }
+        if (typeof a[field] === 'string') {
+          // easier sort if strings
+          return a[field].localeCompare(b[field]);
+        } else {
+          if (a[field] < b[field]) {
+            return -1;
+          }
+          if (a[field] > b[field]) {
+            return 1;
+          }
 
-        return 0;
+          return 0;
+        }
       });
     }
   }
@@ -74,7 +81,11 @@ export class AssignableListComponent<T> implements OnInit {
         return -1;
       } else if (this.getUserLastAssignmentDate(b) === undefined) {
         return 1;
-      } else if (this.getUserLastAssignmentDate(a).equals(this.getUserLastAssignmentDate(b))) {
+      } else if (
+        this.getUserLastAssignmentDate(a).equals(
+          this.getUserLastAssignmentDate(b)
+        )
+      ) {
         // equal items sort equally
         return 0;
       } else if (
@@ -105,7 +116,7 @@ export class AssignableListComponent<T> implements OnInit {
   /**
    * Get those from assignmentsByUser, so they would
    * contain any assignment not yet saved to the DB
-   * @param user 
+   * @param user
    */
   getUserAssignments(user: User): Assignment[] {
     const assignmentsByUser = this.assignmentService.assignmentsByUser;
@@ -114,29 +125,24 @@ export class AssignableListComponent<T> implements OnInit {
 
   /**
    * Return the number of all the assignment of a user
-   * @param user 
+   * @param user
    */
   getAssignmentsNumber(user: User): number {
-
     return this.getUserAssignments(user).length;
   }
 
-  test() {
-    console.log('test');
-  }
   /**
    * Get the last assignments
-   * @param user 
+   * @param user
    */
   getUserLastAssignmentDate(user: User): DateTime {
     const userAss = this.getUserAssignments(user);
 
     if (userAss.length !== 0) {
-      const index = userAss.length - 1 ;
+      const index = userAss.length - 1;
 
       return userAss[index].week;
     }
-
   }
 
   /**

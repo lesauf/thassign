@@ -81,7 +81,6 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     allParts?: Part[],
     allUsers?: User[]
   ): Assignment | Assignment[] {
-    
     if (props instanceof Array) {
       const assignments = props.map((obj, index) => {
         return new Assignment(obj, allParts, allUsers);
@@ -336,6 +335,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
 
   /**
    * Populate assignmentsByUser
+   * Sorted by week ( and position ?)
    * @param allAssignments
    */
   groupAssignmentsByUser(allAssignments?: Assignment[]) {

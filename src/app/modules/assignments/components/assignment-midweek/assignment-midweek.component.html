@@ -1,106 +1,111 @@
-<ng-template #loading>
-  <app-loader></app-loader>
-</ng-template>
+<app-loader *ngIf="loading"></app-loader>
 
-<div *ngIf="(mPrograms$ | async) as mPrograms; else loading">
-  <form [formGroup]="programsForm" 
-    (ngSubmit)="onSubmit()">
-    <!-- FORM BUTTONS-->
-    <div *ngIf="isEditMode; else viewButtons">
-      <!-- 
-      fxLayout="row" fxLayoutAlign="space-around center" -->
-      <button
-        type="reset"
-        mat-raised-button
-        class="mat-primary"
-        (click)="cancelEdit()"
-      >
-        <mat-icon>undo</mat-icon>
-        {{ "cancel" | translate | titlecase }}
-      </button>
+<div *ngIf="mPrograms$ | withLoading | async as mProgramsWithLoading">
+  <ng-template [ngIf]="mProgramsWithLoading.error">{{ 'error.general' | translate }}</ng-template>
+  <!-- <ng-template [ngIf]="mProgramsWithLoading.loading"><app-loader></app-loader></ng-template> -->
 
-      <button type="submit" mat-raised-button class="mat-primary">
-        <mat-icon>save</mat-icon>
-        {{ "save" | translate | titlecase }}
-      </button>
-    </div>
+  <ng-template [ngIf]="mProgramsWithLoading.value">
+    <form *ngIf="mProgramsWithLoading.value as mPrograms" [formGroup]="programsForm" 
+      (ngSubmit)="onSubmit()">
+      <div *ngIf="mPrograms.size">
+        <!-- FORM BUTTONS-->
+        <div *ngIf="isEditMode; else viewButtons">
+          <!-- 
+          fxLayout="row" fxLayoutAlign="space-around center" -->
+          <button
+            type="reset"
+            mat-raised-button
+            class="mat-primary"
+            (click)="cancelEdit()"
+          >
+            <mat-icon>undo</mat-icon>
+            {{ "cancel" | translate | titlecase }}
+          </button>
 
-    <!-- PRINT BUTTONS -->
-    <ng-template #viewButtons>
-        <button
-          type="button"
-          mat-raised-button
-          class="mat-primary"
-          (click)="setEditMode(true)"
-        >
-          <mat-icon>edit</mat-icon>
-          {{ "edit" | translate | titlecase }}
-        </button>
+          <button type="submit" mat-raised-button class="mat-primary">
+            <mat-icon>save</mat-icon>
+            {{ "save" | translate | titlecase }}
+          </button>
+        </div>
 
-        <button
-          type="button"
-          mat-raised-button
-          class="mat-primary"
-          (click)="saveAsPdf()"
-        >
-          <mat-icon>print</mat-icon>
-          {{ "print" | translate | titlecase }}
-        </button>
-    </ng-template>
+        <!-- PRINT BUTTONS -->
+        <ng-template #viewButtons>
+            <button
+              type="button"
+              mat-raised-button
+              class="mat-primary"
+              (click)="setEditMode(true)"
+            >
+              <mat-icon>edit</mat-icon>
+              {{ "edit" | translate | titlecase }}
+            </button>
 
-    <div *ngFor="let mProgram of mPrograms | keyvalue"
-      [formGroupName]="mProgram.key">
-      <div *ngIf="mProgram.value as program">
-        <h2>{{ program.week | translateDate: "MMM-D" : {days: 6} | async }}</h2>
+            <button
+              type="button"
+              mat-raised-button
+              class="mat-primary"
+              (click)="saveAsPdf()"
+            >
+              <mat-icon>print</mat-icon>
+              {{ "print" | translate | titlecase }}
+            </button>
+        </ng-template>
+      </div>
 
-        <div formArrayName="assignments">
-          <div *ngFor="let assignment of program.assignments" 
-            [formGroupName]="assignment.position"
-            [title]="assignment.description">
-            <div>
-              {{ assignment.title }}
-              <div *ngIf="isEditMode; else view">
-                <div fxFlex="30" fxFlex.lt-sm="auto">
-                  <app-picker
-                    [optionsTemplate]="displayComponentRef.componentType"
-                    title="{{ 'assignee' | translate | titlecase }}"
-                    placeholder="{{ 'assignee' | translate | titlecase }}"
-                    [form]="programsForm"
-                    [controlPath]="[program._id, 
-                      'assignments', 
-                      assignment.position, 
-                      'assignee']"
-                    [options]="assignableListByPart[assignment.part.name]"
-                    labelField="fullName"
-                  ></app-picker>
+      <div *ngFor="let mProgram of mPrograms | keyvalue"
+        [formGroupName]="mProgram.key">
+        <div *ngIf="mProgram.value as program">
+          <h2>{{ program.week | translateDate: "MMM-D" : {days: 6} | async }}</h2>
+
+          <div formArrayName="assignments">
+            <div *ngFor="let assignment of program.assignments" 
+              [formGroupName]="assignment.position"
+              [title]="assignment.description">
+              <div>
+                {{ assignment.title }}
+                <div *ngIf="isEditMode; else view">
+                  <div fxFlex="30" fxFlex.lt-sm="auto">
+                    <app-picker
+                      [optionsTemplate]="displayComponentRef.componentType"
+                      title="{{ 'assignee' | translate | titlecase }}"
+                      placeholder="{{ 'assignee' | translate | titlecase }}"
+                      [form]="programsForm"
+                      [controlPath]="[program._id, 
+                        'assignments', 
+                        assignment.position, 
+                        'assignee']"
+                      [options]="assignableListByPart[assignment.part.name]"
+                      labelField="fullName"
+                    ></app-picker>
+                  </div>
+
+                  <div *ngIf="assignment.part.withAssistant" fxFlex="30" fxFlex.lt-sm="auto">
+                    <app-picker
+                      [optionsTemplate]="displayComponentRef.componentType"
+                      title="{{ 'assistant' | translate | titlecase }}"
+                      placeholder="{{ 'assistant' | translate | titlecase }}"
+                      [form]="programsForm"
+                      [controlPath]="[program._id, 
+                        'assignments', 
+                        assignment.position, 
+                        'assistant']"
+                      [options]="assignableListByPart['clm.ministry.assistant']"
+                      labelField="fullName"
+                    ></app-picker>
+                  </div>
                 </div>
 
-                <div *ngIf="assignment.part.withAssistant" fxFlex="30" fxFlex.lt-sm="auto">
-                  <app-picker
-                    [optionsTemplate]="displayComponentRef.componentType"
-                    title="{{ 'assistant' | translate | titlecase }}"
-                    placeholder="{{ 'assistant' | translate | titlecase }}"
-                    [form]="programsForm"
-                    [controlPath]="[program._id, 
-                      'assignments', 
-                      assignment.position, 
-                      'assistant']"
-                    [options]="assignableListByPart['clm.ministry.assistant']"
-                    labelField="fullName"
-                  ></app-picker>
-                </div>
+                <ng-template #view>
+                  <span>{{ assignment.assignee?.fullName }}</span>
+
+                  <span *ngIf="assignment.assistant">
+                    &nbsp;/&nbsp;{{ assignment.assistant?.fullName }}</span>
+                </ng-template>
               </div>
-
-              <ng-template #view>
-                <span>{{ assignment.assignee?.fullName }}</span>
-
-                <span *ngIf="assignment.assistant">
-                  &nbsp;/&nbsp;{{ assignment.assistant?.fullName }}</span>
-              </ng-template>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </form>
+    </form>
+  </ng-template>
 </div>
