@@ -69,6 +69,7 @@ export const partMocks: any[] = [
     name: 'clm.ministry.bible-study',
     meeting: 'midweek',
     type: 'student',
+    withAssistant: true,
     position: 3,
   },
   {

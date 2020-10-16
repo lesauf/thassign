@@ -68,8 +68,6 @@ export abstract class AssignmentCommon {
 
   assignmentsByWeek: Assignment[][] = [];
 
-  
-
   protected assignmentService: AssignmentService;
   protected partService: PartService;
   protected userService: UserService;
@@ -77,7 +75,7 @@ export abstract class AssignmentCommon {
   protected formBuilder: FormBuilder;
   protected settingService: SettingService;
   protected _snackBar: MatSnackBar;
-  protected _translate: TranslateService;
+  protected translateService: TranslateService;
   protected validationService: ValidationService;
 
   constructor() {
@@ -88,7 +86,7 @@ export abstract class AssignmentCommon {
     // this.formBuilder = formBuilder;
     // this.settingService = settingService;
     // this._snackBar = _snackBar;
-    // this._translate = _translate;
+    // this.translateService = translateService;
     // this.validationService = validationService;
   }
 
@@ -225,10 +223,10 @@ export abstract class AssignmentCommon {
    */
   async generateAssignmentsOld() {
     //   // Get the error messages
-    //   const noAssignableUserMessage = await this._translate
+    //   const noAssignableUserMessage = await this.translateService
     //     .get('part-with-no-assignable-user')
     //     .toPromise();
-    //   const noAssignableUserAction = await this._translate
+    //   const noAssignableUserAction = await this.translateService
     //     .get('part-with-no-assignable-user-action')
     //     .toPromise();
     //   console.log(this.assignableList['initialCall']);
@@ -309,10 +307,10 @@ export abstract class AssignmentCommon {
 
   // async generateAssignments() {
   //   // Get the error messages
-  //   const noAssignableUserMessage = await this._translate
+  //   const noAssignableUserMessage = await this.translateService
   //     .get('part-with-no-assignable-user')
   //     .toPromise();
-  //   const noAssignableUserAction = await this._translate
+  //   const noAssignableUserAction = await this.translateService
   //     .get('part-with-no-assignable-user-action')
   //     .toPromise();
 
@@ -487,7 +485,7 @@ export abstract class AssignmentCommon {
 
     const mywindow = window.open('', '', 'height=400,width=600');
 
-    this._translate.get('assignments').subscribe((pageTitle) => {
+    this.translateService.get('assignments').subscribe((pageTitle) => {
       const printContents = this.printable.nativeElement.innerHTML;
 
       mywindow.document.write(

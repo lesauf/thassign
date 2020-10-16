@@ -3,6 +3,7 @@ import {
   Component,
   ComponentFactoryResolver,
   ComponentRef,
+  ElementRef,
   EventEmitter,
   Injector,
   Input,
@@ -11,6 +12,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
@@ -47,6 +49,9 @@ export class AssignmentMidweekComponent
   @Output()
   editMode: EventEmitter<any> = new EventEmitter();
 
+  @ViewChild('printableArea')
+  printable: ElementRef;
+  
   public displayComponentRef: ComponentRef<AssignableListComponent<User>>;
 
   currentWeek: DateTime;
@@ -97,6 +102,7 @@ export class AssignmentMidweekComponent
     this.data$ = combineLatest([
       this.userService.data,
       this.assignmentService.data,
+      // this.translateService.onLangChange.asObservable(),
     ]).subscribe(async ([users, assignments]) => {
       if (users !== null && assignments !== null) {
         // Display form only when observables have started emitting
@@ -183,9 +189,10 @@ export class AssignmentMidweekComponent
       // 1. Build a map of all current edited assignments
       let tmpArr = [];
       Object.keys(editedPrograms).forEach((week) => {
-        tmpArr.concat(editedPrograms[week]
-          .assignments.map((a) => [a.key, a])
-        );
+        const convAss = this.assignmentService.createAssignment(
+          editedPrograms[week].assignments
+        ) as Assignment[];
+        tmpArr = tmpArr.concat(convAss.map((a) => [a.key, a]));
       });
       const currentAss = new Map(tmpArr);
 
@@ -193,18 +200,18 @@ export class AssignmentMidweekComponent
       const allAssignments = new Map(this.assignmentService.getAssignments());
 
       // 3. merge the two maps
-      const mergedAss = new Map([
-        ...allAssignments, 
-        ...currentAss
-      ]) as Map<string, Assignment>;
+      const mergedAss = new Map([...allAssignments, ...currentAss]) as Map<
+        string,
+        Assignment
+      >;
 
       this.assignmentService.groupAssignmentsByUser(mergedAss);
     });
   }
 
-  showLoader(status=true) {
+  showLoader(status = true) {
     this.loading = status;
-    
+
     // While loading we disable the picker
     if (status) {
       // this.setEditMode(true);

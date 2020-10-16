@@ -102,7 +102,6 @@ export class MonthPickerComponent implements OnInit, OnChanges {
    * @name emitValue
    */
   emitValue() {
-    console.log(this.date.value.toISO());
     this.monthSelected.emit(this.date.value);
   }
 
