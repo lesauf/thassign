@@ -4,15 +4,16 @@ import { Observable, BehaviorSubject, of } from 'rxjs';
 import { DateTime, Interval } from 'luxon';
 
 import { AuthService } from '@src/app/modules/auth/auth.service';
+import { BackendService } from '@src/app/core/services/backend.service';
 import { CommonService } from '@src/app/core/services/common.service';
 import { MessageService } from '@src/app/core/services/message.service';
+import { PartService } from '@src/app/core/services/part.service';
+import { SettingService } from '@src/app/core/services/setting.service';
 import { UserService } from '@src/app/modules/users/user.service';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { Part } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
-import { BackendService } from '@src/app/core/services/backend.service';
 import { AssignmentConverter } from '@src/app/core/models/assignment/assignment.converter';
-import { AssignmentsModule } from '../assignments.module';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -26,12 +27,12 @@ const httpOptions = {
   providedIn: 'root',
 })
 export abstract class AssignmentService extends CommonService<Assignment> {
-  public abstract weekendParts = [
-    'weekend.publicTalk.chairman',
-    'weekend.publicTalk.speaker',
-    'weekend.watchtower.conductor',
-    'weekend.watchtower.reader',
-  ];
+  // public abstract weekendParts = [
+  //   'weekend.publicTalk.chairman',
+  //   'weekend.publicTalk.speaker',
+  //   'weekend.watchtower.conductor',
+  //   'weekend.watchtower.reader',
+  // ];
 
   // private assignmentsUrl = 'api/assignment'; // URL to web api
 
@@ -55,13 +56,27 @@ export abstract class AssignmentService extends CommonService<Assignment> {
    */
   assignmentsByUser: Map<string, Assignment[]> = new Map();
 
+  /**
+   * Display the Students part ?
+   * if undefined display all parts
+   *
+   * This is used for a session. The one in SettingService
+   * is persisted in the DB
+   */
+  displayStudentsParts: boolean;
+
   constructor(
     private authService: AuthService,
     protected backendService: BackendService,
     protected messageService: MessageService,
+    protected partService: PartService,
+    protected settingService: SettingService,
     protected userService: UserService
   ) {
     super();
+
+    // Get some settings
+    this.displayStudentsParts = this.settingService.displayStudentsParts;
 
     // generateAssignments(userService, partSer);
   }
@@ -176,8 +191,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
   ) {
     try {
       // Convert results to Assignment array
-      
-      
+
       // const allAssignments = this.createAssignment(
       //   assignments,
       //   allParts,
@@ -329,6 +343,27 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     }
 
     return pAssignments;
+  }
+
+  /**
+   * Check if the current user is handling the given part
+   * @param part
+   */
+  isWorkingOnPart(part: Part): boolean {
+    const isStudentPart = this.partService.meetingParts[
+      'midweek-students'
+    ].includes(part.name);
+
+    if (this.displayStudentsParts === true) {
+      // Only display students parts
+      return isStudentPart;
+    } else if (this.displayStudentsParts === false) {
+      // Only display non students parts
+      return !isStudentPart;
+    } else {
+      // Display all the parts
+      return true;
+    }
   }
 
   // async getWeekendChairmanAssignmentByWeek(week: DateTime) {

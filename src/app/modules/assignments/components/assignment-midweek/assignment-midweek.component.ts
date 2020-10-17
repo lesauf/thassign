@@ -28,9 +28,10 @@ import { BackendService } from '@src/app/core/services/backend.service';
 import { PartService } from '@src/app/core/services/part.service';
 import { ProgramService } from '@src/app/core/services/program.service';
 import { UserService } from '@src/app/modules/users/user.service';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
+import { Part } from '@src/app/core/models/part/part.model';
 import { Program } from '@src/app/core/models/program.model';
 import { User } from '@src/app/core/models/user/user.model';
-import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 
 @Component({
   selector: 'app-assignment-midweek',
@@ -51,12 +52,12 @@ export class AssignmentMidweekComponent
 
   @ViewChild('printableArea')
   printable: ElementRef;
-  
+
   public displayComponentRef: ComponentRef<AssignableListComponent<User>>;
 
-  currentWeek: DateTime;
+  // currentWeek: DateTime;
 
-  dateFormat = MY_FORMATS.display.dateA11yLabel;
+  // dateFormat = MY_FORMATS.display.dateA11yLabel;
 
   meetingName = 'midweek';
 
@@ -97,7 +98,7 @@ export class AssignmentMidweekComponent
     super();
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     // Pipe to the assignments observable
     this.data$ = combineLatest([
       this.userService.data,
@@ -140,7 +141,7 @@ export class AssignmentMidweekComponent
     this.showLoader();
 
     // Get the first week as the first monday of the month
-    this.currentWeek = this.month.set({ weekday: 8 });
+    // this.currentWeek = this.month.set({ weekday: 8 });
 
     await this.programService.getProgramsByMonth('midweek', this.month);
 
@@ -241,38 +242,49 @@ export class AssignmentMidweekComponent
   }
 
   /**
-   * Add the assignment to the AssignmentService::assignmentsByUser
+   * Check if the current user is handling the given part
+   * @param part
    */
-  // extractAllAssignmentsFromProgram(program: any) {
-  //   const assignments = [];
-  //   program.assignments.forEach((assignment) => {
-  //     if (assignment.assignee !== '') {
-  //       // user assigned, add it to his list of assignments
-  //       assignment = new Assignment(assignment);
-  //       (assignment.assignee as User).assignments[assignment.key] = assignment;
-  //     }
-  //   });
-  // }
-
-  getMondays() {
-    let d = new Date();
-    let month = d.getMonth();
-    let tuesdays = [];
-
-    d.setDate(1);
-
-    // Get the first Monday in the month
-    d.setDate(d.getDate() + ((8 - d.getDay()) % 7));
-    // while (d.getDay() !== 1) {
-    //     d.setDate(d.getDate() + 1);
-    // }
-
-    // Get all the other Mondays in the month
-    while (d.getMonth() === month) {
-      tuesdays.push(new Date(d.getTime()));
-      d.setDate(d.getDate() + 7);
-    }
-
-    return tuesdays;
+  isWorkingOnPart(part: Part): boolean {
+    return this.assignmentService.isWorkingOnPart(part);
   }
+
+  getDisplayStudentsParts(): boolean {
+    return this.assignmentService.displayStudentsParts;
+  }
+
+  /**
+   *
+   * Second click on chip deselect it
+   * @param displayStudentsParts
+   */
+  setDisplayStudentsParts(displayStudentsParts: boolean) {
+    if (displayStudentsParts === this.assignmentService.displayStudentsParts) {
+      this.assignmentService.displayStudentsParts = undefined;
+    } else {
+      this.assignmentService.displayStudentsParts = displayStudentsParts;
+    }
+  }
+
+  // getMondays() {
+  //   let d = new Date();
+  //   let month = d.getMonth();
+  //   let tuesdays = [];
+
+  //   d.setDate(1);
+
+  //   // Get the first Monday in the month
+  //   d.setDate(d.getDate() + ((8 - d.getDay()) % 7));
+  //   // while (d.getDay() !== 1) {
+  //   //     d.setDate(d.getDate() + 1);
+  //   // }
+
+  //   // Get all the other Mondays in the month
+  //   while (d.getMonth() === month) {
+  //     tuesdays.push(new Date(d.getTime()));
+  //     d.setDate(d.getDate() + 7);
+  //   }
+
+  //   return tuesdays;
+  // }
 }

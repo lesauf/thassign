@@ -38,21 +38,6 @@ import { BackendService } from '@src/app/core/services/backend.service';
 import { map, tap } from 'rxjs/operators';
 import { User } from '@src/app/core/models/user/user.model';
 
-// export const DATE_FORMATS = {
-//   parse: {
-//     dateInput: 'DD/MM/YYYY',
-//   },
-//   display: {
-//     dateInput: 'DD/MM/YYYY',
-//     monthYearLabel: 'MMM YYYY',
-//     dateA11yLabel: 'LL',
-//     monthYearA11yLabel: 'MMMM YYYY',
-//   },
-//   store: {
-//     dateInput: 'YYYY-MM-DD',
-//   },
-// };
-
 /**
  * Handle weekend assignments attributions
  * Chairman, speaker, Watchtower reader

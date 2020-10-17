@@ -77,19 +77,19 @@ export class AssignableListComponent<T> implements OnInit {
     this.data.options.sort((a: User, b: User) => {
       // Sort by last assignment's date
       // nulls sort after anything else
-      if (this.getUserLastAssignmentDate(a) === undefined) {
+      if (this.getUserLastAssignment(a) === undefined) {
         return -1;
-      } else if (this.getUserLastAssignmentDate(b) === undefined) {
+      } else if (this.getUserLastAssignment(b) === undefined) {
         return 1;
       } else if (
-        this.getUserLastAssignmentDate(a).equals(
-          this.getUserLastAssignmentDate(b)
+        this.getUserLastAssignment(a).week.equals(
+          this.getUserLastAssignment(b).week
         )
       ) {
         // equal items sort equally
         return 0;
       } else if (
-        this.getUserLastAssignmentDate(a) < this.getUserLastAssignmentDate(b)
+        this.getUserLastAssignment(a).week < this.getUserLastAssignment(b).week
       ) {
         // otherwise, older sorts first
         return -1;
@@ -114,14 +114,35 @@ export class AssignableListComponent<T> implements OnInit {
   }
 
   /**
+   * Get the assignments for part filtered by the current user
+   * 
    * Get those from assignmentsByUser, so they would
    * contain any assignment not yet saved to the DB
+   * 
    * @param user
    */
   getUserAssignments(user: User): Assignment[] {
     const assignmentsByUser = this.assignmentService.assignmentsByUser;
 
-    return assignmentsByUser.get(user._id);
+    return assignmentsByUser.get(user._id)
+      .filter(a => this.assignmentService.isWorkingOnPart(a.part));
+  }
+
+  /**
+   * Get the last assignment
+   * @param user
+   */
+  getUserLastAssignment(user: User): Assignment {
+    const userAss = this.getUserAssignments(user);
+
+    if (userAss.length !== 0) {
+      const index = userAss.length - 1;
+
+      return userAss[index];
+    } else {
+      return null;
+    }
+    
   }
 
   /**
@@ -130,20 +151,6 @@ export class AssignableListComponent<T> implements OnInit {
    */
   getAssignmentsNumber(user: User): number {
     return this.getUserAssignments(user).length;
-  }
-
-  /**
-   * Get the last assignments
-   * @param user
-   */
-  getUserLastAssignmentDate(user: User): DateTime {
-    const userAss = this.getUserAssignments(user);
-
-    if (userAss.length !== 0) {
-      const index = userAss.length - 1;
-
-      return userAss[index].week;
-    }
   }
 
   /**

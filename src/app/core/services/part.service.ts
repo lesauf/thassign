@@ -34,7 +34,6 @@ export class PartService extends CommonService<Part> {
       'clm.treasures.bible-reading',
       'clm.ministry.initial-call',
       'clm.ministry.return-visit',
-      'clm.ministry.return-visit',
       'clm.ministry.bible-study',
       'clm.ministry.talk',
       'clm.ministry.assistant',
@@ -92,17 +91,10 @@ export class PartService extends CommonService<Part> {
     // Text comparisons are made on lowercase
     const correspondingPart = parts.find((part) => {
       const t: string = this.getTranslationOf(part.name);
-      return t.toLowerCase() === title.toLowerCase();
+      return t.toLowerCase() == title.toLowerCase();
     });
-
     if (correspondingPart !== undefined) {
       return correspondingPart;
-    } else if (
-      partSection === 'ministry' &&
-      this.getTranslationOf('talk').toLowerCase() === title.toLowerCase()
-    ) {
-      // student talk
-      return this.getPartByName('clm.ministry.talk');
     } else if (partSection === 'treasures') {
       // Digging or Treasures talk
       return this.getPartByName('clm.talk-or-discussion');

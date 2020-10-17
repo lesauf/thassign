@@ -161,17 +161,7 @@ export class ProgramService extends CommonService<Program> {
 
       // Update Assignment store
       this.assignmentService.storeAssignments(
-        
-        
-        
-        
-        
         this.extractAllAssignments(allPrograms)
-      
-      
-      
-      
-      
       );
 
       return allPrograms;

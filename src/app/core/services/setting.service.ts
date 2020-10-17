@@ -10,10 +10,21 @@ export const DATE_FORMATS = {
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SettingService {
-  constructor() {}
+  /**
+   * Display the Students part ?
+   * if undefined display all parts
+   * 
+   * Useful for CLM overseer or coordinator to filter the parts
+   * he works on
+   */
+  displayStudentsParts: boolean = true;
+
+  constructor() {
+   
+  }
 
   /**
    * Start day of week : 0 = Sunday | 1 = Monday
