@@ -160,7 +160,7 @@ export class User {
           );
         }
       }
-
+      // console.log(userProperties);
       // Assign the properties to this object
       Object.assign(this, userProperties);
     }
@@ -188,20 +188,8 @@ export class User {
       delete this.congregation;
     }
 
-
-    if (!this.deletedAt) {
-      delete this.deletedAt;
-    }
-    if (!this.deletedBy) {
-      delete this.deletedBy;
-    }
-    if (!this.updatedAt) {
-      delete this.updatedAt;
-    }
-    // Remove also createdAt ?
-    if (this.createdAt) {
-      delete this.createdAt;
-    }
+    // Remove the get properties
+    // delete this.fullName;
   }
 
   /**
@@ -222,6 +210,8 @@ export class User {
     return this.firstName + ' ' + this.lastName;
   }
 
+  set fullName(fullName: string) {}
+
   get type() {
     let generatedType = '';
     if (this.genre === 'man') {
@@ -241,6 +231,8 @@ export class User {
     return generatedType;
   }
 
+  set type(type: string) {}
+
   get progress() {
     let progress = '';
     if (!this.baptized) {
@@ -252,6 +244,8 @@ export class User {
 
     return progress;
   }
+
+  set progress(progress) {}
 
   /**
    * List of meetings the users have parts on
@@ -268,22 +262,26 @@ export class User {
     return _meetingsAssignable;
   }
 
+  set meetingsAssignable(meetingsAssignable) {}
+
   get assignmentsDisplay(): string {
     let aDisplay = '';
 
-    this.assignments.forEach((a) => {
+    this.assignments?.forEach((a) => {
       aDisplay = aDisplay + DateTime.fromJSDate(a.week).toLocaleString();
     });
 
     return aDisplay;
   }
 
+  set assignmentsDisplay(assignmentsDisplay) {}
+
   get lastAssignment(): Assignment {
-    if (!this.assignments.length) {
+    if (!this.assignments?.length) {
       return null;
     }
     // sort by assignment
-    this.assignments.sort((a, b) => {
+    this.assignments?.sort((a, b) => {
       if (a.week < b.week) {
         return 1;
       }
@@ -296,4 +294,6 @@ export class User {
 
     return this.assignments[0];
   }
+
+  set lastAssignment(lastAssignment) {}
 }

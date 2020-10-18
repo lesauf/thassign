@@ -159,20 +159,22 @@ export class UserService extends CommonService<User> {
   /**
    * Get all users from server
    */
-  storeUsers(users: [], allParts: Part[]): User[] {
+  storeUsers(users: any[], allParts: Part[]): User[] {
     try {
       // We need to pass the ownerId as parameter because Stitch
       // does not support lookup on user context
       // const result = await this.callFunction('Users_find', [
       //   { ownerId: this.authService.getUser().id },
       // ]);
+      console.log(users);
+      if (users[0].constructor.name !== 'User') {
+        users = this.createUser(users, allParts) as User[];
+      }
 
-      const allUsers = this.createUser(users, allParts) as User[];
-
-      this.updateStore(allUsers);
+      this.updateStore(users);
       this.log('Stored users');
 
-      return allUsers;
+      return users;
     } catch (error) {
       this.handleError('storeUsers', error, [], '');
     }
