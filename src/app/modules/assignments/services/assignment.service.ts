@@ -121,7 +121,10 @@ export abstract class AssignmentService extends CommonService<Assignment> {
       // Convert the Map assignments to an array to make the search
       const assMap = [...allAssignments.values()];
       let userAss = assMap.filter((ass: Assignment) => {
-        return ass.assignee?._id === user._id;
+        const isAssignee = ass.assignee?._id === user._id;
+        const isAssistant = ass.assistant?._id === user._id;
+        // Assignee or assistant
+        return isAssignee || isAssistant;
       });
 
       this.assignmentsByUser.set(user._id, userAss);

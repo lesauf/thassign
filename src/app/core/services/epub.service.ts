@@ -65,15 +65,16 @@ export class EpubService extends CommonService<any> {
       await this.book.open(this.epubPath + epubFilename + '.epub');
     } catch (error) {
       if (error.status === 404) {
+        // No epub, notify the dev
         this.messageService.log('Please provide the epub for ' + epubFilename);
-        this.messageService.presentToast(
-          'Sorry, you cannot create the program for now: ' + this.epubMonth
-        );
-        // Return empty array as reference program
-        return [];
       } else {
-        throw error;
+        this.messageService.log(error.message, error);
       }
+      this.messageService.presentToast(
+        'Sorry, you cannot create the program for now: ' + this.epubMonth
+      );
+      // Return empty array as reference program
+      return [];
     }
 
     // Extract the programs

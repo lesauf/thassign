@@ -102,10 +102,10 @@ export class AssignmentMidweekComponent
     // Pipe to the assignments observable
     this.data$ = combineLatest([
       this.userService.data,
-      this.assignmentService.data,
+      this.programService.data,
       // this.translateService.onLangChange.asObservable(),
-    ]).subscribe(async ([users, assignments]) => {
-      if (users !== null && assignments !== null) {
+    ]).subscribe(async ([users, programs]) => {
+      if (users !== null && programs !== null) {
         // Display form only when observables have started emitting
         await this.initializeData();
 

@@ -74,20 +74,12 @@ export class AppResolverService implements Resolve<string> {
             this.partService.getParts()
           );
 
+          // Store all programs (al all so the assignments in them)
           const allPrograms = this.programService.storePrograms(
             programs,
             parts,
             allUsers
           );
-
-          // TODO Delete this
-          // const allAssignments = this.assignmentService.storeAssignments(
-          //   assignments,
-          //   parts,
-          //   allUsers
-          // );
-
-          // console.log('Updated data from DB: ', allUsers, allAssignments);
         }
       );
 

@@ -113,12 +113,15 @@ export class ProgramService extends CommonService<Program> {
       // Not the initial emission
       let mPrograms: Map<any, any> = new Map();
 
-      if (storedPrograms.length) {
+      if (storedPrograms.length !== 0) {
         // If there are programs in the db filter the ones for
         // this meeting and month
         let fPrograms = storedPrograms.filter((program) => {
+          const sameMeeting = program.meeting === meeting;
+          const sameMonth = program.month.toString() === month.toString();
+
           // Remove the programs whose week are not in this month
-          return program.meeting === meeting && program.month.equals(month);
+          return sameMeeting && sameMonth;
         });
 
         mPrograms = this.convertProgramsToMap(fPrograms) as Map<
@@ -155,14 +158,14 @@ export class ProgramService extends CommonService<Program> {
         allParts,
         allUsers
       ) as Program[];
-      // const allPrograms = programs;
-      // console.log('Programs to put in the store :', allPrograms);
-      this.updateStore(allPrograms);
-
       // Update Assignment store
       this.assignmentService.storeAssignments(
         this.extractAllAssignments(allPrograms)
       );
+
+      // const allPrograms = programs;
+      // console.log('Programs to put in the store :', allPrograms);
+      this.updateStore(allPrograms);
 
       return allPrograms;
     } catch (error) {
@@ -227,12 +230,6 @@ export class ProgramService extends CommonService<Program> {
    * @param week
    */
   async getProgramFromEpub(epubFilename: string, week?: DateTime) {
-    // if (this.epubService.getLanguageFromEpubFilename(epubFilename) !== 'E') {
-    //   this.messageService.log(
-    //     'Please provide the english epub for ' + epubFilename
-    //   );
-    // }
-
     const signedInUserId = this.backendService.getSignedInUser()._id;
     const roughPrograms = await this.epubService.getProgramsFromEpub(
       epubFilename,
@@ -285,7 +282,7 @@ export class ProgramService extends CommonService<Program> {
       // First convert all the assignments to a 2D array
       // of [ass.key, ass]
       const ass2d = p.assignments.map((ass) => [ass.key, ass]);
-      
+
       a = a.concat(ass2d);
     });
 

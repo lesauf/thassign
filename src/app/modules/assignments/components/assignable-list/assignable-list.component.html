@@ -63,7 +63,7 @@
       cdkFocusInitial>
       <h2 matLine>{{ user.fullName }}</h2>
       <span matLine *ngIf="getUserAssignments(user).length"
-        matTooltip="{{ getUserLastAssignment(user).part.name | translate }}">
+        matTooltip="{{ getUserLastAssignmentNameTranslated(user) }}">
         {{ "last" | translate | titlecase }}
         {{
           getUserLastAssignment(user).week

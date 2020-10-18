@@ -48,7 +48,7 @@ export class MessageService {
     console.log();
     this.translate.get(messageKey).subscribe((message) => {
       this._snackBar.open(message, '', {
-        duration: 2000,
+        duration: 5000,
       });
     });
   }

@@ -1,12 +1,12 @@
 import { Component, OnInit, Inject, ViewChild, Injector } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectionList } from '@angular/material/list';
+import { TranslateService } from '@ngx-translate/core';
 
 import { OptionsDialogComponent } from '@src/app/shared/components/options-dialog/options-dialog.component';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { User } from '@src/app/core/models/user/user.model';
 import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
-import { DateTime } from 'luxon';
 
 /**
  * Display a list of assignable brothers to choose from for an assignment
@@ -26,7 +26,8 @@ export class AssignableListComponent<T> implements OnInit {
 
   constructor(
     private injector: Injector,
-    protected assignmentService: AssignmentService
+    protected assignmentService: AssignmentService,
+    protected translateService: TranslateService
   ) {
     this.dialogRef = this.injector.get(MatDialogRef, null);
     this.data = this.injector.get(MAT_DIALOG_DATA, null);
@@ -34,6 +35,9 @@ export class AssignableListComponent<T> implements OnInit {
 
   ngOnInit(): void {
     this.userList = this.data.options;
+
+    // By default sort the users bay last assignments date
+    this.sortByLastAssignmentDate();
   }
 
   closeDialog() {
@@ -115,21 +119,23 @@ export class AssignableListComponent<T> implements OnInit {
 
   /**
    * Get the assignments for part filtered by the current user
-   * 
+   *
    * Get those from assignmentsByUser, so they would
    * contain any assignment not yet saved to the DB
-   * 
+   *
    * @param user
    */
   getUserAssignments(user: User): Assignment[] {
     const assignmentsByUser = this.assignmentService.assignmentsByUser;
 
-    return assignmentsByUser.get(user._id)
-      .filter(a => this.assignmentService.isWorkingOnPart(a.part));
+    return assignmentsByUser
+      .get(user._id)
+      .filter((a) => this.assignmentService.isWorkingOnPart(a.part));
   }
 
   /**
    * Get the last assignment
+   * (or undefined if there are none)
    * @param user
    */
   getUserLastAssignment(user: User): Assignment {
@@ -139,10 +145,19 @@ export class AssignableListComponent<T> implements OnInit {
       const index = userAss.length - 1;
 
       return userAss[index];
-    } else {
-      return null;
     }
-    
+  }
+
+  getUserLastAssignmentNameTranslated(user: User) {
+    const lastAssignment = this.getUserLastAssignment(user);
+    if (lastAssignment.assignee._id === user._id) {
+      return this.translateService.instant(lastAssignment.part.name);
+    } else {
+      // Assistant
+      const partName = this.translateService.instant(lastAssignment.part.name);
+      const assistant = this.translateService.instant('assistant');
+      return `${partName} (${assistant})`;
+    }
   }
 
   /**
