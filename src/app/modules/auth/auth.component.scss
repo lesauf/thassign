@@ -1,7 +1,7 @@
 $gray-lighter: #eceeef !default;
-$image_path: '/assets/images/' !default;
+$image_path: "/assets/images/" !default;
 
-$prefix: 'sigin';
+$prefix: "sigin";
 
 .#{$prefix} {
   &-conainer {
@@ -32,4 +32,22 @@ $prefix: 'sigin';
   font-size: 14px;
   margin-left: 10px;
   color: #00aaaa;
+}
+
+#auth {
+  height: 100%;
+  background-image: url("/assets/login11.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.login-block {
+  width: 90%;
+  max-width: 300px;
+}
+
+#auth mat-card-title {
+  text-align: center;
+  margin: 0 auto 1em;
 }

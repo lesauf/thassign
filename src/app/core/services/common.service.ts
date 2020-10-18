@@ -1,34 +1,53 @@
+import { Injectable } from '@angular/core';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 
-import { StitchService } from '@src/app/core/services/stitch.service';
 import { MessageService } from '@src/app/core/services/message.service';
+import { BackendService } from '@src/app/core/services/backend.service';
 
 /**
  * M type stand for 'Model', the model type
  */
+@Injectable()
 export abstract class CommonService<M> {
   /**
-   * Attempt to code a Observable data service
+   * Observable data service
+   * the type will be converted to Map<string, M>
    */
-  protected dataStore: BehaviorSubject<M[]> = new BehaviorSubject<M[]>(null);
+  protected dataStore: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  public readonly data: Observable<M[]> = this.dataStore.asObservable();
+  public readonly data: Observable<M[]>; //  = this.dataStore.asObservable();
 
   protected collectionName: string;
   protected serviceName: string;
   protected messageService: MessageService;
-  protected backendService: StitchService;
+  protected backendService: BackendService;
 
-  constructor() {}
+  constructor() {
+    this.data = this.dataStore.asObservable();
+  }
 
   /**
    * Generic function to encapsulate any Baas used
    */
-  protected callFunction<T>(functionName, parameters?: T[]): Promise<any> {
+  protected callFunction<T>(functionName, parameters?: any[]): Promise<any> {
     return this.backendService.callFunction(functionName, parameters);
   }
 
-  protected updateStore(values: M[]): void {
+  /**
+   * Generic function to encapsulate any Baas used
+   */
+  // protected callFunctionViaHook<T>(
+  //   functionName,
+  //   parameters?: T[]
+  // ): Promise<any> {
+  //   return this.backendService.callFunctionViaHook(functionName, parameters);
+  // }
+
+  /**
+   * Update the store with the most recent data from the DB
+   * @param values
+   */
+  protected updateStore(values: any): void {
     this.dataStore.next(values);
   }
 
@@ -67,9 +86,11 @@ export abstract class CommonService<M> {
     // };
   }
 
-  /** Log a UserService message with the MessageService */
+  /**
+   * Log an error/message to send the developer
+   */
   protected log(message: string, service?: string) {
-    service = service !== undefined ? service : 'UserService';
+    service = service !== undefined ? service : this.constructor.name;
     this.messageService.add(`${service}: ${message}`);
   }
 }

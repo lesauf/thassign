@@ -11,16 +11,17 @@ import {
   IsDate,
   IsDateString,
 } from 'class-validator';
-import { Part, ObjectId } from '@src/app/core/models/part/part.model';
-import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { DateTime } from 'luxon';
+
+import { Part } from '@src/app/core/models/part/part.model';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 
 export class User {
   @IsObject()
   @IsOptional()
   // Joi.string().alphanum()
   // tslint:disable-next-line: variable-name
-  _id: ObjectId;
+  _id: string;
 
   // @(jf.string().required())
   @MinLength(1, { message: 'error.firstName.any.empty' })
@@ -28,6 +29,7 @@ export class User {
 
   // @(jf.string().required())
   @MinLength(1, { message: 'error.lastName.any.empty' })
+  @IsOptional()
   lastName: string;
 
   // Joi.string().optional().allow('man', 'woman')
@@ -97,10 +99,10 @@ export class User {
    */
   // Joi.array().allow(null),
   @IsArray()
-  parts: Part[] | ObjectId[];
+  parts: Part[] | string[] = [];
 
   @IsArray()
-  assignments: any[];
+  assignments: object = null;
 
   // Joi.boolean().optional().default(false), // Can modify programs
   @IsBoolean()
@@ -110,7 +112,7 @@ export class User {
   // Joi.date().default(Date.now()),
   @IsDate()
   @IsOptional()
-  createdAt: Date = new Date();
+  createdAt: Date;
 
   // Joi.date(),
   @IsDate()
@@ -142,23 +144,38 @@ export class User {
   ) {
     if (userProperties) {
       // If the Users are coming from the DB (first part is an ObjectId),
-      // convert parts id array to an array of Part
-      if (allParts && userProperties['parts'][0].hasOwnProperty('id')) {
-        if (allParts) {
-          userProperties['parts'] = userProperties['parts'].map((partId: any) =>
-            allParts.find((part: Part) => {
-              return partId.equals(part._id);
-            })
-          );
-        }
+      // convert parts names array to an array of Part
+      // console.log('User props: ', userProperties);
 
-        if (allAssignments && userProperties['_id']) {
-          userProperties['assignments'] = allAssignments.filter(
-            (ass: Assignment) => {
-              return ass.assignee._id.equals(userProperties['_id']);
-            }
-          );
-        }
+      if (
+        allParts &&
+        userProperties['parts'] &&
+        typeof userProperties['parts'][0] === 'string'
+      ) {
+        userProperties['parts'] = userProperties['parts']
+          ? userProperties['parts'].map((partName: any) =>
+              allParts.find((part: Part) => {
+                return partName === part.name;
+              })
+            )
+          : [];
+      }
+
+      // get the assignments of the user
+      const assignments = {};
+      if (allAssignments && userProperties['_id'] !== undefined) {
+        // First filter the user assignments
+        userProperties['assignments'] = allAssignments.filter(
+          (ass: Assignment) => {
+            return ass.assignee?._id === userProperties['_id'];
+          }
+        );
+        // Convert them to Map
+        userProperties['assignments'].forEach((ass) => {
+          const key = ass.key;
+          assignments[key] = ass;
+        });
+        userProperties['assignments'] = assignments;
       }
       // console.log(userProperties);
       // Assign the properties to this object
@@ -171,25 +188,67 @@ export class User {
    * for example, replace parts with their ids
    */
   prepareToSave(): void {
-    // Replace parts with their ids
-    this.parts = (this.parts as Part[]).map((part) => part._id);
+    // Replace parts with their names
+    this.parts = (this.parts as Part[]).map((part) => part.name);
 
     // Remove empty fields
-    if (!this.email) {
-      delete this.email;
-    }
-    if (!this.phone) {
-      delete this.phone;
-    }
-    if (!this.overseer) {
-      delete this.overseer;
-    }
-    if (!this.congregation) {
-      delete this.congregation;
-    }
+    // if (!this.email) {
+    //   delete this.email;
+    // }
+    // if (!this.phone) {
+    //   delete this.phone;
+    // }
+    // if (!this.overseer) {
+    //   delete this.overseer;
+    // }
+    // if (!this.congregation) {
+    //   delete this.congregation;
+    // }
 
     // Remove the get properties
     // delete this.fullName;
+  }
+
+  /**
+   * Convert to a standard object for saving
+   */
+  toObject() {
+    // Define updatedAt field if the _id field exist
+    if (this._id === undefined) {
+      this.createdAt = new Date();
+    } else {
+      this.updatedAt = new Date();
+    }
+    debugger;
+    return {
+      ...(this._id && { _id: this._id }),
+      ownerId: this.ownerId,
+      firstName: this.firstName,
+      deleted: this.deleted,
+      ...(this.genre && { genre: this.genre }),
+      parts: this.parts,
+      assignments: this.assignments,
+
+      ...(this.email !== undefined && { email: this.email }),
+      ...(this.lastName !== undefined && { lastName: this.lastName }),
+      ...(this.congregation !== undefined && {
+        congregation: this.congregation,
+      }),
+      ...(this.baptized !== undefined && { baptized: this.baptized }),
+      ...(this.publisher !== undefined && { publisher: this.publisher }),
+      ...(this.child !== undefined && { child: this.child }),
+      ...(this.phone !== undefined && { phone: this.phone }),
+      ...(this.overseer !== undefined && { overseer: this.overseer }),
+      ...(this.disabled !== undefined && { disabled: this.disabled }),
+      ...(this.hashedPassword !== undefined && {
+        hashedPassword: this.hashedPassword,
+      }),
+      ...(this.activated !== undefined && { activated: this.activated }),
+      ...(this.createdAt !== undefined && { createdAt: this.createdAt }),
+      ...(this.updatedAt !== undefined && { updatedAt: this.updatedAt }),
+      ...(this.deletedAt !== undefined && { deletedAt: this.deletedAt }),
+      ...(this.deletedBy !== undefined && { deletedBy: this.deletedBy }),
+    };
   }
 
   /**
@@ -207,12 +266,13 @@ export class User {
 
   // Some virtual properties
   get fullName() {
-    return this.firstName + ' ' + this.lastName;
+    if (this.lastName !== undefined) {
+      return this.firstName + ' ' + this.lastName;
+    }
+    return this.firstName ? this.firstName : 'UPDATE INFOS !';
   }
 
-  set fullName(fullName: string) {}
-
-  get type() {
+  get type(): string {
     let generatedType = '';
     if (this.genre === 'man') {
       if (this.child) {
@@ -224,8 +284,10 @@ export class User {
       } else {
         generatedType = 'man';
       }
-    } else {
+    } else if (this.genre === 'woman') {
       generatedType = this.child ? 'girl' : 'woman';
+    } else {
+      generatedType = 'unknown';
     }
 
     return generatedType;
@@ -253,7 +315,7 @@ export class User {
   get meetingsAssignable(): string[] {
     const _meetingsAssignable = [];
 
-    this.parts.forEach((part) => {
+    this.parts?.forEach((part) => {
       if (!_meetingsAssignable.includes(part['meeting'])) {
         _meetingsAssignable.push(part['meeting']);
       }
@@ -267,8 +329,8 @@ export class User {
   get assignmentsDisplay(): string {
     let aDisplay = '';
 
-    this.assignments?.forEach((a) => {
-      aDisplay = aDisplay + DateTime.fromJSDate(a.week).toLocaleString();
+    Object.values(this.assignments).forEach((v, k) => {
+      aDisplay = aDisplay + v.week.toLocaleString();
     });
 
     return aDisplay;
@@ -277,22 +339,27 @@ export class User {
   set assignmentsDisplay(assignmentsDisplay) {}
 
   get lastAssignment(): Assignment {
-    if (!this.assignments?.length) {
+    if (!Object.keys(this.assignments).length) {
       return null;
     }
-    // sort by assignment
-    this.assignments?.sort((a, b) => {
-      if (a.week < b.week) {
-        return 1;
-      }
 
-      if (a.week > b.week) {
-        return -1;
-      }
-      return 0;
-    });
+    const keys = Object.keys(this.assignments);
+    // the key of the assignments is a string
+    keys.sort();
+    //   (a, b) => {
+    //   if (a.week < b.week) {
+    //     return 1;
+    //   }
 
-    return this.assignments[0];
+    //   if (a.week > b.week) {
+    //     return -1;
+    //   }
+    //   return 0;
+    // });
+    const lastKey = keys.pop();
+
+    return this.assignments[lastKey];
+    // return this.assignments[0];
   }
 
   set lastAssignment(lastAssignment) {}

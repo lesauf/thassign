@@ -30,4 +30,8 @@ export class OptionsDialogComponent<T> implements OnInit {
       data: this.options.selectedOptions.selected[0].value,
     });
   }
+
+  test() {
+    console.log('test');
+  }
 }

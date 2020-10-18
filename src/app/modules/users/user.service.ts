@@ -1,18 +1,20 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, interval, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { AuthService } from '@src/app/modules/auth/auth.service';
 import { CommonService } from '@src/app/core/services/common.service';
-import { generateUsers } from 'src/app/core/mocks/users.mock';
+import { generateUsers } from '@src/app/core/mocks/users.mock';
 import { MessageService } from '@src/app/core/services/message.service';
-import { PartService } from 'src/app/core/services/part.service';
-import { StitchService } from 'src/app/core/services/stitch.service';
-import { User } from 'src/app/core/models/user/user.model';
-import { Part } from 'src/app/core/models/part/part.model';
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
+import { PartService } from '@src/app/core/services/part.service';
+import { User } from '@src/app/core/models/user/user.model';
+import { Part } from '@src/app/core/models/part/part.model';
+import { UserConverter } from '@src/app/core/models/user/user.converter';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
+import { BackendService } from '@src/app/core/services/backend.service';
+import { IsArray } from 'class-validator';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -36,8 +38,6 @@ interface AssignableUsersByPart {
   providedIn: 'root',
 })
 export class UserService extends CommonService<User> {
-  private usersUrl = 'api/user'; // URL to web api
-
   /**
    * Current user to edit or view
    * Used to pass it as a parameter and avoid query again from the DB
@@ -48,7 +48,7 @@ export class UserService extends CommonService<User> {
    * Paginated user list store
    */
   private pUsersStore: BehaviorSubject<User[]> = new BehaviorSubject<User[]>(
-    null
+    []
   );
 
   /**
@@ -56,10 +56,19 @@ export class UserService extends CommonService<User> {
    */
   pUsers: Observable<User[]> = this.pUsersStore.asObservable();
 
+  /**
+   * Pagination properties
+   */
   sortField = 'lastName';
-  sortOrder = 'ASC';
+  sortOrder = 'asc';
   pageSize = 10;
   pageIndex = 1;
+  searchTerm = '';
+
+  /**
+   * List of filters on the form filterName => dbField | type of dbField
+   */
+  filters = {};
 
   protected collectionName = 'users';
   protected serviceName = 'UserService';
@@ -68,15 +77,18 @@ export class UserService extends CommonService<User> {
     private http: HttpClient,
     protected messageService: MessageService,
     private partService: PartService,
-    private authService: AuthService,
     private translate: TranslateService,
-    protected backendService: StitchService
+    protected backendService: BackendService
   ) {
     super();
 
     // this.users = this.store.asObservable();
 
     // this.fetchUsers();
+
+    // this.backendService.listenToCollection('users').subscribe((data) => {
+    //   this.updateStore(this.createUser(data, partService.allParts) as User[]);
+    // });
   }
 
   /**
@@ -124,7 +136,7 @@ export class UserService extends CommonService<User> {
     const parts = this.partService.getParts();
     const generatedUsers = generateUsers(
       parts,
-      this.authService.getUser().id,
+      this.backendService.getSignedInUser()._id,
       numberToGenerate
     );
 
@@ -132,11 +144,16 @@ export class UserService extends CommonService<User> {
       // Clear the list of users to activate loader
       this.updateStore(null);
 
-      const users = await this.callFunction('Users_insertMany', [
+      // insert users
+      await this.backendService.upsertManyDocs(
+        'users',
         generatedUsers,
-      ]);
+        'set',
+        false,
+        new UserConverter()
+      );
 
-      this.updateStore(this.createUser(users, allParts) as User[]);
+      // this.updateStore(this.createUser(users, allParts) as User[]);
 
       this.log('generated users');
     } catch (error) {
@@ -159,25 +176,36 @@ export class UserService extends CommonService<User> {
   /**
    * Get all users from server
    */
-  storeUsers(users: any[], allParts: Part[]): User[] {
+  storeUsers(
+    users: any[],
+    allParts: Part[],
+    allAssignments?: Assignment[]
+  ): User[] {
     try {
-      // We need to pass the ownerId as parameter because Stitch
-      // does not support lookup on user context
-      // const result = await this.callFunction('Users_find', [
-      //   { ownerId: this.authService.getUser().id },
-      // ]);
-      console.log(users);
-      if (users[0].constructor.name !== 'User') {
-        users = this.createUser(users, allParts) as User[];
-      }
+      // convert to User objects
+      const allUsers = this.createUser(users, allParts) as User[];
+      // console.log('Users to put in the store :', allUsers);
 
-      this.updateStore(users);
-      this.log('Stored users');
+      this.updateStore(allUsers);
+      // this.log('Stored users');
 
-      return users;
+      return allUsers;
     } catch (error) {
       this.handleError('storeUsers', error, [], '');
     }
+  }
+
+  /**
+   * Fetch a user by id from the backend
+   * @param userId
+   */
+  async getUserFromDb(userId: string): Promise<User | null> {
+    const doc = await this.backendService
+      .getCollectionWithConverter('users', new UserConverter())
+      .doc(userId)
+      .get();
+
+    return doc.exists ? (doc.data() as User) : null;
   }
 
   /**
@@ -191,15 +219,13 @@ export class UserService extends CommonService<User> {
         // Get user from store
         this.log(`fetched user id=${userId}`);
 
-        return this.getUsers().find(
-          (user) => user._id.toHexString() === userId
-        );
+        return this.getUsers().find((user) => user._id === userId);
       } else {
         // create an empty user with default values
         return new User({
           // firstName: '',
           // lastName: '',
-          ownerId: this.authService.getUser().id,
+          ownerId: this.backendService.getSignedInUser()._id,
           // genre: '',
           child: false,
           baptized: false,
@@ -214,59 +240,62 @@ export class UserService extends CommonService<User> {
     }
   }
 
-  /* GET users whose name contains search term */
-  async searchUsers(term: string): Promise<User[]> {
-    // term = term ? encodeURIComponent(term.trim()) : null;
+  /**
+   * Check if a given user pass the filters
+   */
+  filterUser(user: User): boolean {
+    let passFiltering = true; // Do this user pass all the filters ?
 
-    try {
-      const result = await this.callFunction('Users_search', [term]);
+    // Loop on the filters keys
+    Object.keys(this.filters).forEach((fKey) => {
+      if (this.filters[fKey] === 'boolean') {
+        // pass if field value is true
+        passFiltering = passFiltering && user[fKey] === true;
+      } else if (this.filters[fKey] === 'boolean-false') {
+        // pass if field value is false
+        passFiltering = passFiltering && user[fKey] === false;
+      } else {
+        // filter key is the value, filter value is the name of the field
+        const fValue = this.filters[fKey];
+        passFiltering = passFiltering && user[fValue] === fKey;
+      }
+    });
 
-      // const users = this.createUser(result) as User[];
-      const users = result;
-      this.log(`found users matching "${term}"`);
+    return passFiltering;
+  }
 
-      return users;
-    } catch (error) {
-      this.handleError<any>('searchUsers', []);
+  sortUsers(a: User, b: User): number {
+    if (a[this.sortField] === b[this.sortField]) {
+      return 0;
     }
+
+    const sortResult = a[this.sortField] > b[this.sortField] ? 1 : -1;
+
+    return this.sortOrder === 'asc' ? sortResult : -sortResult;
   }
 
   /**
-   * Query users from the server
-   * rename to Paginate users
+   * Paginate users
    *
    * @returns the total number of filtered users for pagination
    */
-  paginateUsers(
-    sortField: string = 'lastName',
-    sortOrder: string = 'asc',
-    pageSize: number = 50,
-    pageIndex: number = 1,
-    filters: string = ''
-  ): number {
-    function filterFunction(user: User) {
-      return user.fullName.match(new RegExp(filters, 'i')) !== null;
-    }
-
-    function sortFunction(a: User, b: User): number {
-      if (a[sortField] === b[sortField]) {
-        return 0;
-      }
-
-      const sortResult = a[sortField] > b[sortField] ? 1 : -1;
-
-      return sortOrder === 'asc' ? sortResult : -sortResult;
-    }
-
+  paginateUsers(): number {
     const users = this.dataStore.getValue();
 
     if (users !== null) {
-      const fUsers = users.filter((user) => filterFunction(user));
+      const fUsers = users.filter(
+        (user) =>
+          user.fullName.match(new RegExp(this.searchTerm, 'i')) !== null &&
+          this.filterUser(user)
+      );
 
       this.pUsersStore.next(
         fUsers
-          .sort((a: User, b: User) => sortFunction(a, b))
-          .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
+          .sort((a: User, b: User) => this.sortUsers(a, b))
+          .slice(
+            this.pageIndex * this.pageSize,
+            (this.pageIndex + 1) * this.pageSize
+          )
       );
 
       return fUsers.length;
@@ -286,8 +315,7 @@ export class UserService extends CommonService<User> {
     return users.filter(
       (user) =>
         (user.parts as Part[]).find(
-          (assignablePart) =>
-            assignablePart._id.toHexString() === part._id.toHexString()
+          (assignablePart) => assignablePart.name === part.name
         ) !== undefined
     );
     //   tap((h) => {
@@ -308,16 +336,16 @@ export class UserService extends CommonService<User> {
   //     map((result) => {
   //       // Arranging
   //       const chairmanResults = result.find(
-  //         (part) => part._id === 'weekend.publicTalk.chairman'
+  //         (part) => part.name === 'weekend.publicTalk.chairman'
   //       );
   //       const speakerResults = result.find(
-  //         (part) => part._id === 'weekend.publicTalk.speaker'
+  //         (part) => part.name === 'weekend.publicTalk.speaker'
   //       );
   //       const conductorResults = result.find(
-  //         (part) => part._id === 'weekend.watchtower.conductor'
+  //         (part) => part.name === 'weekend.watchtower.conductor'
   //       );
   //       const readerResults = result.find(
-  //         (part) => part._id === 'weekend.watchtower.reader'
+  //         (part) => part.name === 'weekend.watchtower.reader'
   //       );
 
   //       const weekeendAssignableList = {
@@ -352,21 +380,23 @@ export class UserService extends CommonService<User> {
    * 'weekend.publicTalk.chairman' part
    * nb: Sort assignments by week desc
    */
-  getAssignableUsersByParts(parts: Part[], meetingName: string): any {
-    const users = this.getUsers();
+  getAssignableUsersByParts(parts?: Part[], meetingName?: string): any {
+    if (parts === undefined) {
+      parts = this.partService.getParts();
+    }
 
+    const users = this.getUsers();
+    // console.log(users);
     const assignableUsersByPart = {};
 
     const assignableUsers = users.filter((user) => {
       const meetings = user.meetingsAssignable;
-
-      // No disabled user in the assignable list
       return meetings.includes(meetingName) && !user.disabled;
     });
 
     // Arranging by part,
     parts.forEach((part) => {
-      assignableUsersByPart[part.name] = assignableUsers.filter(
+      assignableUsersByPart[part.name] = users.filter(
         (user) =>
           (user.parts as Part[]).find(
             (userPart) => userPart.name === part.name
@@ -400,13 +430,18 @@ export class UserService extends CommonService<User> {
   //////// Save methods //////////
 
   /**
-   * @POST add a new user to the server
+   * Add a new user to the server
    */
-  async addUser(user: User, allParts: Part[]): Promise<any> {
+  async addUser(user: User, allParts?: Part[]): Promise<any> {
     try {
-      const users = await this.callFunction('Users_insertMany', [[user]]);
-
-      this.updateStore(this.createUser(users, allParts) as User[]);
+      await this.backendService.upsertOneDoc(
+        'users',
+        user,
+        null,
+        'set',
+        false,
+        new UserConverter()
+      );
 
       this.log(`added user`);
     } catch (error) {
@@ -417,14 +452,16 @@ export class UserService extends CommonService<User> {
   /**
    * @PUT: update the user on the server
    */
-  async updateUser(userData: User, allParts: Part[]): Promise<void> {
+  async updateUser(user: User, allParts?: Part[]): Promise<void> {
     try {
-      const users = await this.callFunction('Users_updateByIds', [
-        [userData._id],
-        userData,
-      ]);
-
-      this.updateStore(this.createUser(users, allParts) as User[]);
+      await this.backendService.upsertOneDoc(
+        'users',
+        user,
+        user._id,
+        'set',
+        true,
+        new UserConverter()
+      );
 
       this.log(`updated user`);
     } catch (error) {
@@ -432,36 +469,38 @@ export class UserService extends CommonService<User> {
     }
   }
 
-  /** DELETE: delete the user from the server */
-  async deleteUser(userId: string[], allParts: Part[]): Promise<any> {
+  /**
+   * DELETE: delete the user from the server
+   */
+  async deleteUser(userId: string | string[]): Promise<any> {
     try {
-      const users = await this.callFunction('Users_deleteByIds', [userId]);
+      if (userId.hasOwnProperty('length')) {
+        // many users
+        await this.backendService.upsertManyDocs(
+          'users',
+          userId as String[],
+          'delete',
+          false,
+          new UserConverter()
+        );
 
-      this.updateStore(this.createUser(users, allParts) as User[]);
+        this.log(`deleted users`);
+      } else {
+        // Only one user
+        await this.backendService.upsertOneDoc(
+          'users',
+          null,
+          userId as string,
+          'delete',
+          false,
+          new UserConverter()
+        );
 
-      this.log(`deleted user`);
-    } catch (error) {
-      this.handleError<any>('deleteUser', error);
-    }
-  }
+        this.log(`deleted user`);
+      }
+      // const users = await this.callFunction('Users_deleteByIds', [userId]);
 
-  /** SOFT DELETE: mark the users as deleted from the server */
-  async softDeleteUsers(userId: string[], allParts: Part[]): Promise<any> {
-    try {
-      const deleteProps = {
-        deleted: true,
-        deletedAt: new Date(),
-        deletedBy: this.authService.getUser().id,
-      };
-
-      const users = await this.callFunction('Users_updateByIds', [
-        userId,
-        deleteProps,
-      ]);
-
-      this.updateStore(this.createUser(users, allParts) as User[]);
-
-      this.log(`deleted user`);
+      //   this.updateStore(this.createUser(users, allParts) as User[]);
     } catch (error) {
       this.handleError<any>('deleteUser', error);
     }
@@ -475,7 +514,7 @@ export class UserService extends CommonService<User> {
     // : Observable<any> {
     user.prepareToSave();
 
-    // this.parts = (this.parts as Part[]).map((part) => part._id);
+    // this.parts = (this.parts as Part[]).map((part) => part.name);
 
     if (user._id !== null) {
       // user update

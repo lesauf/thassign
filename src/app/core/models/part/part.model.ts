@@ -5,6 +5,8 @@ import {
   IsOptional,
   IsUUID,
   IsObject,
+  IsNumber,
+  IsInt,
 } from 'class-validator';
 
 /**
@@ -50,9 +52,9 @@ export type ObjectId = {
  * Minimum data for a standard part
  */
 export class Part {
-  @IsObject()
+  @IsString()
   @IsOptional()
-  _id: ObjectId;
+  _id: string;
 
   // @(jf.string().required())
   @IsString()
@@ -60,8 +62,19 @@ export class Part {
 
   // @(jf.string().required().allow('midweek', 'midweek-students', 'weekend'))
   @IsString()
-  @IsIn(['midweek', 'midweek-students', 'weekend'])
+  @IsIn(['midweek', 'weekend'])
   meeting: string;
+
+  /**
+   * Zero-based position of the assignment in its week
+   */
+  @IsInt()
+  position = 0;
+
+  @IsString()
+  @IsIn(['student', 'talk-or-discussion'])
+  //@IsIn(['prayer', 'chairman', 'treasures', 'ministry', "christianLiving", 'publicTalk', 'watchtower'])
+  type: 'student' | 'talk-or-discussion' | 'general';
 
   /**
    * Does it need a title
@@ -79,10 +92,13 @@ export class Part {
   @IsOptional()
   withAssistant?: boolean;
 
-  @IsString()
+  /**
+   * Does it need a reader
+   */
+  // @(jf.boolean().optional())
+  @IsBoolean()
   @IsOptional()
-  // @(jf.string().optional())
-  after?: string;
+  withReader?: boolean;
 
   /**
    * Is it an overseer assignment?

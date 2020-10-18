@@ -1,5 +1,5 @@
 import * as faker from 'faker'; // /locale/en_US'
-import { ObjectId } from 'mongodb';
+// import { ObjectId } from 'mongodb';
 
 import { Part } from '@src/app/core/models/part/part.model';
 
@@ -12,117 +12,128 @@ import { Part } from '@src/app/core/models/part/part.model';
  */
 export const partMocks: any[] = [
   {
-    _id: new ObjectId(),
+    _id: '',
     name: 'clm.chairman',
     meeting: 'midweek',
+    type: 'general',
+    byAnOverseer: true,
   },
   {
-    _id: new ObjectId(),
+    _id: '',
     name: 'clm.prayer',
-    meeting: 'midweek',
-  },
-  {
-    _id: new ObjectId(),
-    name: 'clm.treasures.talk',
-    meeting: 'midweek-treasures',
-    withTitle: true,
-    byAnOverseer: true,
-  },
-  {
-    _id: new ObjectId(),
-    name: 'clm.treasures.digging',
-    meeting: 'midweek-treasures',
-    byAnOverseer: true,
-  },
-  {
-    _id: new ObjectId(),
-    name: 'clm.treasures.bible-reading',
-    meeting: 'midweek-treasures',
+    meeting: 'any',
+    type: 'general',
     byABrother: true,
   },
   {
-    _id: new ObjectId(),
-    name: 'clm.ministry.initial-call',
-    meeting: 'midweek-students',
-    withAssistant: true,
-  },
-  {
-    _id: new ObjectId(),
-    name: 'clm.ministry.return-visit',
-    meeting: 'midweek-students',
-    withAssistant: true,
-  },
-  {
-    _id: new ObjectId(),
-    name: 'clm.ministry.bible-study',
-    meeting: 'midweek-students',
-    withAssistant: true,
-  },
-  {
-    _id: new ObjectId(),
-    name: 'clm.ministry.talk',
-    meeting: 'midweek-students',
-  },
-  {
-    _id: new ObjectId(),
-    name: 'clm.ministry.assistant',
-    meeting: 'midweek-students',
-  },
-  {
-    _id: new ObjectId(),
-    name: 'clm.christianLiving.talks',
-    meeting: 'midweek-christianLiving',
+    _id: '',
+    name: 'clm.talk-or-discussion',
+    meeting: 'midweek',
+    type: 'talk-or-discussion',
     withTitle: true,
+    byAnOverseer: true,
+  },
+  // {
+  //   _id: '',
+  //   name: 'clm.treasures.digging',
+  //   meeting: 'midweek',
+  //   type: 'talk-or-discussion',
+  //   byAnOverseer: true,
+  // },
+  {
+    _id: '',
+    name: 'clm.treasures.bible-reading',
+    meeting: 'midweek',
+    type: 'student',
+    byABrother: true,
+    position: 0,
   },
   {
-    _id: new ObjectId(),
+    _id: '',
+    name: 'clm.ministry.initial-call',
+    meeting: 'midweek',
+    type: 'student',
+    withAssistant: true,
+    position: 1,
+  },
+  {
+    _id: '',
+    name: 'clm.ministry.return-visit',
+    meeting: 'midweek',
+    type: 'student',
+    withAssistant: true,
+    position: 2,
+  },
+  {
+    _id: '',
+    name: 'clm.ministry.bible-study',
+    meeting: 'midweek',
+    type: 'student',
+    withAssistant: true,
+    position: 3,
+  },
+  {
+    _id: '',
+    name: 'clm.ministry.talk',
+    meeting: 'midweek',
+    type: 'student',
+    byABrother: true,
+    position: 4,
+  },
+  {
+    _id: '',
+    name: 'clm.ministry.assistant',
+    type: 'student',
+    meeting: 'any',
+  },
+  // {
+  //   _id: '',
+  //   name: 'clm.christianLiving.talks',
+  //   meeting: 'midweek',
+  //   type: 'talk-or-discussion',
+  //   withTitle: true,
+  //   byAnOverseer: true,
+  // },
+  {
+    _id: '',
     name: 'clm.christianLiving.congregation-bible-study',
-    meeting: 'midweek-christianLiving',
+    meeting: 'midweek',
+    type: 'talk-or-discussion',
+    byAnOverseer: true,
+    withReader: true,
   },
   {
-    _id: new ObjectId(),
-    name: 'clm.christianLiving.congregation-bible-study-reader',
-    meeting: 'midweek-christianLiving',
+    _id: '',
+    name: 'clm.reader',
+    meeting: 'midweek',
+    type: 'general',
   },
   {
-    _id: new ObjectId(),
+    _id: '',
     name: 'weekend.publicTalk.chairman',
-    meeting: 'weekend-publicTalk',
+    meeting: 'weekend',
+    type: 'general',
     byAnOverseer: true,
   },
   {
-    _id: new ObjectId(),
+    _id: '',
     name: 'weekend.publicTalk.speaker',
-    meeting: 'weekend-publicTalk',
+    meeting: 'weekend',
+    type: 'talk-or-discussion',
     byAnOverseer: true,
   },
   {
-    _id: new ObjectId(),
-    name: 'weekend.watchtower.conductor',
-    meeting: 'weekend-watchtower',
+    _id: '',
+    name: 'weekend.reader',
+    meeting: 'weekend',
+    type: 'general',
   },
   {
-    _id: new ObjectId(),
-    name: 'weekend.watchtower.reader',
-    meeting: 'weekend-watchtower',
+    _id: '',
+    name: 'weekend.watchtower.conductor',
+    meeting: 'weekend',
+    type: 'talk-or-discussion',
+    byAnOverseer: true,
+    withReader: true,
   },
 ];
-// } else {
-//   return await PartModel.find();
-// }
-
-// let part: PartSchema;
-
-// export const PARTS: PartType[] = getParts();
-
-// export const generateParts = async (count = faker.random.number(10)) => {
-//   const parts = await PartModel.find();
-//   const res = [];
-
-//   for (let i = 1; i <= count + 1; i++) {
-//     const randomPart = faker.random.arrayElement(parts);
-//     res.push(randomPart);
-//   }
-
-//   return res;
-// };

@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { MatSidenav, MatDrawer } from '@angular/material/sidenav';
-import { UserService } from 'src/app/modules/users/user.service';
+import { UserService } from '@src/app/modules/users/user.service';
 
 @Component({
   selector: 'app-content-layout',

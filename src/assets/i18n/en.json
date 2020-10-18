@@ -6,6 +6,7 @@
   "Week-end": "Week-end",
   "actions": "actions",
   "all": "All",
+  "apply-filters": "Apply filters",
   "assignable-parts": "Assignable parts",
   "assignee": "Assignee",
   "assignment": "Assignment",
@@ -15,34 +16,42 @@
   "cancel": "Cancel",
   "chairman": "Chairman",
   "child": "Child",
+  "clear-filters": "Clear filters",
   "clm": {
     "chairman": "CLM - Chairman",
     "christianLiving": {
       "congregation-bible-study": "Congregation Bible Study",
       "first-part": "First Part",
       "second-part": "Second Part",
+      "talks": "Christian Life - Parts",
       "third-part": "Third Part",
       "title": "Christian Life Title"
     },
-    "closing-prayer": "CLM - Closing Prayer",
     "ministry": {
       "assistant": "Assistant",
       "bible-study": "Bible Study",
-      "first-return-visit": "First Return Visit",
+      "return-visit": "Return Visit",
       "initial-call": "Initial Call",
       "second-return-visit": "Second Return Visit",
       "talk": "Talk",
       "title": "Ministry Meeting Title"
     },
-    "opening-prayer": "CLM - Opening prayer",
+    "prayer": "Prayer",
+    "reader": "Reader - Midweek",
+    "talk-or-discussion": "Midweek part",
     "treasures": {
       "bible-reading": "Bible Reading",
       "digging": "Digging for Spiritual Gems",
       "first-part": "Treasures - First Part",
+      "talk": "Treasures - Talk",
       "title": "Treasures Meeting Title"
     }
   },
   "close": "close",
+  "comments": {
+    "concluding": "Concluding comments",
+    "opening": "Opening comments"
+  },
   "conductor": "Conductor",
   "confirm-success": "User removed",
   "delete": "delete",
@@ -62,10 +71,14 @@
   "edit-user-infos": "user informations",
   "elder": "Elder",
   "email": "Email",
+  "email-required": "Please enter your email",
   "error": {
+    "occurred": "An error occured",
     "email": {
       "string": {
-        "email": "This address is incomplete"
+        "already-in-use": "An account already exist with this address. Did you forget your password ?",
+        "email": "This address is incomplete",
+        "no-record": "User not found or wrong password. Check your address/password or sign up"
       }
     },
     "firstName": {
@@ -90,11 +103,13 @@
   "form-error": "Please correct the errors in the form first",
   "generate": "Generate",
   "go": "Go",
+  "google-sign-in": "Sign in with Google",
   "home": "Home",
   "language": "language",
   "last": "last",
   "last-name": "Last name",
   "login": "Login",
+  "log-in-to-your-account": "Log in to your account",
   "ma": {
     "bible-reading": "Bible reading",
     "bible-study": "Bible study",
@@ -123,6 +138,8 @@
   "not-disabled": "Not disabled",
   "ok": "Ok",
   "parts": "Parts",
+  "password-required": "Please enter your password",
+  "password2-required": "Please enter your password again",
   "phone": "Phone",
   "pluralization": {
     "people": "{gender, select, male{His name is} female{Her name is} other{Their names are }} {name}",
@@ -141,13 +158,19 @@
   "save": "Save",
   "search-users": "Search a user",
   "select-all": "select all",
+  "sign-in": "Sign in",
+  "sign-out": "Sign out",
+  "sign-up": "Create an account",
+  "song": "Song",
   "sort-by": "sort by",
   "sort-order": "sort order",
   "sort-users-by-any-assignment": "Sort Users by Any Assignment",
   "sort-users-by-name": "Sort users by name",
   "sort-users-by-this-assignment": "Sort users by this assignment",
   "speaker": "Speaker",
+  "Student": "Student",
   "submit": "Submit",
+  "talk": "Talk",
   "this": "This",
   "total": "total",
   "type": "type",
@@ -162,16 +185,14 @@
   "weekend-meeting": "Weekend Meeting",
   "weekend": {
     "chairman": "Weekend - Chairman",
-    "closing-prayer": "Weekend - Closing prayer",
-    "opening-prayer": "Weekend - Opening Prayer",
     "publicTalk": {
       "chairman": "Weekend - Chairman",
-      "speaker": "Weekend - Speaker",
+      "speaker": "Public Speaker",
       "title": "Public Talk title"
     },
+    "reader": "Reader - Watchtower",
     "watchtower": {
       "conductor": "Watchtower conductor",
-      "reader": "Watchtower Reader",
       "title": "Watchtower Study Title"
     }
   },

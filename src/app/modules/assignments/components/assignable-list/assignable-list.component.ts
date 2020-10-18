@@ -1,9 +1,12 @@
 import { Component, OnInit, Inject, ViewChild, Injector } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectionList } from '@angular/material/list';
+import { TranslateService } from '@ngx-translate/core';
 
-import { OptionsDialogComponent } from 'src/app/shared/components/options-dialog/options-dialog.component';
-import { User } from 'src/app/core/models/user/user.model';
+import { OptionsDialogComponent } from '@src/app/shared/components/options-dialog/options-dialog.component';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
+import { User } from '@src/app/core/models/user/user.model';
+import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
 
 /**
  * Display a list of assignable brothers to choose from for an assignment
@@ -18,12 +21,24 @@ export class AssignableListComponent<T> implements OnInit {
 
   public dialogRef = null;
   public data;
-  constructor(private injector: Injector) {
+
+  public userList: User[];
+
+  constructor(
+    private injector: Injector,
+    protected assignmentService: AssignmentService,
+    protected translateService: TranslateService
+  ) {
     this.dialogRef = this.injector.get(MatDialogRef, null);
     this.data = this.injector.get(MAT_DIALOG_DATA, null);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.userList = this.data.options;
+
+    // By default sort the users bay last assignments date
+    this.sortByLastAssignmentDate();
+  }
 
   closeDialog() {
     this.dialogRef.close({
@@ -37,48 +52,120 @@ export class AssignableListComponent<T> implements OnInit {
   sort(field: string) {
     if (field === 'date') {
       // Sort by last assignment date
-      this.data.options.sort((a: User, b: User) => {
-        // Sort by last assignment's date
-        // nulls sort after anything else
-        if (a.lastAssignment === null) {
-          return -1;
-        } else if (b.lastAssignment === null) {
-          return 1;
-        } else if (a.lastAssignment?.week === b.lastAssignment?.week) {
-          // equal items sort equally
-          return 0;
-        } else if (a.lastAssignment?.week < b.lastAssignment?.week) {
-          // otherwise, older sorts first
-          return -1;
-        } else {
-          // recent sorts first
-          return 1;
-        }
-      });
+      this.sortByLastAssignmentDate();
     } else if (field === 'assignmentsNumber') {
       // Sort by assignments number
-      this.data.options.sort((a: User, b: User) => {
-        if (a.assignments.length < b.assignments.length) {
-          return -1;
-        }
-        if (a.assignments.length > b.assignments.length) {
-          return 1;
-        }
-
-        return 0;
-      });
+      this.sortByAssignmentsTotal();
     } else {
+      // Sort by the given field
       this.data.options.sort((a: User, b: User) => {
-        if (a[field] < b[field]) {
-          return -1;
-        }
-        if (a[field] > b[field]) {
-          return 1;
-        }
+        if (typeof a[field] === 'string') {
+          // easier sort if strings
+          return a[field].localeCompare(b[field]);
+        } else {
+          if (a[field] < b[field]) {
+            return -1;
+          }
+          if (a[field] > b[field]) {
+            return 1;
+          }
 
-        return 0;
+          return 0;
+        }
       });
     }
+  }
+
+  sortByLastAssignmentDate() {
+    // Sort by last assignment date
+    this.data.options.sort((a: User, b: User) => {
+      // Sort by last assignment's date
+      // nulls sort after anything else
+      if (this.getUserLastAssignment(a) === undefined) {
+        return -1;
+      } else if (this.getUserLastAssignment(b) === undefined) {
+        return 1;
+      } else if (
+        this.getUserLastAssignment(a).week.equals(
+          this.getUserLastAssignment(b).week
+        )
+      ) {
+        // equal items sort equally
+        return 0;
+      } else if (
+        this.getUserLastAssignment(a).week < this.getUserLastAssignment(b).week
+      ) {
+        // otherwise, older sorts first
+        return -1;
+      } else {
+        // recent sorts first
+        return 1;
+      }
+    });
+  }
+
+  sortByAssignmentsTotal() {
+    this.data.options.sort((a: User, b: User) => {
+      if (this.getAssignmentsNumber(a) < this.getAssignmentsNumber(b)) {
+        return -1;
+      }
+      if (this.getAssignmentsNumber(a) > this.getAssignmentsNumber(b)) {
+        return 1;
+      }
+
+      return 0;
+    });
+  }
+
+  /**
+   * Get the assignments for part filtered by the current user
+   *
+   * Get those from assignmentsByUser, so they would
+   * contain any assignment not yet saved to the DB
+   *
+   * @param user
+   */
+  getUserAssignments(user: User): Assignment[] {
+    const assignmentsByUser = this.assignmentService.assignmentsByUser;
+
+    return assignmentsByUser
+      .get(user._id)
+      .filter((a) => this.assignmentService.isWorkingOnPart(a.part));
+  }
+
+  /**
+   * Get the last assignment
+   * (or undefined if there are none)
+   * @param user
+   */
+  getUserLastAssignment(user: User): Assignment {
+    const userAss = this.getUserAssignments(user);
+
+    if (userAss.length !== 0) {
+      const index = userAss.length - 1;
+
+      return userAss[index];
+    }
+  }
+
+  getUserLastAssignmentNameTranslated(user: User) {
+    const lastAssignment = this.getUserLastAssignment(user);
+    if (lastAssignment.assignee._id === user._id) {
+      return this.translateService.instant(lastAssignment.part.name);
+    } else {
+      // Assistant
+      const partName = this.translateService.instant(lastAssignment.part.name);
+      const assistant = this.translateService.instant('assistant');
+      return `${partName} (${assistant})`;
+    }
+  }
+
+  /**
+   * Return the number of all the assignment of a user
+   * @param user
+   */
+  getAssignmentsNumber(user: User): number {
+    return this.getUserAssignments(user).length;
   }
 
   /**

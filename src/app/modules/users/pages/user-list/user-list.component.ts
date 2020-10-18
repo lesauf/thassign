@@ -11,16 +11,16 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { tap } from 'rxjs/operators';
-import { Observable, of, BehaviorSubject } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject, merge } from 'rxjs';
 
 // import { any } from '../../../../../../server/src/modules/users/user.schema';
-// import { User } from 'src/app/models/users.schema';
+// import { User } from '@src/app/models/users.schema';
 import { UserDetailComponent } from '@src/app/modules/users/components/user-detail/user-detail.component';
 import { UserService } from '@src/app/modules/users/user.service';
 import { UserSortComponent } from '@src/app/modules/users/components/user-sort/user-sort.component';
-import { User } from 'src/app/core/models/user/user.model';
-import { PartService } from 'src/app/core/services/part.service';
+import { User } from '@src/app/core/models/user/user.model';
+import { PartService } from '@src/app/core/services/part.service';
 
 @Component({
   selector: 'app-user-list',
@@ -47,7 +47,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   // State of all checkboxes
   noUserChecked = true;
   display = 'grid'; // 'grid' or 'list'
-  sort = 'firstName';
+  sortField = 'firstName';
   sortOrder = 'asc';
   /**
    * Number of total users filtered
@@ -57,7 +57,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   pageSizeOptions: number[] = [1, 2, 5, 10, 25, 100];
   usersTotal: number;
-  filters = ''; // TODO: retrieve value from input field in component UserFilter
+  searchTerm = '';
 
   // MatPaginator Output
   @ViewChildren(MatPaginator) paginators: QueryList<MatPaginator>;
@@ -76,23 +76,37 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.userService.data.subscribe((users) => {
       this.users = users;
       this.pUsers$ = this.userService.pUsers;
-
-      // this.userService.pUsers.subscribe((t) => console.log('test', t));
-      this.getUsers();
     });
+
+    this.getUsers();
   }
 
   ngAfterViewInit(): void {
     // Handle paginators
+    let obsForPagination;
     this.paginators.forEach((paginator) => {
-      paginator.page
+      merge(paginator.page, this.userService.data)
         .pipe(
           tap(() => {
             this.getUsers(paginator);
             this.pageSize = paginator.pageSize;
             this.pageIndex = paginator.pageIndex;
           })
+          // switchMap((pageEvent) => {
+          //   console.log(pageEvent);
+
+          //   this.dataLength = this.userService.paginateUsers(
+          //     this.sortField,
+          //     this.sortOrder,
+          //     paginator !== undefined ? paginator.pageSize : this.pageSize,
+          //     paginator !== undefined ? paginator.pageIndex : this.pageIndex,
+          //     this.searchTerm
+          //   );
+
+          //   return this.userService.pUsers;
+          // })
         )
+
         .subscribe();
     });
 
@@ -120,14 +134,17 @@ export class UserListComponent implements OnInit, AfterViewInit {
    */
   getUsers(paginator?: MatPaginator): void {
     // Clear users list to display the loader
-    // this.users = null;
-    this.dataLength = this.userService.paginateUsers(
-      this.sort,
-      this.sortOrder,
-      paginator !== undefined ? paginator.pageSize : this.pageSize,
-      paginator !== undefined ? paginator.pageIndex : this.pageIndex,
-      this.filters
-    );
+    this.users = null;
+
+    this.userService.sortField = this.sortField;
+    this.userService.sortOrder = this.sortOrder;
+    this.userService.pageSize =
+      paginator !== undefined ? paginator.pageSize : this.pageSize;
+    this.userService.pageIndex =
+      paginator !== undefined ? paginator.pageIndex : this.pageIndex;
+    this.userService.searchTerm = this.searchTerm;
+
+    this.dataLength = this.userService.paginateUsers();
 
     // Handle users checkboxes
     // this.usersCheckboxes.forEach((c, index, usersCheckboxes) => {
@@ -159,7 +176,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
    * Perform a search from the filter input
    */
   searchByName(searchTerms: string) {
-    this.filters = searchTerms;
+    this.searchTerm = searchTerms;
 
     this.pageIndex = 0; // Set the paginator pack to the first page
     this.getUsers();
@@ -187,16 +204,9 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.router.navigate([path]);
   }
 
-  // getPartName(partId) {
-  //   return this.partService.getPartName(partId);
-  // }
-
-  async delete(userId?: string[]) {
+  async delete(userId?: string | string[]) {
     try {
-      await this.userService.softDeleteUsers(
-        userId,
-        this.partService.getParts()
-      );
+      await this.userService.deleteUser(userId);
       // Refresh the list
       this.getUsers();
     } catch (error) {
@@ -251,12 +261,12 @@ export class UserListComponent implements OnInit, AfterViewInit {
     const dialogRef = this.dialog.open(UserSortComponent, {
       data: {
         trigger: target,
-        sort: this.sort,
+        sort: this.sortField,
       },
     });
     dialogRef.afterClosed().subscribe((sort) => {
-      if (sort && this.sort !== sort) {
-        this.sort = sort;
+      if (sort && this.sortField !== sort) {
+        this.sortField = sort;
         this.getUsers();
       }
     });

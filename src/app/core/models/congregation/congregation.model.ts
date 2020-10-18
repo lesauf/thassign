@@ -33,7 +33,7 @@ export class Congregation {
 
   // Joi.date().default(Date.now()),
   @IsInt()
-  createdAt: number = Date.now();
+  createdAt: number;
 
   // Joi.date(),
   @IsInt()

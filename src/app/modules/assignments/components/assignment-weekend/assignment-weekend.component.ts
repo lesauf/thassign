@@ -20,14 +20,14 @@ import { DateTime, Interval } from 'luxon';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AssignmentCommon } from '@src/app/modules/assignments/components/assignment.common';
-import { AssignmentService } from 'src/app/modules/assignments/assignment.service';
-import { MessageService } from 'src/app/core/services/message.service';
-import { PartService } from 'src/app/core/services/part.service';
-import { SettingService } from 'src/app/core/services/setting.service';
-import { UserService } from 'src/app/modules/users/user.service';
-import { ValidationService } from 'src/app/core/services/validation.service';
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
-import { Part } from 'src/app/core/models/part/part.model';
+import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
+import { MessageService } from '@src/app/core/services/message.service';
+import { PartService } from '@src/app/core/services/part.service';
+import { SettingService } from '@src/app/core/services/setting.service';
+import { UserService } from '@src/app/modules/users/user.service';
+import { ValidationService } from '@src/app/core/services/validation.service';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
+import { Part } from '@src/app/core/models/part/part.model';
 
 export const DATE_FORMATS = {
   parse: {
@@ -53,7 +53,8 @@ export const DATE_FORMATS = {
   templateUrl: './assignment-weekend.component.html',
   styleUrls: ['./assignment-weekend.component.scss'],
 })
-export class AssignmentWeekendComponent extends AssignmentCommon
+export class AssignmentWeekendComponent
+  extends AssignmentCommon
   implements OnInit, OnChanges, OnDestroy {
   @Input()
   /**
@@ -174,24 +175,24 @@ export class AssignmentWeekendComponent extends AssignmentCommon
     const weekendForm = this.formBuilder.group({
       chairman: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
-        part: this.chairmanPart._id,
+        part: this.chairmanPart.name,
         assignee: [''],
       }),
       speaker: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
-        part: this.speakerPart._id,
+        part: this.speakerPart.name,
         assignee: [''],
         title: 'A definir',
         number: 0,
       }),
       conductor: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
-        part: this.conductorPart._id,
+        part: this.conductorPart.name,
         assignee: [''],
       }),
       reader: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
-        part: this.readerPart._id,
+        part: this.readerPart.name,
         assignee: [''],
       }),
     });

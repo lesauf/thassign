@@ -23,12 +23,12 @@ import { UserEditProvider } from '@src/app/modules/users/pages/user-edit/user-ed
 // import { any } from '../../../../../../server/src/modules/parts/part.model';
 // import { Part } from '../../../models/parts.schema';
 // import { UserModel } from '../../../../../server/src/modules/users/user.model';
-import { User } from 'src/app/core/models/user/user.model';
+import { User } from '@src/app/core/models/user/user.model';
 import { ValidationService } from '@src/app/core/services/validation.service';
-import { PartService } from 'src/app/core/services/part.service';
+import { PartService } from '@src/app/core/services/part.service';
 import { UserService } from '@src/app/modules/users/user.service';
 import { MessageService } from '@src/app/core/services/message.service';
-import { Part } from 'src/app/core/models/part/part.model';
+import { Part } from '@src/app/core/models/part/part.model';
 // import { translate } from './../../utils/common';
 
 @Component({
@@ -109,7 +109,10 @@ export class UserEditComponent implements OnInit {
         genre: new FormControl(this.user.genre),
         child: new FormControl(this.user.child),
         phone: new FormControl(this.user.phone),
-        email: new FormControl(this.user.email),
+        email: new FormControl(
+          this.user.email,
+          ValidationService.emailValidator
+        ),
         overseer: new FormControl(this.user.overseer),
         disabled: new FormControl(this.user.disabled),
         // familyMembers: new FormControl(this.user.familyMembers),
@@ -152,10 +155,11 @@ export class UserEditComponent implements OnInit {
 
   async saveUser() {
     const saved = false;
-
+    // console.log('Before ', this.userForm.value);
     // trigger validation
     this.validationService.validateAllFormFields(this.userForm);
 
+    // console.log('After validation ', this.userForm.value);
     try {
       if (this.userForm.valid) {
         // Make sure to create a deep copy of the form-model
@@ -166,6 +170,7 @@ export class UserEditComponent implements OnInit {
           this.partService.getParts()
         ) as User;
 
+        // console.log('After: ', result);
         // Do useful stuff with the gathered data
         const insertedUser = await this.userService.upsertUser(
           result,
@@ -200,7 +205,7 @@ export class UserEditComponent implements OnInit {
 
   deleteUser() {
     // TODO show confirmation alert
-    this.userService.deleteUser(this.user, this.partService.getParts());
+    this.userService.deleteUser(this.user);
 
     // Go to users list, passing dummy data to force reload
     this.router.navigate(['users', { dummyData: new Date().getTime() }]);
@@ -233,10 +238,6 @@ export class UserEditComponent implements OnInit {
     }
   }
 
-  // getPartName(partId) {
-  //   return this.partService.getPartName(partId);
-  // }
-
   /**
    * Allow the user to just click on a part to select/deselect it
    */
@@ -248,8 +249,7 @@ export class UserEditComponent implements OnInit {
       if (selectedParts !== null) {
         // search
         selectedPartIndex = selectedParts.findIndex(
-          (selectedPart, index, sParts) =>
-            selectedPart._id.toHexString() === part._id.toHexString()
+          (selectedPart, index, sParts) => selectedPart.name === part.name
         );
       } else {
         selectedParts = [];
@@ -270,13 +270,17 @@ export class UserEditComponent implements OnInit {
         onlySelf: false,
         emitEvent: true,
       });
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
    * To populate the form, check if the part chip should be selected
    */
   partSelected(part: Part): boolean {
+    // console.log(part);
+
     if (this.userForm.controls.parts.value !== null) {
       const partValue = this.userForm.controls.parts.value;
 
@@ -285,7 +289,7 @@ export class UserEditComponent implements OnInit {
         // partValue.find((selectedPart) => selectedPart.name === part.name) !==
         // undefined
         partValue.find((selectedPart) => {
-          return selectedPart._id.toHexString() === part._id.toHexString();
+          return selectedPart.name === part.name;
         }) !== undefined
       );
     }

@@ -9,7 +9,7 @@
     <span fxLayout="row" fxLayoutAlign="start center">
       <img class="avatar" src="assets/images/avatars/noavatar.png" />
       <!-- fxHide fxShow.gt-xs -->
-      <!-- <span class="name">{{ currentUser?.firstName }}</span> -->
+      <span class="name">{{ currentUser?.email }}</span>
       <mat-icon class="icon">keyboard_arrow_down</mat-icon>
     </span>
   </button>
@@ -33,7 +33,7 @@
         <mat-divider></mat-divider>
 
         <mat-list-item>
-          <a matLine routerLink="/auth/logout">Logout</a>
+          <a matLine routerLink="/auth/logout">{{ "sign-out" | translate }}</a>
           <button mat-icon-button><mat-icon>exit_to_app</mat-icon></button>
         </mat-list-item>
       </mat-nav-list>

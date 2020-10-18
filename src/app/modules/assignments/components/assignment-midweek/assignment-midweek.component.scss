@@ -1,0 +1,45 @@
+.week-box-edit {
+  padding: 1em;
+  // Styles for the form
+  .alternate-color {
+    border-top: 1px solid #444444;
+  }
+}
+
+.week-box-view {
+  background-color: white;
+  padding: 1em;
+  color: #555555;
+}
+
+h2 {
+  margin: 0;
+}
+
+.assignments-list {
+  // border: dashed 1px #ccc;
+  min-height: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.assignment-line {
+  margin-bottom: 0.5em
+}
+
+// .assignment-name {}
+
+
+
+// @media print {
+  .assignment-assignee {
+    font-weight: bold;
+  }
+
+// }
+
+// .assignment-assistant {}
+
+mat-chip {
+  width: 200px;
+}

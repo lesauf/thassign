@@ -1,72 +1,79 @@
-<div mat-dialog-title fxLayout="row wrap" fxLayoutAlign="space-between center">
-  <div fxFlex="90">
-    {{ data.title | translate }}
-  </div>
-  <div fxFlex="10">
+<div mat-dialog-title>
+  <div fxFill fxLayout="row" fxLayoutAlign="space-between center">
+    <!-- Title & close buttons-->
+    <span>
+      {{ data.title | translate }}
+    </span>
+
     <button
       type="button"
       mat-icon-button
       matSuffix
       mat-dialog-close
-      aria-label="close"
-    >
+      aria-label="close">
       <mat-icon>close</mat-icon>
     </button>
   </div>
-  <button
-    fxFlex="auto "
-    mat-raised-button
-    type="button"
-    (click)="sort('assignmentsNumber')"
-  >
-    {{ "number" | translate | titlecase }}
-    <mat-icon matSuffix>arrow_upward</mat-icon>
-  </button>
-  <button fxFlex="auto " mat-raised-button type="button" (click)="sort('date')">
-    {{ "date" | translate | titlecase }} <mat-icon>arrow_upward</mat-icon>
-  </button>
-  <button
-    fxFlex="auto "
-    mat-raised-button
-    type="button"
-    (click)="sort('firstName')"
-  >
-    {{ "first-name" | translate | titlecase }} <mat-icon>arrow_upward</mat-icon>
-  </button>
-  <button
-    fxFlex="auto "
-    mat-raised-button
-    type="button"
-    (click)="sort('lastName')"
-  >
-    {{ "last-name" | translate | titlecase }} <mat-icon>arrow_upward</mat-icon>
-  </button>
+  <p fxFill fxLayout="row" fxLayoutAlign="space-between center"> 
+    <!-- Sort buttons-->
+    <button
+      fxFlex="45"
+      mat-raised-button
+      type="button"
+      (click)="sort('assignmentsNumber')">
+      {{ "number" | translate | titlecase }}
+      <mat-icon matSuffix>arrow_upward</mat-icon>
+    </button>
+  
+    <button fxFlex="45"
+      mat-raised-button 
+      type="button" 
+      (click)="sort('date')">
+      {{ "date" | translate | titlecase }} 
+      <mat-icon>arrow_upward</mat-icon>
+    </button>
+  </p>
+  <p fxFill fxLayout="row" fxLayoutAlign="space-between center">
+    <button
+      fxFlex="45"
+      mat-raised-button
+      type="button"
+      (click)="sort('firstName')">
+      {{ "first-name" | translate | titlecase }} 
+      <mat-icon>arrow_upward</mat-icon>
+    </button>
+    <button
+      fxFlex="45"
+      mat-raised-button
+      type="button"
+      (click)="sort('lastName')">
+      {{ "last-name" | translate | titlecase }} <mat-icon>arrow_upward</mat-icon>
+    </button>
+  </p>
 </div>
 
 <div mat-dialog-content>
   <mat-selection-list
     #options
     [multiple]="false"
-    (selectionChange)="closeDialog()"
-  >
+    (selectionChange)="closeDialog()">
     <mat-list-option
-      *ngFor="let user of data.options; let isFirst = first"
+      *ngFor="let user of userList"
       [value]="user"
-      cdkFocusInitial
-    >
+      cdkFocusInitial>
       <h2 matLine>{{ user.fullName }}</h2>
-      <span matLine *ngIf="user.lastAssignment">
+      <span matLine *ngIf="getUserAssignments(user).length"
+        matTooltip="{{ getUserLastAssignmentNameTranslated(user) }}">
         {{ "last" | translate | titlecase }}
         {{
-          user.lastAssignment?.week.toISOString()
+          getUserLastAssignment(user).week
             | translateDate: "DATE_MED"
             | async
         }}
       </span>
       <span matLine
         >{{ "total" | translate | titlecase }}
-        {{ user.assignments.length }}</span
-      >
+        {{ getAssignmentsNumber(user) }}</span>
     </mat-list-option>
 
     <!-- <div mat-dialog-actions>

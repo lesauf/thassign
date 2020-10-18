@@ -1,7 +1,17 @@
 <GridLayout>
   <!-- This will contain any angular routes you setup -->
-  <page-router-outlet></page-router-outlet>
 
-  
-  
+  <!-- <page-router-outlet actionBarVisibility="never"></page-router-outlet> -->
+
+  <StackLayout>
+    <label text="Cities" textWrap="true"></label>
+    <label
+      [text]="city.name"
+      textWrap="true"
+      *ngFor="let city of cities | async"
+    >
+    </label>
+  </StackLayout>
+
+  <page-router-outlet></page-router-outlet>
 </GridLayout>

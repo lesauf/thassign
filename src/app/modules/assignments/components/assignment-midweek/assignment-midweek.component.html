@@ -1,7 +1,162 @@
-<p>assignment-midweek works!</p>
+<app-loader *ngIf="loading"></app-loader>
 
-<!--<p>-->
-  <!--  {{ week | translateDate: 'MMM-D' | async }}-->
-  <!--</p>-->
+<div *ngIf="mPrograms$ | withLoading | async as mProgramsWithLoading">
+  <ng-template [ngIf]="mProgramsWithLoading.error">{{ 'error.general' | translate }}</ng-template>
+  <!-- <ng-template [ngIf]="mProgramsWithLoading.loading"><app-loader></app-loader></ng-template> -->
 
-<p>{{ '2019-09-16' | translateDate: 'DATE_SHORT' | async }}</p>
+  <ng-template [ngIf]="mProgramsWithLoading.value">
+    <form *ngIf="mProgramsWithLoading.value as mPrograms" 
+      [formGroup]="programsForm" 
+      (ngSubmit)="onSubmit()">
+      <div *ngIf="mPrograms.size && !loading"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="1em"> <!-- During loading no buttons-->
+        <!-- FORM BUTTONS-->
+        <button *ngIf="isEditMode"
+          type="reset"
+          mat-raised-button
+          class="mat-primary"
+          (click)="cancelEdit()">
+          <mat-icon>undo</mat-icon>
+          <span fxHide.lt-sm>
+            {{ "cancel" | translate | titlecase }}
+          </span>
+        </button>
+
+        <button *ngIf="isEditMode"
+          type="submit" 
+          mat-raised-button class="mat-primary">
+          <mat-icon>save</mat-icon>
+          <span fxHide.lt-sm>
+            {{ "save" | translate | titlecase }}
+          </span>
+        </button>
+
+        <!-- PRINT BUTTONS -->
+        <button *ngIf="!isEditMode"
+          type="button"
+          mat-raised-button
+          class="mat-primary"
+          (click)="setEditMode(true)">
+          <mat-icon>edit</mat-icon>
+          <span fxHide.lt-sm>
+            {{ "edit" | translate | titlecase }}
+          </span>
+        </button>
+
+        <button *ngIf="!isEditMode"
+          type="button"
+          mat-raised-button
+          class="mat-primary"
+          (click)="saveAsPdf()">
+          <mat-icon>print</mat-icon>
+          <span fxHide.lt-sm>
+            {{ "print" | translate | titlecase }}
+          </span>
+        </button>
+
+        <!-- PART SELECTOR -->
+        <mat-chip-list>
+          <mat-chip
+            [selected]="getDisplayStudentsParts() === true"
+            (click)="setDisplayStudentsParts(true);">
+            Students Parts
+          </mat-chip>
+          <mat-chip
+            [selected]="getDisplayStudentsParts() === false"
+            (click)="setDisplayStudentsParts(false);">
+            Non Students Parts
+          </mat-chip>
+        </mat-chip-list>
+
+      </div>
+      &nbsp; 
+      <!-- WEEKS -->
+      <div #printableArea>
+        <div *ngFor="let mProgram of mPrograms | keyvalue"
+          [formGroupName]="mProgram.key">
+          <!-- Week block -->
+          <div *ngIf="mProgram.value as program" 
+            [ngClass]="{
+              'week-box-edit': isEditMode,
+              'week-box-view': !isEditMode
+            }">
+            <h2>{{ program.week | translateDate: "MMM-D" : {days: 6} | async }}</h2>
+
+            <div formArrayName="assignments" 
+              fxLayout="column"
+              fxLayoutAlign="start stretch">
+              <ng-container *ngFor="let assignment of program.assignments">
+                <div *ngIf="isWorkingOnPart(assignment.part)"
+                  [formGroupName]="assignment.position"
+                  fxFlex 
+                  fxLayout="row wrap"
+                  fxLayoutAlign="start center"
+                  class="assignment-line">
+                  
+                  <div class="assignment-title" 
+                    [matTooltip]="assignment.description ? assignment.description: null"
+                    fxFlex="30" 
+                    [fxFlex.lt-sm]="isEditMode ? 100 : null">
+                    {{ assignment.title }}
+                  </div>
+                  
+                  <div *ngIf="isEditMode; else view"
+                    fxFlex="70"
+                    fxFlex.lt-sm="95"
+                    fxFlexOffset.lt-sm="5"
+                    fxLayout="row wrap"
+                    fxLayoutAlign="space-between center">
+                    <div [fxFlex]="assignment.part.withAssistant ? 49 : 100">
+                      <app-picker
+                        [optionsTemplate]="displayComponentRef.componentType"
+                        title="{{ assignment.title | titlecase }}"
+                        placeholder="{{ 'assignee' | translate | titlecase }}"
+                        [form]="programsForm"
+                        [controlPath]="[program._id, 
+                          'assignments', 
+                          assignment.position, 
+                          'assignee']"
+                        [options]="assignableListByPart[assignment.part.name]"
+                        labelField="fullName"
+                      ></app-picker>
+                    </div>
+
+                    <div *ngIf="assignment.part.withAssistant" fxFlex="49">
+                      
+                      <app-picker
+                        [optionsTemplate]="displayComponentRef.componentType"
+                        title="{{ assignment.title | titlecase }} ({{ 'assistant' | translate | titlecase }})"
+                        placeholder="{{ 'assistant' | translate | titlecase }}"
+                        [form]="programsForm"
+                        [controlPath]="[program._id, 
+                          'assignments', 
+                          assignment.position, 
+                          'assistant']"
+                        [options]="assignableListByPart['clm.ministry.assistant']"
+                        labelField="fullName"
+                      ></app-picker>
+                    </div>
+                  </div>
+
+                  <ng-template #view>
+                    <div fxFlex="70" 
+                      fxFlex.lt-xs="95" 
+                      fxFlexOffset.lt-xs="5">
+                      <span class="assignment-assignee">{{ assignment.assignee?.fullName }}</span>
+
+                      <span *ngIf="assignment.assistant" class="assignment-assistant">
+                        &nbsp;/&nbsp;{{ assignment.assistant?.fullName }}</span>
+                    </div>
+                  </ng-template>
+                  <mat-divider></mat-divider>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+</div>

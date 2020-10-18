@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "975280216341",
+    "firebase_url": "https://thassign-94fe2.firebaseio.com",
+    "project_id": "thassign-94fe2",
+    "storage_bucket": "thassign-94fe2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975280216341:android:478edcf72baaeb48c7b11c",
+        "android_client_info": {
+          "package_name": "com.lesauf.thassign"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975280216341-15jrgu4ktlgs2lcscceeebd459ann1to.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lesauf.thassign",
+            "certificate_hash": "f2b9b64c848b3ac12f3396412b34a3279608fd23"
+          }
+        },
+        {
+          "client_id": "975280216341-m4n4j0ft7s8q8g4t1r8gbruqnc7leiso.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAORPuozKq-hiMeWaUQu7XyOWpDozYxxVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975280216341-m4n4j0ft7s8q8g4t1r8gbruqnc7leiso.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

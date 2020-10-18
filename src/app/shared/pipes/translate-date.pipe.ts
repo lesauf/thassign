@@ -44,8 +44,13 @@ export class TranslateDatePipe implements PipeTransform {
   /**
    * Make Date dynamic
    * @param format one of the DateTime format constants
+   * @param intervalDisplay an object defining ho to calculate the
    */
-  transform(value: DateTime | Interval | string, format?: any): any {
+  transform(
+    value: DateTime | Interval | string,
+    format?: any,
+    intervalDisplay?: object
+  ): any {
     // make the Date format configurable
     if (format !== undefined) {
       // if not one of DateTime constant, use my own
@@ -59,11 +64,13 @@ export class TranslateDatePipe implements PipeTransform {
     // Initial display of Date.
     // Insert the value into a new behaviour subject. If the language changes,
     // the behaviour subject will be updated
-    const dateObs = new BehaviorSubject<string>(this.format(value, format));
+    const dateObs = new BehaviorSubject<string>(
+      this.format(value, format, intervalDisplay)
+    );
 
     this.translate.onLangChange.subscribe(() => {
       // Rebuild the display of date
-      dateObs.next(this.format(value, format));
+      dateObs.next(this.format(value, format, intervalDisplay));
     });
 
     return dateObs; // needs to be piped into the async pipe
@@ -72,7 +79,11 @@ export class TranslateDatePipe implements PipeTransform {
   /**
    * Handle the generation of the date string
    */
-  format(dateVal: DateTime | Interval | string, format: any) {
+  format(
+    dateVal: DateTime | Interval | string,
+    format: any,
+    intervalDisplay?: object
+  ) {
     let dateString: string;
 
     // get the initial value and whether it is an interval
@@ -87,13 +98,24 @@ export class TranslateDatePipe implements PipeTransform {
         dateVal.start.toLocaleString(format) +
         ' - ' +
         dateVal.end.toLocaleString(format);
-    } else if (DateTime.isDateTime(dateVal)) {
-      dateVal.setLocale(this.translate.currentLang);
-
-      dateString = dateVal.toLocaleString(format);
     } else {
-      dateVal = DateTime.fromISO(dateVal).setLocale(this.translate.currentLang);
-      dateString = dateVal.toLocaleString(format);
+      if (DateTime.isDateTime(dateVal)) {
+        dateVal.setLocale(this.translate.currentLang);
+
+        dateString = dateVal.toLocaleString(format);
+      } else {
+        dateVal = DateTime.fromISO(dateVal).setLocale(
+          this.translate.currentLang
+        );
+        dateString = dateVal.toLocaleString(format);
+      }
+
+      if (intervalDisplay !== undefined) {
+        const intervalEnd = dateVal
+          .plus(intervalDisplay)
+          .toLocaleString(format);
+        dateString = dateString + ' - ' + intervalEnd;
+      }
     }
 
     return dateString;

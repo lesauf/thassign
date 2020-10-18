@@ -18,11 +18,5 @@ import { UsersRoutingModule } from '@src/app/modules/users/users-routing.module'
     UserSortComponent,
   ],
   imports: [SharedModule, UsersRoutingModule, TranslateModule],
-  entryComponents: [
-    UserEditComponent,
-    UserDetailComponent,
-    UserFilterComponent,
-    UserSortComponent,
-  ],
 })
 export class UsersModule {}

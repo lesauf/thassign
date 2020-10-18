@@ -1,17 +1,19 @@
+import { ElementRef, Injectable, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime, Interval } from 'luxon';
 
-import { AssignmentService } from '@src/app/modules/assignments/assignment.service';
-import { MessageService } from 'src/app/core/services/message.service';
-import { PartService } from 'src/app/core/services/part.service';
-import { SettingService } from 'src/app/core/services/setting.service';
+import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
+import { MessageService } from '@src/app/core/services/message.service';
+import { PartService } from '@src/app/core/services/part.service';
+import { SettingService } from '@src/app/core/services/setting.service';
 import { UserService } from '@src/app/modules/users/user.service';
-import { ValidationService } from 'src/app/core/services/validation.service';
-import { Part } from 'src/app/core/models/part/part.model';
-import { Assignment } from 'src/app/core/models/assignment/assignment.model';
+import { ValidationService } from '@src/app/core/services/validation.service';
+import { Part } from '@src/app/core/models/part/part.model';
+import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 
+@Injectable()
 export abstract class AssignmentCommon {
   editMode: any;
 
@@ -19,6 +21,9 @@ export abstract class AssignmentCommon {
    * Starting day of the month of this program
    */
   month: DateTime;
+
+  @ViewChild('printableArea')
+  printable: ElementRef;
 
   /**
    * Used to generate the variables names
@@ -70,7 +75,7 @@ export abstract class AssignmentCommon {
   protected formBuilder: FormBuilder;
   protected settingService: SettingService;
   protected _snackBar: MatSnackBar;
-  protected _translate: TranslateService;
+  protected translateService: TranslateService;
   protected validationService: ValidationService;
 
   constructor() {
@@ -81,19 +86,37 @@ export abstract class AssignmentCommon {
     // this.formBuilder = formBuilder;
     // this.settingService = settingService;
     // this._snackBar = _snackBar;
-    // this._translate = _translate;
+    // this.translateService = translateService;
     // this.validationService = validationService;
   }
 
+  /**
+   * Get some initial data :
+   * - assignables users by part
+   * - assignments by User
+   */
   async initializeData() {
-    await this.getParts();
+    // Get the list of users assignable to parts
+    const assignables = this.userService
+      .getAssignableUsersByParts
+      // this.listOfParts,
+      // this.meetingName
+      ();
 
-    if (!this.listOfParts) {
-      this.listOfParts = await this.partService.getPartsByMeeting(
-        this.meetingName
-      );
-    }
+    this.assignableList = assignables.list;
+    this.assignableListByPart = assignables.byPart;
 
+    this.assignmentService.groupAssignmentsByUser();
+
+    this.isEditMode = false;
+  }
+
+  /**
+   * Get current month specific data
+   * - firstWeekOfTheMonth
+   * - weeks of the current month
+   */
+  initializeMonthData() {
     // Convert the month to the first day of the week
     this.firstWeekOfTheMonth = this.assignmentService.getFirstWeekOfTheSelectedMonth(
       this.month
@@ -102,34 +125,13 @@ export abstract class AssignmentCommon {
     this.weeks = this.assignmentService.getAllWeeksOfTheSelectedMonth(
       this.month
     );
-
-    // this.listOfPartsByWeek = this.assignmentService.getListOfPartsByWeek(
-    //   this.meetingName,
-    //   this.month
-    // );
-    // console.log('LIST PART WEEK', this.listOfPartsByWeek);
-    // this.studentsForm.reset(); // ??
-
-    // Get the list of users assignable to parts
-    // console.log(this.meetingName);
-    const assignables = this.userService.getAssignableUsersByParts(
-      this.listOfParts,
-      this.meetingName
-    );
-
-    this.assignableList = assignables.list;
-    this.assignableListByPart = assignables.byPart;
-
-    // Generate and populate the form with the values for the selected month
-    // this.generateForm();
-    // console.log(this.assignableList);
-
-    // this.populateForm();
-
-    this.isEditMode = false;
   }
 
-  // generateForm() {}
+  setEditMode(value: boolean) {
+    this.isEditMode = value;
+
+    this.editMode.emit(value);
+  }
 
   /**
    * Get parts of a meeting
@@ -221,10 +223,10 @@ export abstract class AssignmentCommon {
    */
   async generateAssignmentsOld() {
     //   // Get the error messages
-    //   const noAssignableUserMessage = await this._translate
+    //   const noAssignableUserMessage = await this.translateService
     //     .get('part-with-no-assignable-user')
     //     .toPromise();
-    //   const noAssignableUserAction = await this._translate
+    //   const noAssignableUserAction = await this.translateService
     //     .get('part-with-no-assignable-user-action')
     //     .toPromise();
     //   console.log(this.assignableList['initialCall']);
@@ -305,10 +307,10 @@ export abstract class AssignmentCommon {
 
   // async generateAssignments() {
   //   // Get the error messages
-  //   const noAssignableUserMessage = await this._translate
+  //   const noAssignableUserMessage = await this.translateService
   //     .get('part-with-no-assignable-user')
   //     .toPromise();
-  //   const noAssignableUserAction = await this._translate
+  //   const noAssignableUserAction = await this.translateService
   //     .get('part-with-no-assignable-user-action')
   //     .toPromise();
 
@@ -473,6 +475,42 @@ export abstract class AssignmentCommon {
       }
 
       return sortValue;
+    });
+  }
+  /**
+   * @todo extract the styles
+   */
+  saveAsPdf() {
+    // window.print();
+
+    const mywindow = window.open('', '', 'height=400,width=600');
+
+    this.translateService.get('assignments').subscribe((pageTitle) => {
+      const printContents = this.printable.nativeElement.innerHTML;
+
+      mywindow.document.write(
+        '<!DOCTYPE html><html><head><title>' +
+          pageTitle +
+          ': ' +
+          this.month.toFormat('MMMM yyyy') +
+          '</title>'
+      );
+      // Styling
+      mywindow.document.write(
+        '<style>' +
+          'body { font-size: 1.2em }' +
+          '.assignment-line:not(last-child) { margin: 0 0 1em; }' +
+          '.week-box-view { width: 80%; margin: 0 auto; }' +
+          '.assignment-assignee { font-weight: bold; }' +
+          '</style>'
+      );
+      /*optional stylesheet*/
+      mywindow.document.write('</head><body>');
+      mywindow.document.write(printContents);
+      mywindow.document.write('</body></html>');
+
+      mywindow.document.execCommand('print');
+      mywindow.close();
     });
   }
 

@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '@src/app/modules/auth/auth.service';
+import { BackendService } from '@src/app/core/services/backend.service';
 
 @Component({
   selector: 'app-logout',
@@ -10,22 +11,30 @@ import { AuthService } from '@src/app/modules/auth/auth.service';
   styleUrls: ['../auth.component.scss'],
 })
 export class LogoutComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private backendService: BackendService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.logout();
   }
 
-  logout() {
-    if (this.authService.isLoggedIn()) {
-      const authedUser = this.authService.getUser();
+  async logout() {
+    try {
+      const userState = await this.authService.isLoggedIn();
 
-      this.authService.logout();
-      console.log(`successfully logged out`);
+      if (userState) {
+        // const authedUser = this.backendService.getSignedInUser();
 
-      const message = 'Logged out';
+        this.authService.logout();
+        console.log(`successfully logged out`);
+      }
+
+      this.router.navigate(['/auth/login']);
+    } catch (error) {
+      throw error;
     }
-
-    this.router.navigate(['/auth/login']);
   }
 }

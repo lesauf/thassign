@@ -1,4 +1,6 @@
 <!-- <button mat-button (click)="addUser()">Add one more</button> -->
+<!-- <a routerLink="/auth/logout" routerLinkActive="active">Logout</a>
+<h1>Home works</h1> -->
 
 <!--<ng-container *ngIf="{-->
 <!--    users: users$ | async,-->
@@ -6,8 +8,8 @@
 <!--  } as loadedData">-->
 <!--<div *ngIf="loadedData.users && loadedData.parts; else loading">-->
 <p>Parts loaded: {{ parts.length }}</p>
-<p>Users loaded: {{ users.length }}</p>
-<p>Assignments loaded: {{ assignments.length }}</p>
+<p *ngIf="users$ | async as usersObs">Users Observable loaded: {{ usersObs.length }}</p>
+<p *ngIf="assignments$ | async as assignmentsObs">Assignments loaded: {{ assignmentsObs.length }}</p>
 
 <!-- <app-picker title="Choose a user" placeholder="Choose a user ..." [options]="users" labelField="fullName"></app-picker> -->
 
@@ -16,4 +18,4 @@
   <app-loader></app-loader>
 </ng-template>
 <!--</ng-container>-->
-<!-- <app-import-epub epubFilename="mwb_E_201909"></app-import-epub> -->
+<!-- <app-import-epub></app-import-epub> -->

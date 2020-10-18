@@ -1,23 +1,25 @@
+import { FormControl, FormGroup } from '@angular/forms';
 import {
-  IsArray,
   IsBoolean,
   IsDate,
-  IsEmail,
   IsString,
-  IsIn,
   IsInt,
   IsObject,
   IsOptional,
-  IsUUID,
-  IsDefined,
-  MinLength,
 } from 'class-validator';
 import { DateTime } from 'luxon';
 
 import { Part, ObjectId } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
+import { exit } from 'process';
 
 export class Assignment {
+  @IsObject()
+  @IsOptional()
+  // Joi.string().alphanum()
+  // tslint:disable-next-line: variable-name
+  _id: string;
+
   @IsObject()
   @IsOptional()
   week: DateTime;
@@ -41,9 +43,19 @@ export class Assignment {
   @IsInt()
   position = 1;
 
+  /**
+   * Theme of the assignment
+   */
   @IsString()
   @IsOptional()
-  title: string; // theme of the assignment
+  title: string;
+
+  /**
+   * Description of the assignment
+   */
+  @IsString()
+  @IsOptional()
+  description: string;
 
   @IsString()
   @IsOptional()
@@ -53,31 +65,6 @@ export class Assignment {
   @IsOptional()
   number: number; // like public talk number
 
-  // Joi.date().default(Date.now()),
-  @IsDate()
-  @IsOptional()
-  createdAt: Date = new Date();
-
-  // Joi.date(),
-  @IsDate()
-  @IsOptional()
-  updatedAt: Date;
-
-  // deleted: Joi.boolean().default(false),
-  @IsBoolean()
-  @IsOptional()
-  deleted = false;
-
-  // Joi.date(),
-  @IsDate()
-  @IsOptional()
-  deletedAt: Date;
-
-  // Joi.string(),
-  @IsInt()
-  @IsOptional()
-  deletedBy: string;
-
   private _assignableUsers: User[];
 
   private _assignableAssistants: User[];
@@ -86,41 +73,117 @@ export class Assignment {
    * @todo Sanitize/clean the object passed (apply some rules,
    * like women can not give public talks ...)
    */
-  constructor(props?: object) {
+  constructor(props?: object, allParts?: Part[], allUsers?: User[]) {
     if (props) {
-      if (!props['week'].hasOwnProperty('isLuxonDateTime')) {
+      // Converting week to Luxon date if not
+      if (!props['week']?.hasOwnProperty('isLuxonDateTime')) {
         const refDate = DateTime.utc();
-        props['week'] = DateTime.fromJSDate(props['week'], {
+
+        props['week'] = DateTime.fromISO(props['week'], {
           zone: refDate.zone,
           locale: refDate.locale,
         });
       }
 
+      // Get part, assignee, assistant
+      if (
+        typeof props['part'] === 'string' ||
+        typeof props['assignee'] === 'string'
+      ) {
+        props = this.convertForeignKeys(props, allParts, allUsers);
+      }
       Object.assign(this, props);
     }
   }
 
   /**
-   * The unique identifier of this assignment in the form
+   * Replace part, assignee and assistant with model object.
+   * if coming from the DB. The form contain already the right Objects types
+   * @param props
+   * @param allParts
+   * @param allUsers
    */
-  get key() {
-    return this.week.toISODate() + this.position;
+  convertForeignKeys(props: object, allParts?: Part[], allUsers?: User[]) {
+    // Part: converted only if it is a string (coming from DB)
+    if (allParts && typeof props['part'] === 'string') {
+      const part = allParts.find((part) => part.name === props['part']);
+      props['part'] = part ? part : '';
+    }
+
+    if (allUsers) {
+      // Assignee coming from DB
+      if (props['assignee'] && typeof props['assignee'] === 'string') {
+        const assignee = allUsers.find(
+          (user) => user._id === props['assignee']
+        );
+        props['assignee'] = assignee ? assignee : '';
+      }
+
+      // Assistant coming from DB
+      if (props['assistant'] && typeof props['assistant'] === 'string') {
+        const assistant = allUsers.find(
+          (user) => user._id === props['assistant']
+        );
+        props['assistant'] = assistant ? assistant : '';
+      }
+    }
+
+    return props;
   }
 
-  set assignableUsers(users: User[]) {
-    this._assignableUsers = users;
+  /**
+   * Convert the user to the format accepted in the db
+   * for example, replace parts with their ids
+   */
+  prepareToSave(): void {
+    // Remove empty fields
+    if (!this.assistant) {
+      delete this.assistant;
+    }
+    if (!this.title) {
+      delete this.title;
+    }
+    if (!this.description) {
+      delete this.description;
+    }
+    if (!this.number) {
+      delete this.number;
+    }
   }
 
-  get assignableUsers() {
-    return this._assignableUsers;
+  toFormGroup() {
+    return new FormGroup({
+      week: new FormControl(this.week || ''),
+      part: new FormControl(this.part || ''),
+      assignee: new FormControl(this.assignee || ''),
+      hall: new FormControl(this.hall || ''),
+      ownerId: new FormControl(this.ownerId || ''),
+      position: new FormControl(this.position),
+      assistant: new FormControl(this.assistant || ''),
+      title: new FormControl(this.title || ''),
+      description: new FormControl(this.description || ''),
+      number: new FormControl(this.number || ''),
+    });
   }
 
-  set assignableAssistants(users: User[]) {
-    this._assignableAssistants = users;
-  }
+  /**
+   * Convert to a standard object for saving
+   */
+  toObject() {
+    return {
+      ...(this._id && { _id: this._id }),
+      ownerId: this.ownerId,
+      week: this.week.toFormat('yyyyMMdd'),
+      part: this.part.name,
+      position: this.position,
 
-  get assignableAssistants() {
-    return this._assignableAssistants;
+      ...(this.assignee && { assignee: this.assignee._id }),
+      ...(this.assistant && { assistant: this.assistant._id }),
+      ...(this.title && { title: this.title }),
+      ...(this.description && { description: this.description }),
+      ...(this.hall && { hall: this.hall }),
+      ...(this.number && { number: this.number }),
+    };
   }
 
   /**
@@ -137,26 +200,25 @@ export class Assignment {
   }
 
   /**
-   * Convert the user to the format accepted in the db
-   * for example, replace parts with their ids
+   * The unique identifier of this assignment in the form
    */
-  prepareToSave(): void {
-    // Remove empty fields
-    if (!this.assistant) {
-      delete this.assistant;
-    }
-    if (!this.deletedAt) {
-      delete this.deletedAt;
-    }
-    if (!this.deletedBy) {
-      delete this.deletedBy;
-    }
-    if (!this.updatedAt) {
-      delete this.updatedAt;
-    }
-    // Remove also createdAt ?
-    if (this.createdAt) {
-      delete this.createdAt;
-    }
+  get key() {
+    return this.week.toFormat('yyyyMMdd') + this.position;
+  }
+
+  set assignableUsers(users: User[]) {
+    this._assignableUsers = users;
+  }
+
+  get assignableUsers() {
+    return this._assignableUsers;
+  }
+
+  set assignableAssistants(users: User[]) {
+    this._assignableAssistants = users;
+  }
+
+  get assignableAssistants() {
+    return this._assignableAssistants;
   }
 }

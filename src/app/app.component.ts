@@ -1,7 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+
+import { BackendService } from '@src/app/core/services/backend.service';
 
 // import { AuthService } from './modules/auth/auth.service';
 
@@ -9,6 +12,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
+  moduleId: module.id,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
@@ -22,13 +26,18 @@ export class AppComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription;
   public user: any;
 
+  cities: Observable<any[]>;
+
   constructor(
     // private authService: AuthService,
+    private backendService: BackendService,
     private router: Router,
     private translate: TranslateService
-  ) {}
+  ) {
+    // this.backendService.init();
+  }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     // init this.user on startup
     // this.authService.me().subscribe(data => {
     //   this.user = data.user;
@@ -39,6 +48,9 @@ export class AppComponent implements OnInit, OnDestroy {
     //   this.user = user;
     // });
 
+    // this.page.actionBarHidden = true;
+
+    await this.backendService.init();
     this._initTranslationLanguage();
   }
 

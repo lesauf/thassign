@@ -1,0 +1,128 @@
+<FlexboxLayout [formGroup]="userForm" id="auth">
+  <!-- (ngSubmit)="submit('emailPassword')" -->
+
+  <FlexboxLayout
+    id="loginForm"
+    flexDirection="column"
+    justifyContent="space-between"
+    alignItems="stretch"
+    class="nt-form p-10"
+    [class.dark]="!isLoggingIn"
+  >
+    <StackLayout>
+      <label text="Thassign" class="h1 text-center"></label>
+      <label
+        text="{{ 'log-in-to-your-account' | translate }}"
+        textWrap="true"
+        class="m-l-15"
+      ></label>
+    </StackLayout>
+
+    <StackLayout>
+      <label
+        *ngIf="formMessages.all"
+        text="{{ formMessages.all | translate }}"
+        textWrap="true"
+      ></label>
+
+      <TextField
+        hint="{{ 'email-required' | translate }}"
+        keyboardType="email"
+        autocorrect="false"
+        autocapitalizationType="none"
+        formControlName="email"
+      >
+      </TextField>
+      <label
+        *ngIf="formMessages.email"
+        text="{{ formMessages.email | translate }}"
+        class="help"
+      >
+      </label>
+    </StackLayout>
+
+    <StackLayout>
+      <TextField
+        hint="{{ 'password-required' | translate }}"
+        secure="true"
+        formControlName="password"
+      ></TextField>
+      <label
+        *ngIf="formMessages.password"
+        text="{{ formMessages.password | translate }}"
+        class="help"
+      >
+      </label>
+    </StackLayout>
+
+    <StackLayout>
+      <TextField
+        *ngIf="!isLoggingIn"
+        hint="{{ 'password2-required' | translate }}"
+        secure="true"
+        formControlName="repeatPassword"
+        row="2"
+      ></TextField>
+      <label
+        *ngIf="formMessages.repeatPassword"
+        text="{{ formMessages.repeatPassword | translate }}"
+        class="help"
+      >
+      </label>
+    </StackLayout>
+
+    <FlexboxLayout
+      flexDirection="row-reverse"
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <!-- Sign in button -->
+      <button
+        text="{{ (isLoggingIn ?  'sign-in' : 'sign-up') | translate }}"
+        class="-primary p-10"
+        (tap)="submit('emailPassword')"
+      ></button>
+
+      <!-- Sign up button -->
+      <button
+        text="{{ (isLoggingIn ?  'sign-up' : 'sign-in') | translate }}"
+        (tap)="toggleDisplay()"
+        class="p-10"
+      ></button>
+    </FlexboxLayout>
+
+    <!-- Social login button -->
+    <FlexboxLayout
+      flexDirection="row"
+      justifyContent="center"
+      alignItems="stretch"
+    >
+      <button (tap)="submit('google')" class="p-10">
+        <FormattedString>
+          <!-- <image
+            src="../../../assets/icon/google-logo.png"
+            stretch="aspectFill"
+          ></image> -->
+          <!-- <span text="{{ 'google-sign-in' | translate }}"></span> -->
+
+          <span
+            text="&#xf1a0;"
+            fontFamily="Font Awesome 5 Brands, fa-brands-400"
+          ></span>
+          <span text=" {{ 'google-sign-in' | translate }}"></span>
+
+          <!-- <label class="fas" style="margin-top: 10px" text="&#xf013;"></label>
+          <label text=" Settings"></label> -->
+        </FormattedString>
+      </button>
+    </FlexboxLayout>
+  </FlexboxLayout>
+</FlexboxLayout>
+
+<ActivityIndicator
+  [busy]="isLoading"
+  [visibility]="isLoading ? 'visible' : 'collapsed'"
+  row="1"
+  horizontalAlignment="center"
+  verticalAlignment="center"
+></ActivityIndicator>

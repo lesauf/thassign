@@ -5,55 +5,66 @@ import {
   Router,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
+  Route,
+  UrlSegment,
 } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 import { AuthService } from '@src/app/modules/auth/auth.service';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private fireAuth: AngularFireAuth
+  ) {}
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): boolean {
+  ): boolean | Observable<boolean> | Promise<boolean> {
     const url: string = state.url;
 
-    // console.log('AuthGuard#canActivate called');
-    return this.checkLogin(url);
+    return new Promise((resolve, reject) => {
+      this.fireAuth.authState.subscribe((user: firebase.User) => {
+        if (user) {
+          this.authService.setUser({
+            _id: user.uid,
+            firstName: user.displayName,
+            email: user.email,
+            ownerId: user.uid,
+          });
 
-    // const user = (window as any).user;
-    // if (user) {
-    //   return true;
-    // }
+          resolve(true);
+        } else {
+          this.authService.setUser(null);
 
-    // // not logged in so redirect to login page with the return url
-    // this.router.navigate(['/auth/login']);
-    // return false;
+          this.router.navigateByUrl('/auth');
+          resolve(false);
+        }
+      });
+    });
   }
 
-  checkLogin(url: string): boolean {
-    if (this.authService.isLoggedIn()) {
-      if (!this.authService.getUser().customData.hasOwnProperty('_id')) {
-        // I noticed that Custom data are empty on page reload ...
-        // Refresh them manually
-        this.authService.refreshCustomData();
-      }
-      return true;
-    }
+  // async checkLogin(url: string): Promise<boolean> {
+  //   try {
+  //     // Store the attempted URL for redirecting
+  //     this.authService.redirectUrl = url;
 
-    // Store the attempted URL for redirecting
-    this.authService.redirectUrl = url;
-
-    // Navigate to the login page with extras
-    this.router.navigate(['/auth/login']);
-    return false;
-  }
+  //     // Navigate to the login page with extras
+  //     this.router.navigate(['/auth/login']);
+  //     return false;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 
   canActivateChild(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): boolean {
+  ): boolean | Observable<boolean> | Promise<boolean> {
     return this.canActivate(route, state);
   }
 }

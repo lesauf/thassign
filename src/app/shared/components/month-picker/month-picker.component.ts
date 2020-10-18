@@ -9,8 +9,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  NativeDateAdapter,
+} from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
+import { LuxonDateAdapter } from '@src/app/core/adapters/luxon-date-adapter/luxon-date-adapter';
 import { DateTime } from 'luxon';
 
 // export const MY_FORMATS = {
@@ -47,7 +52,13 @@ export const MY_FORMATS = {
   selector: 'app-month-picker',
   templateUrl: './month-picker.component.html',
   styleUrls: ['./month-picker.component.scss'],
-  providers: [{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }],
+  providers: [
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+    // {
+    //   provide: DateAdapter,
+    //   useClass: LuxonDateAdapter,
+    // },
+  ],
 })
 export class MonthPickerComponent implements OnInit, OnChanges {
   @Input() disablePicker: boolean;
@@ -64,7 +75,9 @@ export class MonthPickerComponent implements OnInit, OnChanges {
 
   date = new FormControl();
 
-  constructor() {}
+  constructor(dateAdapter: LuxonDateAdapter) {
+    // dateAdapter;
+  }
 
   ngOnInit() {
     const firstDayOfMonth = DateTime.utc().startOf('month');
@@ -89,7 +102,6 @@ export class MonthPickerComponent implements OnInit, OnChanges {
    * @name emitValue
    */
   emitValue() {
-    // console.log(this.date.value);
     this.monthSelected.emit(this.date.value);
   }
 

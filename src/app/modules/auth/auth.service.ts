@@ -1,48 +1,68 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 // import { Subject } from 'rxjs/Subject';
 
-import { StitchService } from 'src/app/core/services/stitch.service';
-import { first } from 'rxjs/operators';
-// import { userSchema } from 'src/app/core/models/user/user.schema';
-import { User } from 'src/app/core/models/user/user.model';
 import { validate } from 'class-validator';
+import { BackendService } from '@src/app/core/services/backend.service';
+import { CommonService } from '@src/app/core/services/common.service';
+import { User } from '@src/app/core/models/user/user.model';
+import { UserService } from '@src/app/modules/users/user.service';
 // import { TooltipComponent } from '@angular/material/tooltip';
 
 @Injectable()
-export class AuthService {
+export class AuthService extends CommonService<User> {
   // store the URL so we can redirect after logging in
   redirectUrl = '';
 
-  constructor(private stitchService: StitchService) {}
-
-  isLoggedIn(): boolean {
-    return this.stitchService.isLoggedIn();
+  constructor(
+    protected backendService: BackendService,
+    protected userService: UserService
+  ) {
+    super();
   }
 
-  login(username: string, password: string): Promise<any> {
-    return this.stitchService.authenticate(username, password);
+  async isLoggedIn(): Promise<boolean> {
+    return await this.backendService.isLoggedIn();
+  }
+
+  emailLogin(username: string, password: string): Promise<any> {
+    return this.backendService.authenticate(
+      'emailPassword',
+      username,
+      password
+    );
+  }
+
+  async googleLogin(): Promise<void> {
+    await this.backendService.authenticate('google');
+
+    const sUser = this.backendService.getSignedInUser();
+    // Store/update the user info on my side if not already done
+    if ((await this.userService.getUserFromDb(sUser._id)) === null) {
+      await this.userService.updateUser(sUser);
+    }
   }
 
   refreshCustomData() {
-    return this.stitchService.refreshCustomData();
+    return this.backendService.refreshCustomData();
   }
 
   async register(
-    firstname: string,
-    lastname: string,
     email: string,
     password: string,
-    repeatPassword: string
+    repeatPassword: string,
+    firstname?: string,
+    lastname?: string
   ): Promise<void> {
-    console.log('User: ', {
-      firstname,
-      lastname,
-      email,
-      password,
-      repeatPassword,
-    });
+    // console.log('User: ', {
+    //   email,
+    //   password,
+    //   repeatPassword,
+    //   firstname,
+    //   lastname,
+    // });
 
     // Create user then authenticate him at one
     try {
@@ -68,37 +88,39 @@ export class AuthService {
       }
 
       // Create user and authenticate at once to get his _id
-      const authedUser = await this.stitchService.createUserAccount(
+      const authedUser = await this.backendService.createUserAccount(
         email,
         password
       );
-      // Link the user data to stitch auth provider
-      user.userId = authedUser.id;
-      console.log('Created: ', authedUser);
 
       // Save custom user data
-      this.stitchService.callFunction('Profiles_upsertCustomData', [user]);
+      await this.userService.addUser(this.backendService.getSignedInUser());
 
-      // Set the user data immediately since he is authenticated
-      this.stitchService.refreshCustomData();
-
-      console.log('Logged :', this.stitchService.getUser());
-      // user.hashedPassword = password;
-      // return await this.stitchService.authenticate(email, password);
+      // console.log('Logged :', this.backendService.getSignedInUser());
     } catch (error) {
       throw error;
     }
   }
 
-  setUser(user) {}
+  /**
+   * Set logged in user infos
+   * @param user
+   */
+  setUser(user: any) {
+    this.backendService.signedInUser = new User(user);
+  }
 
-  getUser() {
-    return this.stitchService.getUser();
+  /**
+   * Get logged in user infos
+   * @param user
+   */
+  getUser(): User {
+    return this.backendService.getSignedInUser();
   }
 
   me() {}
 
   logout(): void {
-    this.stitchService.logout();
+    this.backendService.logout();
   }
 }

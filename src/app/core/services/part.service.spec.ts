@@ -13,7 +13,7 @@ describe('PartService', () => {
     mocks: [TranslateService],
     providers: [
       {
-        provide: StitchService,
+        provide: RealmService,
         useValue: {
           authenticate: () => Promise.resolve(true),
           getCollectionByName: () => Promise.resolve(null),

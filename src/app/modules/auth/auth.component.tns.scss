@@ -1,0 +1,18 @@
+@import "~@nativescript/theme/scss/variables";
+
+FlexboxLayout#auth {
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-image: url("~/assets/login11.jpg");
+}
+
+FlexboxLayout#loginForm {
+  width: 300;
+  background-color: light(background);
+
+  @at-root .ns-dark & {
+    background-color: dark(background);
+  }
+  border-radius: 15px;
+}

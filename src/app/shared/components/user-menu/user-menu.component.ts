@@ -5,7 +5,9 @@ import {
   HostListener,
   ElementRef,
 } from '@angular/core';
-import { User } from 'src/app/core/models/user/user.model';
+import { AuthService } from '@src/app/modules/auth/auth.service';
+
+import { User } from '@src/app/core/models/user/user.model';
 
 @Component({
   selector: 'ma-user-menu',
@@ -29,7 +31,12 @@ export class UserMenuComponent implements OnInit {
     }
   }
 
-  constructor(private elementRef: ElementRef) {}
+  constructor(
+    private authService: AuthService,
+    private elementRef: ElementRef
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.currentUser = this.authService.getUser();
+  }
 }

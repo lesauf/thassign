@@ -6,6 +6,7 @@
   "Week-end": "Week-end",
   "actions": "actions",
   "all": "Tous",
+  "apply-filters": "Appliquer les filtres",
   "assignable-parts": "Attributions possible",
   "assignee": "Élève",
   "assignment": "Attribution",
@@ -15,34 +16,42 @@
   "cancel": "Annuler",
   "chairman": "President",
   "child": "Enfant",
+  "clear-filters": "Effacer les filtres",
   "clm": {
     "chairman": "VCM - President",
     "christianLiving": {
-      "congregation-bible-study": "Etude biblique de l'assemblée",
+      "congregation-bible-study": "Étude biblique de l'assemblée",
       "first-part": "Premiere partie",
       "second-part": "Deuxieme partie",
+      "talks": "Vie chretienne - Parties",
       "third-part": "Troisieme partie",
       "title": "Title Vie Chretienne"
     },
-    "closing-prayer": "Prière de cloture",
     "ministry": {
       "assistant": "Interlocuteur",
       "bible-study": "Etude biblique",
-      "first-return-visit": "Première nouvelle visite",
+      "return-visit": "Nouvelle visite",
       "initial-call": "Premier contact",
       "second-return-visit": "Deuxieme nouvelle visite",
       "talk": "Discours",
       "title": "Ministere"
     },
-    "opening-prayer": "Priere d'ouverture",
+    "prayer": "Priere",
+    "reader": "Lecteur - Milieu de semaine",
+    "talk-or-discussion": "Partie a la reunion de semaine",
     "treasures": {
       "bible-reading": "Lecture de la bible",
       "digging": "Recherchons des perles",
       "first-part": "Premiere partie",
+      "talk": "Joyaux - Discours",
       "title": "Recherchons des perles spirituelles"
     }
   },
   "close": "fermer",
+  "comments": {
+    "concluding": "Paroles de conclusion",
+    "opening": "Paroles d’introduction"
+  },
   "conductor": "Conducteur",
   "confirm-success": "Utilisateur supprimé",
   "delete": "supprimer",
@@ -62,10 +71,14 @@
   "edit-user-infos": "informations d'un utilisateur",
   "elder": "Ancien",
   "email": "Email",
+  "email-required": "Entre ton adresse e-mail",
   "error": {
+    "occurred": "Une erreur est survenue",
     "email": {
       "string": {
-        "email": "Cette adresse n'est pas complete"
+        "already-in-use": "Un compte existe deja avec cette adresse. As-tu oublié ton mot de passe ?",
+        "email": "Cette adresse n'est pas complete",
+        "no-record": "Utilisateur inexistant. Verifie ton adresse/mot de passe ou inscris-toi"
       }
     },
     "firstName": {
@@ -90,11 +103,13 @@
   "form-error": "SVP corriger d'abord les erreurs dans le formulaire",
   "generate": "Generer",
   "go": "Rechercher",
+  "google-sign-in": "Se connecter avec Google",
   "home": "Accueil",
   "language": "langue",
   "last": "dernier",
   "last-name": "Nom",
   "login": "Nom d'utilisateur",
+  "log-in-to-your-account": "Connecte-toi",
   "ma": {
     "bible-reading": "Lecture de la Bible",
     "bible-study": "Etude biblique",
@@ -109,7 +124,8 @@
     "items_per_page": "Nombre par page",
     "last_page": "Fin",
     "next_page": "Suivant",
-    "of": "sur"
+    "of": "sur",
+    "previous_page": "Fin"
   },
   "menu": "menu",
   "midweek": "Milieu de semaine",
@@ -122,12 +138,14 @@
   "not-disabled": "Non désactivé",
   "ok": "Ok",
   "parts": "Attributions",
+  "password-required": "Entre ton mot de passe",
+  "password2-required": "Entre ton mot de passe encore",
   "phone": "Téléphone",
   "pluralization": {
     "people": "{gender, select, male{Son nom est} female{Son nom, est} other{Leurs noms sont}} {name}",
     "things": "Il y a {count, plural, =0{is} one{is} other{are}} {count, plural, =0{} one{a} other{several}} {count, plural, =0{nothing} one{thing} other{things}}"
   },
-  "prayer": "Priere",
+  "prayer": "Prière",
   "previous-week": "Semaine precedente",
   "print": "impression",
   "publisher": "Proclamateur",
@@ -140,13 +158,19 @@
   "save": "Enregistrer",
   "search-users": "Rechercher un utilisateur",
   "select-all": "sélectionner tout",
+  "sign-in": "Se connecter",
+  "sign-out": "Se déconnecter",
+  "sign-up": "S'inscrire",
+  "song": "Cantique",
   "sort-by": "trier par",
   "sort-order": "ordre de tri",
   "sort-users-by-any-assignment": "Trier suivant toutes les attributions",
   "sort-users-by-name": "Trier suivant le nom",
   "sort-users-by-this-assignment": "Trier suivant cette attribution",
   "speaker": "Orateur",
+  "Student": "Eleve",
   "submit": "Enregistrer",
+  "talk": "Discours",
   "this": "Ceci",
   "total": "total",
   "type": "type",
@@ -161,17 +185,15 @@
   "weekend-meeting": "Reunion du week-end",
   "weekend": {
     "chairman": "Week-end - Président",
-    "closing-prayer": "Week-end - Prière de cloture",
-    "opening-prayer": "Week-end - Prière d'ouverture",
     "publicTalk": {
       "chairman": "President",
       "speaker": "Orateur",
       "title": "Discours public"
     },
+    "reader": "Lecteur - TG",
     "speaker": "Week-end - Orateur",
     "watchtower": {
       "conductor": "Conducteur TG",
-      "reader": "Lecteur TG",
       "title": "Tour de Garde"
     }
   },

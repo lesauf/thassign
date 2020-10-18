@@ -14,7 +14,7 @@ import {
 // import { UserType } from '../../../../../../server/src/modules/users/user.schema';
 // import { User } from '../../../models/users.schema';
 import { UserService } from '@src/app/modules/users/user.service';
-import { User } from 'src/app/core/models/user/user.model';
+import { User } from '@src/app/core/models/user/user.model';
 import { UserDetailComponent } from '@src/app/modules/users/components/user-detail/user-detail.component';
 
 @Component({
@@ -30,6 +30,28 @@ export class UserFilterComponent implements OnInit {
   searchText: string;
 
   /**
+   * List of filters on the form filterName => dbField | type of dbField
+   */
+  filtersList = {
+    elder: 'overseer',
+    'ministerial-servant': 'overseer',
+    man: 'genre',
+    woman: 'genre',
+    child: 'boolean',
+    baptized: 'boolean',
+    disabled: 'boolean',
+    'not-disabled': 'boolean-false',
+    publisher: 'boolean',
+  };
+
+  /**
+   * Extract the names of filters as array for the view
+   */
+  filtersName = Object.keys(this.filtersList);
+
+  selectedFilters = [];
+
+  /**
    * Set the expanded status of the search panel
    */
   displayMore = false;
@@ -41,11 +63,6 @@ export class UserFilterComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog
   ) {}
-
-  // Push a search term into the observable stream.
-  search(term: string): void {
-    this.searchTerms.next(term);
-  }
 
   ngOnInit(): void {
     // this.users$ = this.inputControl.valueChanges.pipe(
@@ -72,11 +89,28 @@ export class UserFilterComponent implements OnInit {
       .subscribe();
   }
 
+  // Push a search term into the observable stream.
+  search(): void {
+    this.searchTerms.next(this.searchText);
+  }
+
   displayFn(user?: any): string | undefined {
     return user ? `${user.firstName}` : undefined; // ${user.lastName}
   }
 
+  /**
+   * Apply the filters by passing them to the service
+   * and emit the search text
+   */
   searchUsers() {
+    const sFiltersObj = {};
+
+    this.selectedFilters.forEach((fName) => {
+      sFiltersObj[fName] = this.filtersList[fName];
+    });
+
+    this.userService.filters = sFiltersObj;
+
     this.performedSearch.emit(this.searchText);
   }
 
@@ -89,5 +123,36 @@ export class UserFilterComponent implements OnInit {
         user: user,
       },
     });
+  }
+
+  /**
+   * Clear filters and search text then call the search function
+   */
+  clearFilters() {
+    this.selectedFilters = [];
+    this.userService.filters = {};
+    this.searchText = '';
+
+    this.searchUsers();
+  }
+
+  /**
+   * Select/deselect a filter chip
+   */
+  toggleFilter(filter: string) {
+    const index = this.selectedFilters.indexOf(filter);
+    if (index === -1) {
+      // Not selected
+      this.selectedFilters.push(filter);
+    } else {
+      this.selectedFilters.splice(index, 1);
+    }
+  }
+
+  /**
+   * Check if a filter is in the list of selected filters
+   */
+  filterSelected(filter: string) {
+    return this.selectedFilters.indexOf(filter) !== -1;
   }
 }

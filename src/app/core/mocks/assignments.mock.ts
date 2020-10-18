@@ -37,7 +37,7 @@
 //     parts.forEach(part => {
 //       const usersOfThisPart = users.filter(
 //         u =>
-//           u.parts.find(availablePart => availablePart._id === part._id) !==
+//           u.parts.find(availablePart => availablePart.name === part.name) !==
 //           undefined
 //       );
 //       // randomly choose a user from the approved list ...

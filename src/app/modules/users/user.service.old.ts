@@ -7,8 +7,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { CommonService } from '../../core/services/common.service';
 import { MessageService } from '../../core/services/message.service';
-import { StitchService } from 'src/app/core/services/stitch.service';
-// import { PartService } from 'src/app/core/services/part.service';
+import { StitchService } from '@src/app/core/services/stitch.service';
+// import { PartService } from '@src/app/core/services/part.service';
 // import * as mockUsers from '../../mocks/users.mock';
 // import { User } from '../../models/users.schema';
 // import { any } from 'server/src/modules/users/user.schema';
@@ -100,7 +100,7 @@ export class UserService extends CommonService {
    * GET user by part.
    */
   getUsersByPart(part: any): Observable<any[]> {
-    const partId = part._id;
+    const partName = part.name;
 
     return this.http.get<any[]>(this.usersUrl).pipe(
       map((result: any[]) => {
@@ -108,8 +108,9 @@ export class UserService extends CommonService {
         // TODO REMOVE when doing nice requests on MongoDB
         return result.filter(
           (user) =>
-            user.parts.find((availablePart) => availablePart._id === partId) !==
-            undefined
+            user.parts.find(
+              (availablePart) => availablePart.name === partName
+            ) !== undefined
         );
       }),
       tap((h) => {
@@ -130,16 +131,16 @@ export class UserService extends CommonService {
       map((result) => {
         // Arranging
         const chairmanResults = result.find(
-          (part) => part._id === 'weekend.publicTalk.chairman'
+          (part) => part.name === 'weekend.publicTalk.chairman'
         );
         const speakerResults = result.find(
-          (part) => part._id === 'weekend.publicTalk.speaker'
+          (part) => part.name === 'weekend.publicTalk.speaker'
         );
         const conductorResults = result.find(
-          (part) => part._id === 'weekend.watchtower.conductor'
+          (part) => part.name === 'weekend.watchtower.conductor'
         );
         const readerResults = result.find(
-          (part) => part._id === 'weekend.watchtower.reader'
+          (part) => part.name === 'weekend.watchtower.reader'
         );
 
         const weekeendAssignableList = {

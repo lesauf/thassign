@@ -1,5 +1,4 @@
 import * as faker from 'faker'; // /locale/en_US'
-import { PartService } from '@src/app/core/services/part.service';
 import { Part } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
 
@@ -11,7 +10,7 @@ const generateParts = (parts: Part[], count = faker.random.number(10)) => {
 
   for (let i = 1; i <= count + 1; i++) {
     const randomPart = faker.random.arrayElement(parts);
-    res.push(randomPart._id);
+    res.push(randomPart.name);
   }
 
   return res;
@@ -24,7 +23,7 @@ export const generateOneUser = (parts: Part[], ownerId) => {
   const baptized = faker.random.boolean();
   const publisher = faker.random.boolean();
 
-  return {
+  return new User({
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     genre: genre,
@@ -43,10 +42,10 @@ export const generateOneUser = (parts: Part[], ownerId) => {
     parts: generateParts(parts), // Parts names
     assignments: [],
     disabled: false,
-    createdAt: new Date(),
+    // createdAt: new Date(),
     deleted: false,
     ownerId: ownerId,
-  };
+  });
 };
 
 export const generateUsers = (

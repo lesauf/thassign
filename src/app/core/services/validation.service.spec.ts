@@ -1,7 +1,6 @@
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 
 import { ValidationService } from '@src/app/core/services/validation.service';
-import { StitchService } from 'src/app/core/services/stitch.service';
 
 describe('ValidationService', () => {
   let ValidationServiceSpectator: SpectatorService<ValidationService>;
