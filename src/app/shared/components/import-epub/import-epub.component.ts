@@ -5,7 +5,7 @@ import {
   Input,
   OnInit,
   ViewChild,
-  Renderer2
+  Renderer2,
 } from '@angular/core';
 import ePub, { Book, Rendition } from 'epubjs';
 import Spine from 'epubjs/types/spine';
@@ -25,7 +25,7 @@ export class ImportEpubComponent implements OnInit {
   renderArea: ElementRef;
 
   @Input()
-  epubFilename = 'mwb_E_202011';
+  epubFilename = 'mwb_E_202101';
 
   // public epubPath = '/assets/epubs/';
 

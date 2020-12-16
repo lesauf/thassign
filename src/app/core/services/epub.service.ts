@@ -76,9 +76,10 @@ export class EpubService extends CommonService<any> {
       // Return empty array as reference program
       return [];
     }
-
+    console.log('Book', this.book);
     // Extract the programs
     const referencePrograms = await this.extractMwbPrograms(ownerId);
+    console.log('Ref Program', referencePrograms);
 
     return referencePrograms;
   }
@@ -111,85 +112,92 @@ export class EpubService extends CommonService<any> {
     await this.book.ready;
 
     const weekPages = await this.getXmlOfSections();
-
+    console.log('weekPages', weekPages);
     // Store the current week
     let currentWeek: DateTime;
 
     weekPages.forEach((weekPage) => {
       // We look for the sections/pages containing the referenceProgram
-      const ministrySection = weekPage.xml.getElementsByClassName('ministry');
+      const ministrySection = weekPage.xml.getElementsByClassName(
+        'mwbHeadingIcon and ministry--rev2021'
+      );
 
       if (ministrySection.length !== 0) {
+        console.log(ministrySection);
         // Get the week
         const weekString = weekPage.xml.querySelector("[id='p1']")
           .lastElementChild.innerHTML;
+
         const weekStringFull = this.convertWeekToDateString(weekString);
 
-        if (currentWeek === undefined) {
-          // First week
-          currentWeek = DateTime.fromISO(weekStringFull);
-        } else {
-          // subsequent weeks just get calculated
-          // so that they can cross the months easily
-          currentWeek = currentWeek.plus({ days: 7 });
-        }
-
-        // ------------------------------------
-        // Prepare the Program object         -
-        // ------------------------------------
-        const referenceProgram = {
-          // referenceProgram reference key is week + userId
-          _id: currentWeek.toFormat('yyyyMMdd') + ownerId,
-          meeting: 'midweek',
-          week: currentWeek.toFormat('yyyyMMdd'),
-          month: currentWeek.toFormat('yyyyMM'), // also store the month
-          // xhtml: weekPage.xml.toString(),
-          // sectionIndex: weekPage.index,
-          assignments: [],
-          ownerId: ownerId,
-        };
-
-        // The details for assignments are in ul.noMarker tags
-        // We do not need them
-        const parts: NodeList = weekPage.xml.querySelectorAll(
-          'ul:not(.noMarker) > li > p'
-        );
-
-        for (let index = 0; index < parts.length; index++) {
-          // get the meeting section of this part
-          let partSection = 'chairman';
-          const partSectionDiv = parts
-            .item(index)
-            .parentElement.parentElement.parentElement.parentElement.getElementsByTagName(
-              'h2'
-            );
-
-          if (partSectionDiv.length) {
-            const classes = partSectionDiv.item(0).getAttribute('class');
-
-            partSection = classes.substr(classes.indexOf(' ')).trim();
+        if (weekStringFull !== null) {
+          if (currentWeek === undefined) {
+            // First week
+            currentWeek = DateTime.fromISO(weekStringFull);
+          } else {
+            // subsequent weeks just get calculated
+            // so that they can cross the months easily
+            currentWeek = currentWeek.plus({ days: 7 });
           }
 
-          const partTitle: string[] = this.extractPartTitleAndDescription(
-            parts.item(index).textContent
-          );
-
-          referenceProgram.assignments.push({
+          // ------------------------------------
+          // Prepare the Program object         -
+          // ------------------------------------
+          const referenceProgram = {
+            // referenceProgram reference key is week + userId
+            _id: currentWeek.toFormat('yyyyMMdd') + ownerId,
             meeting: 'midweek',
             week: currentWeek.toFormat('yyyyMMdd'),
-            position: index,
-            partSection,
-            ownerId: '',
-            assignee: '',
-            title: partTitle[0].trim(),
-            // part with a description (separated by column :)
-            ...(partTitle.length > 1
-              ? { description: partTitle[1].trim() }
-              : null),
-          });
-        }
+            month: currentWeek.toFormat('yyyyMM'), // also store the month
+            // xhtml: weekPage.xml.toString(),
+            // sectionIndex: weekPage.index,
+            assignments: [],
+            ownerId: ownerId,
+          };
 
-        referencePrograms.push(referenceProgram);
+          // The details for assignments are in ul.noMarker tags
+          // We do not need them
+          const parts: NodeList = weekPage.xml.querySelectorAll('ul > li > p'); // 'ul:not(.noMarker) > li > p'
+          console.log('Parts', parts);
+          for (let index = 0; index < parts.length; index++) {
+            // get the meeting section of this part
+            let partSection = 'chairman';
+            const partSectionDiv = parts
+              .item(index)
+              .parentElement.parentElement.parentElement.parentElement.getElementsByTagName(
+                'div'
+              );
+            console.log('partSectionDiv: ', partSectionDiv);
+            if (partSectionDiv.length) {
+              const classes = partSectionDiv.item(0).getAttribute('class');
+
+              partSection = classes
+                .substring(classes.lastIndexOf(' '), classes.indexOf('-'))
+                .trim();
+              console.log('Classes: ', partSection);
+            }
+
+            const partTitle: string[] = this.extractPartTitleAndDescription(
+              parts.item(index).textContent
+            );
+
+            referenceProgram.assignments.push({
+              meeting: 'midweek',
+              week: currentWeek.toFormat('yyyyMMdd'),
+              position: index,
+              partSection,
+              ownerId: '',
+              assignee: '',
+              title: partTitle[0].trim(),
+              // part with a description (separated by column :)
+              ...(partTitle.length > 1
+                ? { description: partTitle[1].trim() }
+                : null),
+            });
+          }
+
+          referencePrograms.push(referenceProgram);
+        }
       }
     });
 
@@ -255,7 +263,8 @@ export class EpubService extends CommonService<any> {
 
       return this.epubMonth + day;
     } else {
-      throw 'No day in the week string provided';
+      console.log('No day in the week string provided');
+      return null;
     }
   }
 

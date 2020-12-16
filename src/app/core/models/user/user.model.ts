@@ -266,7 +266,7 @@ export class User {
 
   // Some virtual properties
   get fullName() {
-    if (this.lastName !== undefined) {
+    if (this.lastName) {
       return this.firstName + ' ' + this.lastName;
     }
     return this.firstName ? this.firstName : 'UPDATE INFOS !';
