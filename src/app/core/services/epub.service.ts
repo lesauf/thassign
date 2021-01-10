@@ -76,10 +76,10 @@ export class EpubService extends CommonService<any> {
       // Return empty array as reference program
       return [];
     }
-    console.log('Book', this.book);
+    // console.log('Book', this.book);
     // Extract the programs
     const referencePrograms = await this.extractMwbPrograms(ownerId);
-    console.log('Ref Program', referencePrograms);
+    // console.log('Ref Program', referencePrograms);
 
     return referencePrograms;
   }
@@ -112,7 +112,7 @@ export class EpubService extends CommonService<any> {
     await this.book.ready;
 
     const weekPages = await this.getXmlOfSections();
-    console.log('weekPages', weekPages);
+    // console.log('weekPages', weekPages);
     // Store the current week
     let currentWeek: DateTime;
 
@@ -123,7 +123,7 @@ export class EpubService extends CommonService<any> {
       );
 
       if (ministrySection.length !== 0) {
-        console.log(ministrySection);
+        // console.log(ministrySection);
         // Get the week
         const weekString = weekPage.xml.querySelector("[id='p1']")
           .lastElementChild.innerHTML;
@@ -158,7 +158,7 @@ export class EpubService extends CommonService<any> {
           // The details for assignments are in ul.noMarker tags
           // We do not need them
           const parts: NodeList = weekPage.xml.querySelectorAll('ul > li > p'); // 'ul:not(.noMarker) > li > p'
-          console.log('Parts', parts);
+          // console.log('Parts', parts);
           for (let index = 0; index < parts.length; index++) {
             // get the meeting section of this part
             let partSection = 'chairman';
@@ -167,14 +167,14 @@ export class EpubService extends CommonService<any> {
               .parentElement.parentElement.parentElement.parentElement.getElementsByTagName(
                 'div'
               );
-            console.log('partSectionDiv: ', partSectionDiv);
+            // console.log('partSectionDiv: ', partSectionDiv);
             if (partSectionDiv.length) {
               const classes = partSectionDiv.item(0).getAttribute('class');
 
               partSection = classes
                 .substring(classes.lastIndexOf(' '), classes.indexOf('-'))
                 .trim();
-              console.log('Classes: ', partSection);
+              // console.log('Classes: ', partSection);
             }
 
             const partTitle: string[] = this.extractPartTitleAndDescription(
