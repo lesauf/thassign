@@ -13,9 +13,9 @@ export abstract class CommonService<M> {
    * Observable data service
    * the type will be converted to Map<string, M>
    */
-  protected dataStore: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  protected dataStore: BehaviorSubject<any> = new BehaviorSubject<any>([]);
 
-  public readonly data: Observable<M[]>; //  = this.dataStore.asObservable();
+  public readonly data: Observable<any>; //  = this.dataStore.asObservable();
 
   protected collectionName: string;
   protected serviceName: string;

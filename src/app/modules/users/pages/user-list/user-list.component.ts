@@ -17,10 +17,13 @@ import { Observable, of, BehaviorSubject, merge } from 'rxjs';
 // import { any } from '../../../../../../server/src/modules/users/user.schema';
 // import { User } from '@src/app/models/users.schema';
 import { UserDetailComponent } from '@src/app/modules/users/components/user-detail/user-detail.component';
+import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
 import { UserService } from '@src/app/modules/users/user.service';
 import { UserSortComponent } from '@src/app/modules/users/components/user-sort/user-sort.component';
 import { User } from '@src/app/core/models/user/user.model';
 import { PartService } from '@src/app/core/services/part.service';
+import { CombineLatestOperator } from 'rxjs/internal/observable/combineLatest';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-user-list',
@@ -67,6 +70,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   constructor(
     private router: Router,
+    private assignmentService: AssignmentService,
     private userService: UserService,
     private partService: PartService,
     private dialog: MatDialog
@@ -78,7 +82,17 @@ export class UserListComponent implements OnInit, AfterViewInit {
       this.pUsers$ = this.userService.pUsers;
     });
 
+    // TODO see if it is possible to get the last assignment of each user
+    // combineLatest([this.userService.data, this.assignmentService.data])
+    //   .subscribe(([users, assignments]) => {
+    //   if (users !== null && assignments !== null) {
+    //     this.assignmentService.groupAssignmentsByUser(assignments, users);
+    //     console.log(this.assignmentService.assignmentsByUser);
+    //   }
+    // });
+
     this.getUsers();
+
   }
 
   ngAfterViewInit(): void {
@@ -92,21 +106,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
             this.pageSize = paginator.pageSize;
             this.pageIndex = paginator.pageIndex;
           })
-          // switchMap((pageEvent) => {
-          //   console.log(pageEvent);
-
-          //   this.dataLength = this.userService.paginateUsers(
-          //     this.sortField,
-          //     this.sortOrder,
-          //     paginator !== undefined ? paginator.pageSize : this.pageSize,
-          //     paginator !== undefined ? paginator.pageIndex : this.pageIndex,
-          //     this.searchTerm
-          //   );
-
-          //   return this.userService.pUsers;
-          // })
         )
-
         .subscribe();
     });
 
@@ -118,6 +118,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     });
 
     // this.getUsers();
+
   }
 
   async generateUsers() {

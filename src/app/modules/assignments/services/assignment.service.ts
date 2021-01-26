@@ -112,12 +112,15 @@ export abstract class AssignmentService extends CommonService<Assignment> {
    * Sorted by week ( and position ?)
    * @param allAssignments
    */
-  groupAssignmentsByUser(allAssignments?: Map<string, Assignment>) {
+  groupAssignmentsByUser(allAssignments?: Map<string, Assignment>, users?: User[]) {
     if (allAssignments === undefined) {
       allAssignments = this.getAssignments();
     }
 
-    this.userService.getUsers().forEach((user) => {
+    if (users === undefined) {
+      users = this.userService.getUsers();
+    }
+    users.forEach((user) => {
       // Convert the Map assignments to an array to make the search
       const assMap = [...allAssignments.values()];
       let userAss = assMap.filter((ass: Assignment) => {
@@ -193,27 +196,6 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     allUsers?: User[]
   ) {
     try {
-      // Convert results to Assignment array
-
-      // const allAssignments = this.createAssignment(
-      //   assignments,
-      //   allParts,
-      //   allUsers
-      // ) as Assignment[];
-      // Sort
-      // result.sort((a: Assignment, b: Assignment) => {
-      //   // sort desc
-      //   if (a.week > b.week) {
-      //     return -1;
-      //   }
-
-      //   if (a.week < b.week) {
-      //     return 1;
-      //   }
-
-      //   return 0;
-      // });
-
       this.updateStore(assignments);
       // this.log('fetched Assignments', 'AssignmentService');
 
@@ -222,90 +204,6 @@ export abstract class AssignmentService extends CommonService<Assignment> {
       return this.handleError('storeAssignments', error, [], '');
     }
   }
-
-  /**
-   * Get an assignment
-   *
-   * @param id: string
-   */
-  // getAssignment(id?: number | string): Assignment {
-  //   try {
-  //     if (id) {
-  //       // Get assignment from store
-  //       this.log(`fetched assignment id=${id}`);
-
-  //       return this.getAssignments().find(
-  //         (assignment) => assignment._id === id
-  //       );
-  //     } else {
-  //       // create an empty assignment with default values
-  //       return new Assignment({
-  //         ownerId: this.backendService.getSignedInUser()._id,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     this.handleError<any>(`getAssignment id=${id}`, error);
-  //   }
-  // }
-
-  /**
-   * GET assignments by week
-   * @param week as a DateTime object
-   * @param partNames List of part we want to filter
-   */
-  // getAssignmentsByWeek(
-  //   week: DateTime,
-  //   partNames?: string[]
-  // ): Observable<Assignment[]> {
-  //   const url = this.assignmentsUrl + '/week/' + week.toFormat('YYYY-MM-DD');
-  //   return this.http.get<Assignment[]>(url).pipe(
-  //     tap((h) => {
-  //       const outcome = h ? `fetched` : `did not find`;
-  //       const weekFormatted = week.toFormat('L');
-  //       this.log(
-  //         `${outcome} assignments of week ${weekFormatted}`,
-  //         'AssignmentService'
-  //       );
-  //     }),
-  //     catchError(this.handleError('getAssignmentsByWeek', []))
-  //   );
-  // }
-
-  // async getWeekendAssignmentsByMonth(month: DateTime) {
-  //   // console.log(week.toFormat('YYYY-MM-DD'));
-  //   const url =
-  //     this.assignmentsUrl +
-  //     '/meeting/weekend/month/' +
-  //     month.toFormat(this.settingService.getDateFormat('store'));
-
-  //   // // Get all the assignments of this week
-  //   const weekendAssignments = await this.http
-  //     .get<any[]>(url)
-  //     .pipe(
-  //       tap((h) => {
-  //         const outcome = h ? `fetched` : `did not find`;
-  //         const monthFormatted = month.toFormat('L');
-  //         this.log(
-  //           `${outcome} weekend assignments of month ${monthFormatted}`,
-  //           'AssignmentService'
-  //         );
-  //       }),
-  //       catchError(this.handleError('getWeekendAssignmentsByMonth', []))
-  //     )
-  //     .toPromise();
-  //   // console.log(weekendAssignments);
-  //   // Now group them by week then part name
-  //   const weekendAssignmentsGrouped = [];
-  //   weekendAssignments.forEach((week) => {
-  //     weekendAssignmentsGrouped[week._id] = [];
-  //     week.parts.forEach((result) => {
-  //       weekendAssignmentsGrouped[week._id][result._id.part] =
-  //         result.assignment;
-  //     });
-  //   });
-
-  //   return weekendAssignmentsGrouped;
-  // }
 
   /**
    * Get the assignments for some parts during a month
@@ -368,32 +266,6 @@ export abstract class AssignmentService extends CommonService<Assignment> {
       return true;
     }
   }
-
-  // async getWeekendChairmanAssignmentByWeek(week: DateTime) {
-  //   const weekendChairmanPart = ['weekend.publicTalk.chairman'];
-  //   const url =
-  //     this.assignmentsUrl +
-  //     'partName/weekend.publicTalk.chairman/week/' +
-  //     week.toFormat('Y-M-D');
-  //   return this.http.get<any[]>(url).pipe(
-  //     tap((h) => {
-  //       const outcome = h ? `fetched` : `did not find`;
-  //       const weekFormatted = week.toFormat('L');
-  //       this.log(
-  //         `${outcome} weekend chairman assignments of week ${weekFormatted}`,
-  //         'AssignmentService'
-  //       );
-  //     }),
-  //     catchError(this.handleError('getWeekendChairmanAssignmentByWeek', []))
-  //   );
-  //   // // Get all the assignments of this week
-  //   // const weekendChairman = await this.getAssignmentsByWeek(
-  //   //   week,
-  //   //   weekendChairmanPart
-  //   // ).toPromise();
-
-  //   // return weekendChairman[0];
-  // }
 
   //////// Save methods //////////
   /**
