@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ControlMessagesComponent } from '@src/app/shared/components/control-messages/control-messages.component';
 
@@ -6,7 +6,7 @@ describe('ControlMessagesComponent', () => {
   let component: ControlMessagesComponent;
   let fixture: ComponentFixture<ControlMessagesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ControlMessagesComponent ]
     })
