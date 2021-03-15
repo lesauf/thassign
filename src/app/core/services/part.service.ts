@@ -31,6 +31,7 @@ export class PartService extends CommonService<Part> {
     ],
     'midweek-students': [
       'clm.treasures.bible-reading',
+      'clm.ministry.memorial-invitation',
       'clm.ministry.initial-call',
       'clm.ministry.return-visit',
       'clm.ministry.bible-study',
@@ -92,6 +93,7 @@ export class PartService extends CommonService<Part> {
       const t: string = this.getTranslationOf(part.name);
       return t.toLowerCase() == title.toLowerCase();
     });
+    
     if (correspondingPart !== undefined) {
       return correspondingPart;
     } else if (partSection === 'treasures') {

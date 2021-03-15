@@ -219,7 +219,7 @@ export class User {
     } else {
       this.updatedAt = new Date();
     }
-    debugger;
+
     return {
       ...(this._id && { _id: this._id }),
       ownerId: this.ownerId,

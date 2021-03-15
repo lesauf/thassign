@@ -254,7 +254,7 @@ export abstract class AssignmentService extends CommonService<Assignment> {
     const isStudentPart = this.partService.meetingParts[
       'midweek-students'
     ].includes(part.name);
-
+    
     if (this.displayStudentsParts === true) {
       // Only display students parts
       return isStudentPart;
