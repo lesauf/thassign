@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @mixin mat-list-icon($size: 24px) {
   font-size: $size;
   height: $size;
@@ -23,7 +24,7 @@
   padding-top: 0px;
   }
   .secondaryMenu {
-  background: mat-color($primary, 500);
+  background: mat.get-color-from-palette($primary, 500);
   transition: max-height 0.4s cubic-bezier(0.35, 0, 0.25, 1);
   padding-top: 0px;
   }

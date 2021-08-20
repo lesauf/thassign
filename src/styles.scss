@@ -1,10 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+@use '~@angular/material' as mat;
 
 @import "~@angular/material/prebuilt-themes/purple-green.css";
 // @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 // Import theming functions
-@import "~@angular/material/theming";
 
 @mixin theme-color-grabber($theme) {
   $primary: map-get($theme, primary);
@@ -13,13 +13,13 @@
 
   // Theme specific styles
   .primaryColorBg {
-    background-color: mat-color($primary, 900);
+    background-color: mat.get-color-from-palette($primary, 900);
   }
   .accentColorBg {
-    background-color: mat-color($accent);
+    background-color: mat.get-color-from-palette($accent);
   }
   .warnColorBg {
-    background-color: mat-color($warn);
+    background-color: mat.get-color-from-palette($warn);
   }
 }
 
