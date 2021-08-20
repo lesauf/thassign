@@ -1,18 +1,6 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  ViewChild,
-  Renderer2,
-  Injectable,
-} from '@angular/core';
-import ePub, { Book, Rendition } from 'epubjs';
-import Spine from 'epubjs/types/spine';
-import Section from 'epubjs/types/section';
+import { Injectable } from '@angular/core';
+import { Book, Rendition } from 'epubjs';
 import { DateTime } from 'luxon';
-import { indexOfElementNode } from 'epubjs/types/utils/core';
 
 import { CommonService } from '@src/app/core/services/common.service';
 import { MessageService } from '@src/app/core/services/message.service';
@@ -125,8 +113,8 @@ export class EpubService extends CommonService<any> {
       if (ministrySection.length !== 0) {
         // console.log(ministrySection);
         // Get the week
-        const weekString = weekPage.xml.querySelector("[id='p1']")
-          .lastElementChild.innerHTML;
+        const weekString =
+          weekPage.xml.querySelector("[id='p1']").lastElementChild.innerHTML;
 
         const weekStringFull = this.convertWeekToDateString(weekString);
 

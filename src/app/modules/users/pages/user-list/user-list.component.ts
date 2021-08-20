@@ -3,7 +3,6 @@ import {
   Component,
   OnInit,
   QueryList,
-  ViewChild,
   ViewChildren,
   ElementRef,
 } from '@angular/core';
@@ -11,8 +10,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { switchMap, tap } from 'rxjs/operators';
-import { Observable, of, BehaviorSubject, merge } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Observable, merge } from 'rxjs';
 
 // import { any } from '../../../../../../server/src/modules/users/user.schema';
 // import { User } from '@src/app/models/users.schema';
@@ -22,8 +21,6 @@ import { UserService } from '@src/app/modules/users/user.service';
 import { UserSortComponent } from '@src/app/modules/users/components/user-sort/user-sort.component';
 import { User } from '@src/app/core/models/user/user.model';
 import { PartService } from '@src/app/core/services/part.service';
-import { CombineLatestOperator } from 'rxjs/internal/observable/combineLatest';
-import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-user-list',
@@ -92,7 +89,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
     // });
 
     this.getUsers();
-
   }
 
   ngAfterViewInit(): void {
@@ -118,7 +114,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
     });
 
     // this.getUsers();
-
   }
 
   async generateUsers() {

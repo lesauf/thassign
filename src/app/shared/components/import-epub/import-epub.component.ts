@@ -1,15 +1,6 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  ViewChild,
-  Renderer2,
-} from '@angular/core';
-import ePub, { Book, Rendition } from 'epubjs';
-import Spine from 'epubjs/types/spine';
-import Section from 'epubjs/types/section';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+// import { Book, Rendition } from 'epubjs';
+import * as epubjs from 'epubjs';
 import { DateTime } from 'luxon';
 
 import { BackendService } from '@src/app/core/services/backend.service';
@@ -29,9 +20,9 @@ export class ImportEpubComponent implements OnInit {
 
   // public epubPath = '/assets/epubs/';
 
-  public book: Book;
+  public book: epubjs.Book;
 
-  public rendition: Rendition;
+  public rendition: epubjs.Rendition;
 
   public displayedProgramIndex = 0;
   public displayedProgram;

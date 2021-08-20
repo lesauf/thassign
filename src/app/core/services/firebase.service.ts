@@ -5,12 +5,11 @@ import {
   AngularFirestoreCollection,
   CollectionReference,
 } from '@angular/fire/firestore';
-import firebase from 'firebase';
-// import 'firebase/firestore';
-// import 'firebase/auth';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
 
 import { User } from '@src/app/core/models/user/user.model';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class FirebaseService {
@@ -149,7 +148,7 @@ export class FirebaseService {
     data: any[],
     operation: 'set' | 'delete' = 'set',
     merge = false,
-    converter?: object,
+    converter?: object
   ): Promise<any> {
     // Get a new write batch
     var batch = this.firestore.firestore.batch();
