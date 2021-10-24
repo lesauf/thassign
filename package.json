@@ -45,7 +45,7 @@
     "@ngx-translate/http-loader": "^6.0.0",
     "class-validator": "^0.13.1",
     "core-js": "^3.16.2",
-    "epubjs": "^0.3.88",
+    "epubjs": "^0.3.90",
     "firebase": "^8.10.0",
     "luxon": "^2.0.2",
     "messageformat": "^2.3.0",
