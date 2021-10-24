@@ -399,7 +399,7 @@ export class UserService extends CommonService<User> {
       assignableUsersByPart[part.name] = users.filter(
         (user) =>
           (user.parts as Part[]).find(
-            (userPart) => userPart.name === part.name
+            (userPart) => userPart.name === part.name && !user.disabled
           ) !== undefined
       );
     });
