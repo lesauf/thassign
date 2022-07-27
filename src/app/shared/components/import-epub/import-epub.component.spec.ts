@@ -8,8 +8,9 @@ describe('ImportEpubComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImportEpubComponent ]
-    })
+    declarations: [ImportEpubComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 
