@@ -12,11 +12,11 @@ import {
 } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
-  FormArray,
+  UntypedFormArray,
   FormControl,
-  FormGroup,
+  UntypedFormGroup,
   Validators,
-  FormBuilder,
+  UntypedFormBuilder,
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -82,7 +82,7 @@ export class AssignmentMidweekStudentsComponent
    */
   data$: Subscription;
 
-  studentsForm: FormGroup;
+  studentsForm: UntypedFormGroup;
 
   payLoad = '';
 
@@ -98,7 +98,7 @@ export class AssignmentMidweekStudentsComponent
     protected partService: PartService,
     protected userService: UserService,
     protected messageService: MessageService,
-    protected formBuilder: FormBuilder,
+    protected formBuilder: UntypedFormBuilder,
     protected settingService: SettingService,
     protected _snackBar: MatSnackBar,
     protected _translate: TranslateService,
@@ -228,7 +228,7 @@ export class AssignmentMidweekStudentsComponent
    * @param wIndex position within the week
    */
   addAssignment(week: Interval, wIndex: string) {
-    (this.studentsForm.get([wIndex]) as FormArray).insert(
+    (this.studentsForm.get([wIndex]) as UntypedFormArray).insert(
       this.assignmentsByWeek[wIndex].length,
       this.acs.toAssignmentControl(
         new Assignment({
@@ -244,7 +244,7 @@ export class AssignmentMidweekStudentsComponent
   }
 
   removeAssignment(assignment: Assignment, wIndex: string) {
-    (this.studentsForm.get([wIndex]) as FormArray).removeAt(
+    (this.studentsForm.get([wIndex]) as UntypedFormArray).removeAt(
       assignment.position
     );
     // trigger valueChanges to update assignmentsByWeek
@@ -255,16 +255,16 @@ export class AssignmentMidweekStudentsComponent
   drop(event: CdkDragDrop<number>, wIndex: number) {
     const move = (this.studentsForm.get([
       event.previousContainer.data,
-    ]) as FormArray).get([event.previousIndex]);
+    ]) as UntypedFormArray).get([event.previousIndex]);
 
     (this.studentsForm.get([
       event.previousContainer.data,
-    ]) as FormArray).removeAt(event.previousIndex);
+    ]) as UntypedFormArray).removeAt(event.previousIndex);
 
     // Set the week
     move.get('week').setValue(this.weeks[wIndex].start);
 
-    (this.studentsForm.get([event.container.data]) as FormArray).insert(
+    (this.studentsForm.get([event.container.data]) as UntypedFormArray).insert(
       event.currentIndex,
       move
     );

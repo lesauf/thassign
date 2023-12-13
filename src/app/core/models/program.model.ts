@@ -1,4 +1,4 @@
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import {
   IsArray,
   IsBoolean,
@@ -110,13 +110,13 @@ export class Program {
     });
 
     // Now prepare the program form itself
-    return new FormGroup({
-      _id: new FormControl(this._id || ''),
-      month: new FormControl(this.month || ''),
-      week: new FormControl(this.week || ''),
-      meeting: new FormControl(this.meeting || ''),
-      ownerId: new FormControl(this.ownerId || ownerId),
-      assignments: new FormArray(assignmentsArray),
+    return new UntypedFormGroup({
+      _id: new UntypedFormControl(this._id || ''),
+      month: new UntypedFormControl(this.month || ''),
+      week: new UntypedFormControl(this.week || ''),
+      meeting: new UntypedFormControl(this.meeting || ''),
+      ownerId: new UntypedFormControl(this.ownerId || ownerId),
+      assignments: new UntypedFormArray(assignmentsArray),
     });
   }
 }

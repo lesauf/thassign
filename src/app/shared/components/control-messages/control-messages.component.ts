@@ -1,5 +1,5 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, UntypedFormControl } from '@angular/forms';
 import { ValidationService } from '@src/app/core/services/validation.service';
 
 @Injectable()
@@ -23,7 +23,7 @@ import { ValidationService } from '@src/app/core/services/validation.service';
  */
 export class ControlMessagesComponent implements OnInit {
   @Input()
-  control: FormControl;
+  control: UntypedFormControl;
 
   controlName: string;
   constructor() {}

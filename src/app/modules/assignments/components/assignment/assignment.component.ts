@@ -12,7 +12,7 @@ import {
   ViewChild,
   TemplateRef,
 } from '@angular/core';
-import { FormGroup, FormArray } from '@angular/forms';
+import { UntypedFormGroup, FormArray } from '@angular/forms';
 import { MatSelectionList } from '@angular/material/list';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -32,7 +32,7 @@ export class AssignmentComponent implements OnInit, OnDestroy {
   @Input() isEditMode: boolean;
   @Input() listOfParts: Part[];
   @Input() assignableListByPart: User[][];
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() wIndex: number;
 
   @Output() isRemoved: EventEmitter<Assignment> = new EventEmitter();

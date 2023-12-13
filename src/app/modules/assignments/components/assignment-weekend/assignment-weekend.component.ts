@@ -9,11 +9,11 @@ import {
   OnDestroy,
 } from '@angular/core';
 import {
-  FormArray,
+  UntypedFormArray,
   FormControl,
-  FormGroup,
+  UntypedFormGroup,
   Validators,
-  FormBuilder,
+  UntypedFormBuilder,
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DateTime, Interval } from 'luxon';
@@ -86,7 +86,7 @@ export class AssignmentWeekendComponent
     protected partService: PartService,
     protected userService: UserService,
     protected messageService: MessageService,
-    protected formBuilder: FormBuilder,
+    protected formBuilder: UntypedFormBuilder,
     protected settingService: SettingService,
     protected _snackBar: MatSnackBar,
     protected _translate: TranslateService,
@@ -171,7 +171,7 @@ export class AssignmentWeekendComponent
     this.monthForm.disable(); // Disabled by default to prevent editing
   }
 
-  generateWeekendForm(week: Interval): FormGroup {
+  generateWeekendForm(week: Interval): UntypedFormGroup {
     const weekendForm = this.formBuilder.group({
       chairman: this.formBuilder.group({
         week: week.toFormat(DATE_FORMATS.store.dateInput),
@@ -197,7 +197,7 @@ export class AssignmentWeekendComponent
       }),
     });
 
-    return weekendForm as FormGroup;
+    return weekendForm as UntypedFormGroup;
   }
 
   getListOfPartsByWeek() {
@@ -223,8 +223,8 @@ export class AssignmentWeekendComponent
     );
 
     // Populate form with stored values if there are
-    const weekForms = this.monthForm.controls['weeks'] as FormArray;
-    weekForms.controls.forEach((weekendForm: FormGroup, i) => {
+    const weekForms = this.monthForm.controls['weeks'] as UntypedFormArray;
+    weekForms.controls.forEach((weekendForm: UntypedFormGroup, i) => {
       this.listOfParts.forEach((partName, partIndex) => {
         const week = weekendForm.controls[partName].value['week'];
 
@@ -233,9 +233,9 @@ export class AssignmentWeekendComponent
             weekendAssignments[week][this[partName + 'Part'].name] !== undefined
           ) {
             // Type casting to remove TS errors
-            ((this.monthForm.get('weeks') as FormArray).at(
+            ((this.monthForm.get('weeks') as UntypedFormArray).at(
               i
-            ) as FormGroup).controls[partName].patchValue(
+            ) as UntypedFormGroup).controls[partName].patchValue(
               weekendAssignments[week][this[partName + 'Part'].name]
             );
           }

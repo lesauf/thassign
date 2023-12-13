@@ -5,7 +5,7 @@ import {
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { OptionsDialogComponent } from '@src/app/shared/components/options-dialog/options-dialog.component';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { ComponentType } from '@angular/cdk/portal';
 
 /**
@@ -25,7 +25,7 @@ export class PickerComponent<T> implements OnInit {
    */
   @Input() optionsTemplate: any = OptionsDialogComponent; // ComponentType<T> | TemplateRef<T>;
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() controlPath: string[];
   // @Input() controlName: string;
   @Input() placeholder: string;
@@ -50,12 +50,12 @@ export class PickerComponent<T> implements OnInit {
 
   @Input() selectedValue: T;
 
-  control: FormGroup;
+  control: UntypedFormGroup;
 
   constructor(public dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.control = this.form.get(this.controlPath) as FormGroup;
+    this.control = this.form.get(this.controlPath) as UntypedFormGroup;
 
     // console.log(this.optionsTemplate);
     if (!this.optionsTemplate) {
