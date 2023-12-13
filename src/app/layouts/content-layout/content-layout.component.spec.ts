@@ -8,8 +8,9 @@ describe('MaComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [MaComponent]
-    }).compileComponents();
+    declarations: [MaComponent],
+    teardown: { destroyAfterEach: false }
+}).compileComponents();
   }));
 
   beforeEach(() => {

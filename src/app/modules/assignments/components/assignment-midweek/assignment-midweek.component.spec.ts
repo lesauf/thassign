@@ -8,8 +8,9 @@ describe('AssignmentMidweekComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AssignmentMidweekComponent ]
-    })
+    declarations: [AssignmentMidweekComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 
