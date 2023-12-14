@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ElementRef, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import { MessageService } from '@src/app/core/services/message.service';

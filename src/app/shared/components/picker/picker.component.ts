@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
+  MatLegacyDialog as MatDialog,
+  MatLegacyDialogRef as MatDialogRef,
+  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+} from '@angular/material/legacy-dialog';
 import { OptionsDialogComponent } from '@src/app/shared/components/options-dialog/options-dialog.component';
 import { UntypedFormGroup } from '@angular/forms';
 import { ComponentType } from '@angular/cdk/portal';

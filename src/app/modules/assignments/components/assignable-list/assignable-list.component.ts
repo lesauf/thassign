@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ViewChild, Injector } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSelectionList } from '@angular/material/list';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatLegacySelectionList as MatSelectionList } from '@angular/material/legacy-list';
 import { TranslateService } from '@ngx-translate/core';
 
 import { OptionsDialogComponent } from '@src/app/shared/components/options-dialog/options-dialog.component';

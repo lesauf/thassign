@@ -15,7 +15,7 @@ import {
   Validators,
   UntypedFormBuilder,
 } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { DateTime, Interval } from 'luxon';
 import { TranslateService } from '@ngx-translate/core';
 

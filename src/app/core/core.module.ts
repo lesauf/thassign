@@ -1,7 +1,7 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MAT_DATE_LOCALE, DateAdapter } from '@angular/material/core';
-import { MatPaginatorIntl } from '@angular/material/paginator';
+import { MatLegacyPaginatorIntl as MatPaginatorIntl } from '@angular/material/legacy-paginator';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthHeaderInterceptor } from '@src/app/core/interceptors/auth-header.interceptor';
