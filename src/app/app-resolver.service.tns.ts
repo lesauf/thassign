@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Resolve,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Part } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
 import { Observable, EMPTY, of } from 'rxjs';
@@ -16,7 +12,7 @@ import { AuthService } from '@src/app/modules/auth/auth.service';
 @Injectable({
   providedIn: 'root',
 })
-export class AppResolverService implements Resolve<string> {
+export class AppResolverService  {
   constructor(
     protected authService: AuthService,
     protected assignmentService: AssignmentService,

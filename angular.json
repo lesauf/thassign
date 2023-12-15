@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash"
+           ],
             "outputPath": "dist/thassign",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -134,9 +137,10 @@
       }
     }
   },
-  "defaultProject": "thassign",
   "cli": {
-    "defaultCollection": "@nativescript/schematics",
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "@nativescript/schematics"
+    ]
   }
 }

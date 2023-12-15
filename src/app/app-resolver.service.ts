@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Resolve,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 
 import { Part } from '@src/app/core/models/part/part.model';
@@ -21,7 +17,7 @@ import { UserConverter } from '@src/app/core/models/user/user.converter';
 @Injectable({
   providedIn: 'root',
 })
-export class AppResolverService implements Resolve<string> {
+export class AppResolverService  {
   constructor(
     protected authService: AuthService,
     protected assignmentService: AssignmentService,

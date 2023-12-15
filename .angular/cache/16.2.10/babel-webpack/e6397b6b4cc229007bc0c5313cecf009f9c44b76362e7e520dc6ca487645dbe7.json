@@ -1,0 +1,1 @@
+{"ast":null,"code":"import '@firebase/auth';","map":{"version":3,"names":[],"sources":["C:/Users/CSEG/Desktop/thassign/node_modules/firebase/auth/dist/index.esm.js"],"sourcesContent":["import '@firebase/auth';\n"],"mappings":"AAAA,OAAO,gBAAgB"},"metadata":{},"sourceType":"module","externalDependencies":[]}
