@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '@src/app/modules/auth/auth.service';
@@ -14,7 +14,7 @@ import { LoginHelper } from '@src/app/modules/auth/login/login-helper';
 export class LoginComponent implements OnInit {
   @Input() message: string;
 
-  userForm: FormGroup;
+  userForm: UntypedFormGroup;
   formMessages = {
     all: '',
     email: '',
@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private loginHelper: LoginHelper
   ) {}

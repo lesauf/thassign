@@ -14,7 +14,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime, Interval } from 'luxon';
 import { combineLatest, concat, Observable, of, Subscription } from 'rxjs';
@@ -78,7 +78,7 @@ export class AssignmentMidweekComponent
    */
   data$: Subscription;
 
-  programsForm: FormGroup;
+  programsForm: UntypedFormGroup;
 
   /**
    * Display the Loading msg
@@ -177,7 +177,7 @@ export class AssignmentMidweekComponent
     // }
 
     //
-    this.programsForm = new FormGroup(group);
+    this.programsForm = new UntypedFormGroup(group);
   }
 
   /**

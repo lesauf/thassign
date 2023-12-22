@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, NgZone } from '@angular/core';
 import {
-  FormGroup,
-  FormBuilder,
+  UntypedFormGroup,
+  UntypedFormBuilder,
   Validators,
-  FormControl,
+  UntypedFormControl,
   ValidationErrors,
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ import { AuthHelper } from '@src/app/modules/auth/auth-helper';
 export class AuthComponent implements OnInit {
   @Input() message: string;
 
-  userForm: FormGroup;
+  userForm: UntypedFormGroup;
   formMessages = {
     all: '',
     email: '',
@@ -52,7 +52,7 @@ export class AuthComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private authHelper: AuthHelper,
     private ngZone: NgZone
@@ -100,7 +100,7 @@ export class AuthComponent implements OnInit {
     // this.onValueChanged();
   }
 
-  passwordsMatchValidator(control: FormControl): ValidationErrors {
+  passwordsMatchValidator(control: UntypedFormControl): ValidationErrors {
     const password = control.root.get('password');
     return password && control.value !== password.value
       ? {

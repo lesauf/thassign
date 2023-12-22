@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  FormGroup,
-  FormBuilder,
-  FormControl,
+  UntypedFormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
   Validators,
   ValidationErrors,
 } from '@angular/forms';
@@ -16,7 +16,7 @@ import { AuthService } from '@src/app/modules/auth/auth.service';
   styleUrls: ['../auth.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-  userForm: FormGroup;
+  userForm: UntypedFormGroup;
   formMessages = {
     firstName: '',
     lastName: '',
@@ -52,7 +52,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router
   ) {}
 
@@ -80,7 +80,7 @@ export class RegisterComponent implements OnInit {
     this.onValueChanged();
   }
 
-  passwordsMatchValidator(control: FormControl): ValidationErrors {
+  passwordsMatchValidator(control: UntypedFormControl): ValidationErrors {
     const password = control.root.get('password');
     return password && control.value !== password.value
       ? {

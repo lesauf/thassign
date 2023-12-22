@@ -12,7 +12,6 @@ import { User } from '@src/app/core/models/user/user.model';
 
 @Component({
   selector: 'app-home',
-  moduleId: module.id,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })

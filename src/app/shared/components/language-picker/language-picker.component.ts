@@ -8,6 +8,7 @@ import {
 import { User } from '@src/app/core/models/user/user.model';
 import { TranslateService } from '@ngx-translate/core';
 
+
 @Component({
   selector: 'ma-language-picker',
   templateUrl: './language-picker.component.html',

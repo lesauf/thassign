@@ -12,14 +12,14 @@ import {
   ViewChild,
   TemplateRef,
 } from '@angular/core';
-import { FormGroup, FormArray } from '@angular/forms';
-import { MatSelectionList } from '@angular/material/list';
-import { MatDialogRef } from '@angular/material/dialog';
+import { UntypedFormGroup, FormArray } from '@angular/forms';
+import { MatLegacySelectionList as MatSelectionList } from '@angular/material/legacy-list';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { Part } from '@src/app/core/models/part/part.model';
 import { User } from '@src/app/core/models/user/user.model';
-import { MatSelectChange } from '@angular/material/select';
+import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import { AssignableListComponent } from '@src/app/modules/assignments/components/assignable-list/assignable-list.component';
 
 @Component({
@@ -32,7 +32,7 @@ export class AssignmentComponent implements OnInit, OnDestroy {
   @Input() isEditMode: boolean;
   @Input() listOfParts: Part[];
   @Input() assignableListByPart: User[][];
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() wIndex: number;
 
   @Output() isRemoved: EventEmitter<Assignment> = new EventEmitter();

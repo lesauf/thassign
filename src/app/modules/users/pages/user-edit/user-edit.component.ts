@@ -8,10 +8,10 @@ import {
   NgZone,
 } from '@angular/core';
 import {
-  FormGroup,
+  UntypedFormGroup,
   Validators,
   FormBuilder,
-  FormControl,
+  UntypedFormControl,
   FormArray,
 } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -58,7 +58,7 @@ export class UserEditComponent implements OnInit {
   @Output()
   userEdited = new EventEmitter<object>();
   selectedUser: any;
-  userForm: FormGroup;
+  userForm: UntypedFormGroup;
   overseerFieldsDisabled: boolean;
   manFieldsDisabled: boolean;
 
@@ -98,26 +98,26 @@ export class UserEditComponent implements OnInit {
   }
 
   getUserForm(): void {
-    this.userForm = new FormGroup(
+    this.userForm = new UntypedFormGroup(
       {
-        _id: new FormControl(this.user._id),
-        firstName: new FormControl(this.user.firstName),
-        lastName: new FormControl(this.user.lastName),
-        congregation: new FormControl(this.user.congregation),
-        baptized: new FormControl(this.user.baptized),
-        publisher: new FormControl(this.user.publisher),
-        genre: new FormControl(this.user.genre),
-        child: new FormControl(this.user.child),
-        phone: new FormControl(this.user.phone),
-        email: new FormControl(
+        _id: new UntypedFormControl(this.user._id),
+        firstName: new UntypedFormControl(this.user.firstName),
+        lastName: new UntypedFormControl(this.user.lastName),
+        congregation: new UntypedFormControl(this.user.congregation),
+        baptized: new UntypedFormControl(this.user.baptized),
+        publisher: new UntypedFormControl(this.user.publisher),
+        genre: new UntypedFormControl(this.user.genre),
+        child: new UntypedFormControl(this.user.child),
+        phone: new UntypedFormControl(this.user.phone),
+        email: new UntypedFormControl(
           this.user.email,
           ValidationService.emailValidator
         ),
-        overseer: new FormControl(this.user.overseer),
-        disabled: new FormControl(this.user.disabled),
+        overseer: new UntypedFormControl(this.user.overseer),
+        disabled: new UntypedFormControl(this.user.disabled),
         // familyMembers: new FormControl(this.user.familyMembers),
-        parts: new FormControl(this.user.parts),
-        ownerId: new FormControl(this.user.ownerId),
+        parts: new UntypedFormControl(this.user.parts),
+        ownerId: new UntypedFormControl(this.user.ownerId),
         // assignments: new FormControl(this.user.assignments)
       },
       ValidationService.classValidator(new User())

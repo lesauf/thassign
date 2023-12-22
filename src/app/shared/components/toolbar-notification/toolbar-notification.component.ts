@@ -1,9 +1,9 @@
 import { Component, ElementRef, Inject, Input, OnInit } from '@angular/core';
 import {
-  MAT_DIALOG_DATA,
-  MatDialogConfig,
-  MatDialogRef,
-} from '@angular/material/dialog';
+  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+  MatLegacyDialogConfig as MatDialogConfig,
+  MatLegacyDialogRef as MatDialogRef,
+} from '@angular/material/legacy-dialog';
 
 // const debug = require('debug')('todo');
 import { MessageService } from '@src/app/core/services/message.service';

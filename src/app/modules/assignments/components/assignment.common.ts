@@ -1,6 +1,6 @@
 import { ElementRef, Injectable, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { UntypedFormBuilder, FormGroup, UntypedFormArray } from '@angular/forms';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime, Interval } from 'luxon';
 
@@ -40,7 +40,7 @@ export abstract class AssignmentCommon {
   /**
    * Form for assignments for the whole month
    */
-  monthForm: FormArray;
+  monthForm: UntypedFormArray;
 
   /**
    * Edit mode, useful for disabling the month selector
@@ -72,7 +72,7 @@ export abstract class AssignmentCommon {
   protected partService: PartService;
   protected userService: UserService;
   protected messageService: MessageService;
-  protected formBuilder: FormBuilder;
+  protected formBuilder: UntypedFormBuilder;
   protected settingService: SettingService;
   protected _snackBar: MatSnackBar;
   protected translateService: TranslateService;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormArray } from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormArray } from '@angular/forms';
 
 import { AssignmentDropdown } from '@src/app/modules/assignments/models/assignment-dropdown.model';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
@@ -19,29 +19,29 @@ export class AssignmentControlService {
         weekArray[assignment.position] = this.toAssignmentControl(assignment);
       });
 
-      group[wIndex] = new FormArray(weekArray);
+      group[wIndex] = new UntypedFormArray(weekArray);
       // weekArray = [];
     });
 
-    return new FormGroup(group);
+    return new UntypedFormGroup(group);
   }
 
-  toAssignmentControl(assignment: Assignment): FormGroup {
-    return new FormGroup({
-      week: new FormControl(assignment.week || ''),
-      part: new FormControl(assignment.part || ''),
-      assignee: new FormControl(assignment.assignee || ''),
-      hall: new FormControl(assignment.hall || ''),
-      ownerId: new FormControl(assignment.ownerId || ''),
-      position: new FormControl(assignment.position),
+  toAssignmentControl(assignment: Assignment): UntypedFormGroup {
+    return new UntypedFormGroup({
+      week: new UntypedFormControl(assignment.week || ''),
+      part: new UntypedFormControl(assignment.part || ''),
+      assignee: new UntypedFormControl(assignment.assignee || ''),
+      hall: new UntypedFormControl(assignment.hall || ''),
+      ownerId: new UntypedFormControl(assignment.ownerId || ''),
+      position: new UntypedFormControl(assignment.position),
       // ...(assignment.part?.withAssistant && {
-      assistant: new FormControl(assignment.assistant || ''),
+      assistant: new UntypedFormControl(assignment.assistant || ''),
       // }),
       // ...(assignment.part?.withTitle && {
-      title: new FormControl(assignment.title || ''),
+      title: new UntypedFormControl(assignment.title || ''),
       // }),
       // ...(assignment.number && {
-      number: new FormControl(assignment.number || ''),
+      number: new UntypedFormControl(assignment.number || ''),
       // }),
     });
   }

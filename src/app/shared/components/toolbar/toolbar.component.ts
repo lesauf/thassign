@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, Input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 import { MessageService } from '@src/app/core/services/message.service';
 import { ToolbarHelpers } from '@src/app/shared/components/toolbar/toolbar.helpers';

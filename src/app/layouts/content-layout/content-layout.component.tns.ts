@@ -5,7 +5,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-content-layout',
-  moduleId: module.id,
   templateUrl: './content-layout.component.html',
   styleUrls: ['./content-layout.component.scss'],
 })

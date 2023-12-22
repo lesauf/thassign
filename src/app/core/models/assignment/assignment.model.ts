@@ -1,4 +1,4 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import {
   IsBoolean,
   IsDate,
@@ -152,17 +152,17 @@ export class Assignment {
   }
 
   toFormGroup() {
-    return new FormGroup({
-      week: new FormControl(this.week || ''),
-      part: new FormControl(this.part || ''),
-      assignee: new FormControl(this.assignee || ''),
-      hall: new FormControl(this.hall || ''),
-      ownerId: new FormControl(this.ownerId || ''),
-      position: new FormControl(this.position),
-      assistant: new FormControl(this.assistant || ''),
-      title: new FormControl(this.title || ''),
-      description: new FormControl(this.description || ''),
-      number: new FormControl(this.number || ''),
+    return new UntypedFormGroup({
+      week: new UntypedFormControl(this.week || ''),
+      part: new UntypedFormControl(this.part || ''),
+      assignee: new UntypedFormControl(this.assignee || ''),
+      hall: new UntypedFormControl(this.hall || ''),
+      ownerId: new UntypedFormControl(this.ownerId || ''),
+      position: new UntypedFormControl(this.position),
+      assistant: new UntypedFormControl(this.assistant || ''),
+      title: new UntypedFormControl(this.title || ''),
+      description: new UntypedFormControl(this.description || ''),
+      number: new UntypedFormControl(this.number || ''),
     });
   }
 

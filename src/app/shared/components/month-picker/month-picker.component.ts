@@ -8,7 +8,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -73,7 +73,7 @@ export class MonthPickerComponent implements OnInit, OnChanges {
    */
   previousSelectedMonth: DateTime;
 
-  date = new FormControl();
+  date = new UntypedFormControl();
 
   constructor(dateAdapter: LuxonDateAdapter) {
     // dateAdapter;

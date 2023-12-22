@@ -17,6 +17,8 @@ import { PickerComponent } from '@src/app/shared/components/picker/picker.compon
 import { OptionsDialogComponent } from '@src/app/shared/components/options-dialog/options-dialog.component';
 import { TranslateDatePipe } from '@src/app/shared/pipes/translate-date.pipe';
 import { WithLoadingPipe } from '@src/app/shared/pipes/with-loading.pipe';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
@@ -41,6 +43,7 @@ import { WithLoadingPipe } from '@src/app/shared/pipes/with-loading.pipe';
     HttpClientModule,
     TranslateModule,
     CoreModule,
+    MatIconModule
   ],
   exports: [
     CommonModule,

@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { UntypedFormControl } from '@angular/forms';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import {
@@ -55,7 +55,7 @@ export class UserFilterComponent implements OnInit {
    * Set the expanded status of the search panel
    */
   displayMore = false;
-  inputControl = new FormControl();
+  inputControl = new UntypedFormControl();
   private searchTerms = new Subject<string>();
 
   constructor(

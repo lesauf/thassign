@@ -1,7 +1,7 @@
 import {
-  FormGroup,
+  UntypedFormGroup,
   Validators,
-  FormBuilder,
+  UntypedFormBuilder,
   FormControl,
 } from '@angular/forms';
 import { Injectable, OnInit } from '@angular/core';
@@ -22,10 +22,10 @@ export class UserEditProvider {
   private overseerFieldsDisable: BehaviorSubject<boolean> = new BehaviorSubject(
     false
   );
-  private form: FormGroup;
+  private form: UntypedFormGroup;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private partService: PartService
   ) {}
 

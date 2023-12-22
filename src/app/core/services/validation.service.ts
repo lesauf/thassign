@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
-  FormGroup,
-  FormControl,
+  UntypedFormGroup,
+  UntypedFormControl,
   ValidatorFn,
   AbstractControl,
-  FormArray,
+  UntypedFormArray,
 } from '@angular/forms';
 import { validateSync } from 'class-validator';
 import { User } from '@src/app/core/models/user/user.model';
@@ -29,7 +29,7 @@ export class ValidationService {
     //   }, {});
     // }
 
-    return (form: FormGroup): { [key: string]: any } | null => {
+    return (form: UntypedFormGroup): { [key: string]: any } | null => {
       const result = schema.validate(form.value, {
         abortEarly: false,
       });
@@ -58,7 +58,7 @@ export class ValidationService {
    * Wrapper that will map Joi errors to an Angular format
    */
   static classValidator(model): ValidatorFn {
-    return (form: FormGroup): { [key: string]: any } | null => {
+    return (form: UntypedFormGroup): { [key: string]: any } | null => {
       // console.log(model.fromJson(form.value));
       const errors = validateSync(form.value);
 
@@ -136,12 +136,12 @@ export class ValidationService {
   /**
    * Trigger validation on formFields
    */
-  validateAllFormFields(formGroup: FormGroup | FormArray) {
+  validateAllFormFields(formGroup: UntypedFormGroup | UntypedFormArray) {
     Object.keys(formGroup.controls).forEach((field) => {
       const control = formGroup.get(field);
-      if (control instanceof FormControl) {
+      if (control instanceof UntypedFormControl) {
         control.markAsTouched({ onlySelf: true });
-      } else if (control instanceof FormGroup) {
+      } else if (control instanceof UntypedFormGroup) {
         this.validateAllFormFields(control);
       }
     });
