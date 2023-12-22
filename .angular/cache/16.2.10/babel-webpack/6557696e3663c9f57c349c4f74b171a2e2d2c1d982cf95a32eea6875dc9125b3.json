@@ -1,1 +1,0 @@
-{"ast":null,"code":"import '@firebase/firestore';","map":{"version":3,"names":[],"sources":["C:/Users/CSEG/Desktop/thassign/node_modules/firebase/firestore/dist/index.esm.js"],"sourcesContent":["import '@firebase/firestore';\n"],"mappings":"AAAA,OAAO,qBAAqB"},"metadata":{},"sourceType":"module","externalDependencies":[]}

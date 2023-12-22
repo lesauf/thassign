@@ -58,12 +58,12 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -80,7 +80,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 
     // Shared & Core
     CoreModule,
-    SharedModule,
+    SharedModule
   ],
 
   providers: [BackendService],

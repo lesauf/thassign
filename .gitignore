@@ -11,6 +11,9 @@ src/**/*.js
 # Only exists if Bazel was run
 /bazel-out
 
+#applications features
+.angular
+
 # dependencies
 /node_modules
 
