@@ -9,8 +9,9 @@ describe('LogoutComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [LogoutComponent],
-    }).compileComponents();
+    declarations: [LogoutComponent],
+    teardown: { destroyAfterEach: false }
+}).compileComponents();
   }));
 
   beforeEach(() => {
