@@ -20,6 +20,12 @@
             "outputPath": "dist/thassign",
             "index": "src/index.html",
             "main": "src/main.ts",
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "validator",
+              "faker",
+              "event-emitter"
+           ],
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
