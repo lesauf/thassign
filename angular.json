@@ -24,7 +24,8 @@
               "lodash",
               "validator",
               "faker",
-              "event-emitter"
+              "event-emitter",
+              "@xmldom/xmldom"
            ],
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
