@@ -181,11 +181,12 @@
               <legend>
                 {{ meeting | translate | titlecase }}
               </legend>
-              <mat-chip
-                [fxHide]="
+              <!-- [fxHide]="
                   (part?.byAnOverseer && overseerFieldsDisabled) ||
                   (part?.byABrother && manFieldsDisabled)
-                "
+                " -->
+              <mat-chip
+                
                 *ngFor="let part of allPartsGrouped.parts[meetingIndex]"
                 [selected]="partSelected(part)"
                 (click)="togglePart(part); userForm.markAllAsTouched()"

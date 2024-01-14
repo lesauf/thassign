@@ -1,3 +1,4 @@
+<!--  -->
 <app-loader *ngIf="loading"></app-loader>
 
 <div *ngIf="mPrograms$ | withLoading | async as mProgramsWithLoading">
@@ -19,7 +20,7 @@
           class="mat-primary"
           (click)="cancelEdit()">
           <mat-icon>undo</mat-icon>
-          <span fxHide-lt-sm>
+          <span fxHide.lt-sm>
             {{ "cancel" | translate | titlecase }}
           </span>
         </button>
@@ -28,7 +29,7 @@
           type="submit" 
           mat-raised-button class="mat-primary">
           <mat-icon>save</mat-icon>
-          <span fxHide-lt-sm>
+          <span fxHide.lt-sm>
             {{ "save" | translate | titlecase }}
           </span>
         </button>
@@ -40,7 +41,7 @@
           class="mat-primary"
           (click)="setEditMode(true)">
           <mat-icon>edit</mat-icon>
-          <span fxHide-lt-sm>
+          <span fxHide.lt-sm>
             {{ "edit" | translate | titlecase }}
           </span>
         </button>
@@ -51,7 +52,7 @@
           class="mat-primary"
           (click)="saveAsPdf()">
           <mat-icon>print</mat-icon>
-          <span fxHide-lt-sm>
+          <span fxHide.lt-sm>
             {{ "print" | translate | titlecase }}
           </span>
         </button>
@@ -94,21 +95,22 @@
                   fxLayout="row wrap"
                   fxLayoutAlign="start center"
                   class="assignment-line">
-                  
-                  <div class="assignment-title" 
-                    [matTooltip]="assignment.description ? assignment.description: null"
+                  <!-- [matTooltip]="assignment.description ? assignment.description: null"
                     fxFlex="30" 
-                    [fxFlex-lt-sm]="isEditMode ? 100 : null">
+                    [fxFlex.lt-sm]="isEditMode ? 100 : null"  -->
+                  <div class="assignment-title" 
+                    >
                     {{ assignment.title }}
                   </div>
                   
                   <div *ngIf="isEditMode; else view"
                     fxFlex="70"
-                    fxFlex-lt-sm="95"
-                    fxFlexOffset-lt-sm="5"
+                    fxFlex.lt-sm="95"
+                    fxFlexOffset.lt-sm="5"
                     fxLayout="row wrap"
                     fxLayoutAlign="space-between center">
-                    <div [fxFlex]="assignment.part.withAssistant ? 49 : 100">
+                    <!--[fxFlex]="assignment.part.withAssistant ? 49 : 100"  -->
+                    <div >
                       <app-picker
                         [optionsTemplate]="displayComponentRef.componentType"
                         title="{{ assignment.title | titlecase }}"
@@ -143,7 +145,7 @@
                   <ng-template #view>
                     <div fxFlex="70" 
                       fxFlex.lt-xs="95" 
-                      fxFlexOffset-lt-xs="5">
+                      fxFlexOffset.lt-xs="5">
                       <span class="assignment-assignee">{{ assignment.assignee?.fullName }}</span>
 
                       <span *ngIf="assignment.assistant" class="assignment-assistant">
