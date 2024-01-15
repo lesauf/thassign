@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { MatSidenav, MatDrawer } from '@angular/material/sidenav';
 import { UserService } from '@src/app/modules/users/user.service';
 
@@ -27,7 +28,7 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
   sideNavMode = 'side';
 
   constructor(
-    //public mediaObserver: MediaObserver,
+    public mediaObserver: MediaObserver,
     private userService: UserService
   ) {}
 
@@ -36,9 +37,9 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-   // this.mediaObserver.media$.subscribe((mediaChange: MediaChange) => {
-    //  this.toggleView();
-    //});
+    this.mediaObserver.media$.subscribe((mediaChange: MediaChange) => {
+      this.toggleView();
+    });
   }
 
   ngOnDestroy() {
@@ -64,7 +65,7 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
       }
     }
   }
-/*
+
   toggleView() {
     if (this.mediaObserver.isActive('gt-md')) {
       this.sideNavMode = 'side';
@@ -83,5 +84,4 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
       this.matDrawerShow = false;
     }
   }
-  */
 }
