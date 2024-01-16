@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -14,7 +14,13 @@ import { AuthService } from '@src/app/modules/auth/auth.service';
 
 @NgModule({
   imports: [CommonModule, SharedModule, AuthRoutingModule, TranslateModule],
+
   declarations: [...navigatableAuthComponents],
+
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ],
+
   providers: [
     AuthGuard,
     AuthService,

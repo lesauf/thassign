@@ -1,11 +1,11 @@
-<div fxLayout="column" fxFlexFill fxLayoutAlign="center center" style="
+<div class="d-flex flex-column flex-fill justify-content-center align-items-center" style="
     background-image: url('../../../assets/login11.jpg');
     height: 100%;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
   ">
-  <div fxLayout="column">
+  <div class="d-flex flex-column ">
     <div class="mat-elevation-z4">
       <mat-card>
         <mat-card-title>User login
@@ -14,7 +14,7 @@
           </a>
         </mat-card-title>
         <mat-card-content>
-          <form fxLayout="column" fxLayoutAlign="start stretch"
+          <form class="d-flex flex-column justify-content-start align-items-stretch"
                 [formGroup]="userForm" (ngSubmit)="login()">
             <div *ngIf="formMessages.all" class="help is-danger">
               <mat-form-field class="full-width">
