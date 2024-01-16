@@ -8,8 +8,7 @@
   <form
     (ngSubmit)="onSubmit()"
     [formGroup]="studentsForm"
-    fxLayout="column"
-    fxLayoutAlign="space-between stretch"
+    class="d-flex flex-column justify-content-between align-items-center"
   >
     <!-- FORM BUTTONS-->
     <div *ngIf="isEditMode; else viewButtons" fxFlex>
@@ -33,7 +32,7 @@
 
     <!-- PRINT BUTTONS -->
     <ng-template #viewButtons>
-      <div fxFlex>
+      <div class="d-flex flex-grow-1">
         <button
           type="button"
           mat-raised-button
@@ -58,31 +57,26 @@
     &nbsp;
 
     <!-- WEEKS -->
-    <div fxFlex #printableArea>
+    <div class="d-flex flex-grow-1" #printableArea>
       <div
         [ngClass]="{
           'week-box-edit': isEditMode,
           'week-box-view': !isEditMode
         }"
         cdkDropListGroup
-        fxLayout="column"
-        fxLayoutAlign="space-between center"
+        class="d-flex flex-column justify-content-between align-items-center"
       >
         <div
           *ngFor="let week of weeks; index as wIndex"
-          fxFlex
-          fxFill
-          fxLayout="row wrap"
-          fxLayoutAlign="space-around start"
-          class="assignments-container"
+          class="d-flex flex-grow-1 flex-row flex-wrap flex-fill justify-content-around align-items-start assignments-container"
         >
-          <h2 fxFlex>
+          <h2 class="d-flex flex-grow-1">
             {{ week | translateDate: "MMM-D" | async }}
           </h2>
           <button
             *ngIf="isEditMode"
             type="button"
-            fxFlex="nogrow"
+            class="flex-grow-0"
             mat-raised-button
             matTooltip="{{ 'add-new-assignment' | translate }}"
             [disabled]="studentsForm.disabled"
@@ -93,7 +87,7 @@
 
           <!--<div >-->
           <div
-            fxFlex="100"
+            class="d-flex w-100"
             cdkDropList
             cdkDropListData="{{ wIndex }}"
             [ngClass]="{ 'assignments-list': isEditMode }"
