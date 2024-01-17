@@ -17,14 +17,15 @@ import { AuthService } from '@src/app/modules/auth/auth.service';
 
   declarations: [...navigatableAuthComponents],
 
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ],
-
   providers: [
     AuthGuard,
     AuthService,
     // TokenStorage
   ],
+
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ],
+
 })
 export class AuthModule {}
