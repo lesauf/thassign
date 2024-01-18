@@ -6,9 +6,10 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { MediaChange, MediaObserver } from '@angular/flex-layout';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatSidenav, MatDrawer } from '@angular/material/sidenav';
 import { UserService } from '@src/app/modules/users/user.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-content-layout',
@@ -18,6 +19,7 @@ import { UserService } from '@src/app/modules/users/user.service';
 export class ContentLayoutComponent implements OnInit, OnChanges {
   @Input() isVisible = true;
   visibility = 'shown';
+  breakpoint$: Observable<boolean>;
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(MatDrawer) drawer: MatDrawer;
@@ -28,7 +30,7 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
   sideNavMode = 'side';
 
   constructor(
-    public mediaObserver: MediaObserver,
+    private breakpointObserver: BreakpointObserver,
     private userService: UserService
   ) {}
 
@@ -37,9 +39,9 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.mediaObserver.media$.subscribe((mediaChange: MediaChange) => {
-      this.toggleView();
-    });
+    this.breakpoint$.subscribe(() =>
+    this.toggleView()
+  );
   }
 
   ngOnDestroy() {
@@ -67,17 +69,17 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
   }
 
   toggleView() {
-    if (this.mediaObserver.isActive('gt-md')) {
+    if (this.breakpointObserver.isMatched('gt-md')) {
       this.sideNavMode = 'side';
       this.sideNavOpened = true;
       this.matDrawerOpened = false;
       this.matDrawerShow = true;
-    } else if (this.mediaObserver.isActive('gt-xs')) {
+    } else if (this.breakpointObserver.isMatched('gt-xs')) {
       this.sideNavMode = 'side';
       this.sideNavOpened = false;
       this.matDrawerOpened = true;
       this.matDrawerShow = true;
-    } else if (this.mediaObserver.isActive('lt-sm')) {
+    } else if (this.breakpointObserver.isMatched('lt-sm')) {
       this.sideNavMode = 'over';
       this.sideNavOpened = false;
       this.matDrawerOpened = false;
