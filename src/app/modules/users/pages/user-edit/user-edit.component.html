@@ -2,26 +2,26 @@
 
 <mat-divider></mat-divider>
 
-<div class="d-flex flex-column grid gap-3 justify-content-around align-items-stretch" fxLayoutGap="10px">
+<div class="d-flex flex-column gap-3 justify-content-around align-items-stretch">
   <app-loader *ngIf="!userForm"> </app-loader>
 
   <form
-    class="d-flex w-95 flex-row flex-wrap justify-content-center align-items-start"
+    class="d-flex col-11 flex-row flex-wrap justify-content-center align-items-start"
     #userEditForm
     *ngIf="userForm"
     [formGroup]="userForm"
     (ngSubmit)="saveUser()"
   >
     <div
-      class="d-flex w-100 flex-row flex-wrap gap-3 justify-content-center align-items-start"
+      class="d-flex col-12 flex-row flex-wrap gap-3 justify-content-center align-items-start"
     >
       <!-- Left column -->
       <div
-        class="d-flex flex-column w-80 col-md-9 col-sm-11 justify-content-center align-items-start"
+        class="d-flex flex-column col-10 col-md-9 col-sm-11 justify-content-center align-items-start"
       >
         <!-- Genre -->
         <mat-radio-group
-          class="d-flex flex-row w-80 col-md-9 col-sm-11 gap-3 justify-content-start align-items-stretch"
+          class="d-flex flex-row gap-3 justify-content-start align-items-stretch"
           labelPosition="before"
           formControlName="genre"
           (change)="toggleManFields('genre', $event)"
@@ -99,9 +99,9 @@
 
       <!-- RIGHT COLUMN -->
       <div
-        class="d-flex w-10 col-md-2 col-xs-9 flex-column flex-sm-row flex-sm-wrap justify-content-between align-items-start justify-content-xs-end align-items-xs-center gap-sm-3 gap-md-3 gap-lg-3  "
+        class="d-flex col-1 col-md-2 col-xs-9 flex-column flex-sm-row flex-sm-wrap justify-content-between align-items-start justify-content-xs-end align-items-xs-center gap-sm-3 gap-md-3 gap-lg-3  "
       >
-        <div class="d-flex flex-grow-1">&nbsp;</div>
+        
         <!-- Child -->
         <mat-checkbox
           class="d-flex col-sm-6"
@@ -140,20 +140,20 @@
       </div>
       <!-- /Right column -->
 
-      <div class="d-flex w-100">
+      <div class="d-flex col-12">
         &nbsp;
         <!-- spacer -->
       </div>
 
       <!-- Part Chips -->
 
-      <div class="d-flex w-90" *ngIf="allPartsGrouped$ | async as allPartsGrouped">
+      <div class="d-flex col-11" *ngIf="allPartsGrouped$ | async as allPartsGrouped">
         <div>
           <!-- Midweek parts -->
           <h3>{{ "assignable-parts" | translate | titlecase }}</h3>
-          <mat-chip-list multiple="true" fxLayout="row">
+          <mat-chip-list multiple="true" class=" d-flex flex-row ">
             <fieldset
-              class="d-flex w-100"
+              class="d-flex col-12"
               *ngFor="
                 let meeting of allPartsGrouped.meetings;
                 let meetingIndex = index
@@ -175,13 +175,13 @@
         </div>
       </div>
 
-      <div class="d-flex w-100">
+      <div class="d-flex col-12">
         &nbsp;
         <!-- spacer -->
       </div>
 
       <!-- BUTTONS -->
-      <div class="d-flex w-100 flex-row justify-content-around align-items-stretch">
+      <div class="d-flex col-12 flex-row justify-content-around align-items-stretch">
         <button type="button" mat-raised-button (click)="cancel()">
           {{ "cancel" | translate | titlecase }}
         </button>
@@ -190,7 +190,7 @@
         </button>
       </div>
 
-      <div class="d-flex w-100">
+      <div class="d-flex col-12">
         &nbsp;
         <!-- spacer -->
       </div>

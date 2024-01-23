@@ -1,4 +1,4 @@
-import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   NativeScriptCommonModule,
@@ -50,6 +50,5 @@ import { SharedModule } from '@src/app/shared/shared.module';
   ],
 
   declarations: [HomeComponent],
-  schemas: [NO_ERRORS_SCHEMA],
 })
 export class ContentLayoutModule {}
