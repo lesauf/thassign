@@ -8,7 +8,7 @@
   <form
     (ngSubmit)="onSubmit()"
     [formGroup]="studentsForm"
-    class="d-flex flex-column justify-content-between align-items-center"
+    class="d-flex flex-column justify-content-between align-items-stretch"
   >
     <!-- FORM BUTTONS-->
     <div *ngIf="isEditMode; else viewButtons" class="d-flex flex-grow-1 " >
@@ -57,7 +57,7 @@
     &nbsp;
 
     <!-- WEEKS -->
-    <div class="d-flex flex-grow-1" #printableArea>
+    <div class="d-flex flex-grow-1 " #printableArea>
       <div
         [ngClass]="{
           'week-box-edit': isEditMode,
@@ -68,7 +68,8 @@
       >
         <div
           *ngFor="let week of weeks; index as wIndex"
-          class="d-flex flex-grow-1 flex-row flex-wrap flex-fill justify-content-around align-items-start assignments-container"
+          class="d-flex flex-grow-1 flex-row flex-wrap justify-content-around align-items-start assignments-container"
+          style="width: 100%;"
         >
           <h2 class="d-flex flex-grow-1">
             {{ week | translateDate: "MMM-D" | async }}

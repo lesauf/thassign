@@ -28,7 +28,7 @@
 
 <!-- Table control bar -->
 <div class="d-flex flex-row justify-content-between align-items-stretch">
-  <div class="d-flex mx-3 align-items-center gap-2 " style="width: 30px;" >
+  <div class="d-flex mx-4 align-items-center gap-2 " style="width: 30px;" >
     <mat-checkbox class="gap-1"
       [checked]="masterChecked"
       matTooltip="{{ 'select-all' | translate }}"
@@ -95,10 +95,10 @@
         class=" d-flex flex-row gap-1 justify-content-start align-items-stretch"
       >
         <mat-panel-title
-          class="d-flex flex-grow-1 flex-row align-items-center col-sm-12 gap-1 justify-content-between align-items-stretch"
+          class="d-flex flex-grow-1 flex-row align-items-center col-xs-12 gap-3 justify-content-between align-items-stretch"
         >
           <!-- Checkbox -->
-          <div class=" d-flex align-items-center" style="width: 25px; "  >
+          <div class="align-items-center" style="width: 25px; "  >
             <mat-checkbox
               name="userCheckbox"
               [value]="user._id"
@@ -118,12 +118,12 @@
             {{ user.fullName }}
           </div>
         </mat-panel-title>
-        <mat-panel-description class=" d-flex flex-grow-1 align-items-center" >
-          <div class=" d-flex flex-grow-1 d-none d-sm-block" *ngIf="user.phone">
+        <mat-panel-description class=" justify-content-center" >
+          <div class=" d-flex flex-grow-1 d-none d-sm-block"  *ngIf="user.phone">
             <mat-icon inline="true">phone</mat-icon> {{ user.phone }}
           </div>
 
-          <div class=" d-flex flex-grow-1 d-none d-md-block" *ngIf="user.email">
+          <div class=" d-flex flex-grow-1 d-none d-md-block"  *ngIf="user.email">
             <mat-icon inline="true">mail_outline</mat-icon>
             {{ user.email }}
           </div>
@@ -134,23 +134,23 @@
         <!-- Lazy rendering -->
 
         <div
-          class="d-flex flex-row flex-wrap flex-sm-column justify-content-start align-items-stretch "
+          class="d-flex flex-row flex-wrap flex-xs-column justify-content-start align-items-stretch "
         >
-          <div class="d-flex w-30 ">
-            <mat-icon inline="true">person</mat-icon>
+          <div >
+            <mat-icon  inline="true">person</mat-icon>
             {{ user.type }}
           </div>
 
-          <div class="d-flex w-30" *ngIf="user.progress">
+          <div  class="mx-auto"  *ngIf="user.progress">
             <mat-icon inline="true">info</mat-icon>
             {{ user.progress }}
           </div>
 
-          <div class="d-flex flex-grow-1 d-xs-none " *ngIf="user.phone">
+          <div class="d-flex flex-grow-1 d-block d-sm-none " *ngIf="user.phone">
             <mat-icon inline="true">phone</mat-icon>
             {{ user.phone }}
           </div>
-          <div class="d-flex flex-grow-1 d-sm-none " *ngIf="user.email">
+          <div class="d-flex flex-grow-1 d-none d-sm-block d-md-none " *ngIf="user.email">
             <mat-icon inline="true">mail_outline</mat-icon>
             {{ user.email }}
           </div>

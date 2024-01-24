@@ -91,14 +91,14 @@
                   
                   <div class="assignment-title"
                     [matTooltip]="assignment.description ? assignment.description: null"
-                    class="isEditMode ? d-flex w-30 col-sm-12 : d-flex w-30 d-sm-none">
+                    class="{{isEditMode ? 'd-flex w-30 col-sm-12' : 'd-flex w-30 d-sm-none'}}">
                     {{ assignment.title }}
                   </div>
                   
                   <div *ngIf="isEditMode; else view"
                     class="w-70 flex-row flex-wrap col-sm-11 justify-content-start align-items-center mr-sm-5 assignment-line"
                     >
-                    <div class="assignment.part.withAssistant ? d-flex w-49 : d-flex w-100">
+                    <div class="{{assignment.part.withAssistant ? 'd-flex w-49' : 'd-flex w-100'}}">
                       <app-picker
                         [optionsTemplate]="displayComponentRef.componentType"
                         title="{{ assignment.title | titlecase }}"

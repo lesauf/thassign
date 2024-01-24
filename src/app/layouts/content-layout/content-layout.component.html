@@ -2,7 +2,7 @@
   Below is another example of the home page that has a smaller menu that shows up when the main menu is hidden
 -->
 
-<mat-sidenav-container class="container modal-fullscreen" >
+<mat-sidenav-container class="container modal-fullscreen " style="height: 100%; position: fixed; overflow:hidden;" >
   <mat-sidenav
     [mode]="sideNavMode"
     class="sidenav"
@@ -17,7 +17,7 @@
     <app-sidemenu (onMenuSelected)="closeSidebar()"></app-sidemenu>
   </mat-sidenav>
   <mat-sidenav-content style="z-index: unset;">
-    <mat-drawer-container fullscreen >
+    <mat-drawer-container fullscreen  >
       <mat-drawer mode="side" #drawer class="drawer" [opened]="matDrawerOpened">
         <!-- Logo or Initials -->
         <mat-toolbar color="primary" center class="mat-elevation-z4">
@@ -35,7 +35,7 @@
         ></ma-toolbar>
 
         <div class="d-flex flex-row justify-content-center align-items-start ">
-          <div class="d-flex col-11 mat-elevation-z4">
+          <div class=" col-11 mat-elevation-z4">
             <router-outlet></router-outlet>
           </div>
         </div>

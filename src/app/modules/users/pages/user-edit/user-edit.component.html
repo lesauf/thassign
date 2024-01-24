@@ -6,7 +6,7 @@
   <app-loader *ngIf="!userForm"> </app-loader>
 
   <form
-    class="d-flex col-11 flex-row flex-wrap justify-content-center align-items-start"
+    class="col-11 flex-row flex-wrap justify-content-center align-items-start"
     #userEditForm
     *ngIf="userForm"
     [formGroup]="userForm"
@@ -29,14 +29,14 @@
           <mat-radio-button value="man" name="genre">
             {{ "man" | translate }}
           </mat-radio-button>
-          <mat-radio-button class="d-flex flex-grow-1" value="woman" name="genre">
+          <mat-radio-button class="flex-grow-1" value="woman" name="genre">
             {{ "woman" | translate }}
           </mat-radio-button>
         </mat-radio-group>
         <app-control-messages [control]="userForm.controls['genre']">
         </app-control-messages>
         <!-- First name -->
-        <mat-form-field class="d-flex flex-fill">
+        <mat-form-field  style="width: 100%;">
           <input
             matInput
             autocomplete="off"
@@ -48,7 +48,7 @@
         <app-control-messages [control]="userForm.controls['firstName']">
         </app-control-messages>
         <!-- Last name -->
-        <mat-form-field class="d-flex flex-fill">
+        <mat-form-field style="width: 100%;">
           <input
             matInput
             autocomplete="off"
@@ -59,7 +59,7 @@
         <app-control-messages [control]="userForm.controls['lastName']">
         </app-control-messages>
         <!-- Phone -->
-        <mat-form-field class="d-flex flex-fill">
+        <mat-form-field style="width: 100%;">
           <input
             matInput
             autocomplete="off"
@@ -70,7 +70,7 @@
         <app-control-messages [control]="userForm.controls['phone']">
         </app-control-messages>
         <!-- Email -->
-        <mat-form-field class="d-flex flex-fill">
+        <mat-form-field style="width: 100%;">
           <input
             matInput
             type="email"
@@ -84,7 +84,7 @@
         <!-- Overseer -->
         <mat-radio-group
           labelPosition="before"
-          class="d-flex flex-row flex-wrap gap-3"
+          class="flex-row flex-wrap gap-3"
           formControlName="overseer"
           [hidden]="overseerFieldsDisabled"
         >
@@ -99,7 +99,7 @@
 
       <!-- RIGHT COLUMN -->
       <div
-        class="d-flex col-1 col-md-2 col-xs-9 flex-column flex-sm-row flex-sm-wrap justify-content-between align-items-start justify-content-xs-end align-items-xs-center gap-sm-3 gap-md-3 gap-lg-3  "
+        class="d-flex mt-4 col-1 col-md-2 col-xs-9 flex-column flex-sm-row flex-sm-wrap justify-content-between align-items-start justify-content-xs-end align-items-xs-center gap-sm-3 gap-md-3 gap-lg-3  "
       >
         
         <!-- Child -->
@@ -151,7 +151,7 @@
         <div>
           <!-- Midweek parts -->
           <h3>{{ "assignable-parts" | translate | titlecase }}</h3>
-          <mat-chip-list multiple="true" class=" d-flex flex-row ">
+          <mat-chip-list multiple="true" class="d-flex flex-row ">
             <fieldset
               class="d-flex col-12"
               *ngFor="
@@ -163,7 +163,7 @@
                 {{ meeting | translate | titlecase }}
               </legend>
               <mat-chip
-                class="!((part?.byAnOverseer && overseerFieldsDisabled) ||(part?.byABrother && manFieldsDisabled)) ? d-flex d-none"
+              class="{{((part?.byAnOverseer && overseerFieldsDisabled) ||(part?.byABrother && manFieldsDisabled)) ? 'd-flex d-none' : ''}}"
                 *ngFor="let part of allPartsGrouped.parts[meetingIndex]"
                 [selected]="partSelected(part)"
                 (click)="togglePart(part); userForm.markAllAsTouched()"
