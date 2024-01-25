@@ -52,7 +52,7 @@
       </mat-icon>
     </button>
   </div>
-  <div class="d-flex justify-content-center " style="width: 30px;">
+  <div class="d-flex align-items-center " style="width: 30px;">
     <button
       mat-icon-button
       [disabled]="noUserChecked"
@@ -92,13 +92,13 @@
       *ngFor="let user of pUsers; last as last; trackBy: trackById"
     >
       <mat-expansion-panel-header
-        class=" d-flex flex-row gap-1 justify-content-start align-items-stretch"
+        class=" d-flex flex-row justify-content-start align-items-stretch"
       >
         <mat-panel-title
-          class="d-flex flex-grow-1 flex-row align-items-center col-xs-12 gap-3 justify-content-between align-items-stretch"
+          class="d-flex flex-row align-items-center col-xs-12 gap-3 justify-content-between align-items-stretch"
         >
           <!-- Checkbox -->
-          <div class="align-items-center" style="width: 25px; "  >
+          <div class="d-flex align-items-center" style="width: 25px; "  >
             <mat-checkbox
               name="userCheckbox"
               [value]="user._id"
@@ -109,17 +109,17 @@
           </div>
 
           <!-- Type icon -->
-          <div class=" d-flex" style="width: 30px;">
+          <div class="d-flex" style="width: 30px;">
             <img class="genre-icon" src="/assets/icon/{{ user.type }}.svg" />
           </div>
 
           <!-- User name -->
-          <div  class=" d-flex flex-grow-1 align-items-center" >
+          <div  class=" d-flex flex-grow-1 align-items-center"  >
             {{ user.fullName }}
           </div>
         </mat-panel-title>
-        <mat-panel-description class=" justify-content-center" >
-          <div class=" d-flex flex-grow-1 d-none d-sm-block"  *ngIf="user.phone">
+        <mat-panel-description class="d-flex flex-grow-1 justify-content-center"  >
+          <div class=" d-flex flex-grow-1 d-none d-sm-block" *ngIf="user.phone">
             <mat-icon inline="true">phone</mat-icon> {{ user.phone }}
           </div>
 

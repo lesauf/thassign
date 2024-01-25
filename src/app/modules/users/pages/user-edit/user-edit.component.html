@@ -153,7 +153,7 @@
           <h3>{{ "assignable-parts" | translate | titlecase }}</h3>
           <mat-chip-list multiple="true" class="d-flex flex-row ">
             <fieldset
-              class="d-flex col-12"
+              style="width:100%; "
               *ngFor="
                 let meeting of allPartsGrouped.meetings;
                 let meetingIndex = index
@@ -163,7 +163,7 @@
                 {{ meeting | translate | titlecase }}
               </legend>
               <mat-chip
-              class="{{((part?.byAnOverseer && overseerFieldsDisabled) ||(part?.byABrother && manFieldsDisabled)) ? 'd-flex d-none' : ''}}"
+              class="{{((part?.byAnOverseer && overseerFieldsDisabled) ||(part?.byABrother && manFieldsDisabled)) ? '' : 'd-flex d-none'}}"
                 *ngFor="let part of allPartsGrouped.parts[meetingIndex]"
                 [selected]="partSelected(part)"
                 (click)="togglePart(part); userForm.markAllAsTouched()"

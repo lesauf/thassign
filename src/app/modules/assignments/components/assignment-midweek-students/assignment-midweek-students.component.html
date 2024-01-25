@@ -64,12 +64,11 @@
           'week-box-view': !isEditMode
         }"
         cdkDropListGroup
-        class="d-flex flex-column justify-content-between align-items-center"
+        class="d-flex flex-column justify-content-between align-items-center" style="width: 100%;"
       >
         <div
           *ngFor="let week of weeks; index as wIndex"
-          class="d-flex flex-grow-1 flex-row flex-wrap justify-content-around align-items-start assignments-container"
-          style="width: 100%;"
+          class="d-flex flex-grow-1 w-100 flex-row flex-wrap justify-content-around align-items-start assignments-container"
         >
           <h2 class="d-flex flex-grow-1">
             {{ week | translateDate: "MMM-D" | async }}
@@ -88,7 +87,7 @@
 
           <!--<div >-->
           <div
-            class="d-flex col-12"
+            class="d-flex" style="width: 100%;"
             cdkDropList
             cdkDropListData="{{ wIndex }}"
             [ngClass]="{ 'assignments-list': isEditMode }"
