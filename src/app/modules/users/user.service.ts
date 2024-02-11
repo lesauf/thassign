@@ -1,10 +1,8 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, interval, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-import { AuthService } from '@src/app/modules/auth/auth.service';
 import { CommonService } from '@src/app/core/services/common.service';
 import { generateUsers } from '@src/app/core/mocks/users.mock';
 import { MessageService } from '@src/app/core/services/message.service';
@@ -14,7 +12,6 @@ import { Part } from '@src/app/core/models/part/part.model';
 import { UserConverter } from '@src/app/core/models/user/user.converter';
 import { Assignment } from '@src/app/core/models/assignment/assignment.model';
 import { BackendService } from '@src/app/core/services/backend.service';
-import { IsArray } from 'class-validator';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

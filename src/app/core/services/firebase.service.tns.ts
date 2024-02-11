@@ -34,7 +34,7 @@ export class FirebaseService {
           if (data.loggedIn) {
             this.user = new User({
               _id: data.user.uid,
-              firstName: data.user.displayName,
+              firstName: data.user.name,
               email: data.user.email,
               ownerId: data.user.uid,
             });
