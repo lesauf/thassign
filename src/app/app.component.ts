@@ -2,8 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription, Observable } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 import { BackendService } from '@src/app/core/services/backend.service';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 
 // import { AuthService } from './modules/auth/auth.service';
 
@@ -31,7 +33,8 @@ export class AppComponent implements OnInit, OnDestroy {
     // private authService: AuthService,
     private backendService: BackendService,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private storage: AngularFireStorage
   ) {
     // this.backendService.init();
   }
