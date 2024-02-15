@@ -82,7 +82,7 @@
     "inquirer": "^8.1.2",
     "inquirer-autocomplete-prompt": "^2.0.1",
     "jest": "^27.0.6",
-    "jest-preset-angular": "^9.0.6",
+    "jest-preset-angular": "^8.4.0",
     "open": "^9.1.0",
     "protractor": "^7.0.0",
     "ts-jest": "^27.0.5",

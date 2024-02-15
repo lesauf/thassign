@@ -6,6 +6,7 @@ import {
   CollectionReference,
   DocumentData,
 } from '@angular/fire/compat/firestore';
+import { Firestore, doc, onSnapshot, DocumentReference, docSnapshots } from '@angular/fire/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
@@ -14,6 +15,7 @@ import { User } from '@src/app/core/models/user/user.model';
 
 @Injectable()
 export class FirebaseService {
+  doc: DocumentReference;
   signedInUser: User;
 
   constructor(
@@ -35,6 +37,8 @@ export class FirebaseService {
       }
     });
   }
+
+  docSnapshots(doc).subscribe(...);
 
   init() {}
 
