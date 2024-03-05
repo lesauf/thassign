@@ -8,9 +8,8 @@ describe('UserFormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [UserEditComponent],
-    teardown: { destroyAfterEach: false }
-}).compileComponents();
+      declarations: [UserEditComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

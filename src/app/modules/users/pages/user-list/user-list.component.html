@@ -15,26 +15,27 @@
 </div>
 
 <!-- Generate button -->
-<div class="d-flex flex-row justify-content-end align-items-start">
+<div fxLayout="row" fxLayoutAlign="end start">
   <button
     mat-raised-button
     matTooltip="{{ 'generate-users' | translate | titlecase }}"
     (click)="generateUsers()"
-    class="d-flex justify-content-end "
+    fxFlex="1"
+    fxFlexAlign="right"
   >
     <mat-icon>autorenew</mat-icon>
   </button>
 </div>
 
 <!-- Table control bar -->
-<div class="d-flex flex-row justify-content-between align-items-stretch">
-  <div class="d-flex mx-4 align-items-center gap-2 " style="width: 30px;" >
-    <mat-checkbox class="gap-1"
+<div fxLayout="row" fxLayoutAlign="space-between stretch">
+  <div fxFlex="30px" fxFlexOffset="25px" fxFlexAlign="center">
+    <mat-checkbox
       [checked]="masterChecked"
       matTooltip="{{ 'select-all' | translate }}"
     ></mat-checkbox>
   </div>
-  <div class="d-flex justify-content-center ">
+  <div fxFlexAlign="center">
     <button mat-icon-button (click)="openSort($event)">
       <mat-icon>sort</mat-icon>
     </button>
@@ -52,7 +53,7 @@
       </mat-icon>
     </button>
   </div>
-  <div class="d-flex align-items-center " style="width: 30px;">
+  <div fxFlex="30px" fxFlexAlign="center">
     <button
       mat-icon-button
       [disabled]="noUserChecked"
@@ -68,7 +69,7 @@
       <mat-icon>delete</mat-icon>
     </button>
   </div>
-  <div class="d-flex flex-grow-1"></div>
+  <div fxFlex></div>
 </div>
 
 <mat-paginator
@@ -92,13 +93,20 @@
       *ngFor="let user of pUsers; last as last; trackBy: trackById"
     >
       <mat-expansion-panel-header
-        class=" d-flex flex-row justify-content-start align-items-stretch"
+        fxLayout="row"
+        fxLayoutAlign="start stretch"
+        fxLayoutGap
       >
         <mat-panel-title
-          class="d-flex flex-row align-items-center col-xs-12 gap-3 justify-content-between align-items-stretch"
+          fxFlex
+          fxFlex.lt-sm="100"
+          fxFlexAlign="center"
+          fxLayout="row"
+          fxLayoutAlign="space-between stretch"
+          fxLayoutGap="15px"
         >
           <!-- Checkbox -->
-          <div class="d-flex align-items-center" style="width: 25px; "  >
+          <div fxFlex="25px" fxFlexAlign="center">
             <mat-checkbox
               name="userCheckbox"
               [value]="user._id"
@@ -109,21 +117,21 @@
           </div>
 
           <!-- Type icon -->
-          <div class="d-flex" style="width: 30px;">
+          <div fxFlex="30px">
             <img class="genre-icon" src="/assets/icon/{{ user.type }}.svg" />
           </div>
 
           <!-- User name -->
-          <div  class=" d-flex flex-grow-1 align-items-center"  >
+          <div fxFlex fxFlexAlign="center">
             {{ user.fullName }}
           </div>
         </mat-panel-title>
-        <mat-panel-description class="d-flex flex-grow-1 justify-content-center"  >
-          <div class=" d-flex flex-grow-1 d-none d-sm-block" *ngIf="user.phone">
+        <mat-panel-description fxFlex fxFlexAlign="center">
+          <div fxFlex fxHide.lt-sm *ngIf="user.phone">
             <mat-icon inline="true">phone</mat-icon> {{ user.phone }}
           </div>
 
-          <div class=" d-flex flex-grow-1 d-none d-md-block"  *ngIf="user.email">
+          <div fxFlex fxHide.lt-md *ngIf="user.email">
             <mat-icon inline="true">mail_outline</mat-icon>
             {{ user.email }}
           </div>
@@ -134,23 +142,25 @@
         <!-- Lazy rendering -->
 
         <div
-          class="d-flex flex-row flex-wrap flex-xs-column justify-content-start align-items-stretch "
+          fxLayout="row wrap"
+          fxLayout.lt-sm="column"
+          fxLayoutAlign="start stretch"
         >
-          <div >
-            <mat-icon  inline="true">person</mat-icon>
+          <div fxFlex="45">
+            <mat-icon inline="true">person</mat-icon>
             {{ user.type }}
           </div>
 
-          <div  class="mx-auto"  *ngIf="user.progress">
+          <div fxFlex="45" *ngIf="user.progress">
             <mat-icon inline="true">info</mat-icon>
             {{ user.progress }}
           </div>
 
-          <div class="d-flex flex-grow-1 d-block d-sm-none " *ngIf="user.phone">
+          <div fxFlex fxHide.gt-xs *ngIf="user.phone">
             <mat-icon inline="true">phone</mat-icon>
             {{ user.phone }}
           </div>
-          <div class="d-flex flex-grow-1 d-none d-sm-block d-md-none " *ngIf="user.email">
+          <div fxFlex fxHide.gt-sm *ngIf="user.email">
             <mat-icon inline="true">mail_outline</mat-icon>
             {{ user.email }}
           </div>
@@ -158,7 +168,8 @@
 
         <mat-chip-list
           selectable="false"
-          class="d-flex flex-row justify-content-start align-items-stretch"
+          fxLayout="row"
+          fxLayoutAlign="start stretch"
         >
           <mat-chip
             class="mat-chip-list-stacked"

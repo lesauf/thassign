@@ -8,9 +8,8 @@ describe('AuthLayoutComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [AuthLayoutComponent],
-    teardown: { destroyAfterEach: false }
-})
+      declarations: [ AuthLayoutComponent ]
+    })
     .compileComponents();
   }));
 

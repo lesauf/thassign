@@ -8,9 +8,8 @@ describe('ToolbarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [ToolbarComponent],
-    teardown: { destroyAfterEach: false }
-})
+      declarations: [ ToolbarComponent ]
+    })
     .compileComponents();
   }));
 

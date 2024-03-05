@@ -8,9 +8,8 @@ describe('UserSortComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [UserSortComponent],
-    teardown: { destroyAfterEach: false }
-}).compileComponents();
+      declarations: [UserSortComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

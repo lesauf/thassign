@@ -1,4 +1,4 @@
-@use '@angular/material' as mat;
+@use '~@angular/material' as mat;
 @mixin mat-list-icon($size: 24px) {
   font-size: $size;
   height: $size;

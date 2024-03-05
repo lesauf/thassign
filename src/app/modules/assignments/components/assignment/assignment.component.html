@@ -1,10 +1,11 @@
 <div [formGroup]="form" *ngIf="isEditMode; else assignmentDisplay">
   <div formArrayName="{{ wIndex }}">
     <div
-    class="flex-row d-flex justify-content-around justify-content-center"
+      fxLayout="row"
       formGroupName="{{ assignment.position }}"
+      fxLayoutAlign="space-around center"
     >
-      <div class="d-flex w-5">
+      <div fxFlex="5">
         <button
           mat-button
           type="button"
@@ -16,8 +17,8 @@
         </button>
       </div>
       <!-- PART -->
-      <div class="d-flex w-30 col-sm-auto">
-        <mat-form-field class="d-flex flex-fill">
+      <div fxFlex="30" fxFlex.lt-sm="auto">
+        <mat-form-field fxFill>
           <mat-select
             placeholder="{{ 'assignment' | translate | titlecase }}"
             [compareWith]="compareFn"
@@ -40,7 +41,7 @@
         </mat-form-field>
       </div>
       <!-- ASSIGNEE -->
-      <div  class="d-flex w-30 col-sm-auto">
+      <div fxFlex="30" fxFlex.lt-sm="auto">
         <app-picker
           *ngIf="form.get([wIndex, assignment.position, 'part']).value"
           [optionsTemplate]="displayComponentRef.componentType"
@@ -58,7 +59,7 @@
 
       </div>
       <!-- ASSISTANT -->
-      <div  class="d-flex w-30 col-sm-auto">
+      <div fxFlex="30" fxFlex.lt-sm="auto">
         <app-picker
           *ngIf="
             form.get([wIndex, assignment.position, 'part']).value?.withAssistant
@@ -79,15 +80,18 @@
 
 <!-- ASSIGNMENT DISPLAY -->
 <ng-template #assignmentDisplay>
-  <div class="d-flex flex-row justify-content-start align-items-center">
+  <div fxLayout="row wrap" fxLayoutAlign="start center">
     <!-- PART -->
     <div
-    class="d-flex w-30 col-sm-12 justify-content-end assignment-name"
+      fxFlex="30"
+      fxFlex.lt-sm="100"
+      fxFlexOffset="5"
+      class="assignment-name"
     >
       {{ assignment.part.name | translate }}
     </div>
     <!-- ASSIGNEE & ASSISTANT -->
-    <div  class="d-flex w-50 col-sm-12 justify-content-end  mr-sm-10">
+    <div fxFlex="50" fxFlex.lt-sm="100" fxFlexOffset.lt-sm="10">
       <span class="assignment-assignee">
         {{ assignment.assignee?.fullName }}
       </span>

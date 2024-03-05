@@ -8,10 +8,11 @@
   <form
     (ngSubmit)="onSubmit()"
     [formGroup]="studentsForm"
-    class="d-flex flex-column justify-content-between align-items-stretch"
+    fxLayout="column"
+    fxLayoutAlign="space-between stretch"
   >
     <!-- FORM BUTTONS-->
-    <div *ngIf="isEditMode; else viewButtons" class="d-flex flex-grow-1 " >
+    <div *ngIf="isEditMode; else viewButtons" fxFlex>
       <!-- 
       fxLayout="row" fxLayoutAlign="space-around center" -->
       <button
@@ -32,7 +33,7 @@
 
     <!-- PRINT BUTTONS -->
     <ng-template #viewButtons>
-      <div class="d-flex flex-grow-1">
+      <div fxFlex>
         <button
           type="button"
           mat-raised-button
@@ -57,26 +58,31 @@
     &nbsp;
 
     <!-- WEEKS -->
-    <div class="d-flex flex-grow-1 " #printableArea>
+    <div fxFlex #printableArea>
       <div
         [ngClass]="{
           'week-box-edit': isEditMode,
           'week-box-view': !isEditMode
         }"
         cdkDropListGroup
-        class="d-flex flex-column justify-content-between align-items-center" style="width: 100%;"
+        fxLayout="column"
+        fxLayoutAlign="space-between center"
       >
         <div
           *ngFor="let week of weeks; index as wIndex"
-          class="d-flex flex-grow-1 w-100 flex-row flex-wrap justify-content-around align-items-start assignments-container"
+          fxFlex
+          fxFill
+          fxLayout="row wrap"
+          fxLayoutAlign="space-around start"
+          class="assignments-container"
         >
-          <h2 class="d-flex flex-grow-1">
+          <h2 fxFlex>
             {{ week | translateDate: "MMM-D" | async }}
           </h2>
           <button
             *ngIf="isEditMode"
             type="button"
-            class="d-flex flex-grow-0"
+            fxFlex="nogrow"
             mat-raised-button
             matTooltip="{{ 'add-new-assignment' | translate }}"
             [disabled]="studentsForm.disabled"
@@ -87,7 +93,7 @@
 
           <!--<div >-->
           <div
-            class="d-flex" style="width: 100%;"
+            fxFlex="100"
             cdkDropList
             cdkDropListData="{{ wIndex }}"
             [ngClass]="{ 'assignments-list': isEditMode }"

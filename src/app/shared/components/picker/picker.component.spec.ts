@@ -8,9 +8,8 @@ describe('PickerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [PickerComponent],
-    teardown: { destroyAfterEach: false }
-})
+      declarations: [ PickerComponent ]
+    })
     .compileComponents();
   }));
 

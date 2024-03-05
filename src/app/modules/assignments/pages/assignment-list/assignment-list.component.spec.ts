@@ -8,9 +8,8 @@ describe('AssignmentListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [AssignmentListComponent],
-    teardown: { destroyAfterEach: false }
-})
+      declarations: [ AssignmentListComponent ]
+    })
     .compileComponents();
   }));
 

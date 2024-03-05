@@ -1,10 +1,11 @@
-<div  class="d-flex flex-column justify-content-start align-items-center gap-1 " >
-  <div class=" d-flex flex-row flex-grow-1 justify-content-start align-items-start" >
-    <button class="d-flex w-10" mat-raised-button (click)="prevPage()">
+<div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="15px">
+  <div fxFlex fxLayout="row" fxLayoutAlign="start start">
+    <button fxFlex="10" mat-raised-button (click)="prevPage()">
       <mat-icon>arrow_left</mat-icon>
     </button>
     <button
-      class="d-flex w-10 row col-10 mx-auto"
+      fxFlex="10"
+      fxFlexOffset="90"
       mat-raised-button
       (click)="nextPage()"
     >
@@ -12,10 +13,10 @@
     </button>
   </div>
 
-  <div class="d-flex w-80 flex-row justify-content-center align-items-start ">
+  <div fxFlex="80" fxLayout="row" fxLayoutAlign="center start">
     <div
       #epubArea
-      class="d-flex w-80"
+      fxFlex="80"
       class="bg-color-white"
       [innerHtml]="displayedProgram"
     ></div>

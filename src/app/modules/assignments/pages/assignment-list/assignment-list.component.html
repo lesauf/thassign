@@ -1,6 +1,6 @@
 <!-- Month selector -->
-<div class="d-flex flex-row justify-content-center align-items-center" >
-  <app-month-picker 
+<div fxLayout="row" fxLayoutAlign="center center">
+  <app-month-picker
     [disablePicker]="isEditMode"
     (monthSelected)="getSelectedMonth($event)"
   >

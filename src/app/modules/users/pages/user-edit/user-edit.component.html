@@ -2,26 +2,37 @@
 
 <mat-divider></mat-divider>
 
-<div class="d-flex flex-column gap-3 justify-content-around align-items-stretch">
+<div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="space-around stretch">
   <app-loader *ngIf="!userForm"> </app-loader>
 
   <form
-    class="col-11 flex-row flex-wrap justify-content-center align-items-start"
+    fxFlex="95"
+    fxLayout="row wrap"
+    fxLayoutAlign="center start"
     #userEditForm
     *ngIf="userForm"
     [formGroup]="userForm"
     (ngSubmit)="saveUser()"
   >
     <div
-      class="d-flex col-12 flex-row flex-wrap gap-3 justify-content-center align-items-start"
+      fxFlex="100"
+      fxLayoutGap="25px"
+      fxLayout="row wrap"
+      fxLayoutAlign="center start"
     >
       <!-- Left column -->
       <div
-        class="d-flex flex-column col-10 col-md-9 col-sm-11 justify-content-center align-items-start"
+        fxFlex="80"
+        fxFlex.lt-md="75"
+        fxFlex.lt-sm="95"
+        fxLayout="column"
+        fxLayoutAlign="center start"
       >
         <!-- Genre -->
         <mat-radio-group
-          class="d-flex flex-row gap-3 justify-content-start align-items-stretch"
+          fxFlex="row"
+          fxLayoutAlign="start stretch"
+          fxLayoutGap="15px"
           labelPosition="before"
           formControlName="genre"
           (change)="toggleManFields('genre', $event)"
@@ -29,14 +40,14 @@
           <mat-radio-button value="man" name="genre">
             {{ "man" | translate }}
           </mat-radio-button>
-          <mat-radio-button class="flex-grow-1" value="woman" name="genre">
+          <mat-radio-button fxFlex value="woman" name="genre">
             {{ "woman" | translate }}
           </mat-radio-button>
         </mat-radio-group>
         <app-control-messages [control]="userForm.controls['genre']">
         </app-control-messages>
         <!-- First name -->
-        <mat-form-field  style="width: 100%;">
+        <mat-form-field fxFill>
           <input
             matInput
             autocomplete="off"
@@ -48,7 +59,7 @@
         <app-control-messages [control]="userForm.controls['firstName']">
         </app-control-messages>
         <!-- Last name -->
-        <mat-form-field style="width: 100%;">
+        <mat-form-field fxFill>
           <input
             matInput
             autocomplete="off"
@@ -59,7 +70,7 @@
         <app-control-messages [control]="userForm.controls['lastName']">
         </app-control-messages>
         <!-- Phone -->
-        <mat-form-field style="width: 100%;">
+        <mat-form-field fxFill>
           <input
             matInput
             autocomplete="off"
@@ -70,7 +81,7 @@
         <app-control-messages [control]="userForm.controls['phone']">
         </app-control-messages>
         <!-- Email -->
-        <mat-form-field style="width: 100%;">
+        <mat-form-field fxFill>
           <input
             matInput
             type="email"
@@ -84,7 +95,8 @@
         <!-- Overseer -->
         <mat-radio-group
           labelPosition="before"
-          class="flex-row flex-wrap gap-3"
+          fxFlex="row wrap"
+          fxLayoutGap="15px"
           formControlName="overseer"
           [hidden]="overseerFieldsDisabled"
         >
@@ -99,12 +111,19 @@
 
       <!-- RIGHT COLUMN -->
       <div
-        class="d-flex mt-4 col-1 col-md-2 col-xs-9 flex-column flex-sm-row flex-sm-wrap justify-content-between align-items-start justify-content-xs-end align-items-xs-center gap-sm-3 gap-md-3 gap-lg-3  "
+        fxFlex="10"
+        fxFlex.lt-md="15"
+        fxFlex.xs="95"
+        fxLayout="column"
+        fxLayout.lt-sm="row wrap"
+        fxLayoutGap.gt-sm="10px"
+        fxLayoutAlign="space-between start"
+        fxLayoutAlign.xs="end center"
       >
-        
+        <div fxFlex>&nbsp;</div>
         <!-- Child -->
         <mat-checkbox
-          class="d-flex col-sm-6"
+          fxFlex.lt-sm="45"
           labelPosition="after"
           formControlName="child"
           (change)="toggleManFields('child', $event)"
@@ -113,7 +132,7 @@
         </mat-checkbox>
         <!-- baptized -->
         <mat-checkbox
-          class="d-flex col-sm-6"
+          fxFlex.lt-sm="45"
           labelPosition="after"
           formControlName="baptized"
           (change)="toggleManFields('baptized', $event)"
@@ -122,7 +141,7 @@
         </mat-checkbox>
         <!-- publisher -->
         <mat-checkbox
-          class="d-flex col-sm-6"
+          fxFlex.lt-sm="45"
           labelPosition="after"
           formControlName="publisher"
           (change)="toggleManFields('publisher', $event)"
@@ -131,7 +150,7 @@
         </mat-checkbox>
         <!-- disabled -->
         <mat-checkbox
-          class="d-flex col-sm-6"
+          fxFlex.lt-sm="45"
           labelPosition="after"
           formControlName="disabled"
         >
@@ -140,20 +159,20 @@
       </div>
       <!-- /Right column -->
 
-      <div class="d-flex col-12">
+      <div fxFlex="100">
         &nbsp;
         <!-- spacer -->
       </div>
 
       <!-- Part Chips -->
 
-      <div class="d-flex col-11" *ngIf="allPartsGrouped$ | async as allPartsGrouped">
+      <div fxFlex="90" *ngIf="allPartsGrouped$ | async as allPartsGrouped">
         <div>
           <!-- Midweek parts -->
           <h3>{{ "assignable-parts" | translate | titlecase }}</h3>
-          <mat-chip-list multiple="true" class="d-flex flex-row ">
+          <mat-chip-list multiple="true" fxLayout="row">
             <fieldset
-              style="width:100%; "
+              fxFlex="100"
               *ngFor="
                 let meeting of allPartsGrouped.meetings;
                 let meetingIndex = index
@@ -163,7 +182,10 @@
                 {{ meeting | translate | titlecase }}
               </legend>
               <mat-chip
-              class="{{((part?.byAnOverseer && overseerFieldsDisabled) ||(part?.byABrother && manFieldsDisabled)) ? '' : 'd-flex d-none'}}"
+                [fxHide]="
+                  (part?.byAnOverseer && overseerFieldsDisabled) ||
+                  (part?.byABrother && manFieldsDisabled)
+                "
                 *ngFor="let part of allPartsGrouped.parts[meetingIndex]"
                 [selected]="partSelected(part)"
                 (click)="togglePart(part); userForm.markAllAsTouched()"
@@ -175,13 +197,13 @@
         </div>
       </div>
 
-      <div class="d-flex col-12">
+      <div fxFlex="100">
         &nbsp;
         <!-- spacer -->
       </div>
 
       <!-- BUTTONS -->
-      <div class="d-flex col-12 flex-row justify-content-around align-items-stretch">
+      <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-around stretch">
         <button type="button" mat-raised-button (click)="cancel()">
           {{ "cancel" | translate | titlecase }}
         </button>
@@ -190,7 +212,7 @@
         </button>
       </div>
 
-      <div class="d-flex col-12">
+      <div fxFlex="100">
         &nbsp;
         <!-- spacer -->
       </div>

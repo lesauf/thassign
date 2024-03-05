@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { AssignmentService } from '@src/app/modules/assignments/services/assignment.service';
 
 describe('AssignmentService', () => {
-  beforeEach(() => TestBed.configureTestingModule({ teardown: { destroyAfterEach: false } }));
+  beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
     const service: AssignmentService = TestBed.inject(AssignmentService);

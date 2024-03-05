@@ -8,9 +8,8 @@ describe('LanguagePickerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [LanguagePickerComponent],
-    teardown: { destroyAfterEach: false }
-}).compileComponents();
+      declarations: [LanguagePickerComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

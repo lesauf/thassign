@@ -6,7 +6,7 @@ describe('AssignmentControlService', () => {
   let service: AssignmentControlService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ teardown: { destroyAfterEach: false } });
+    TestBed.configureTestingModule({});
     service = TestBed.inject(AssignmentControlService);
   });
 

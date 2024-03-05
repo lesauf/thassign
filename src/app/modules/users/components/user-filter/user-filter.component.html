@@ -1,13 +1,13 @@
-<div  class="d-flex flex-row flex-wrap justify-content-center align-items-start">
+<div fxLayout="row wrap" fxLayoutAlign="center start">
   <mat-expansion-panel
-    class=" col-11 "
+    fxFlex="90"
     #mepSearch="matExpansionPanel"
     [expanded]="displayMore"
     [hideToggle]="false"
   >
     <mat-expansion-panel-header>
-      <div class="d-flex w-100 flex-row flex-wrap justify-content-center align-items-stretch">
-        <mat-form-field class="flex-fill col-11 col-sm-10 col-md-9" >
+      <div fxFlex fxLayout="row wrap" fxLayoutAlign="center stretch">
+        <mat-form-field fxFlex="90" fxFlex.lt-md="80" fxFlex.lt-sm="70">
           <!-- Disabled autocomplete -->
           <!-- [matAutocomplete]="auto" -->
           <input

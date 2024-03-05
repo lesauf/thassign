@@ -8,9 +8,8 @@ describe('ControlMessagesComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [ControlMessagesComponent],
-    teardown: { destroyAfterEach: false }
-})
+      declarations: [ ControlMessagesComponent ]
+    })
     .compileComponents();
   }));
 

@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-  <div class=" d-flex flex-fill flex-row justify-content-between align-items-center ">
+  <div fxFill fxLayout="row" fxLayoutAlign="space-between center">
     <!-- Title & close buttons-->
     <span>
       {{ data.title | translate }}
@@ -14,10 +14,10 @@
       <mat-icon>close</mat-icon>
     </button>
   </div>
-  <p class="d-flex flex-fill flex-row justify-content-between align-items-center " > 
+  <p fxFill fxLayout="row" fxLayoutAlign="space-between center"> 
     <!-- Sort buttons-->
     <button
-    class="d-flex w-95"
+      fxFlex="45"
       mat-raised-button
       type="button"
       (click)="sort('assignmentsNumber')">
@@ -25,7 +25,7 @@
       <mat-icon matSuffix>arrow_upward</mat-icon>
     </button>
   
-    <button class="d-flex w-95"
+    <button fxFlex="45"
       mat-raised-button 
       type="button" 
       (click)="sort('date')">
@@ -33,9 +33,9 @@
       <mat-icon>arrow_upward</mat-icon>
     </button>
   </p>
-  <p class="d-flex flex-fill flex-row justify-content-between align-items-center ">
+  <p fxFill fxLayout="row" fxLayoutAlign="space-between center">
     <button
-    class="d-flex w-95"
+      fxFlex="45"
       mat-raised-button
       type="button"
       (click)="sort('firstName')">
@@ -43,7 +43,7 @@
       <mat-icon>arrow_upward</mat-icon>
     </button>
     <button
-    class="d-flex w-45"
+      fxFlex="45"
       mat-raised-button
       type="button"
       (click)="sort('lastName')">

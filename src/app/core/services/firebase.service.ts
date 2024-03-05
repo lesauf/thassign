@@ -1,21 +1,18 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
 import {
   AngularFirestore,
   AngularFirestoreCollection,
   CollectionReference,
-  DocumentData,
-} from '@angular/fire/compat/firestore';
-import { Firestore, doc, onSnapshot, DocumentReference, docSnapshots } from '@angular/fire/firestore';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
-import 'firebase/compat/auth';
+} from '@angular/fire/firestore';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
 
 import { User } from '@src/app/core/models/user/user.model';
 
 @Injectable()
 export class FirebaseService {
-  doc: DocumentReference;
   signedInUser: User;
 
   constructor(
@@ -37,8 +34,6 @@ export class FirebaseService {
       }
     });
   }
-
-  docSnapshots(doc).subscribe(...);
 
   init() {}
 
@@ -127,12 +122,14 @@ export class FirebaseService {
 
     if (operation === 'set') {
       // add/update/merge
-      return this.getCollectionWithConverter(collection, converter)
+      return this.firestore
+        .collection(this.getCollectionWithConverter(collection, converter))
         .doc(id)
         .set(data, { merge: merge });
     } else {
       // Delete
-      return this.getCollectionWithConverter(collection, converter)
+      return this.firestore
+        .collection(this.getCollectionWithConverter(collection, converter))
         .doc(id)
         .delete();
     }
@@ -175,7 +172,7 @@ export class FirebaseService {
       }
 
       const colRef = this.firestore
-        .collection(this.getCollectionWithConverter(collection, converter).id)
+        .collection(this.getCollectionWithConverter(collection, converter))
         .doc(currentId);
 
       if (operation === 'set') {
@@ -195,7 +192,7 @@ export class FirebaseService {
    * @param collName
    * @param converter
    */
-  getCollectionWithConverter(collName, converter?: any) {
+  getCollectionWithConverter(collName, converter?: any): CollectionReference {
     if (converter !== undefined) {
       return firebase.firestore().collection(collName).withConverter(converter);
     } else {
@@ -252,7 +249,7 @@ export class FirebaseService {
 
   paginateQuery(
     collName: string,
-    converter: any, //firebase.firestore.FirestoreDataConverter<unknown>,
+    converter: firebase.firestore.FirestoreDataConverter<unknown>,
     sortField: string = 'lastName',
     sortOrder: firebase.firestore.OrderByDirection = 'asc',
     pageSize: number = 50,

@@ -8,9 +8,8 @@ describe('UserFilterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [UserFilterComponent],
-    teardown: { destroyAfterEach: false }
-})
+      declarations: [ UserFilterComponent ]
+    })
     .compileComponents();
   }));
 

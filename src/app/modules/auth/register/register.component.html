@@ -1,5 +1,7 @@
 <div
-  class="d-flex flex-column flex-fill justify-content-center align-items-center"
+  fxLayout="column"
+  fxFlexFill
+  fxLayoutAlign="center center"
   style="
     background-image: url('../../../assets/login11.jpg');
     height: 100%;
@@ -8,7 +10,7 @@
     background-size: cover;
   "
 >
-  <div class="d-flex flex-column">
+  <div fxLayout="column">
     <div class="mat-elevation-z4">
       <mat-card>
         <mat-card-title
@@ -19,7 +21,8 @@
         </mat-card-title>
         <mat-card-content>
           <form
-            class="d-flex flex-column justify-content-start align-items-stretch"
+            fxLayout="column"
+            fxLayoutAlign="start stretch"
             [formGroup]="userForm"
             (ngSubmit)="register()"
           >

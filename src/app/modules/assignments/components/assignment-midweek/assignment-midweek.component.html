@@ -9,24 +9,26 @@
       [formGroup]="programsForm" 
       (ngSubmit)="onSubmit()">
       <div *ngIf="mPrograms.size && !loading"
-        class="d-flex flex-row justify-content-start align-items-center"> <!-- During loading no buttons-->
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="1em"> <!-- During loading no buttons-->
         <!-- FORM BUTTONS-->
         <button *ngIf="isEditMode"
           type="reset"
           mat-raised-button
-          class="mat-primary mb-3"
+          class="mat-primary"
           (click)="cancelEdit()">
           <mat-icon>undo</mat-icon>
-          <span class="d-sm-none">
+          <span fxHide.lt-sm>
             {{ "cancel" | translate | titlecase }}
           </span>
         </button>
 
         <button *ngIf="isEditMode"
-          type="submit"
-          mat-raised-button class="mat-primary mt-3">
+          type="submit" 
+          mat-raised-button class="mat-primary">
           <mat-icon>save</mat-icon>
-          <span class="d-sm-none">
+          <span fxHide.lt-sm>
             {{ "save" | translate | titlecase }}
           </span>
         </button>
@@ -35,10 +37,10 @@
         <button *ngIf="!isEditMode"
           type="button"
           mat-raised-button
-          class="mat-primary mt-3"
+          class="mat-primary"
           (click)="setEditMode(true)">
           <mat-icon>edit</mat-icon>
-          <span class="d-sm-none">
+          <span fxHide.lt-sm>
             {{ "edit" | translate | titlecase }}
           </span>
         </button>
@@ -46,10 +48,10 @@
         <button *ngIf="!isEditMode"
           type="button"
           mat-raised-button
-          class="mat-primary mt-3"
+          class="mat-primary"
           (click)="saveAsPdf()">
           <mat-icon>print</mat-icon>
-          <span class="d-sm-none">
+          <span fxHide.lt-sm>
             {{ "print" | translate | titlecase }}
           </span>
         </button>
@@ -71,7 +73,7 @@
       </div>
       &nbsp; 
       <!-- WEEKS -->
-      <div  #printableArea>
+      <div #printableArea>
         <div *ngFor="let mProgram of mPrograms | keyvalue"
           [formGroupName]="mProgram.key">
           <!-- Week block -->
@@ -82,23 +84,31 @@
             }">
             <h2>{{ program.week | translateDate: "MMM-D" : {days: 6} | async }}</h2>
 
-            <div formArrayName="assignments"
-              class="d-flex flex-column justify-content-start align-items-stretch">
+            <div formArrayName="assignments" 
+              fxLayout="column"
+              fxLayoutAlign="start stretch">
               <ng-container *ngFor="let assignment of program.assignments">
                 <div *ngIf="isWorkingOnPart(assignment.part)"
                   [formGroupName]="assignment.position"
-                  class="d-flex col-12 flex-row flex-wrap justify-content-start align-items-center assignment-line">
+                  fxFlex 
+                  fxLayout="row wrap"
+                  fxLayoutAlign="start center"
+                  class="assignment-line">
                   
-                  <div class="assignment-title"
+                  <div class="assignment-title" 
                     [matTooltip]="assignment.description ? assignment.description: null"
-                    class="{{isEditMode ? 'd-flex w-30 col-sm-12' : 'd-flex w-30 d-sm-none'}}">
+                    fxFlex="30" 
+                    [fxFlex.lt-sm]="isEditMode ? 100 : null">
                     {{ assignment.title }}
                   </div>
                   
                   <div *ngIf="isEditMode; else view"
-                    class="w-70 flex-row flex-wrap col-sm-11 justify-content-start align-items-center mr-sm-5 assignment-line"
-                    >
-                    <div class="{{assignment.part.withAssistant ? 'd-flex w-49' : 'd-flex w-100'}}">
+                    fxFlex="70"
+                    fxFlex.lt-sm="95"
+                    fxFlexOffset.lt-sm="5"
+                    fxLayout="row wrap"
+                    fxLayoutAlign="space-between center">
+                    <div [fxFlex]="assignment.part.withAssistant ? 49 : 100">
                       <app-picker
                         [optionsTemplate]="displayComponentRef.componentType"
                         title="{{ assignment.title | titlecase }}"
@@ -113,7 +123,7 @@
                       ></app-picker>
                     </div>
 
-                    <div *ngIf="assignment.part.withAssistant" class="d-flex w-49">
+                    <div *ngIf="assignment.part.withAssistant" fxFlex="49">
                       
                       <app-picker
                         [optionsTemplate]="displayComponentRef.componentType"
@@ -131,7 +141,9 @@
                   </div>
 
                   <ng-template #view>
-                    <div class="d-flex w-70 col-xs-11 mr-sm-5">
+                    <div fxFlex="70" 
+                      fxFlex.lt-xs="95" 
+                      fxFlexOffset.lt-xs="5">
                       <span class="assignment-assignee">{{ assignment.assignee?.fullName }}</span>
 
                       <span *ngIf="assignment.assistant" class="assignment-assistant">

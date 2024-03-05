@@ -6,7 +6,7 @@ describe('RealmService', () => {
   let service: RealmService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ teardown: { destroyAfterEach: false } });
+    TestBed.configureTestingModule({});
     service = TestBed.inject(RealmService);
   });
 

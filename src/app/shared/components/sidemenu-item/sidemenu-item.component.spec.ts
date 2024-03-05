@@ -8,9 +8,8 @@ describe('SidemenuItemComponent', () => {
 
   beforeEach(waitForAsync(() => {
   TestBed.configureTestingModule({
-    declarations: [SidemenuItemComponent],
-    teardown: { destroyAfterEach: false }
-})
+    declarations: [ SidemenuItemComponent ]
+  })
   .compileComponents();
   }));
 

@@ -1,16 +1,18 @@
-<div class="d-flex flex-column flex-fill justify-content-center align-items-center" id="auth">
-  <div class="d-flex flex-column mat-elevation-z4 login-block">
+<div fxLayout="column" fxFlexFill fxLayoutAlign="center center" id="auth">
+  <div fxLayout="column" class="mat-elevation-z4 login-block">
     <mat-card>
       <mat-card-title><h1>Thassign</h1></mat-card-title>
       <mat-card-content>
         <h2>{{ "log-in-to-your-account" | translate }}</h2>
 
         <form
-        class="d-flex flex-column mb-3 justify-content-start align-items-stretch"
+          fxLayout="column"
+          fxLayoutAlign="start stretch"
+          fxLayoutGap="1em"
           [formGroup]="userForm"
           (ngSubmit)="submit('emailPassword')"
         >
-          <div *ngIf="formMessages.all" class="help is-danger mt-5">
+          <div *ngIf="formMessages.all" class="help is-danger">
             <legend>{{ formMessages.all | translate }}</legend>
           </div>
           <mat-form-field
@@ -28,7 +30,7 @@
               matInput
             />
           </mat-form-field>
-          <div *ngIf="formMessages.email" class="help is-danger mt-5">
+          <div *ngIf="formMessages.email" class="help is-danger">
             {{ formMessages.email | translate }}
           </div>
           <mat-form-field
@@ -45,7 +47,7 @@
               matInput
             />
           </mat-form-field>
-          <div *ngIf="formMessages.password" class="help is-danger mt-5">
+          <div *ngIf="formMessages.password" class="help is-danger">
             {{ formMessages.password | translate }}
           </div>
           <mat-form-field
@@ -63,15 +65,15 @@
               matInput
             />
           </mat-form-field>
-          <div *ngIf="formMessages.repeatPassword" class="help is-danger mt-5">
+          <div *ngIf="formMessages.repeatPassword" class="help is-danger">
             {{ formMessages.repeatPassword | translate }}
           </div>
           <app-loader *ngIf="isLoading"></app-loader>
-          <div class="d-flex flex-row-reverse justify-content-between align-items-center mt-3">
+          <div fxLayout="row-reverse" fxLayoutAlign="space-between center">
             <!-- Sign in button -->
             <button
               mat-raised-button
-              class="d-flex align-items-start"
+              fxAlign="start"
               color="primary"
               type="submit"
               [disabled]="!userForm.valid"
@@ -95,7 +97,7 @@
             </button>
           </div>
           <!-- Social login button -->
-          <div class="d-flex justify-content-center align-items-stretch flex-row mt-3" >
+          <div fxLayout="row" fxLayoutAlign="center stretch">
             <button
               mat-raised-button
               type="button"
@@ -107,7 +109,6 @@
                 aria-hidden="false"
                 aria-label="Google logo"
                 matPrefix
-                style="height: 40px;"
               ></mat-icon>
               &nbsp;
               <!-- <img src="/assets/icon/google-logo.svg" /> -->

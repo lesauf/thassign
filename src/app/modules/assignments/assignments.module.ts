@@ -1,7 +1,6 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '@src/app/shared/shared.module';
@@ -19,7 +18,6 @@ import { AssignableListComponent } from '@src/app/modules/assignments/components
     DragDropModule,
     SharedModule,
     TranslateModule,
-    MatTooltipModule
   ],
   declarations: [
     AssignableListComponent,
@@ -29,8 +27,5 @@ import { AssignableListComponent } from '@src/app/modules/assignments/components
     AssignmentMidweekComponent,
     AssignmentComponent,
   ],
-  schemas: [
-  CUSTOM_ELEMENTS_SCHEMA
-],
 })
 export class AssignmentsModule {}

@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '@src/app/shared/shared.module';
@@ -18,8 +18,5 @@ import { UsersRoutingModule } from '@src/app/modules/users/users-routing.module'
     UserSortComponent,
   ],
   imports: [SharedModule, UsersRoutingModule, TranslateModule],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ],
 })
 export class UsersModule {}

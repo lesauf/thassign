@@ -5,14 +5,13 @@ import { AppComponent } from '@src/app/app.component';
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule
-    ],
-    declarations: [
+      ],
+      declarations: [
         AppComponent
-    ],
-    teardown: { destroyAfterEach: false }
-}).compileComponents();
+      ],
+    }).compileComponents();
   }));
 
   it('should create the app', () => {

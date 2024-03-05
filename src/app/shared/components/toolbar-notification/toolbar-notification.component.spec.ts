@@ -8,9 +8,8 @@ describe('ToolbarNotificationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [ToolbarNotificationComponent],
-    teardown: { destroyAfterEach: false }
-})
+      declarations: [ ToolbarNotificationComponent ]
+    })
     .compileComponents();
   }));
 
