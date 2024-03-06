@@ -72,9 +72,7 @@
     </StackLayout>
 
     <FlexboxLayout
-      flexDirection="row-reverse"
-      justifyContent="space-between"
-      alignItems="center"
+      class="d-flex flex-row-reverse justify-content-between align-items-center"
     >
       <!-- Sign in button -->
       <button
@@ -93,9 +91,7 @@
 
     <!-- Social login button -->
     <FlexboxLayout
-      flexDirection="row"
-      justifyContent="center"
-      alignItems="stretch"
+      class="d-flex flex-row justify-content-center align-items-stretch"
     >
       <button (tap)="submit('google')" class="p-10">
         <FormattedString>

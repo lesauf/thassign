@@ -1,26 +1,26 @@
 <h2 mat-dialog-title class="center">{{ user.fullName }}</h2>
 
 <div>
-  <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch" fxLayoutAlign.lt-sm="center start">
-    <div fxFlex="45">
+  <div class="d-flex flex-row flex-wrap flex-sm-column justify-content-around align-items-stretch justify-content-sm-center align-items-sm-start">
+    <div >
       <mat-icon inline="true">person</mat-icon>
       {{ user.type }}
     </div>
-    <div fxFlex="45" *ngIf="user.progress">
+    <div  *ngIf="user.progress">
       <mat-icon inline="true">info</mat-icon>
       {{ user.progress }}
     </div>
-    <div fxFlex="45" *ngIf="user.phone">
+    <div  *ngIf="user.phone">
       <mat-icon inline="true">phone</mat-icon>
       {{ user.phone }}
     </div>
-    <div fxFlex="45" *ngIf="user.email">
+    <div  *ngIf="user.email">
       <mat-icon inline="true">mail_outline</mat-icon>
       {{ user.email }}
     </div>
   </div>
 
-  <mat-chip-list fxLayout="row" fxLayoutAlign="start stretch">
+  <mat-chip-list  class="d-flex flex-row justify-content-start align-items-stretch">
     <mat-chip class="mat-chip-list-stacked" aria-orientation="vertical" [selectable]="false" disabled *ngFor="let part of user.parts">
       {{ part.name | translate }}
     </mat-chip>

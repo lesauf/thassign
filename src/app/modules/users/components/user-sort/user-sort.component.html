@@ -2,15 +2,14 @@
 
 <div mat-dialog-content>
   <mat-radio-group
-    fxLayout="column"
-    fxLayoutGap="15px"
+    class="d-flex flex-column mb-3 "
     [(ngModel)]="sort"
     (change)="closeUserSort()"
   >
-    <mat-radio-button fxFlex value="firstName">
+    <mat-radio-button class="flex-grow-1 mt-3" value="firstName">
       {{ 'first-name' | translate | titlecase }}
     </mat-radio-button>
-    <mat-radio-button fxFlex value="lastName">
+    <mat-radio-button class="flex-grow-1 mt-3" value="lastName">
       {{ 'last-name' | translate | titlecase }}
     </mat-radio-button>
   </mat-radio-group>

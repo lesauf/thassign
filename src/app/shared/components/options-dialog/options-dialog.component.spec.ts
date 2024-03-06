@@ -8,8 +8,9 @@ describe('OptionsDialogComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ OptionsDialogComponent ]
-    })
+    declarations: [OptionsDialogComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

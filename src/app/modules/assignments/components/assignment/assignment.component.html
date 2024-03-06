@@ -1,11 +1,10 @@
 <div [formGroup]="form" *ngIf="isEditMode; else assignmentDisplay">
   <div formArrayName="{{ wIndex }}">
     <div
-      fxLayout="row"
+    class="flex-row d-flex justify-content-around justify-content-center"
       formGroupName="{{ assignment.position }}"
-      fxLayoutAlign="space-around center"
     >
-      <div fxFlex="5">
+      <div class="d-flex w-5">
         <button
           mat-button
           type="button"
@@ -17,8 +16,8 @@
         </button>
       </div>
       <!-- PART -->
-      <div fxFlex="30" fxFlex.lt-sm="auto">
-        <mat-form-field fxFill>
+      <div class="d-flex w-30 col-sm-auto">
+        <mat-form-field class="d-flex flex-fill">
           <mat-select
             placeholder="{{ 'assignment' | translate | titlecase }}"
             [compareWith]="compareFn"
@@ -41,7 +40,7 @@
         </mat-form-field>
       </div>
       <!-- ASSIGNEE -->
-      <div fxFlex="30" fxFlex.lt-sm="auto">
+      <div  class="d-flex w-30 col-sm-auto">
         <app-picker
           *ngIf="form.get([wIndex, assignment.position, 'part']).value"
           [optionsTemplate]="displayComponentRef.componentType"
@@ -59,7 +58,7 @@
 
       </div>
       <!-- ASSISTANT -->
-      <div fxFlex="30" fxFlex.lt-sm="auto">
+      <div  class="d-flex w-30 col-sm-auto">
         <app-picker
           *ngIf="
             form.get([wIndex, assignment.position, 'part']).value?.withAssistant
@@ -80,18 +79,15 @@
 
 <!-- ASSIGNMENT DISPLAY -->
 <ng-template #assignmentDisplay>
-  <div fxLayout="row wrap" fxLayoutAlign="start center">
+  <div class="d-flex flex-row justify-content-start align-items-center">
     <!-- PART -->
     <div
-      fxFlex="30"
-      fxFlex.lt-sm="100"
-      fxFlexOffset="5"
-      class="assignment-name"
+    class="d-flex w-30 col-sm-12 justify-content-end assignment-name"
     >
       {{ assignment.part.name | translate }}
     </div>
     <!-- ASSIGNEE & ASSISTANT -->
-    <div fxFlex="50" fxFlex.lt-sm="100" fxFlexOffset.lt-sm="10">
+    <div  class="d-flex w-50 col-sm-12 justify-content-end  mr-sm-10">
       <span class="assignment-assignee">
         {{ assignment.assignee?.fullName }}
       </span>

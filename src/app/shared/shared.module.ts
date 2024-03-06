@@ -1,9 +1,8 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@src/app/shared/material.module';
-import { FlexLayoutModule, CoreModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 
 import { ConfirmDialogComponent } from '@src/app/shared/components/confirm-dialog/confirm-dialog.component';
@@ -36,21 +35,17 @@ import { WithLoadingPipe } from '@src/app/shared/pipes/with-loading.pipe';
     CommonModule,
     FormsModule,
     MaterialModule,
-    FlexLayoutModule,
     ReactiveFormsModule,
     HttpClientModule,
     TranslateModule,
-    CoreModule,
   ],
   exports: [
     CommonModule,
     FormsModule,
     MaterialModule,
-    FlexLayoutModule,
     ReactiveFormsModule,
     HttpClientModule,
     TranslateModule,
-    CoreModule,
     ConfirmDialogComponent,
     ConfirmDirective,
     ControlMessagesComponent,
@@ -63,6 +58,9 @@ import { WithLoadingPipe } from '@src/app/shared/pipes/with-loading.pipe';
     OptionsDialogComponent,
     PickerComponent,
     WithLoadingPipe,
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
   ],
 })
 export class SharedModule {}

@@ -6,9 +6,10 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { MediaChange, MediaObserver } from '@angular/flex-layout';
+import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { MatSidenav, MatDrawer } from '@angular/material/sidenav';
 import { UserService } from '@src/app/modules/users/user.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-content-layout',
@@ -18,6 +19,7 @@ import { UserService } from '@src/app/modules/users/user.service';
 export class ContentLayoutComponent implements OnInit, OnChanges {
   @Input() isVisible = true;
   visibility = 'shown';
+  breakpoint$: Observable<boolean>;
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(MatDrawer) drawer: MatDrawer;
@@ -26,9 +28,9 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
   matDrawerOpened = false;
   matDrawerShow = true;
   sideNavMode = 'side';
-
+  
   constructor(
-    public mediaObserver: MediaObserver,
+    private breakpointObserver: BreakpointObserver,
     private userService: UserService
   ) {}
 
@@ -37,8 +39,34 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.mediaObserver.media$.subscribe((mediaChange: MediaChange) => {
-      this.toggleView();
+    this.breakpointObserver.observe([
+      Breakpoints.XSmall,
+      Breakpoints.Small,
+      Breakpoints.Medium
+    ]).subscribe(result => {
+      if (result.breakpoints[Breakpoints.XSmall]) {
+        this.sideNavMode = 'over';
+        this.sideNavOpened = false;
+        this.matDrawerOpened = false;
+        this.matDrawerShow = false;
+        // S'exécute lorsque l'écran est de type XS
+      }
+  
+      if (result.breakpoints[Breakpoints.Small]) {
+        this.sideNavMode = 'side';
+        this.sideNavOpened = false;
+        this.matDrawerOpened = true;
+        this.matDrawerShow = true;
+        // S'exécute lorsque l'écran est de type SM
+      }
+  
+      if (result.breakpoints[Breakpoints.Medium]) {
+        this.sideNavMode = 'side';
+        this.sideNavOpened = true;
+        this.matDrawerOpened = false;
+        this.matDrawerShow = true;;
+        // S'exécute lorsque l'écran est de type MD
+      }
     });
   }
 
@@ -66,22 +94,4 @@ export class ContentLayoutComponent implements OnInit, OnChanges {
     }
   }
 
-  toggleView() {
-    if (this.mediaObserver.isActive('gt-md')) {
-      this.sideNavMode = 'side';
-      this.sideNavOpened = true;
-      this.matDrawerOpened = false;
-      this.matDrawerShow = true;
-    } else if (this.mediaObserver.isActive('gt-xs')) {
-      this.sideNavMode = 'side';
-      this.sideNavOpened = false;
-      this.matDrawerOpened = true;
-      this.matDrawerShow = true;
-    } else if (this.mediaObserver.isActive('lt-sm')) {
-      this.sideNavMode = 'over';
-      this.sideNavOpened = false;
-      this.matDrawerOpened = false;
-      this.matDrawerShow = false;
-    }
-  }
 }

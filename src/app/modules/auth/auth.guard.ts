@@ -8,8 +8,8 @@ import {
   Route,
   UrlSegment,
 } from '@angular/router';
-import firebase from 'firebase';
-import { AngularFireAuth } from '@angular/fire/auth';
+import firebase from 'firebase/compat';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 import { AuthService } from '@src/app/modules/auth/auth.service';
 import { Observable } from 'rxjs';

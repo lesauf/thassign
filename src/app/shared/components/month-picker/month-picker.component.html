@@ -1,4 +1,5 @@
 <!-- Previous button -->
+
 <button
   mat-raised-button
   title="{{ 'previous-month' | translate }}"
@@ -10,16 +11,16 @@
 </button>
 &nbsp;
 
-<label fxFlex.lt-md="90">
-  <span fxHide>{{ 'month' | translate | titlecase }}</span>
-  <mat-form-field>
+<label class="col-xs-11 " >
+  <span class=" d-none ">{{ 'month' | translate | titlecase }}</span>
+  <mat-form-field style="width: 100px;" >
     <input
       matInput
       (click)="monthPicker.open()"
       [matDatepicker]="monthPicker"
       [formControl]="date"
       class="center"
-      style="text-align: center"
+      style="text-align: center;"
     />
     <mat-datepicker
       #monthPicker
