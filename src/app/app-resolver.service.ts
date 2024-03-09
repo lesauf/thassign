@@ -56,6 +56,7 @@ export class AppResolverService implements Resolve<string> {
       //   .getQueryForCurrentUser('assignments', 'week')
       //   .valueChanges();
 
+    
       combineLatest([users$, programs$]).subscribe(
         ([users, programs]) => {
           const parts = this.partService.getParts();
@@ -82,6 +83,7 @@ export class AppResolverService implements Resolve<string> {
           );
         }
       );
+      
 
       return 'Data fetched';
     } catch (error) {

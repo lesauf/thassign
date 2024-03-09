@@ -38,7 +38,7 @@ export class FirebaseService {
     });
   }
 
-  docSnapshots(doc).subscribe(...);
+  
 
   init() {}
 
