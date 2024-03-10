@@ -58,7 +58,7 @@ export class AppResolverService implements Resolve<string> {
 
     
       combineLatest([users$, programs$]).subscribe(
-        ([users, programs]) => {
+        ([users, programs]: any[]) => {
           const parts = this.partService.getParts();
 
           // Handle assignments
