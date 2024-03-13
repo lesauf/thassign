@@ -20,11 +20,14 @@ export class FirebaseService {
 
   constructor(
     // private authService: AuthService,
-    private firestore: AngularFirestore,
-    private fireAuth: AngularFireAuth
+    //private firestore: AngularFirestore,
+    private fireAuth: AngularFireAuth,
+    private firestore: Firestore
   ) {
     this.fireAuth.onAuthStateChanged((user: firebase.User) => {
-      if (user) {
+      this.doc = doc(firestore, user.uid);
+        onSnapshot(this.doc, snap => {
+            if (user) {
         this.signedInUser = new User({
           _id: user.uid,
           firstName: user.displayName,
@@ -35,6 +38,8 @@ export class FirebaseService {
       } else {
         this.signedInUser = null;
       }
+        });
+      
     });
   }
 
@@ -48,6 +53,8 @@ export class FirebaseService {
    * @param email
    * @param password
    */
+
+  /*
   async createUserAccount(
     email: string,
     password: string
@@ -60,7 +67,9 @@ export class FirebaseService {
       throw error;
     }
   }
-
+  */
+ 
+/*
   async authenticate(provider: any, email?: string, password?: string) {
     try {
       if (provider === 'emailPassword') {
@@ -76,10 +85,13 @@ export class FirebaseService {
       throw error;
     }
   }
+  */
 
   /**
    *
    */
+
+  /*
   async isLoggedIn(): Promise<boolean> {
     const user = await this.fireAuth.currentUser;
 
@@ -89,13 +101,17 @@ export class FirebaseService {
   logout() {
     return this.fireAuth.signOut();
   }
+*/
 
   /**
    * return the current signed in user (or null)
    */
+
+  /*
   getSignedInUser(): User {
     return this.signedInUser;
   }
+  */
 
   /**
    * Insert, replace, merge or delete one document in the specified collection
@@ -106,6 +122,8 @@ export class FirebaseService {
    * @param operation
    * @param merge
    */
+
+  /*
   upsertOneDoc(
     collection: string,
     data: any,
@@ -137,6 +155,7 @@ export class FirebaseService {
         .delete();
     }
   }
+  */
 
   /**
    * Insert, replace, merge or delete many documents in the specified collection
@@ -146,6 +165,8 @@ export class FirebaseService {
    * @param operation
    * @param merge
    */
+
+  /*
   upsertManyDocs(
     collection: string,
     data: any[],
@@ -188,6 +209,7 @@ export class FirebaseService {
     // Commit the batch
     return batch.commit(); // .catch((err) => console.error(err));
   }
+  */
 
   /**
    * @see https://github.com/angular/angularfire/issues/2291#issuecomment-600911909
@@ -195,6 +217,8 @@ export class FirebaseService {
    * @param collName
    * @param converter
    */
+
+  /*
   getCollectionWithConverter(collName, converter?: any) {
     if (converter !== undefined) {
       return firebase.firestore().collection(collName).withConverter(converter);
@@ -203,10 +227,14 @@ export class FirebaseService {
     }
   }
 
+  */
+
   /**
    * Return an observable on a collection
    * @param collName
    */
+
+  /*
   getQueryForCurrentUser(
     collName,
     sortField?: string,
@@ -222,6 +250,7 @@ export class FirebaseService {
       }
     });
   }
+  */
 
   /**
    * Get data in a given range
@@ -230,6 +259,7 @@ export class FirebaseService {
    * @param start
    * @param end
    */
+  /*
   async getDocsInRange(
     collName: string,
     field: string,
@@ -282,4 +312,5 @@ export class FirebaseService {
       .collection('cities', (ref) => ref.where('capital', '==', true))
       .valueChanges();
   }
+  */
 }
