@@ -8,7 +8,7 @@ export class BackendService extends FirebaseService {
   /**
    * Put here any initialization for the backend
    */
-  init() {}
+  async init() {}
 
   /**
    * Some test queries to check the connexion

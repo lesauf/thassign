@@ -1,15 +1,16 @@
-import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Injectable, inject } from '@angular/core';
+import { Auth, User as FirebaseUser, GoogleAuthProvider, UserCredential, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup } from '@angular/fire/auth';
 import {
   AngularFirestore,
   AngularFirestoreCollection,
   CollectionReference,
   DocumentData,
 } from '@angular/fire/compat/firestore';
-import { Firestore, doc, onSnapshot, DocumentReference, docSnapshots } from '@angular/fire/firestore';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
-import 'firebase/compat/auth';
+import { Firestore, doc, onSnapshot, DocumentReference, docSnapshots, OrderByDirection, WhereFilterOp, collection, setDoc, deleteDoc, getDoc, runTransaction } from '@angular/fire/firestore';
+// import firebase from 'firebase/compat/app';
+// import 'firebase/compat/auth';
+// import { getAuth, onAuthStateChanged,  } from "firebase/auth";
+// import 'firebase/compat/firestore';
 
 import { User } from '@src/app/core/models/user/user.model';
 
@@ -17,29 +18,25 @@ import { User } from '@src/app/core/models/user/user.model';
 export class FirebaseService {
   doc: DocumentReference;
   signedInUser: User;
+  private fireAuth: Auth = inject(Auth);
+  private firestore: Firestore = inject(Firestore);
 
   constructor(
 	// private authService: AuthService,
 	private angularFirestore: AngularFirestore,
-	private fireAuth: AngularFireAuth,
-	private firestore: Firestore
   ) {
-	this.fireAuth.onAuthStateChanged((user: firebase.User) => {
-  	this.doc = doc(firestore, 'User/`${user.uid}`');
-    	onSnapshot(this.doc, snap => {
-        	if (doc) {
-          	this.signedInUser = new User({
-            	_id: user.uid,
-            	firstName: user.displayName,
-            	email: user.email,
-            	ownerId: user.uid,
-          	});
-    	// console.log('Auth Changed', this.signedInUser);
-        	} else {
-            	this.signedInUser = null;
-        	}
-      	});
- 	 
+	onAuthStateChanged(this.fireAuth, (user: FirebaseUser) => {
+		if (user) {
+		this.signedInUser = new User({
+			_id: user.uid,
+			firstName: user.displayName,
+			email: user.email,
+			ownerId: user.uid,
+		});
+	// console.log('Auth Changed', this.signedInUser);
+		} else {
+			this.signedInUser = null;
+		}
 	});
   }
 
@@ -58,13 +55,13 @@ export class FirebaseService {
   async createUserAccount(
 	email: string,
 	password: string
-  ): Promise<firebase.auth.UserCredential> {
+  ): Promise<UserCredential> {
 	try {
-  	await this.fireAuth.createUserWithEmailAndPassword(email, password);
-
-  	return await this.fireAuth.signInWithEmailAndPassword(email, password);
+		return await createUserWithEmailAndPassword(this.fireAuth, email, password);
 	} catch (error) {
-  	throw error;
+		const errorCode = error.code;
+    	const errorMessage = error.message;
+  		throw error;
 	}
   }
  
@@ -73,13 +70,11 @@ export class FirebaseService {
   async authenticate(provider: any, email?: string, password?: string) {
 	try {
   	if (provider === 'emailPassword') {
-    	return await this.fireAuth.signInWithEmailAndPassword(email, password);
+    	return await signInWithEmailAndPassword(this.fireAuth, email, password);
   	}
 
   	if (provider === 'google') {
-    	return await this.fireAuth.signInWithPopup(
-      	new firebase.auth.GoogleAuthProvider()
-    	);
+    	return await signInWithPopup(this.fireAuth, new GoogleAuthProvider());
   	}
 	} catch (error) {
   	throw error;
@@ -133,26 +128,24 @@ export class FirebaseService {
 	converter?: object
   ): Promise<any> {
 	if (!id) {
-  	if (operation === 'set') {
-    	// Generate id for that insert
-    	id = this.angularFirestore.createId();
-    	data['_id'] = id;
-  	} else {
-    	// Error: delete operation without specified id
-    	throw new Error('No doc id specified for a delete operation');
-  	}
+		if (operation === 'set') {
+			// Generate id for that insert
+			id = this.angularFirestore.createId();
+			data['_id'] = id;
+		} else {
+			// Error: delete operation without specified id
+			throw new Error('No doc id specified for a delete operation');
+		}
 	}
 
 	if (operation === 'set') {
-  	// add/update/merge
-  	return this.getCollectionWithConverter(collection, converter)
-    	.doc(id)
-    	.set(data, { merge: merge });
+		// add/update/merge
+		let docRef = doc(this.getCollectionWithConverter(collection, converter), id);
+		return setDoc(docRef, data, { merge: merge });
 	} else {
-  	// Delete
-  	return this.getCollectionWithConverter(collection, converter)
-    	.doc(id)
-    	.delete();
+		// Delete
+		let docRef = doc(this.getCollectionWithConverter(collection, converter), id);
+		return deleteDoc(docRef);
 	}
   }
   
@@ -165,49 +158,41 @@ export class FirebaseService {
    * @param operation
    * @param merge
    */
-
-  
-  upsertManyDocs(
+  async upsertManyDocs(
 	collection: string,
 	data: any[],
 	operation: 'set' | 'delete' = 'set',
 	merge = false,
 	converter?: object
   ): Promise<any> {
-	// Get a new write batch
-	var batch = this.angularFirestore.firestore.batch();
+	await runTransaction(this.firestore, async (batch) => {
+		// Loop through the array to add them to the batch
+		data.forEach((item) => {
+			let currentId;
 
-	// Loop through the array to add them to the batch
-	data.forEach((item) => {
-  	let currentId;
+			if (!item._id) {
+				if (operation === 'set') {
+					// Generate id for that insert
+					item['_id'] = doc(this.getCollectionWithConverter(collection, converter)).id;
+					currentId = item['_id'];
+				} else {
+					// delete operation without specified id
+					// The item is the id to delete
+					currentId = item;
+				}
+			} else {
+				currentId = item._id;
+			}
 
-  	if (!item._id) {
-    	if (operation === 'set') {
-      	// Generate id for that insert
-      	item['_id'] = this.angularFirestore.createId();
-      	currentId = item['_id'];
-    	} else {
-      	// delete operation without specified id
-      	// The item is the id to delete
-      	currentId = item;
-    	}
-  	} else {
-    	currentId = item._id;
-  	}
+			const colRef = doc(this.getCollectionWithConverter(collection, converter), currentId);
 
-  	const colRef = this.angularFirestore
-    	.collection(this.getCollectionWithConverter(collection, converter).id)
-    	.doc(currentId);
-
-  	if (operation === 'set') {
-    	batch.set(colRef.ref, item, { merge: merge });
-  	} else {
-    	batch.delete(colRef.ref);
-  	}
+			if (operation === 'set') {
+				batch.set(colRef, item, { merge: merge });
+			} else {
+				batch.delete(colRef);
+			}
+		});
 	});
-
-	// Commit the batch
-	return batch.commit(); // .catch((err) => console.error(err));
   }
   
 
@@ -217,13 +202,11 @@ export class FirebaseService {
    * @param collName
    * @param converter
    */
-
-  
-  getCollectionWithConverter(collName, converter?: any) {
+  getCollectionWithConverter(collName: string, converter?: any) {
 	if (converter !== undefined) {
-  	return firebase.firestore().collection(collName).withConverter(converter);
+  	return collection(this.firestore, collName).withConverter(converter);
 	} else {
-  	return firebase.firestore().collection(collName);
+  	return collection(this.firestore, collName);
 	}
   }
 
@@ -233,12 +216,10 @@ export class FirebaseService {
    * Return an observable on a collection
    * @param collName
    */
-
-  
   getQueryForCurrentUser(
 	collName,
 	sortField?: string,
-	sortDirection: firebase.firestore.OrderByDirection = 'asc'
+	sortDirection: OrderByDirection = 'asc'
   ): AngularFirestoreCollection<unknown> {
 	return this.angularFirestore.collection(collName, (ref) => {
   	const query = ref.where('ownerId', '==', this.signedInUser._id);
@@ -251,6 +232,10 @@ export class FirebaseService {
 	});
   }
  
+  async getDocById(collName: string, docId: string, converter?: any): Promise<any> {
+	let docRef = doc(this.getCollectionWithConverter(collName, converter), docId);
+	return await getDoc(docRef);
+  }
 
   /**
    * Get data in a given range
@@ -259,7 +244,6 @@ export class FirebaseService {
    * @param start
    * @param end
    */
-  
   async getDocsInRange(
 	collName: string,
 	field: string,
@@ -284,12 +268,12 @@ export class FirebaseService {
 	collName: string,
 	converter: any, //firebase.firestore.FirestoreDataConverter<unknown>,
 	sortField: string = 'lastName',
-	sortOrder: firebase.firestore.OrderByDirection = 'asc',
+	sortOrder: OrderByDirection = 'asc',
 	pageSize: number = 50,
 	pageIndex: number = 1,
 	filters: Array<{
   	field: string;
-  	opStr: firebase.firestore.WhereFilterOp;
+  	opStr: WhereFilterOp;
   	value: any;
 	}>
   ) {
