@@ -198,9 +198,7 @@ export class UserService extends CommonService<User> {
    */
   async getUserFromDb(userId: string): Promise<User | null> {
     const doc = await this.backendService
-      .getCollectionWithConverter('users', new UserConverter())
-      .doc(userId)
-      .get();
+      .getDocById('users', userId, new UserConverter());
 
     return doc.exists ? (doc.data() as User) : null;
   }
