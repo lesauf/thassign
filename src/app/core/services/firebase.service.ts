@@ -26,7 +26,7 @@ export class FirebaseService {
   ) {
 	this.fireAuth.onAuthStateChanged((user: firebase.User) => {
   	this.doc = doc(firestore, 'User/`${user.uid}`');
-    	onSnapshot(this.doc, snap => {
+    	onSnapshot(this.doc,  snap => {
         	if (doc) {
           	this.signedInUser = new User({
             	_id: user.uid,
@@ -37,8 +37,9 @@ export class FirebaseService {
     	// console.log('Auth Changed', this.signedInUser);
         	} else {
             	this.signedInUser = null;
-        	}
-      	});
+
+      	}});
+	
  	 
 	});
   }
